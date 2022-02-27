@@ -1,3 +1,5 @@
 #+TITLE: kotori-clj
 
 ref: https://github.com/tsu-nera/kotori
+
+Ubereatsで働くのではない, Uberjarに働かせるのだ.

@@ -31,13 +31,15 @@
  :aliases
  {;; clojure -M:run
   :run      {:main-opts ["-m" "kotori.core"]}
-  ;; PORT=8888 cloljure -M:serve
-  :serve    {:main-opts ["-m" "server"]}
+  ;; PORT=8888 clojure -M:serve
+  :serve    {:main-opts ["-m" "kotori.server"]}
   ;; clojure -T:build xxx
   :build    {:deps       {io.github.clojure/tools.build   {:git/tag "v0.8.0" :git/sha "e3e3532"}
                           com.google.cloud.tools/jib-core {:mvn/version "0.20.0"}}
              :ns-default build}
   ;; clojure -A:dev
+  ;; .dir-locals.elのcider-clojure-cli-aliasesにdevを指定することで
+  ;; cider-jack-inでもextra-deps/pathsを反映させる.
   :dev      {:extra-paths ["src/resources" "src/dev"]
              :extra-deps  {integrant/repl {:mvn/version "0.3.2"}}}
   ;; clojure -M:outdated (--upgrade --force)

@@ -1,4 +1,4 @@
-(ns server
+(ns kotori.server
   (:gen-class)
   (:require
    [kotori.firebase :refer [init-firebase-app-prod!]]

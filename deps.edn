@@ -1,0 +1,46 @@
+{
+ :paths ["src"]
+
+ :deps
+ {org.clojure/clojure {:mvn/version "1.10.3"}
+  environ/environ     {:mvn/version "1.2.0"}
+  cheshire/cheshire   {:mvn/version "5.10.2"}
+  clj-http/clj-http   {:mvn/version "3.12.3"}
+  jarohen/chime       {:mvn/version "0.3.3"}
+  com.taoensso/timbre {:mvn/version "5.1.2"}
+
+  ;; integrant
+  integrant/integrant {:mvn/version "0.8.0"}
+
+  ;; Goole Cloud
+  com.google.auth/google-auth-library-oauth2-http {:mvn/version "1.5.3"}
+  com.google.cloud/google-cloud-firestore         {:mvn/version "3.0.13"}
+  com.google.firebase/firebase-admin              {:mvn/version "8.1.0"}
+
+  ;; for API Server
+  ring/ring-core          {:mvn/version "1.9.5"}
+  ring/ring-jetty-adapter {:mvn/version "1.9.5"}
+  ring/ring-json          {:mvn/version "0.5.1"}
+
+  ;; Google Cloud firestore
+  lurodrigo/firestore-clj  {:mvn/version "1.2.1"}
+  ;; firesotre-cljを追加したらio.perfmarkが見つからずにエラーしたので追加.
+  io.perfmark/perfmark-api {:mvn/version "0.25.0"}
+  }
+
+ :aliases
+ {;; clojure -M:run
+  :run      {:main-opts ["-m" "kotori.core"]}
+  ;; PORT=8888 cloljure -M:serve
+  :serve    {:main-opts ["-m" "server"]}
+  ;; clojure -T:build xxx
+  :build    {:deps       {io.github.clojure/tools.build   {:git/tag "v0.8.0" :git/sha "e3e3532"}
+                          com.google.cloud.tools/jib-core {:mvn/version "0.20.0"}}
+             :ns-default build}
+  ;; clojure -A:dev
+  :dev      {:extra-paths ["src/resources" "src/dev"]
+             :extra-deps  {integrant/repl {:mvn/version "0.3.2"}}}
+  ;; clojure -M:outdated (--upgrade --force)
+  :outdated {:extra-deps {com.github.liquidz/antq {:mvn/version "RELEASE"}}
+             :main-opts  ["-m" "antq.core"]}}
+ }

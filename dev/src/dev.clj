@@ -5,7 +5,7 @@
 
 (defn start
   ([]
-   (start config-file))
+   (start kotori-core/config-file))
   ([config-file]
    (igr/set-prep! (constantly (kotori-core/load-config config-file)))
    (igr/prep)

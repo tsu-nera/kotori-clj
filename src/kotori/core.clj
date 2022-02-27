@@ -1,7 +1,6 @@
 (ns kotori.core
   (:gen-class)
   (:require
-   [environ.core :refer [env]]
    [chime.core :as chime]
    [kotori.runner :as runner]
    [taoensso.timbre :as log]
@@ -10,10 +9,7 @@
   (:import
    (java.time Duration Instant)))
 
-(def config-file
-  (if-let [config-file (env :config-file)]
-    config-file
-    "config.edn"))
+(def config-file "config.edn")
 
 (defn load-config [config]
   (-> config
@@ -47,6 +43,8 @@
                     (runner/tweet-random))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; (load-config "config.edn")
 
 ;; (def status (make-status (pick-random)))
 ;; (def response (private/update-status status))

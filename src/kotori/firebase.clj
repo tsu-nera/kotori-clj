@@ -1,5 +1,6 @@
 (ns kotori.firebase
   (:require [clojure.java.io :as io]
+            [integrant.core :as ig]
             [environ.core :refer [env]]
             [firestore-clj.core :as f])
   (:import (com.google.auth.oauth2 GoogleCredentials)
@@ -33,8 +34,35 @@
 
 (def db (delay (f/default-client project-id)))
 
-;; (def db (delay (f/client-with-creds cred-path)))
+;; (defrecord FirebaseBoundary [firebase])
 
+(defmethod ig/init-key ::firebase [_ _]
+  (println "init firebase instance."))
+
+(defmethod ig/halt-key! ::firebase [_ _]
+  (println "destroy firebase instantce."))
+
+;; (defmethod ig/init-key ::firebase
+;;   [_ {:keys [env]}]
+;;   (let [firebase-credentials (:firebase-credentials env)
+;;         firebase-options     (FirebaseOptions/builder)
+;;         firebaseApp          (-> firebase-options
+;;                                  (.setCredentials firebase-credentials)
+;;                                  .build
+;;                                  FirebaseApp/initializeApp)]
+;;     (timbre/info "connectiong to firebase with " firebase-credentials)
+;;     (->FirebaseBoundary {:firebase-app  firebaseApp
+;;                          :firebase-auth (FirebaseAuth/getInstance)})))
+
+;; (defmethod ig/halt-key! ::firebase
+;;   [_ boundary]
+;;   (->
+;;    boundary
+;;    .firebase
+;;    :firebase-app
+;;    .delete))
+
+;; (def db (delay (f/client-with-creds cred-path)))
 
 ;; (init-firebase-app-local!)
 

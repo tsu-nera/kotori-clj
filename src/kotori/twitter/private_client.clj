@@ -9,13 +9,14 @@
 (def screen-name (env :screen-name))
 (def user-id (env :user-id))
 
-(def auth
-  (-> @fs/db
-      (f/doc (str "kotoris/" user-id))
-      (.get)
-      (.get)
-      (.getData)
-      (get "twitter_auth")))
+;; (def auth
+;;   (-> @fs/db
+;;       (f/doc (str "kotoris/" user-id))
+;;       (.get)
+;;       (.get)
+;;       (.getData)
+;;       (get "twitter_auth")))
+(def auth {})
 
 (def auth-token (get auth "auth_token"))
 (def ct0 (get auth "ct0"))

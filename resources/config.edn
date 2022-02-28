@@ -1,2 +1,3 @@
 ;; for integrant
-{}
+{:kotori.env/env           {}
+ :kotori.firebase/firebase {}}

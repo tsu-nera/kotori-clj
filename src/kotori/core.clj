@@ -42,9 +42,35 @@
                   (fn [_]
                     (runner/tweet-random))))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; (load-config "config.edn")
+;;;;;;;;;;;;;;;;;;;
+;; Design Journal
+;;;;;;;;;;;;;;;;;;;
+
+;; 以下の関数の処理内容を丁寧にみていく.
+;; (defn load-config [config]
+;;   (-> config
+;;       io/resource
+;;       slurp
+;;       ig/read-string
+;;       (doto
+;;           ig/load-namespaces)))
+
+;; io/resourceは ファイルパスを返す.
+;; (io/resource "config.edn")
+;; => #object[java.net.URL 0x2156b557 "file:/home/tsu-nera/repo/kotori-clj/resources/config.edn"]
+
+;; slurpはclojure.coreの関数.
+;; filepathをもらうとファイルの中身を文字列として出力.
+;; (slurp (io/resource "config.edn"))
+;; => ";; for integrant\n{}\n"
+
+;; edn形式のファイルを読む.
+;; (ig/read-string ";; for integrant\n{}\n")
+
+;; ig/load-namespacesでnamespaceも一緒に読み込む.
+;; (doto (ig/read-string "{}") ig/load-namespaces)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; (def status (make-status (pick-random)))
 ;; (def response (private/update-status status))

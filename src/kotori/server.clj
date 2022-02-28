@@ -2,7 +2,7 @@
   (:gen-class)
   (:require
    [kotori.firebase :refer [init-firebase-app-prod!]]
-   [kotori.runner :as runner]
+   [kotori.bot :as bot]
    [ring.adapter.jetty :refer [run-jetty]]
    [ring.middleware.json :refer [wrap-json-params wrap-json-response]]
    [ring.middleware.keyword-params :refer [wrap-keyword-params]]
@@ -15,7 +15,7 @@
   (let [;;params (:params req)
         ;;status (:status params)
         ;;tweet (private/update-status status)
-        tweet (runner/tweet-random)]
+        tweet (bot/tweet-random)]
     (response/response "OK")))
 
 (defn serve [port]

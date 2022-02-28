@@ -1,4 +1,4 @@
-(ns kotori.runner
+(ns kotori.bot
   (:require
    [clojure.walk :refer [keywordize-keys]]
    [kotori.firebase :refer [get-fs]]

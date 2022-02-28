@@ -2,7 +2,7 @@
   (:gen-class)
   (:require
    [chime.core :as chime]
-   [kotori.runner :as runner]
+   [kotori.bot :as bot]
    [taoensso.timbre :as log]
    [integrant.core :as ig]
    [clojure.java.io :as io])
@@ -40,7 +40,7 @@
                    ;;(Duration/ofMinutes 3)
                    )
                   (fn [_]
-                    (runner/tweet-random))))
+                    (bot/tweet-random))))
 
 ;;;;;;;;;;;;;;;;;;;
 ;; Design Journal

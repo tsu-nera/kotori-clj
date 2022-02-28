@@ -18,4 +18,4 @@ pom.xml.asc
 *.log
 /tmp
 
-firebase-adminsdk.json
+resources/private

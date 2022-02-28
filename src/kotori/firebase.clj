@@ -37,10 +37,19 @@
 ;; (defrecord FirebaseBoundary [firebase])
 
 (defmethod ig/init-key ::firebase [_ _]
-  (println "init firebase instance."))
+  (println "init firebase instance.")
+  (init-firebase-app-local!))
 
 (defmethod ig/halt-key! ::firebase [_ _]
   (println "destroy firebase instantce."))
+
+;;;;;;;;;;;;;;;;;;;;;;
+;;  Design Journals
+;;;;;;;;;;;;;;;;;;;;;;
+
+;; TODO 初期化失敗時の処理を検討. i.e. firestore接続不可.
+
+;; ::firebaseはreader macroで :kotori.firebase/firebaseと同義.
 
 ;; (defmethod ig/init-key ::firebase
 ;;   [_ {:keys [env]}]
@@ -68,9 +77,6 @@
 
 ;; (def db (FirestoreClient/getFirestore))
 
-;;;;;;;;;;;;;;;;;;;;;;
-;;  Design Journals
-;;;;;;;;;;;;;;;;;;;;;;
 ;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; https://firebase.google.com/docs/admin/setup/

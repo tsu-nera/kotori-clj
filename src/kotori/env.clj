@@ -7,7 +7,8 @@
   (let [environment (env :env)]
     (println "runnning in " environment)
     {
-     :env environment
+     :env       environment
+     :cred-path "resources/private/dmm-fanza-dev-firebase-adminsdk.json"
      }))
 
 (defmethod ig/halt-key! ::env [_ _]
@@ -15,6 +16,23 @@
   nil)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; environを使って読む環境変数は
+;; integrantを使ったとしてもrefreshで更新されないことに注意.
+;;
+;; ref. https://github.com/weavejester/environ/issues/16
+;; environはprocessの環境変数を読むものであるのでそれは不定であり変更を許さない.
+;; replから動的に変更したいならuser.cljでよろしくやってくれ,
+;; environはその責務は果たさない.
+
+;; environをwrapしたconfigを利用することで,
+;; プロセス環境変数とEDN構成ファイルの2つの抽象のモジュールを作成する.
+;; https://github.com/yogthos/config
+;;
+;; なぜこの抽象がほしいかというと,
+;; Google Cloud Runでは環境変数でないとcredの扱いに困る.
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; (start) で実行される部分
 ;; (defmethod ig/init-key ::env [_ _]

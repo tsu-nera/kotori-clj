@@ -1,51 +1,43 @@
 (ns kotori.firebase
   (:require [clojure.java.io :as io]
-            [integrant.core :as ig]
-            ;; [environ.core :refer [env]]
-            ;; [firestore-clj.core :as f]
-            )
+            [integrant.core :as ig])
   (:import (com.google.auth.oauth2 GoogleCredentials)
            (com.google.firebase FirebaseApp FirebaseOptions)
-           (com.google.firebase.cloud FirestoreClient)
-           ))
+           (com.google.firebase.cloud FirestoreClient)))
 
 ;; (def cred-path (env :credentials-path))
-;;
 ;; (def project-id (env :project-id))
 
-(defn init-firebase-app-local! []
-  (let [cred-path       "resources/private/dmm-fanza-dev-firebase-adminsdk.json"
-        service-account (io/input-stream cred-path)
+(defn init-firebase-app-local!
+  [cred-path]
+  (let [service-account (io/input-stream cred-path)
         credentials     (GoogleCredentials/fromStream service-account)]
     (-> (FirebaseOptions/builder)
         (.setCredentials credentials)
         (.build)
         (FirebaseApp/initializeApp))))
 
-;; (defn init-firebase-app-prod! []
-;;   (let [credentials (GoogleCredentials/getApplicationDefault)]
-;;     (-> (FirebaseOptions/builder)
-;;         (.setCredentials credentials)
-;;         (.setProjectId project-id)
-;;         (.build)
-;;         (FirebaseApp/initializeApp))))
+(defn init-firebase-app-prod!
+  [project-id]
+  (let [credentials (GoogleCredentials/getApplicationDefault)]
+    (-> (FirebaseOptions/builder)
+        (.setCredentials credentials)
+        (.setProjectId project-id)
+        (.build)
+        (FirebaseApp/initializeApp))))
 
-
-;; (defn get-fs []
-;;   (FirestoreClient/getFirestore))
-
-;; (def db (delay (f/default-client project-id)))
-
-;; (defrecord FirebaseBoundary [firebase])
-
-(defmethod ig/init-key ::firebase [_ _]
-  (let [app (init-firebase-app-local!)
+;; FirebaseAppとFirestoreに関わるシングルトンな状態管理は
+;; integrantにおまかせするので自分で状態は持たない.
+(defmethod ig/init-key ::firebase [_ {:keys [env]}]
+  (let [app (init-firebase-app-local! (:cred-path env))
         db  (FirestoreClient/getFirestore app)]
-    (println "init firebaseApp instance.")
+    (println "create FirebaseApp instance.")
     {:app app :db db}))
 
+;; Firesore InterfaceはAutoClosableというInteraceを実装しているようで
+;; 名前からしてFirebaseAppを消せば勝手にFirestoreも消えそうだな.
 (defmethod ig/halt-key! ::firebase [_ {:keys [app]}]
-  (println "destroy firebaseApp instantce.")
+  (println "destroy FirebaseApp instantce.")
   (.delete app))
 
 ;;;;;;;;;;;;;;;;;;;;;;

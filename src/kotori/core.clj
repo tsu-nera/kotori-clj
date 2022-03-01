@@ -18,8 +18,7 @@
       slurp
       ig/read-string
       (doto
-          ig/load-namespaces)
-      ))
+          ig/load-namespaces)))
 
 ;; (def timbre-config {:timestamp-opts {:pattern  "yyyy-MM-dd HH:mm:ss,SSS"
 ;;                                      :locale   (java.util.Locale. "ja_JP")

@@ -12,10 +12,9 @@
   ([config-file]
    (-> config-file
        (kotori-core/load-config)
-       (assoc :kotori.env/env {:development? true :local? true})
+       (assoc :kotori.config/config {:development? true :local? true})
        (constantly)
        (set-prep!))
-   ;; (set-prep! (constantly (kotori-core/load-config config-file)))
    (prep)
    (init)))
 

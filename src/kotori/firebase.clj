@@ -5,9 +5,6 @@
            (com.google.firebase FirebaseApp FirebaseOptions)
            (com.google.firebase.cloud FirestoreClient)))
 
-;; (def cred-path (env :credentials-path))
-;; (def project-id (env :project-id))
-
 (defn init-firebase-app-cred!
   [cred-path]
   (let [service-account (io/input-stream cred-path)

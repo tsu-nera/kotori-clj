@@ -1,13 +1,13 @@
-(ns kotori.env
-  (:require [environ.core :refer [env]]
+(ns kotori.config
+  (:require [config.core :refer [env]]
             [integrant.core :as ig]))
 
-(defmethod ig/init-key ::env [_ values]
-  (println "init environment variables")
+(defmethod ig/init-key ::config [_ values]
+  (println "prepare config variables")
   (merge values {:cred-path "resources/private/dmm-fanza-dev-firebase-adminsdk.json"}))
 
-(defmethod ig/halt-key! ::env [_ _]
-  (println "destroy environment variables")
+(defmethod ig/halt-key! ::config [_ _]
+  (println "destroy config variables")
   nil)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

@@ -1,20 +1,46 @@
 (ns dev
   (:require
-   [kotori.core :as kotori-core]
+   [clojure.tools.namespace.repl :refer [refresh]]
    [integrant.repl :refer [clear halt go init prep set-prep! reset reset-all]]
+   [integrant.repl.state :refer [config system]]
+   [kotori.core :as kotori-core]
    ))
 
 (defn start
   ([]
    (start kotori-core/config-file))
   ([config-file]
-   (set-prep! (constantly (kotori-core/load-config config-file)))
+   (-> config-file
+       (kotori-core/load-config)
+       (assoc :kotori.env/env {:development? true :local? true})
+       (constantly)
+       (set-prep!))
+   ;; (set-prep! (constantly (kotori-core/load-config config-file)))
    (prep)
    (init)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+
+;; (def config-map (kotori-core/load-config "config.edn"))
+;; (def dev-map {:local? true :dev? true})
+;;
+;; (merge config-map dev-map)
+
+;; config-edn
+
+;; (start)
+;; (set-prep! (constantly  {:development? true
+;;                          :local?       true}))
+;; (prep)
+;;
+;; => これで intengrant.repl.state.configにmapが設定される.
+
+;; (set-prep! (constantly (kotori-core/load-config "config.edn")))
+;; config
+
 ;; clojure.core constantly
+
 ;; 定数から関数を作成する. 引数が高階関数の関数を呼び出すときにつかう.
 ;; (constantly (kotori-core/load-config "config.edn"))
 ;;

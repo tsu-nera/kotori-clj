@@ -67,7 +67,10 @@
 
 ;; edn形式のファイルを読む.
 ;; (ig/read-string ";; for integrant\n{}\n")
-
+;;
+;; (ig/read-string (slurp (io/resource "config.edn")))
+;; => {:kotori.env/env {}, :kotori.firebase/firebase {:env {:key :kotori.env/env}}}
+;;
 ;; ig/load-namespacesでnamespaceも一緒に読み込む.
 ;; (doto (ig/read-string "{}") ig/load-namespaces)
 
@@ -82,3 +85,4 @@
 ;; (def status (private/get-status "1477034578875277316"))
 
 ;; status
+;; => #'kotori.core/load-config;; => #'kotori.core/load-config;; => #'kotori.core/load-config

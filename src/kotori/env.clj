@@ -2,14 +2,9 @@
   (:require [environ.core :refer [env]]
             [integrant.core :as ig]))
 
-(defmethod ig/init-key ::env [_ _]
+(defmethod ig/init-key ::env [_ values]
   (println "init environment variables")
-  (let [environment (env :env)]
-    (println "runnning in " environment)
-    {
-     :env       environment
-     :cred-path "resources/private/dmm-fanza-dev-firebase-adminsdk.json"
-     }))
+  (merge values {:cred-path "resources/private/dmm-fanza-dev-firebase-adminsdk.json"}))
 
 (defmethod ig/halt-key! ::env [_ _]
   (println "destroy environment variables")

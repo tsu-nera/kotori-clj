@@ -8,7 +8,7 @@
 ;; (def cred-path (env :credentials-path))
 ;; (def project-id (env :project-id))
 
-(defn init-firebase-app-local!
+(defn init-firebase-app-cred!
   [cred-path]
   (let [service-account (io/input-stream cred-path)
         credentials     (GoogleCredentials/fromStream service-account)]
@@ -17,7 +17,7 @@
         (.build)
         (FirebaseApp/initializeApp))))
 
-(defn init-firebase-app-prod!
+(defn init-firebase-app-default!
   [project-id]
   (let [credentials (GoogleCredentials/getApplicationDefault)]
     (-> (FirebaseOptions/builder)
@@ -26,10 +26,16 @@
         (.build)
         (FirebaseApp/initializeApp))))
 
+(defn init-firebase-app!
+  [config]
+  (if (:local? config)
+    (init-firebase-app-cred! (:cred-path config))
+    (init-firebase-app-default! (:project-id config))))
+
 ;; FirebaseAppとFirestoreに関わるシングルトンな状態管理は
 ;; integrantにおまかせするので自分で状態は持たない.
-(defmethod ig/init-key ::firebase [_ {:keys [env]}]
-  (let [app (init-firebase-app-local! (:cred-path env))
+(defmethod ig/init-key ::firebase [_ {:keys [config]}]
+  (let [app (init-firebase-app! config)
         db  (FirestoreClient/getFirestore app)]
     (println "create FirebaseApp instance.")
     {:app app :db db}))
@@ -46,35 +52,7 @@
 
 ;; TODO 初期化失敗時の処理を検討. i.e. firestore接続不可.
 
-;; ::firebaseはreader macroで :kotori.firebase/firebaseと同義.
-
-;; (defmethod ig/init-key ::firebase
-;;   [_ {:keys [env]}]
-;;   (let [firebase-credentials (:firebase-credentials env)
-;;         firebase-options     (FirebaseOptions/builder)
-;;         firebaseApp          (-> firebase-options
-;;                                  (.setCredentials firebase-credentials)
-;;                                  .build
-;;                                  FirebaseApp/initializeApp)]
-;;     (timbre/info "connectiong to firebase with " firebase-credentials)
-;;     (->FirebaseBoundary {:firebase-app  firebaseApp
-;;                          :firebase-auth (FirebaseAuth/getInstance)})))
-
-;; (defmethod ig/halt-key! ::firebase
-;;   [_ boundary]
-;;   (->
-;;    boundary
-;;    .firebase
-;;    :firebase-app
-;;    .delete))
-
-;; (def db (delay (f/client-with-creds cred-path)))
-
-;; (init-firebase-app-local!)
-
-;; (def db (FirestoreClient/getFirestore))
-
-;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; https://firebase.google.com/docs/admin/setup/
 ;; FirebaseOptions options = FirebaseOptions.builder()

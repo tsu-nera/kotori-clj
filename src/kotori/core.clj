@@ -1,13 +1,14 @@
 (ns kotori.core
   (:gen-class)
   (:require
-   [chime.core :as chime]
-   [kotori.bot :as bot]
-   [taoensso.timbre :as log]
+   ;; [chime.core :as chime]
+   ;; [kotori.bot :as bot]
+   ;; [taoensso.timbre :as log]
    [integrant.core :as ig]
    [clojure.java.io :as io])
-  (:import
-   (java.time Duration Instant)))
+  ;; (:import
+  ;;  (java.time Duration Instant))
+  )
 
 (def config-file "config.edn")
 
@@ -17,30 +18,31 @@
       slurp
       ig/read-string
       (doto
-          ig/load-namespaces)))
+          ig/load-namespaces)
+      ))
 
-(def timbre-config {:timestamp-opts {:pattern  "yyyy-MM-dd HH:mm:ss,SSS"
-                                     :locale   (java.util.Locale. "ja_JP")
-                                     :tiemzone (java.util.TimeZone/getTimeZone "Asia/Tokyo")}})
+;; (def timbre-config {:timestamp-opts {:pattern  "yyyy-MM-dd HH:mm:ss,SSS"
+;;                                      :locale   (java.util.Locale. "ja_JP")
+;;                                      :tiemzone (java.util.TimeZone/getTimeZone "Asia/Tokyo")}})
 
 ;; (init-firebase-app-local!)
 
-(defn -main [&args]
-  (-> config-file
-      load-config
-      ig/init))
+;; (defn -main [&args]
+;;   (-> config-file
+;;       load-config
+;;       ig/init))
 
-(defn app [& args]
-  (println "======================================")
-  (println "Started up Twitter Bot.")
-  (log/merge-config! timbre-config)
-  (chime/chime-at (chime/periodic-seq
-                   (Instant/now)
-                   (Duration/ofHours 1)
-                   ;;(Duration/ofMinutes 3)
-                   )
-                  (fn [_]
-                    (bot/tweet-random))))
+;; (defn app [& args]
+;;   (println "======================================")
+;;   (println "Started up Twitter Bot.")
+;;   (log/merge-config! timbre-config)
+;;   (chime/chime-at (chime/periodic-seq
+;;                    (Instant/now)
+;;                    (Duration/ofHours 1)
+;;                    ;;(Duration/ofMinutes 3)
+;;                    )
+;;                   (fn [_]
+;;                     (bot/tweet-random))))
 
 ;;;;;;;;;;;;;;;;;;;
 ;; Design Journal

@@ -1,23 +1,24 @@
 (ns kotori.bot
   (:require
    [clojure.walk :refer [keywordize-keys]]
-   [kotori.firebase :refer [get-fs]]
-   [kotori.meigen :refer [meigens]]
+   [integrant.core :as ig]
+   ;; [kotori.firebase :refer [get-fs]]
+   ;; [kotori.meigen :refer [meigens]]
    [kotori.twitter.private-client :as private]
    [taoensso.timbre :as log]))
 
-(defn get-meigens []
-  (let [coll_meigens (.collection (get-fs) "sources/source_0001/meigens")
-        query        (.get coll_meigens)]
-    (->>
-     (.getDocuments @query)
-     (map #(.getData %)))))
+;; (defn get-meigens []
+;;   (let [coll_meigens (.collection (get-fs) "sources/source_0001/meigens")
+;;         query        (.get coll_meigens)]
+;;     (->>
+;;      (.getDocuments @query)
+;;      (map #(.getData %)))))
 
-(defn pick-random []
-  (let [meigens (get-meigens)]
-    (->> (rand-nth meigens)
-         (into {})
-         (keywordize-keys))))
+;; (defn pick-random []
+;;   (let [meigens (get-meigens)]
+;;     (->> (rand-nth meigens)
+;;          (into {})
+;;          (keywordize-keys))))
 
 (defn make-status [data]
   (let [{content :content, author :author} data]
@@ -32,28 +33,34 @@
      "created_at" created_at
      "updated_at" created_at}))
 
-(defn tweet [status]
-  (let [result    (private/update-status status)
-        data      (make-fs-tweet result)
-        user_id   (:id_str (:user result))
-        status_id (:id_str result)]
-    (try
-      (-> (get-fs)
-          (.collection (str "tweets" "/" user_id "/posts" ))
-          (.document status_id)
-          (.set data))
-      (log/info (str "post tweet completed. status_id=" status_id))
-      (catch Exception e (log/error "post tweet Failed." (.getMessage e))))))
+;; (defn tweet [status]
+;;   (let [result    (private/update-status status)
+;;         data      (make-fs-tweet result)
+;;         user_id   (:id_str (:user result))
+;;         status_id (:id_str result)]
+;;     (try
+;;       (-> (get-fs)
+;;           (.collection (str "tweets" "/" user_id "/posts" ))
+;;           (.document status_id)
+;;           (.set data))
+;;       (log/info (str "post tweet completed. status_id=" status_id))
+;;       (catch Exception e (log/error "post tweet Failed." (.getMessage e))))))
 
-(defn tweet-random []
-  (let [data                               (pick-random)
-        {content :content, author :author} data
-        status                             (make-status data)]
-    (tweet status)))
+;; (defn tweet-random []
+;;   (let [data                               (pick-random)
+;;         {content :content, author :author} data
+;;         status                             (make-status data)]
+;;     (tweet status)))
 
-(defn -main [& args]
-  (tweet-random)
-  0)
+;; (defn -main [& args]
+;;   (tweet-random)
+;;   0)
+
+(defmethod ig/init-key ::bot [_ {:keys [db]}]
+  nil)
+
+(defmethod ig/halt-key! ::bot [_ _]
+  nil)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Design Journals

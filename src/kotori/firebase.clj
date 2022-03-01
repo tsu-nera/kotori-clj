@@ -1,46 +1,52 @@
 (ns kotori.firebase
   (:require [clojure.java.io :as io]
             [integrant.core :as ig]
-            [environ.core :refer [env]]
-            [firestore-clj.core :as f])
+            ;; [environ.core :refer [env]]
+            ;; [firestore-clj.core :as f]
+            )
   (:import (com.google.auth.oauth2 GoogleCredentials)
            (com.google.firebase FirebaseApp FirebaseOptions)
            (com.google.firebase.cloud FirestoreClient)
            ))
 
-(def cred-path (env :credentials-path))
-(def project-id (env :project-id))
+;; (def cred-path (env :credentials-path))
+;;
+;; (def project-id (env :project-id))
 
 (defn init-firebase-app-local! []
-  (let [service-account (io/input-stream cred-path)
+  (let [cred-path       "resources/private/dmm-fanza-dev-firebase-adminsdk.json"
+        service-account (io/input-stream cred-path)
         credentials     (GoogleCredentials/fromStream service-account)]
     (-> (FirebaseOptions/builder)
         (.setCredentials credentials)
         (.build)
         (FirebaseApp/initializeApp))))
 
-(defn init-firebase-app-prod! []
-  (let [credentials (GoogleCredentials/getApplicationDefault)]
-    (-> (FirebaseOptions/builder)
-        (.setCredentials credentials)
-        (.setProjectId project-id)
-        (.build)
-        (FirebaseApp/initializeApp))))
+;; (defn init-firebase-app-prod! []
+;;   (let [credentials (GoogleCredentials/getApplicationDefault)]
+;;     (-> (FirebaseOptions/builder)
+;;         (.setCredentials credentials)
+;;         (.setProjectId project-id)
+;;         (.build)
+;;         (FirebaseApp/initializeApp))))
 
 
-(defn get-fs []
-  (FirestoreClient/getFirestore))
+;; (defn get-fs []
+;;   (FirestoreClient/getFirestore))
 
-(def db (delay (f/default-client project-id)))
+;; (def db (delay (f/default-client project-id)))
 
 ;; (defrecord FirebaseBoundary [firebase])
 
 (defmethod ig/init-key ::firebase [_ _]
-  (println "init firebase instance.")
-  (init-firebase-app-local!))
+  (let [app (init-firebase-app-local!)
+        db  (FirestoreClient/getFirestore app)]
+    (println "init firebaseApp instance.")
+    {:app app :db db}))
 
-(defmethod ig/halt-key! ::firebase [_ _]
-  (println "destroy firebase instantce."))
+(defmethod ig/halt-key! ::firebase [_ {:keys [app]}]
+  (println "destroy firebaseApp instantce.")
+  (.delete app))
 
 ;;;;;;;;;;;;;;;;;;;;;;
 ;;  Design Journals

@@ -1,7 +1,8 @@
 (ns kotori.meigen
   (:require
    [clojure.walk :refer [stringify-keys]]
-   [kotori.firebase :refer [get-fs]]))
+   ;;   [kotori.firebase :refer [get-fs]]
+   ))
 
 (def meigens
   [
@@ -338,10 +339,10 @@
 
 (def fs-coll-path "sources/source_0001/meigens")
 
-(defn add-to-firestore [data]
-  (let [fs-coll-meigens (.collection (get-fs) fs-coll-path)
-        java-map        (stringify-keys data)]
-    (.add fs-coll-meigens java-map)))
+;; (defn add-to-firestore [data]
+;;   (let [fs-coll-meigens (.collection (get-fs) fs-coll-path)
+;;         java-map        (stringify-keys data)]
+;;     (.add fs-coll-meigens java-map)))
 
 ;; (map add-to-firestore meigens)
 

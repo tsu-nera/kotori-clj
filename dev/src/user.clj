@@ -1,7 +1,7 @@
 (ns user)
 
-(defn dev []
-  (require 'dev)
-  (in-ns 'dev)
-  (println ":switch to the development namespace")
+(defn local []
+  (require 'local)
+  (in-ns 'local)
+  (println ":switch to the local development namespace")
   :loaded)

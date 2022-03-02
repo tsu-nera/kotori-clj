@@ -40,7 +40,7 @@
   ;; clojure -A:dev
   ;; .dir-locals.elのcider-clojure-cli-aliasesにdevを指定することで
   ;; cider-jack-inでもextra-deps/pathsを反映させる.
-  :dev      {:extra-paths ["dev/src"]
+  :local    {:extra-paths ["dev/src"]
              :extra-deps  {integrant/repl {:mvn/version "0.3.2"}}}
   ;; clojure -M:outdated (--upgrade --force)
   :outdated {:extra-deps {com.github.liquidz/antq {:mvn/version "RELEASE"}}

@@ -1,6 +1,7 @@
 ;; configuration maps for integrant
 {
- :kotori.config/config     {}
- :kotori.firebase/firebase {:config #ig/ref :kotori.config/config}
+ :kotori.firebase/firebase {:config {}}
+ ;; :kotori.config/config     {}
+ ;; :kotori.firebase/firebase {:config #ig/ref :kotori.config/config}
  ;;:kotori.bot/bot           {:db #ig/ref :kotori.firebase/firebase}
  }

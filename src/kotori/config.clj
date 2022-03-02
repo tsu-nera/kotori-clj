@@ -1,14 +1,33 @@
 (ns kotori.config
-  (:require [config.core :refer [env]]
-            [integrant.core :as ig]))
+  (:require [config.core :as config]
+            [integrant.core :as ig]
+            [clojure.java.io :as io]))
 
 (defmethod ig/init-key ::config [_ values]
   (println "prepare config variables")
-  (merge values {:cred-path "resources/private/dmm-fanza-dev-firebase-adminsdk.json"}))
+  ;;(merge values {:cred-path "resources/private/dev/credentials.json"})
+  (config/reload-env)
+  )
 
 (defmethod ig/halt-key! ::config [_ _]
   (println "destroy config variables")
   nil)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; (require '[clojure.java.io :as io])
+
+;; (io/file "config.edn")
+;; => #object[java.io.File 0x71fda6e1 "config.edn"]
+;; (io/resource "config.edn")
+;; (io/resource "credentials.json")
+;; => #object[java.net.URL 0x7f3b3463 "file:/home/tsu-nera/repo/kotori-clj/resources/config.edn"]
+;; (or (io/resource "config.edn") (io/file "config.edn"))
+;; => #object[java.net.URL 0x4fee40d2 "file:/home/tsu-nera/repo/kotori-clj/resources/config.edn"]
+;;
+
+;; (io/resource "private/dev/config.edn")
+;; (io/resource "private/dev/credentials.json")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 

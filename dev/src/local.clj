@@ -1,25 +1,32 @@
-(ns dev
+(ns local
   (:require
    [clojure.tools.namespace.repl :refer [refresh]]
    [integrant.repl :refer [clear halt go init prep set-prep! reset reset-all]]
    [integrant.repl.state :refer [config system]]
-   [kotori.core :as kotori-core]
-   ))
+   [kotori.core :as kotori-core]))
 
-(defn start
-  ([]
-   (start kotori-core/config-file))
-  ([config-file]
-   (-> config-file
-       (kotori-core/load-config)
-       (assoc :kotori.config/config {:development? true :local? true})
-       (constantly)
-       (set-prep!))
-   (prep)
-   (init)))
+(defn -start [config]
+  (-> kotori-core/config-file
+      (kotori-core/load-config)
+      (assoc :kotori.firebase/firebase {:config config})
+      (constantly)
+      (set-prep!))
+  (prep)
+  (init))
+
+(defn dev []
+  (let [config {:local?    true
+                :env       :development
+                :cred-path "resources/private/dev/credentials.json"}]
+    (-start config)))
+
+(defn prod []
+  (let [config {:local?    true
+                :env       :production
+                :cred-path "resources/private/prod/credentials.json"}]
+    (-start config)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
 
 ;; (def config-map (kotori-core/load-config "config.edn"))
 ;; (def dev-map {:local? true :dev? true})

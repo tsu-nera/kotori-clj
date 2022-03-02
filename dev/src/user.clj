@@ -3,5 +3,5 @@
 (defn local []
   (require 'local)
   (in-ns 'local)
-  (println ":switch to the local development namespace")
+  (println ":switch to the local namespace")
   :loaded)

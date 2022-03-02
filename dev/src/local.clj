@@ -5,14 +5,16 @@
    [integrant.repl.state :refer [config system]]
    [kotori.core :as kotori-core]))
 
-(defn -start [config]
+(defn -start
+  [config]
   (-> kotori-core/config-file
       (kotori-core/load-config)
       (assoc :kotori.firebase/firebase {:config config})
       (constantly)
       (set-prep!))
   (prep)
-  (init))
+  (init)
+  :started)
 
 (defn dev []
   (let [config {:local?    true
@@ -35,8 +37,7 @@
 
 ;; config-edn
 
-;; (start)
-;; (set-prep! (constantly  {:development? true
+;; (start);; (set-prep! (constantly  {:development? true
 ;;                          :local?       true}))
 ;; (prep)
 ;;

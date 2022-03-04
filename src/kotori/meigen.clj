@@ -1,5 +1,8 @@
 (ns kotori.meigen
   (:require
+   [integrant.core :as ig]
+   [firestore-clj.core :as f]
+   [clojure.walk :refer [keywordize-keys]]
    [clojure.walk :refer [stringify-keys]]
    ;;   [kotori.firebase :refer [get-fs]]
    ))
@@ -33,8 +36,7 @@
     :author "野口英世"
     }
    {
-    :content "いちばんいけないのはじぶんなんかだめだと思いこむことだよ。"
-    :author  "野比のび太"
+    :content "いちばんいけないのはじぶんなんかだめだと思いこむことだよ。" :author "野比のび太"
     }
    {
     :content
@@ -337,7 +339,125 @@
    ]
   )
 
-(def fs-coll-path "sources/source_0001/meigens")
+(defonce coll-meigens (atom nil))
+(defonce coll-ids (atom []))
+(def coll-path "sources/source_0001/meigens")
+
+(defn get-coll-ids []
+  (let [docs (.listDocuments @coll-meigens)]
+    (map #(.getId %) docs)))
+
+(defn pick-random []
+  (let [id (rand-nth @coll-ids)]
+    (-> @coll-meigens
+        (f/doc id)
+        (.get)
+        (deref)
+        (.getData)
+        (as-> x (into {} x))
+        (keywordize-keys))))
+
+
+(defmethod ig/init-key ::meigen [_ {:keys [db]}]
+  (reset! coll-meigens (-> db
+                           (:db)
+                           (f/coll coll-path)))
+  (reset! coll-ids (get-coll-ids))
+  (println "meigen initalized")
+  :initalized)
+
+(defmethod ig/halt-key! ::meigen [_ _]
+  (println "meigen terminated")
+  :terminated)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(comment
+  ;; 今の実装だと, firestoreのIDがわからないため,
+  ;; とりあえず全てのデータを取得してその中でランダムにindexを指定している.
+  ;; firestoreのidはfirestoreの機能を利用して自動採番している.
+  ;;
+  ;; auto generated idは doc().idで参照するもので, documentのメンバとしては保持しないと.
+  ;; https://www.reddit.com/r/Firebase/comments/dpnyln/how_to_create_an_autoid_inside_a_firestore/
+  ;;
+  ;; やりたいことはid指定でドキュメントを選択したいが, ローカルではidを保持したくない.
+  ;; id listのみを取得は可能か？
+  ;; まあもしくは初期化でいったん全部取得したらid listだけを状態で持っておくかな.
+  ;; 決められたデータ・セットからランダムにpickするだけならそこまで大きなデータを扱うわけではないし.
+  ;;
+  ;; もしくは自分で採番するか. データの削除で欠番がめんどくさそうではある.
+  ;; まあ時間かけてもしょうがないから簡単に片付けるか.
+  ;;
+  ;; お, .listDocumentsという関数でdocのリストが取得できた.
+  ;; https://googleapis.dev/java/google-cloud-firestore/latest/com/google/cloud/firestore/CollectionReference.html
+  ;;
+  ;; やはりエラーメッセージとドキュメントをみるのが一番いいな.
+
+  ;; (defn get-meigens []
+  ;;   (let [query (.get @coll-meigens)]
+  ;;     (->>
+  ;;      (.getDocuments @query)
+  ;;      (map #(.getData %)))))
+
+  (defn get-coll-ids [coll]
+    (let [docs (.listDocuments @coll)]
+      (map #(.getId %) docs)))
+
+  (reset! coll-ids (get-coll-ids))
+  ;; 出来た,  pick-randomはindex指定に改造するぞ.
+
+  (defn pick-random []
+    (let [id (rand-nth @coll-ids)]
+      (-> @coll-meigens
+          (f/doc id)
+          (.get)
+          (deref)
+          (.getData))))
+
+  ;; (def my-delay (delay (println "test")))
+  ;; (force my-delay)
+  ;; (def my-future (future (println "test")))
+  ;; (pick-random)
+
+  (def docref (-> @coll-meigens
+                  (f/doc (rand-nth @coll-ids))
+                  (.get)))
+
+
+  ;; (def data (let [id (rand-nth @coll-ids)]
+  ;;             (-> @coll-meigens
+  ;;                 (f/doc id)
+  ;;                 (.get)
+  ;;                 (deref)
+  ;;                 (.getData))))
+  ;; (deref doc)
+  ;; (.getData doc)
+ ;;;
+  )
+
+(comment
+  (defonce firestore (atom nil))
+  firestore
+  @firestore
+
+  (def foo (atom 0))
+  foo
+  @foo
+  (reset! foo 2)
+  (swap! foo (fn [_] (+ 1 1)))
+
+  (def bar (atom 1))
+  (defonce bar (atom 0))
+  bar
+  @bar
+  )
+
+(comment
+  firestore
+  (require '[firestore-clj.core :as f])
+  (f/coll @firestore fs-coll-path)
+  )
+
 
 ;; (defn add-to-firestore [data]
 ;;   (let [fs-coll-meigens (.collection (get-fs) fs-coll-path)
@@ -346,7 +466,7 @@
 
 ;; (map add-to-firestore meigens)
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; (get-fs)
 

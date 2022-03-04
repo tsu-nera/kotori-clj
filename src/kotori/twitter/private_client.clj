@@ -12,7 +12,7 @@
 
   ;; (def auth
   ;;   (-> @fs/db
-  ;;       (f/doc (str "kotoris/" user-id))
+  ;;      (f/doc (str "kotoris/" user-id))
   ;;       (.get)
   ;;       (.get)
   ;;       (.getData)

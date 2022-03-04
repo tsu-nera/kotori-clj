@@ -1,5 +1,6 @@
 (ns local
   (:require
+   [clojure.repl :refer :all]
    [clojure.tools.namespace.repl :refer [refresh]]
    [integrant.repl :refer [clear halt go init prep set-prep! reset reset-all]]
    [integrant.repl.state :refer [config system]]
@@ -44,7 +45,6 @@
 ;; => これで intengrant.repl.state.configにmapが設定される.
 
 ;; (set-prep! (constantly (kotori-core/load-config "config.edn")))
-;; config
 
 ;; clojure.core constantly
 

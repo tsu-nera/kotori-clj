@@ -45,9 +45,26 @@
         (get (keyword status-id)))))
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; REPL Experiments
+;;;;;;;;;;;;;;;;;;;;;
+;; Design Journals
+;;;;;;;;;;;;;;;;;;;;;
 
+(comment
+  ;; (def response (get-statuses 1477034578875277316))
+  ;; response
+  ;; (-> response
+  ;;     :body
+  ;;     (json/parse-string true)
+  ;;     :globalObjects
+  ;;     :tweets
+  ;;     :1477034578875277316
+  ;;     )
+
+  ;; (def status (get-status "1477034578875277316"))
+  ;; status
+  )
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; (def response (get-statuses 1477034578875277316))
 ;; (-> response
 ;;     :body

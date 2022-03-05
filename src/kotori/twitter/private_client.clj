@@ -6,6 +6,22 @@
    [firestore-clj.core :as f]
    [kotori.firebase :as fs]))
 
+(def guest-bearer-token
+  "AAAAAAAAAAAAAAAAAAAAANRILgAAAAAAnNwIzUejRCOuH5E6I8xnZz4puTs%3D1Zv7ttfk8LF81IUq16cHjhLTvJu4FA33AGWWjCpTnA")
+(def user-agent "Mozilla/5.0 (X11; Linux x86_64; rv:94.0) Gecko/20100101 Firefox/94.0")
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(comment
+
+  (defn screenname->userid
+    [name] "")
+
+  (screenname->userid "test")
+
+  )
+
+
 (comment
   (def screen-name (env :screen-name))
   (def user-id (env :user-id))
@@ -29,9 +45,6 @@
                      :proxy-pass (env :proxy-pass)}
                     {}))
 
-  (def guest-bearer-token
-    "AAAAAAAAAAAAAAAAAAAAANRILgAAAAAAnNwIzUejRCOuH5E6I8xnZz4puTs%3D1Zv7ttfk8LF81IUq16cHjhLTvJu4FA33AGWWjCpTnA")
-  (def user-agent "Mozilla/5.0 (X11; Linux x86_64; rv:94.0) Gecko/20100101 Firefox/94.0")
 
   (def cookie (str "auth_token=" auth-token "; ct0=" ct0))
 

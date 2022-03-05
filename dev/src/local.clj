@@ -1,16 +1,35 @@
 (ns local
   (:require
    [clojure.repl :refer :all]
+   [clojure.edn :as edn]
    [clojure.tools.namespace.repl :refer [refresh]]
-   [integrant.repl :refer [clear halt go init prep set-prep! reset reset-all]]
+   [integrant.repl :refer [clear halt go init prep set-prep! reset reset-all suspend resume]]
    [integrant.repl.state :refer [config system]]
-   [kotori.core :as kotori-core]))
+   [kotori.core :as kotori-core]
+   ;; [kotori.firebase :as fs]
+   [clojure.java.io :as io]))
 
-(defn -start
-  [config]
+(def screen-name (atom ""))
+(def user-id (atom ""))
+
+(defn set-account [name id]
+  (reset! screen-name name)
+  (reset! user-id id))
+
+(def config-dev "resources/private/dev/config.edn")
+
+(defn- load-config [config]
+  (-> config
+      io/file
+      slurp
+      edn/read-string))
+
+(defn- start
+  [firebase-config kotori-config]
   (-> kotori-core/config-file
       (kotori-core/load-config)
-      (assoc :kotori.firebase/firebase {:config config})
+      (assoc-in [:kotori.firebase/app :config] firebase-config)
+      (assoc-in [:kotori.kotori/app :config] kotori-config)
       (constantly)
       (set-prep!))
   (prep)
@@ -18,18 +37,43 @@
   :started)
 
 (defn dev []
-  (let [config {:local?    true
-                :env       :development
-                :cred-path "resources/private/dev/credentials.json"}]
-    (-start config)))
+  (let [firebase-config {:local?    true
+                         :env       :development
+                         :cred-path "resources/private/dev/credentials.json"}
+        kotori-config   (load-config config-dev)]
+    (start firebase-config kotori-config)))
 
 (defn prod []
   (let [config {:local?    true
                 :env       :production
                 :cred-path "resources/private/prod/credentials.json"}]
-    (-start config)))
+    (start config)))
+
+(defn restart []
+  (clear)
+  (reset-all))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(comment
+  (fs/init-firebase-app-cred! "resources/private/dev/credentials.json")
+  )
+
+(comment
+  (def config-dev "resources/private/dev/config.edn")
+  (require '[clojure.java.io :as io])
+  (io/resource config-dev)
+
+  (require '[clojure.edn :as edn])
+
+  (defn load-config [config]
+    (-> config
+        io/file
+        slurp
+        edn/read-string))
+
+  (load-config config-dev)
+  )
+
 
 ;; (def config-map (kotori-core/load-config "config.edn"))
 ;; (def dev-map {:local? true :dev? true})

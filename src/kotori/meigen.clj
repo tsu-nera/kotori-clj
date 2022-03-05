@@ -360,14 +360,11 @@
 
 (defmethod ig/init-key ::meigen [_ {:keys [db]}]
   (reset! coll-meigens (-> db
-                           (:db)
                            (f/coll coll-path)))
   (reset! coll-ids (get-coll-ids))
-  (println "meigen initalized")
   :initalized)
 
 (defmethod ig/halt-key! ::meigen [_ _]
-  (println "meigen terminated")
   :terminated)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

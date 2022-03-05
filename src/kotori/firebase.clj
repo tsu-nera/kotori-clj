@@ -23,26 +23,37 @@
         (.build)
         (FirebaseApp/initializeApp))))
 
-(defn init-firebase-app!
+(defn create-firebase-app!
   [config]
   (if (:local? config)
     (init-firebase-app-cred! (:cred-path config))
     (init-firebase-app-default! (:project-id config))))
 
-;; FirebaseAppとFirestoreに関わるシングルトンな状態管理は
-;; integrantにおまかせするので自分で状態は持たない.
-(defmethod ig/init-key ::firebase [_ {:keys [config]}]
-  (let [app (init-firebase-app! config)
-        db  (FirestoreClient/getFirestore app)
-        env (:env config)]
-    (println "create FirebaseApp instance for" env)
-    {:app app :db db :env env}))
+;; (destroy-firebase-app!)
+(defn destroy-firebase-app! []
+  (.delete (FirebaseApp/getInstance)))
+
+(defmethod ig/init-key ::app [_ {:keys [config]}]
+  (println "create FirebaseApp instance for " (:env config))
+  (create-firebase-app! config))
 
 ;; Firesore InterfaceはAutoClosableというInteraceを実装しているようで
 ;; 名前からしてFirebaseAppを消せば勝手にFirestoreも消えそうだな.
-(defmethod ig/halt-key! ::firebase [_ {:keys [app env]}]
-  (println "destroy FirebaseApp instantce for" env)
+(defmethod ig/halt-key! ::app [_ app]
+  (println "destroy FirebaseApp instance")
   (.delete app))
+
+;; FirebaseAppとFirestoreに関わるシングルトンな状態管理は
+;; integrantにおまかせするので自分で状態は持たない.
+(defmethod ig/init-key ::firestore [_ _]
+  (println "create Firestore instance")
+  (FirestoreClient/getFirestore))
+
+;; Firesore InterfaceはAutoClosableというInteraceを実装しているようで
+;; 名前からしてFirebaseAppを消せば勝手にFirestoreも消えそうだな.
+;; (defmethod ig/halt-key! ::db [_ _]
+;;   (println "destroy FirebaseApp instance")
+;;   (.delete (FirebaseApp/getInstance)))
 
 ;;;;;;;;;;;;;;;;;;;;;;
 ;;  Design Journals

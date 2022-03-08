@@ -26,24 +26,50 @@
                      :user-agent    user-agent
                      :x-guest-token @guest-token}})
 
-(defn get-statuses-url [status-id]
-  (str "https://api.twitter.com/2/timeline/conversation/"
-       status-id
-       ".json?include_reply_count=1&send_error_codes=true&count=20"))
+(defn get-user
+  ([name]
+   (let [url  (str "https://api.twitter.com/1.1/users/show.json?screen_name=" name)
+         resp (client/get url guest-headers)]
+     (-> resp
+         :body
+         (json/parse-string true)
+         (dissoc :status)))))
 
-(defn get-statuses [status-id]
-  (let [url (get-statuses-url status-id)]
-    (client/get url guest-headers)))
 
-(defn get-status [status-id]
-  (let [response (get-statuses status-id)]
-    (-> response
-        :body
-        (json/parse-string true)
-        :globalObjects
-        :tweets
-        (get (keyword status-id)))))
+(defn resolve-user-id
+  [name]
+  (:id_str (get-user name)))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(comment
+
+  (def user (get-user "richhickey"))
+  #_(resolve-user-id "richhickey")
+  #_(def user (get-user "46130870"))
+  )
+
+;; 一旦封印. private.cljといい感じに揃えたい.
+(comment
+
+  (defn get-statuses-url [status-id]
+    (str "https://api.twitter.com/2/timeline/conversation/"
+         status-id
+         ".json?include_reply_count=1&send_error_codes=true&count=20"))
+
+  (defn get-statuses [status-id]
+    (let [url (get-statuses-url status-id)]
+      (client/get url guest-headers)))
+
+  (defn get-status [status-id]
+    (let [response (get-statuses status-id)]
+      (-> response
+          :body
+          (json/parse-string true)
+          :globalObjects
+          :tweets
+          (get (keyword status-id)))))
+  )
 
 ;;;;;;;;;;;;;;;;;;;;;
 ;; Design Journals

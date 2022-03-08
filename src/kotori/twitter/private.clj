@@ -59,10 +59,71 @@
          (parse-body)
          (dissoc :status)))))
 
+(defn create-tweet
+  ([creds text]
+   (create-tweet creds {} text))
+  ([creds proxy text]
+   (let [url     "https://twitter.com/i/api/1.1/statuses/update.json"
+         data    {:form-params {:status text}}
+         headers (creds->headers creds)
+         params  (merge data headers proxy options)
+         resp    (client/post url params)]
+     (-> resp
+         (parse-body)
+         (dissoc :user)))))
+
+
+(defn delete-tweet
+  ([creds id]
+   (create-tweet creds {} id))
+  ([creds proxy id]
+   (let [url     "https://twitter.com/i/api/1.1/statuses/destroy.json"
+         data    {:form-params {:id id}}
+         headers (creds->headers creds)
+         params  (merge data headers proxy options)
+         resp    (client/post url params)]
+     (-> resp
+         (parse-body)
+         (dissoc :user)))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; 関数の名前はtweepy参考にしようかな.
 ;; https://docs.tweepy.org/en/stable/client.html
+
+(comment
+  ;; https://docs.tweepy.org/en/stable/client.html#tweepy.Client.create_tweet
+  ;; tweepyは create_tweetになってる. statusという言葉はつかっていない.
+  ;; これに従おうか.
+  ;;
+  ;;
+
+  (defn delete-tweet
+    ([creds id]
+     (create-tweet creds {} id))
+    ([creds proxy id]
+     (let [url     "https://twitter.com/i/api/1.1/statuses/destroy.json"
+           data    {:form-params {:id id}}
+           headers (creds->headers creds)
+           params  (merge data headers proxy options)
+           resp    (client/post url params)]
+       (-> resp
+           (parse-body)))))
+
+
+  (defn create-tweet
+    ([creds text]
+     (create-tweet creds {} text))
+    ([creds proxy text]
+     (let [url     "https://twitter.com/i/api/1.1/statuses/update.json"
+           data    {:form-params {:status text}}
+           headers (creds->headers creds)
+           params  (merge data headers proxy options)
+           resp    (client/post url params)]
+       (-> resp
+           :body
+           (json/parse-string true)))
+     ))
+  )
 
 
 (comment
@@ -93,17 +154,6 @@
           :tweets
           (get (keyword status-id)))))
 
-  )
-
-(comment
-  (defn update-status [status]
-    (let [url      "https://twitter.com/i/api/1.1/statuses/update.json"
-          data     {:form-params {:status status}}
-          params   (merge data headers proxies options)
-          response (client/post url params)]
-      (-> response
-          :body
-          (json/parse-string true))))
   )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

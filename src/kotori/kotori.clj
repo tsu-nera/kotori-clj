@@ -39,7 +39,6 @@
 (defmethod ig/init-key ::app [_ {:keys [config db]}]
   (let [user-id   (:user-id config)
         coll-path (id->coll-path user-id)]
-    (def db-tmp db)
     (reset! doc (-> db
                     (fs/doc coll-path)
                     (.get)
@@ -82,6 +81,10 @@
 
   (def tweet (private/get-tweet @twitter-auth @proxy "1500694005259980800"))
   (def user (private/get-user @twitter-auth @proxy "46130870"))
+  (def resp (private/create-tweet @twitter-auth @proxy "test"))
+
+  (def status-id (:id_str resp))
+  (def resp (private/delete-tweet @twitter-auth @proxy status-id))
   )
 
 

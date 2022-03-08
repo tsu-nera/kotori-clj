@@ -4,7 +4,7 @@
    [integrant.core :as ig]
    ;; [kotori.firebase :refer [get-fs]]
    ;; [kotori.meigen :refer [meigens]]
-   [kotori.twitter.private-client :as private]
+   [kotori.twitter.private :as private]
    [taoensso.timbre :as log]))
 
 ;; (defn get-meigens []

@@ -6,15 +6,19 @@
    [integrant.repl :refer [clear halt go init prep set-prep! reset reset-all suspend resume]]
    [integrant.repl.state :refer [config system]]
    [kotori.core :as kotori-core]
+   [kotori.twitter.guest :as guest]
    ;; [kotori.firebase :as fs]
    [clojure.java.io :as io]))
 
 (def screen-name (atom ""))
 (def user-id (atom ""))
 
-(defn set-account [name id]
+
+(defn set-account! [name]
   (reset! screen-name name)
-  (reset! user-id id))
+  (reset! user-id (guest/resolve-user-id name))
+  (println "screen_name: " @screen-name, ",user_id: " @user-id))
+
 
 (def config-dev "resources/private/dev/config.edn")
 

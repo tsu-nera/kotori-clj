@@ -7,18 +7,23 @@
    [integrant.repl.state :refer [config system]]
    [kotori.core :as kotori-core]
    [kotori.twitter.guest :as guest]
-   ;; [kotori.firebase :as fs]
    [clojure.java.io :as io]))
 
 (def screen-name (atom ""))
 (def user-id (atom ""))
 
 
-(defn set-account! [name]
-  (reset! screen-name name)
-  (reset! user-id (guest/resolve-user-id name))
-  (println "screen_name: " @screen-name, ",user_id: " @user-id))
+(defn set-account!
+  ([name]
+   (let [id (guest/resolve-user-id name)]
+     (set-account! name id)))
+  ([name id]
+   (println "update: screen_name="name", user_id="id)
+   (reset! screen-name name)
+   (reset! user-id id)))
 
+(defn get-account []
+  {:name @screen-name :id @user-id})
 
 (def config-dev "resources/private/dev/config.edn")
 
@@ -58,6 +63,12 @@
   (reset-all))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(comment
+  (let [{:keys [screen-name user-id]} (load-config config-dev)]
+    (set-account! screen-name))
+  )
+
 (comment
   (fs/init-firebase-app-cred! "resources/private/dev/credentials.json")
   )

@@ -2,7 +2,6 @@
   (:require
    [cheshire.core :as json]
    [clj-http.client :as client]
-   ;; [environ.core :refer [env]]
    ))
 
 (def guest-bearer-token

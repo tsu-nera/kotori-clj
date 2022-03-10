@@ -6,24 +6,9 @@
    [integrant.repl :refer [clear halt go init prep set-prep! reset reset-all suspend resume]]
    [integrant.repl.state :refer [config system]]
    [kotori.core :as kotori-core]
-   [kotori.twitter.guest :as guest]
    [clojure.java.io :as io]))
 
-(def screen-name (atom ""))
-(def user-id (atom ""))
 
-
-(defn set-account!
-  ([name]
-   (let [id (guest/resolve-user-id name)]
-     (set-account! name id)))
-  ([name id]
-   (println "update: screen_name="name", user_id="id)
-   (reset! screen-name name)
-   (reset! user-id id)))
-
-(defn get-account []
-  {:name @screen-name :id @user-id})
 
 (def config-dev "resources/private/dev/config.edn")
 
@@ -63,15 +48,6 @@
   (reset-all))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(comment
-  (let [{:keys [screen-name user-id]} (load-config config-dev)]
-    (set-account! screen-name))
-  )
-
-(comment
-  (fs/init-firebase-app-cred! "resources/private/dev/credentials.json")
-  )
 
 (comment
   (def config-dev "resources/private/dev/config.edn")

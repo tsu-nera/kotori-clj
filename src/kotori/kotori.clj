@@ -37,7 +37,7 @@
     (assoc m :proxy-port (Integer. port))))
 
 (defmethod ig/init-key ::app [_ {:keys [config db]}]
-  (let [user-id   (:user-id config)
+  (let [user-id   (:userid config)
         coll-path (id->coll-path user-id)]
     (reset! doc (-> db
                     (fs/doc coll-path)
@@ -67,7 +67,7 @@
 
 (comment
 
-  (-> db-tmp
+  (-> db
       (fs/doc "configs/proxies")
       (.get)
       (deref)

@@ -4,6 +4,7 @@
  :kotori.firebase/firestore {:app #ig/ref :kotori.firebase/app}
  :kotori.meigen/meigen      {:db #ig/ref :kotori.firebase/firestore}
  :kotori.kotori/app         {:config {} :db #ig/ref :kotori.firebase/firestore}
+ :kotori.twitter/account    {:kotori #ig/ref :kotori.kotori/app}
  ;; :kotori.config/config     {}
  ;; :kotori.firebase/firebase {:config #ig/ref :kotori.config/config}
  ;;:kotori.bot/bot           {:db #ig/ref :kotori.firebase/firebase}

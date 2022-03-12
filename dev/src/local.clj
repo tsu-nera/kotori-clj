@@ -22,7 +22,8 @@
   (-> kotori-core/config-file
       (kotori-core/load-config)
       (assoc-in [:kotori.service.firebase/app :config] firebase-config)
-      (assoc-in [:kotori.model.kotori/app :config] kotori-config)
+      (assoc-in [:kotori.model.kotori/db :config] kotori-config)
+      (assoc-in [:kotori.model.tweet/db :config] kotori-config)
       (constantly)
       (set-prep!))
   (prep)

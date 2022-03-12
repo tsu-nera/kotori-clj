@@ -36,7 +36,7 @@
   (let [port (:proxy-port m)]
     (assoc m :proxy-port (Integer. port))))
 
-(defmethod ig/init-key ::app [_ {:keys [config db]}]
+(defmethod ig/init-key ::db [_ {:keys [config db]}]
   (let [user-id   (:userid config)
         coll-path (id->coll-path user-id)]
     (def doc (-> db
@@ -60,9 +60,6 @@
                        (proxy-fs-http)
                        (proxy-port-string->number)))))
   :initalized)
-
-(defmethod ig/halt-key! ::app [_ _]
-  :terminated)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 

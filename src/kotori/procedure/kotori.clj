@@ -2,6 +2,7 @@
   (:require
    [kotori.model.meigen :refer [meigens]]
    [kotori.model.kotori :refer [twitter-auth proxies]]
+   [kotori.model.tweet :refer [posts]]
    [kotori.lib.twitter.private :as private]
    [taoensso.timbre :as log]))
 
@@ -12,6 +13,8 @@
   (let [{content :content, author :author} data]
     (str content "\n\n" author)))
 
+;; user_idが入らない.
+;; timestamp型になっていない...
 (defn make-fs-tweet [status]
   (let [created_at (:created_at status)
         user       (:user status)]
@@ -24,15 +27,14 @@
 (defn tweet [text]
   (let [result   (private/create-tweet twitter-auth proxies text)
         data     (make-fs-tweet result)
-        user-id  (:id_str (:user result))
         tweet-id (:id_str result)]
     (try
-      ;; (-> (get-fs)
-      ;;     (.collection (str "tweets" "/" user-id "/posts" ))
-      ;;     (.document status-id)
-      ;;     (.set data))
+      (-> posts
+          (.document tweet-id)
+          (.set data))
       (log/info (str "post tweet completed. tweet-id=" tweet-id))
-      (catch Exception e (log/error "post tweet Failed." (.getMessage e))))))
+      (catch Exception e (log/error "post tweet Failed." (.getMessage e))))
+    ))
 
 (defn tweet-random []
   (let [data                               (pick-random)
@@ -48,7 +50,20 @@
   (pick-random)
   (make-status (pick-random))
 
-  (tweet-random)
+  (def result (tweet-random))
+
+  ;; posts
+  ;; (:id_str (:user result))
+  ;; (def userid (get-in result [:user :id_str]))
+
+  (def data (make-fs-tweet result))
+  (def status-id (:id_str result))
+
+  (-> posts
+      (.document status-id)
+      (.set data))
+
+
   )
 
 (comment

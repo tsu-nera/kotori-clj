@@ -5,8 +5,9 @@
  :kotori.service.firebase/db  {:app #ig/ref :kotori.service.firebase/app}
 
  ;; models
- :kotori.model.meigen/doc {:db #ig/ref :kotori.service.firebase/db}
- :kotori.model.kotori/app {:config {} :db #ig/ref :kotori.service.firebase/db}
+ :kotori.model.meigen/db {:db #ig/ref :kotori.service.firebase/db}
+ :kotori.model.kotori/db {:config {} :db #ig/ref :kotori.service.firebase/db}
+ :kotori.model.tweet/db  {:config {} :db #ig/ref :kotori.service.firebase/db}
 
  ;; :kotori.service.kotori/app   {:config {} :db #ig/ref :kotori.model.firebase/firestore}
  ;; :kotori.twitter/account          {:kotori #ig/ref :kotori.kotori/app}

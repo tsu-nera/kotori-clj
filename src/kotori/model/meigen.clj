@@ -339,10 +339,9 @@
   )
 
 (defonce coll nil)
-(defonce coll-ids [])
-
 (def coll-path "sources/source_0001/meigens")
 
+(defonce coll-ids [])
 (defn get-coll-ids []
   (let [docs (.listDocuments coll)]
     (map #(.getId %) docs)))
@@ -358,7 +357,7 @@
         (keywordize-keys))))
 
 
-(defmethod ig/init-key ::doc [_ {:keys [db]}]
+(defmethod ig/init-key ::db [_ {:keys [db]}]
   (def coll (-> db
                 (f/coll coll-path)))
   (def coll-ids (get-coll-ids))
@@ -444,9 +443,9 @@
   ;; (def my-future (future (println "test")))
   ;; (pick-random)
 
-  (def docref (-> @coll-meigens
-                  (f/doc (rand-nth @coll-ids))
-                  (.get)))
+  ;; (def docref (-> coll-meigens
+  ;;                 (f/doc (rand-nth @coll-ids))
+  ;;                 (.get)))
 
 
   ;; (def data (let [id (rand-nth @coll-ids)]

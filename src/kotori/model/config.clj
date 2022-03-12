@@ -1,4 +1,4 @@
-(ns kotori.config
+(ns kotori.model.config
   (:require [config.core :as config]
             [integrant.core :as ig]
             [clojure.java.io :as io]))

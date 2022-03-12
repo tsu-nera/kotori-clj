@@ -1,4 +1,4 @@
-(ns kotori.firebase
+(ns kotori.service.firebase
   (:require [clojure.java.io :as io]
             [integrant.core :as ig])
   (:import (com.google.auth.oauth2 GoogleCredentials)
@@ -45,10 +45,9 @@
 
 ;; FirebaseAppとFirestoreに関わるシングルトンな状態管理は
 ;; integrantにおまかせするので自分で状態は持たない.
-(defmethod ig/init-key ::firestore [_ _]
+(defmethod ig/init-key ::db [_ _]
   (println "create Firestore instance")
   (FirestoreClient/getFirestore))
-
 ;; Firesore InterfaceはAutoClosableというInteraceを実装しているようで
 ;; 名前からしてFirebaseAppを消せば勝手にFirestoreも消えそうだな.
 ;; (defmethod ig/halt-key! ::db [_ _]
@@ -58,7 +57,9 @@
 ;;;;;;;;;;;;;;;;;;;;;;
 ;;  Design Journals
 ;;;;;;;;;;;;;;;;;;;;;;
-
+(comment
+  (FirebaseApp/getInstance)
+  )
 ;; TODO 初期化失敗時の処理を検討. i.e. firestore接続不可.
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

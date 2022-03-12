@@ -1,13 +1,12 @@
 (ns local
   (:require
-   [clojure.repl :refer :all]
    [clojure.edn :as edn]
+   [clojure.java.io :as io]
+   [clojure.repl :refer :all]
    [clojure.tools.namespace.repl :refer [refresh]]
    [integrant.repl :refer [clear halt go init prep set-prep! reset reset-all suspend resume]]
    [integrant.repl.state :refer [config system]]
-   [kotori.core :as kotori-core]
-   [clojure.java.io :as io]))
-
+   [kotori.core :as kotori-core]))
 
 
 (def config-dev "resources/private/dev/config.edn")
@@ -18,12 +17,13 @@
       slurp
       edn/read-string))
 
+
 (defn- start
   [firebase-config kotori-config]
   (-> kotori-core/config-file
       (kotori-core/load-config)
-      (assoc-in [:kotori.firebase/app :config] firebase-config)
-      (assoc-in [:kotori.kotori/app :config] kotori-config)
+      (assoc-in [:kotori.service.firebase/app :config] firebase-config)
+      ;; (assoc-in [:kotori.service.kotori/app :config] kotori-config)
       (constantly)
       (set-prep!))
   (prep)
@@ -50,6 +50,8 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (comment
+  (kotori-core/load-config kotori-core/config-file)
+
   (def config-dev "resources/private/dev/config.edn")
   (require '[clojure.java.io :as io])
   (io/resource config-dev)

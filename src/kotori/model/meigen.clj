@@ -1,10 +1,9 @@
-(ns kotori.meigen
+(ns kotori.model.meigen
   (:require
    [integrant.core :as ig]
    [firestore-clj.core :as f]
    [clojure.walk :refer [keywordize-keys]]
    [clojure.walk :refer [stringify-keys]]
-   ;;   [kotori.firebase :refer [get-fs]]
    ))
 
 (def meigens
@@ -339,17 +338,18 @@
    ]
   )
 
-(defonce coll-meigens (atom nil))
-(defonce coll-ids (atom []))
+(defonce coll nil)
+(defonce coll-ids [])
+
 (def coll-path "sources/source_0001/meigens")
 
 (defn get-coll-ids []
-  (let [docs (.listDocuments @coll-meigens)]
+  (let [docs (.listDocuments coll)]
     (map #(.getId %) docs)))
 
 (defn pick-random []
-  (let [id (rand-nth @coll-ids)]
-    (-> @coll-meigens
+  (let [id (rand-nth coll-ids)]
+    (-> coll
         (f/doc id)
         (.get)
         (deref)
@@ -358,16 +358,36 @@
         (keywordize-keys))))
 
 
-(defmethod ig/init-key ::meigen [_ {:keys [db]}]
-  (reset! coll-meigens (-> db
-                           (f/coll coll-path)))
-  (reset! coll-ids (get-coll-ids))
+(defmethod ig/init-key ::doc [_ {:keys [db]}]
+  (def coll (-> db
+                (f/coll coll-path)))
+  (def coll-ids (get-coll-ids))
   :initalized)
 
-(defmethod ig/halt-key! ::meigen [_ _]
-  :terminated)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(comment
+  coll
+  coll-ids
+
+  (def docs (-> coll
+                (.get)
+                (deref)
+                (.getDocuments)
+                ))
+  (def doc (first docs))
+
+  (defn doc->map [doc]
+    (-> doc
+        (.getData)
+        (as-> x (into {} x))
+        (keywordize-keys)
+        ))
+
+
+  (def data (into [] (map doc->map docs)))
+  )
 
 (comment
   ;; 今の実装だと, firestoreのIDがわからないため,
@@ -405,7 +425,7 @@
 
   (defn pick-random []
     (let [id (rand-nth @coll-ids)]
-      (-> @coll-meigens
+      (-> coll
           (f/doc id)
           (.get)
           (deref)

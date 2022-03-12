@@ -1,4 +1,4 @@
-(ns kotori.twitter.guest
+(ns kotori.lib.twitter.guest
   (:require
    [cheshire.core :as json]
    [clj-http.client :as client]))

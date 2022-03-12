@@ -1,4 +1,4 @@
-(ns kotori.server)
+(ns kotori.service.server)
 ;; (ns kotori.server
 ;;   (:gen-class)
 ;;   (:require

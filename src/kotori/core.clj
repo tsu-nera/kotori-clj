@@ -20,6 +20,10 @@
       (doto
           ig/load-namespaces)))
 
+(comment
+  (load-config config-file)
+  )
+
 ;; (def timbre-config {:timestamp-opts {:pattern  "yyyy-MM-dd HH:mm:ss,SSS"
 ;;                                      :locale   (java.util.Locale. "ja_JP")
 ;;                                      :tiemzone (java.util.TimeZone/getTimeZone "Asia/Tokyo")}})

@@ -1,10 +1,14 @@
 ;; configuration maps for integrant
 {
- :kotori.firebase/app       {:config {}}
- :kotori.firebase/firestore {:app #ig/ref :kotori.firebase/app}
- :kotori.meigen/meigen      {:db #ig/ref :kotori.firebase/firestore}
- :kotori.kotori/app         {:config {} :db #ig/ref :kotori.firebase/firestore}
- :kotori.twitter/account    {:kotori #ig/ref :kotori.kotori/app}
+ ;; services
+ :kotori.service.firebase/app {:config {}}
+ :kotori.service.firebase/db  {:app #ig/ref :kotori.service.firebase/app}
+
+ ;; models
+ :kotori.model.meigen/doc {:db #ig/ref :kotori.service.firebase/db}
+
+ ;; :kotori.service.kotori/app   {:config {} :db #ig/ref :kotori.model.firebase/firestore}
+ ;; :kotori.twitter/account          {:kotori #ig/ref :kotori.kotori/app}
  ;; :kotori.config/config     {}
  ;; :kotori.firebase/firebase {:config #ig/ref :kotori.config/config}
  ;;:kotori.bot/bot           {:db #ig/ref :kotori.firebase/firebase}

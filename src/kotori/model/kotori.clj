@@ -1,12 +1,12 @@
-(ns kotori.kotori
+(ns kotori.model.kotori
   (:require
-   [clojure.set :refer [rename-keys]]
-   [integrant.core :as ig]
-   [firestore-clj.core :as fs]
-   [camel-snake-kebab.extras :as cske]
    [camel-snake-kebab.core :as csk]
+   [camel-snake-kebab.extras :as cske]
+   [clojure.set :refer [rename-keys]]
    [clojure.walk :refer [keywordize-keys]]
-   [kotori.twitter.private :as private]))
+   [firestore-clj.core :as fs]
+   [integrant.core :as ig]
+   [kotori.lib.twitter.private :as private]))
 
 (defn id->coll-path [id]  (str "kotoris/" id))
 

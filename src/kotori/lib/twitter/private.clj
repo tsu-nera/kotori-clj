@@ -1,4 +1,4 @@
-(ns kotori.twitter.private
+(ns kotori.lib.twitter.private
   (:require
    [cheshire.core :as json]
    [clj-http.client :as client]

@@ -1,10 +1,10 @@
-(ns kotori.bot
+(ns kotori.procedure.kotori
   (:require
    [clojure.walk :refer [keywordize-keys]]
    [integrant.core :as ig]
    ;; [kotori.firebase :refer [get-fs]]
    ;; [kotori.meigen :refer [meigens]]
-   [kotori.twitter.private :as private]
+   [kotori.lib.twitter.private :as private]
    [taoensso.timbre :as log]))
 
 ;; (defn get-meigens []
@@ -56,11 +56,11 @@
 ;;   (tweet-random)
 ;;   0)
 
-(defmethod ig/init-key ::bot [_ {:keys [db]}]
-  nil)
+;; (defmethod ig/init-key ::app [_ {:keys [db]}]
+;;   nil)
 
-(defmethod ig/halt-key! ::bot [_ _]
-  nil)
+;; (defmethod ig/halt-key! ::app [_ _]
+;;   nil)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Design Journals

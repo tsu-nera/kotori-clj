@@ -69,7 +69,8 @@
          resp    (client/post url params)]
      (-> resp
          (parse-body)
-         (dissoc :user)))))
+         ;; (dissoc :user)
+         ))))
 
 
 (defn delete-tweet

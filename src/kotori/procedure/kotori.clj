@@ -4,7 +4,9 @@
    [kotori.model.kotori :refer [twitter-auth proxies]]
    [kotori.model.tweet :refer [posts]]
    [kotori.lib.twitter.private :as private]
-   [taoensso.timbre :as log]))
+   [taoensso.timbre :as log]
+   [firestore-clj.core :as f])
+  (:import [java.text SimpleDateFormat]))
 
 (defn pick-random []
   (rand-nth meigens))
@@ -13,14 +15,19 @@
   (let [{content :content, author :author} data]
     (str content "\n\n" author)))
 
-;; user_idが入らない.
-;; timestamp型になっていない...
-(defn make-fs-tweet [status]
-  (let [created_at (:created_at status)
-        user       (:user status)]
-    {"status_id"  (:id_str status)
+(defn parse-twitter-timestamp [timestamp]
+  (let [format "EEE MMM dd HH:mm:ss Z yyyy"
+        locale java.util.Locale/US
+        sdf    (SimpleDateFormat. format locale)]
+    (.setTimeZone sdf (java.util.TimeZone/getTimeZone "Asia/Tokyo"))
+    (.parse sdf timestamp)))
+
+(defn make-fs-tweet [tweet]
+  (let [created_at (parse-twitter-timestamp (:created_at tweet))
+        user       (:user tweet)]
+    {"status_id"  (:id_str tweet)
      "user_id"    (:id_str user)
-     "text"       (:text status)
+     "text"       (:text tweet)
      "created_at" created_at
      "updated_at" created_at}))
 
@@ -29,10 +36,11 @@
         data     (make-fs-tweet result)
         tweet-id (:id_str result)]
     (try
+      (log/info (str "post tweet completed. tweet-id=" tweet-id))
       (-> posts
           (.document tweet-id)
           (.set data))
-      (log/info (str "post tweet completed. tweet-id=" tweet-id))
+      result
       (catch Exception e (log/error "post tweet Failed." (.getMessage e))))
     ))
 
@@ -52,6 +60,8 @@
 
   (def result (tweet-random))
 
+  result
+
   ;; posts
   ;; (:id_str (:user result))
   ;; (def userid (get-in result [:user :id_str]))
@@ -63,7 +73,53 @@
       (.document status-id)
       (.set data))
 
+  ;; twitterのデータ表現は独自なのでparseする 必要がある.
+  ;; :created_at = "Sat Mar 12 20:34:57 +0000 2022"
 
+  (require '[clj-time.format :as f])
+
+
+
+  ;; (def custom-formatter (f/formatter "EEE MMM dd HH:mm:ss Z yyyy"))
+  ;;
+
+  ;; (def custom-formatter (.withLocale (f/formatter "MMM dd HH:mm:ss")))
+
+  ;; (f/parse custom-formatter twitter-timestamp)
+
+  (f/show-formatters)
+
+  (import '[java.text SimpleDateFormat])
+
+  (def twitter-timestamp "Sat Mar 12 20:34:57 +0000 2022")
+  (def twitter-format "EEE MMM dd HH:mm:ss Z yyyy")
+
+  (defn parse-twitter-timestamp [timestamp]
+    (let [format "EEE MMM dd HH:mm:ss Z yyyy"
+          locale java.util.Locale/US
+          sdf    (SimpleDateFormat. format locale)]
+      (.setTimeZone sdf (java.util.TimeZone/getTimeZone "Asia/Tokyo"))
+      (->> timestamp
+           (.parse sdf))))
+
+  (parse-twitter-timestamp twitter-timestamp)
+
+  (def locale java.util.Locale/US)
+  (def sdf (SimpleDateFormat. twitter-format locale))
+
+  (.setTimeZone sdf (java.util.TimeZone/getTimeZone "UTC"))
+  (def timestamp (.parse sdf twitter-timestamp))
+
+  (type timestamp) ;; => java.util.Date
+
+  ;; DateFormat outputFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm");
+  ;; DateFormat inputFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss ZZZZZ yyyy", Locale.ENGLISH);
+  ;; inputFormat.setLenient(true);
+
+  ;; Date date = inputFormat.parse("Sat Sep 20 19:11:19 ICT 2014");
+  ;; String outputText = outputFormat.format(date);
+
+  ;; System.out.println(outputText);
   )
 
 (comment

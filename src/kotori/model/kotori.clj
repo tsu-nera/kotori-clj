@@ -19,9 +19,9 @@
       (rename-keys {:auth_token :auth-token})))
 
 
-(def doc (atom nil))
-(def twitter-auth (atom {}))
-(def proxy (atom {}))
+(defonce doc nil)
+(defonce twitter-auth nil)
+(defonce proxies nil)
 
 (defn- proxy-fs-http [m]
   (-> m
@@ -39,25 +39,26 @@
 (defmethod ig/init-key ::app [_ {:keys [config db]}]
   (let [user-id   (:userid config)
         coll-path (id->coll-path user-id)]
-    (reset! doc (-> db
-                    (fs/doc coll-path)
-                    (.get)
-                    (deref)
-                    (.getData)
-                    (as-> x (into {} x))
-                    (keywordize-keys)
-                    (as-> x (cske/transform-keys csk/->kebab-case-keyword x))))
-    (reset! twitter-auth (doc->twitter-auth @doc))
-    (let [proxy-label (:proxy-label @doc)
+    (def doc (-> db
+                 (fs/doc coll-path)
+                 (.get)
+                 (deref)
+                 (.getData)
+                 (as-> x (into {} x))
+                 (keywordize-keys)
+                 (as-> x (cske/transform-keys csk/->kebab-case-keyword x))))
+    (def twitter-auth (doc->twitter-auth doc))
+
+    (let [proxy-label (:proxy-label doc)
           proxy-path  "configs/proxies"]
-      (reset! proxy (-> db
-                        (fs/doc proxy-path)
-                        (.get)
-                        (deref)
-                        (.getData)
-                        (get proxy-label)
-                        (proxy-fs-http)
-                        (proxy-port-string->number)))))
+      (def proxies (-> db
+                       (fs/doc proxy-path)
+                       (.get)
+                       (deref)
+                       (.getData)
+                       (get proxy-label)
+                       (proxy-fs-http)
+                       (proxy-port-string->number)))))
   :initalized)
 
 (defmethod ig/halt-key! ::app [_ _]
@@ -66,6 +67,14 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (comment
+
+  (require '[integrant.repl.state :refer [config system]])
+  (def userid (:userid (:config (::app config))))
+
+  (def doc (-> db
+               (fs/doc (id->coll-path userid))))
+
+  @(.get doc)
 
   (-> db
       (fs/doc "configs/proxies")
@@ -79,14 +88,7 @@
       ;; (rename-keys {"ip" :proxy-host "port" :proxy-port "username" :proxy-user "password" :proxy-pass})
       )
 
-  (def tweet (private/get-tweet @twitter-auth @proxy "1500694005259980800"))
-  (def user (private/get-user @twitter-auth @proxy "46130870"))
-  (def resp (private/create-tweet @twitter-auth @proxy "test"))
-
-  (def status-id (:id_str resp))
-  (def resp (private/delete-tweet @twitter-auth @proxy status-id))
   )
-
 
 (comment
   doc

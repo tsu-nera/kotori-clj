@@ -367,6 +367,14 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+;; (def resp (-> coll
+;;               (.get)))
+
+;; (.getDocuments @resp)
+
+;; (type coll)
+;; (map #(.getId %) resp)
+
 (comment
   coll
   coll-ids
@@ -388,7 +396,7 @@
 
   (def data (into [] (map doc->map docs)))
   )
-
+;; => nil;; => nil
 (comment
   ;; 今の実装だと, firestoreのIDがわからないため,
   ;; とりあえず全てのデータを取得してその中でランダムにindexを指定している.

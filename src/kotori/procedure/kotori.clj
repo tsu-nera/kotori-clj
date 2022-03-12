@@ -1,24 +1,12 @@
 (ns kotori.procedure.kotori
   (:require
-   [clojure.walk :refer [keywordize-keys]]
-   [integrant.core :as ig]
-   ;; [kotori.firebase :refer [get-fs]]
-   ;; [kotori.meigen :refer [meigens]]
+   [kotori.model.meigen :refer [meigens]]
+   [kotori.model.kotori :refer [twitter-auth proxies]]
    [kotori.lib.twitter.private :as private]
    [taoensso.timbre :as log]))
 
-;; (defn get-meigens []
-;;   (let [coll_meigens (.collection (get-fs) "sources/source_0001/meigens")
-;;         query        (.get coll_meigens)]
-;;     (->>
-;;      (.getDocuments @query)
-;;      (map #(.getData %)))))
-
-;; (defn pick-random []
-;;   (let [meigens (get-meigens)]
-;;     (->> (rand-nth meigens)
-;;          (into {})
-;;          (keywordize-keys))))
+(defn pick-random []
+  (rand-nth meigens))
 
 (defn make-status [data]
   (let [{content :content, author :author} data]
@@ -33,41 +21,45 @@
      "created_at" created_at
      "updated_at" created_at}))
 
-;; (defn tweet [status]
-;;   (let [result    (private/update-status status)
-;;         data      (make-fs-tweet result)
-;;         user_id   (:id_str (:user result))
-;;         status_id (:id_str result)]
-;;     (try
-;;       (-> (get-fs)
-;;           (.collection (str "tweets" "/" user_id "/posts" ))
-;;           (.document status_id)
-;;           (.set data))
-;;       (log/info (str "post tweet completed. status_id=" status_id))
-;;       (catch Exception e (log/error "post tweet Failed." (.getMessage e))))))
+(defn tweet [text]
+  (let [result   (private/create-tweet twitter-auth proxies text)
+        data     (make-fs-tweet result)
+        user-id  (:id_str (:user result))
+        tweet-id (:id_str result)]
+    (try
+      ;; (-> (get-fs)
+      ;;     (.collection (str "tweets" "/" user-id "/posts" ))
+      ;;     (.document status-id)
+      ;;     (.set data))
+      (log/info (str "post tweet completed. tweet-id=" tweet-id))
+      (catch Exception e (log/error "post tweet Failed." (.getMessage e))))))
 
-;; (defn tweet-random []
-;;   (let [data                               (pick-random)
-;;         {content :content, author :author} data
-;;         status                             (make-status data)]
-;;     (tweet status)))
-
-;; (defn -main [& args]
-;;   (tweet-random)
-;;   0)
-
-;; (defmethod ig/init-key ::app [_ {:keys [db]}]
-;;   nil)
-
-;; (defmethod ig/halt-key! ::app [_ _]
-;;   nil)
+(defn tweet-random []
+  (let [data                               (pick-random)
+        {content :content, author :author} data
+        status                             (make-status data)]
+    (tweet status)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Design Journals
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(comment
+  (pick-random)
+  (make-status (pick-random))
 
-;; (tweet "hogehoge")
+  (tweet-random)
+  )
+
+(comment
+
+  (def tweet (private/get-tweet twitter-auth proxies "1500694005259980800"))
+  (def user (private/get-user twitter-auth proxies "46130870"))
+  (def resp (private/create-tweet twitter-auth proxies "test"))
+
+  (def status-id (:id_str resp))
+  (def resp (private/delete-tweet twitter-auth proxies status-id))
+  )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Tweet Data を firestoreへ保存 status_idをidにする
@@ -82,9 +74,6 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; (pick-random)
-;; (make-status (pick-random))
-;; (tweet-random)
 
 ;; retrive meigen from firestore
 

@@ -40,11 +40,14 @@
   [name]
   (:id_str (get-user name)))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;
+;; Design Journals
+;;;;;;;;;;;;;;;;;;;;;
+
 
 (comment
 
-  (def user (get-user "richhickey"))
+  #_ (def user (get-user "richhickey"))
   #_(resolve-user-id "richhickey")
   #_(def user (get-user "46130870"))
   )
@@ -70,10 +73,6 @@
           :tweets
           (get (keyword status-id)))))
   )
-
-;;;;;;;;;;;;;;;;;;;;;
-;; Design Journals
-;;;;;;;;;;;;;;;;;;;;;
 
 (comment
   ;; (def response (get-statuses 1477034578875277316))

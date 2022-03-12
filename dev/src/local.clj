@@ -8,7 +8,6 @@
    [integrant.repl.state :refer [config system]]
    [kotori.core :as kotori-core]))
 
-
 (def config-dev "resources/private/dev/config.edn")
 
 (defn- load-config [config]
@@ -23,7 +22,7 @@
   (-> kotori-core/config-file
       (kotori-core/load-config)
       (assoc-in [:kotori.service.firebase/app :config] firebase-config)
-      ;; (assoc-in [:kotori.service.kotori/app :config] kotori-config)
+      (assoc-in [:kotori.model.kotori/app :config] kotori-config)
       (constantly)
       (set-prep!))
   (prep)

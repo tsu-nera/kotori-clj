@@ -26,9 +26,9 @@ ref: https://github.com/tsu-nera/kotori
   - aka. Handler, Use Cases, フロー, シーケンス, ストアドプロシージャ.
 - 状態と副作用をもってはならない.
 - キモはprocedure call
-  - REPLから呼べるようにする for Debug.
-  - 全て関数としてREPLから呼び出したい.
-  - リモートだろうとローカルだろうと全ては関数呼び出し.
+  - デバック効率化のためにREPLから呼べるようにする.
+    - 全て関数としてREPLから呼び出したい.
+  - Clojureの世界ではリモートだろうとローカルだろうと全ては関数呼び出し.
     - RPC
     - HTTP Request
     - System Call
@@ -37,14 +37,13 @@ ref: https://github.com/tsu-nera/kotori
 ** service
 
 - loop構造を持ち常駐するプロセス aka. サービス.
-  - aka. Modelator(GoF), Controller(MVC), Manager, Gateway...etc.
+  - aka. Manager, Gateway...etc.
 - Mutable data.
   - 状態をもち状態遷移する.
   - Integrantで依存関係に従って初期化.
-- Modelの管理とProcedureの呼び出しを担当.
 
 ** lib
 
 - 外部とのやりとりを担当.
-  - aka. framework, driver, client.
+  - aka. framework, driver, client, infrastructure
 - procedureから利用される.

@@ -41,8 +41,7 @@
           (.document tweet-id)
           (.set data))
       result
-      (catch Exception e (log/error "post tweet Failed." (.getMessage e))))
-    ))
+      (catch Exception e (log/error "post tweet Failed." (.getMessage e))))))
 
 (defn tweet-random []
   (let [data                               (pick-random)

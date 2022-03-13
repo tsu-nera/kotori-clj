@@ -33,20 +33,23 @@
 (defn destroy-firebase-app! []
   (.delete (FirebaseApp/getInstance)))
 
+(defonce env nil)
+
 (defmethod ig/init-key ::app [_ {:keys [config]}]
-  (println "create FirebaseApp instance for " (:env config))
+  (def env (:env config))
+  (println "create FirebaseApp instance" env)
   (create-firebase-app! config))
 
 ;; Firesore InterfaceはAutoClosableというInteraceを実装しているようで
 ;; 名前からしてFirebaseAppを消せば勝手にFirestoreも消えそうだな.
 (defmethod ig/halt-key! ::app [_ app]
-  (println "destroy FirebaseApp instance")
+  (println "destroy FirebaseApp instance" env)
   (.delete app))
 
 ;; FirebaseAppとFirestoreに関わるシングルトンな状態管理は
 ;; integrantにおまかせするので自分で状態は持たない.
 (defmethod ig/init-key ::db [_ _]
-  (println "create Firestore instance")
+  (println "create Firestore instance" env)
   (FirestoreClient/getFirestore))
 ;; Firesore InterfaceはAutoClosableというInteraceを実装しているようで
 ;; 名前からしてFirebaseAppを消せば勝手にFirestoreも消えそうだな.

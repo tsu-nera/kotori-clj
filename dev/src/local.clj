@@ -6,9 +6,20 @@
    [clojure.tools.namespace.repl :refer [refresh]]
    [integrant.repl :refer [clear halt go init prep set-prep! reset reset-all suspend resume]]
    [integrant.repl.state :refer [config system]]
-   [kotori.core :as kotori-core]))
+   [kotori.core :as kotori-core]
+   [kotori.procedure.kotori :refer [tweet]]
+   ))
+
+
+(def env-dev {:local?    true
+              :env       :development
+              :cred-path "resources/private/dev/credentials.json"})
+(def env-prod {:local?    true
+               :env       :production
+               :cred-path "resources/private/prod/credentials.json"})
 
 (def config-dev "resources/private/dev/config.edn")
+(def config-prod "resources/private/prod/config.edn")
 
 (defn- load-config [config]
   (-> config
@@ -18,37 +29,39 @@
 
 
 (defn- start
-  [firebase-config kotori-config]
+  [env config]
   (-> kotori-core/config-file
       (kotori-core/load-config)
-      (assoc-in [:kotori.service.firebase/app :config] firebase-config)
-      (assoc-in [:kotori.model.kotori/db :config] kotori-config)
-      (assoc-in [:kotori.model.tweet/db :config] kotori-config)
+      (assoc-in [:kotori.service.firebase/app :config] env)
+      (assoc-in [:kotori.model.kotori/db :config] config)
+      (assoc-in [:kotori.model.tweet/db :config] config)
       (constantly)
       (set-prep!))
   (prep)
   (init)
   :started)
 
+(defn env []
+  (merge (get-in config [:kotori.service.firebase/app :config])
+         (get-in config [:kotori.model.kotori/db :config])))
+
 (defn dev []
-  (let [firebase-config {:local?    true
-                         :env       :development
-                         :cred-path "resources/private/dev/credentials.json"}
-        kotori-config   (load-config config-dev)]
-    (start firebase-config kotori-config)))
+  (let [config (load-config config-dev)]
+    (start env-dev config)
+    :development))
 
 (defn prod []
-  (let [config {:local?    true
-                :env       :production
-                :cred-path "resources/private/prod/credentials.json"}]
-    (start config)))
+  (let [config (load-config config-prod)]
+    (start env-prod config)
+    :production))
+
 
 (defn restart []
   (clear)
   (reset-all))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (comment
   (kotori-core/load-config kotori-core/config-file)
 

@@ -1,13 +1,9 @@
 (ns kotori.core
   (:gen-class)
   (:require
-   ;; [chime.core :as chime]
-   ;; [kotori.bot :as bot]
-   ;; [taoensso.timbre :as log]
    [integrant.core :as ig]
+   [taoensso.timbre :as log]
    [clojure.java.io :as io])
-  ;; (:import
-  ;;  (java.time Duration Instant))
   )
 
 (def config-file "config.edn")
@@ -20,32 +16,24 @@
       (doto
           ig/load-namespaces)))
 
+
+(comment
+  (def timbre-config {:timestamp-opts {:pattern  "yyyy-MM-dd HH:mm:ss,SSS"
+                                       :locale   (java.util.Locale. "ja_JP")
+                                       :timezone (java.util.TimeZone/getTimeZone "Asia/Tokyo")}})
+
+  (log/merge-config! timbre-config)
+  (log/info "test")
+
+  log/*config*
+  )
+
+
 (comment
   (load-config config-file)
   )
 
-;; (def timbre-config {:timestamp-opts {:pattern  "yyyy-MM-dd HH:mm:ss,SSS"
-;;                                      :locale   (java.util.Locale. "ja_JP")
-;;                                      :tiemzone (java.util.TimeZone/getTimeZone "Asia/Tokyo")}})
 
-;; (init-firebase-app-local!)
-
-;; (defn -main [&args]
-;;   (-> config-file
-;;       load-config
-;;       ig/init))
-
-;; (defn app [& args]
-;;   (println "======================================")
-;;   (println "Started up Twitter Bot.")
-;;   (log/merge-config! timbre-config)
-;;   (chime/chime-at (chime/periodic-seq
-;;                    (Instant/now)
-;;                    (Duration/ofHours 1)
-;;                    ;;(Duration/ofMinutes 3)
-;;                    )
-;;                   (fn [_]
-;;                     (bot/tweet-random))))
 
 ;;;;;;;;;;;;;;;;;;;
 ;; Design Journal
@@ -78,15 +66,3 @@
 ;; ig/load-namespacesでnamespaceも一緒に読み込む.
 ;; (doto (ig/read-string "{}") ig/load-namespaces)
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-;; (def status (make-status (pick-random)))
-;; (def response (private/update-status status))
-
-;; (tweet-random)
-
-;; (def status (guest/get-status "1477034578875277316"))
-;; (def status (private/get-status "1477034578875277316"))
-
-;; status
-;; => #'kotori.core/load-config;; => #'kotori.core/load-config;; => #'kotori.core/load-config

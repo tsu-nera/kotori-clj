@@ -6,36 +6,30 @@
   (:import
    (java.time Duration Instant)))
 
+(def app (atom :initialized))
 
-(defn app []
-  (println "======================================")
-  (println "Started up Twitter Bot.")
-  (chime/chime-at (chime/periodic-seq
-                   (chime/now)
-                   ;; (Duration/ofHours 1)
-                   (Duration/ofMinutes 3))
-                  (fn [_]
-                    (kotori/tweet-random))))
-
-
-(defn test-app []
-  (chime/chime-at (chime/periodic-seq
-                   (chime/now)
-                   (Duration/ofMinutes 1))
-                  (fn [_]
-                    (println "hello from test app"))
-                  {:on-finished (fn []
-                                  (println "Running twitter bot end."))}))
-
-(defmethod ig/init-key ::app [_ _]
+(defn start []
   (println "Running twitter bot.")
-  (test-app))
+  (reset! app (chime/chime-at (chime/periodic-seq
+                               (chime/now)
+                               (Duration/ofMinutes 1))
+                              #((kotori/tweet-random) %)
+                              {:on-finished (fn []
+                                              (println "Running twitter bot end."))})))
 
-;; chime/chime-atで生成される無名関数は
-;; JavaのAutoClosableをInterfaceを実装しているため,
-;; .closeを呼び出すことによって終了する仕組みのようだ.
-(defmethod ig/halt-key! ::app [_ app]
-  (.close app))
+(defn stop []
+  ;; chime/chime-atで生成される無名関数は
+  ;; JavaのAutoClosableをInterfaceを実装しているため,
+  ;; .closeを呼び出すことによって終了する仕組みのようだ.
+  (.close @app)
+  (reset! app :stopped))
+
+
+;; (defmethod ig/init-key ::app [_ _]
+;;   (start))
+
+;; (defmethod ig/halt-key! ::app [_ app]
+;;   (stop app))
 
 
 (comment

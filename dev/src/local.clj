@@ -8,6 +8,7 @@
    [integrant.repl.state :refer [config system]]
    [kotori.core :as kotori-core]
    [kotori.procedure.kotori :refer [tweet]]
+   [kotori.service.bot :as bot]
    ))
 
 
@@ -27,11 +28,12 @@
       slurp
       edn/read-string))
 
-
-(defn- start
+(defn- init-system
   [env config]
   (-> kotori-core/config-file
       (kotori-core/load-config)
+      ;; ductの導入でもっとうまくかけるかも.
+      ;; (dissoc :kotori.service.bot/app)
       (assoc-in [:kotori.service.firebase/app :config] env)
       (assoc-in [:kotori.model.kotori/db :config] config)
       (assoc-in [:kotori.model.tweet/db :config] config)
@@ -39,7 +41,7 @@
       (set-prep!))
   (prep)
   (init)
-  :started)
+  :initialized)
 
 (defn env []
   (merge (get-in config [:kotori.service.firebase/app :config])
@@ -47,18 +49,26 @@
 
 (defn dev []
   (let [config (load-config config-dev)]
-    (start env-dev config)
+    (init-system env-dev config)
     :development))
 
 (defn prod []
   (let [config (load-config config-prod)]
-    (start env-prod config)
+    (init-system env-prod config)
     :production))
 
 
 (defn restart []
   (clear)
   (reset-all))
+
+(defn run-kotori []
+  (bot/start)
+  :running)
+
+(defn stop-kotori []
+  (bot/stop)
+  :stopped)
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

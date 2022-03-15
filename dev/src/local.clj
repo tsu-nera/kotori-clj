@@ -8,8 +8,7 @@
    [integrant.repl.state :refer [config system]]
    [kotori.core :as kotori-core]
    [kotori.procedure.kotori :refer [tweet]]
-   [kotori.service.bot :as bot]
-   ))
+   [kotori.service.bot :as bot]))
 
 
 (def env-dev {:local?    true
@@ -57,17 +56,16 @@
     (init-system env-prod config)
     :production))
 
-
 (defn restart []
   (clear)
   (reset-all))
 
 (defn run-kotori []
-  (bot/start)
+  (bot/start!)
   :running)
 
 (defn stop-kotori []
-  (bot/stop)
+  (bot/stop!)
   :stopped)
 
 

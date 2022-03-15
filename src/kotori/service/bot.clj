@@ -2,35 +2,36 @@
   (:require
    [integrant.core :as ig]
    [chime.core :as chime]
-   [kotori.procedure.kotori :as kotori])
+   [kotori.procedure.kotori :as kotori]
+   [taoensso.timbre :as log]
+   )
   (:import
    (java.time Duration Instant)))
 
+;; TODO あとでなんとかする. とりあえずの対応.
+;; integrant保留中のためnamespaceに状態をbindingする.
 (def app (atom :initialized))
 
-(defn start []
+(defn start! []
   (println "Running twitter bot.")
-  (reset! app (chime/chime-at (chime/periodic-seq
-                               (chime/now)
-                               (Duration/ofMinutes 1))
-                              #((kotori/tweet-random) %)
-                              {:on-finished (fn []
-                                              (println "Running twitter bot end."))})))
+  (chime/chime-at (chime/periodic-seq
+                   (chime/now)
+                   (Duration/ofMinutes 1))
+                  #((kotori/tweet-random) %)
+                  {:on-finished (fn []
+                                  (println "Running twitter bot end."))}))
 
-(defn stop []
-  ;; chime/chime-atで生成される無名関数は
-  ;; JavaのAutoClosableをInterfaceを実装しているため,
-  ;; .closeを呼び出すことによって終了する仕組みのようだ.
-  (.close @app)
-  (reset! app :stopped))
+;; chime/chime-atで生成される無名関数は
+;; JavaのAutoClosableをInterfaceを実装しているため,
+;; .closeを呼び出すことによって終了する仕組みのようだ.
+(defn stop! [app]
+  (.close app))
 
 
 ;; (defmethod ig/init-key ::app [_ _]
-;;   (start))
+;;   (start!))
 
 ;; (defmethod ig/halt-key! ::app [_ app]
-;;   (stop app))
-
 
 (comment
   chime/*clock*
@@ -64,7 +65,7 @@
   ;;    )
 
   (def tmp-app (atom nil))
-  (reset! tmp-app (test-app))
+  (reset! tmp-app (app))
 
   ;; 無名関数(reify)
   @tmp-app

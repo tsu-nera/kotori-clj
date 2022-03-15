@@ -16,6 +16,15 @@
       (doto
           ig/load-namespaces)))
 
+(defn -main
+  [& _args]
+  (let [config (load-config config-file)]
+    (ig/init config)))
+
+
+;;;;;;;;;;;;;;;;;;;
+;; Design Journal
+;;;;;;;;;;;;;;;;;;;
 
 (comment
   (def timbre-config {:timestamp-opts {:pattern  "yyyy-MM-dd HH:mm:ss,SSS"
@@ -28,16 +37,9 @@
   log/*config*
   )
 
-
 (comment
   (load-config config-file)
   )
-
-
-
-;;;;;;;;;;;;;;;;;;;
-;; Design Journal
-;;;;;;;;;;;;;;;;;;;
 
 ;; 以下の関数の処理内容を丁寧にみていく.
 ;; (defn load-config [config]

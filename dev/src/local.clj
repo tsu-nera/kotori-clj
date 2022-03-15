@@ -11,11 +11,10 @@
    [kotori.service.bot :as bot]))
 
 
-(def env-dev {:local?    true
-              :env       :development
+(def env-dev {:env       :development
               :cred-path "resources/private/dev/credentials.json"})
-(def env-prod {:local?    true
-               :env       :production
+
+(def env-prod {:env       :production
                :cred-path "resources/private/prod/credentials.json"})
 
 (def config-dev "resources/private/dev/config.edn")
@@ -27,7 +26,7 @@
       slurp
       edn/read-string))
 
-(defn- init-system
+(defn- init-system!
   [env config]
   (-> kotori-core/config-file
       (kotori-core/load-config)
@@ -48,12 +47,12 @@
 
 (defn dev []
   (let [config (load-config config-dev)]
-    (init-system env-dev config)
+    (init-system! env-dev config)
     :development))
 
 (defn prod []
   (let [config (load-config config-prod)]
-    (init-system env-prod config)
+    (init-system! env-prod config)
     :production))
 
 (defn restart []
@@ -70,6 +69,8 @@
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
 (comment
   (kotori-core/load-config kotori-core/config-file)
 

@@ -18,6 +18,17 @@
 
 (defn -main
   [& _args]
+
+  ;; (-> config-file
+  ;;     (load-config)
+  ;;     (assoc-in [:kotori.service.firebase/app :config] env)
+  ;;     (assoc-in [:kotori.model.kotori/db :config] config)
+  ;;     (assoc-in [:kotori.model.tweet/db :config] config)
+  ;;     (constantly)
+  ;;     (set-prep!))
+  ;; (prep)
+  ;; (init)
+
   (let [config (load-config config-file)]
     (ig/init config)))
 
@@ -25,6 +36,13 @@
 ;;;;;;;;;;;;;;;;;;;
 ;; Design Journal
 ;;;;;;;;;;;;;;;;;;;
+
+
+(comment
+
+  (-main)
+
+  )
 
 (comment
   (def timbre-config {:timestamp-opts {:pattern  "yyyy-MM-dd HH:mm:ss,SSS"

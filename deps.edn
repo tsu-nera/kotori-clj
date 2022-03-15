@@ -4,6 +4,9 @@
  :deps
  {org.clojure/clojure {:mvn/version "1.10.3"}
 
+  ;; 状態管理
+  integrant/integrant {:mvn/version "0.8.0"}
+
   ;; utilites
   yogthos/config                      {:mvn/version "1.1.9"}
   cheshire/cheshire                   {:mvn/version "5.10.2"}
@@ -12,12 +15,9 @@
   camel-snake-kebab/camel-snake-kebab {:mvn/version "0.4.2"}
   clj-time/clj-time                   {:mvn/version "0.15.2"}
 
-  ;; logging
+  ;; Logging
   com.taoensso/timbre       {:mvn/version "5.1.2"}
   com.fzakaria/slf4j-timbre {:mvn/version "0.3.21"}
-
-  ;; 状態管理
-  integrant/integrant {:mvn/version "0.8.0"}
 
   ;; Goole Cloud
   com.google.auth/google-auth-library-oauth2-http {:mvn/version "1.5.3"}
@@ -39,7 +39,7 @@
  {;; clojure -M:run
   :run      {:main-opts ["-m" "kotori.core"]}
   ;; PORT=8888 clojure -M:serve
-  :serve    {:main-opts ["-m" "kotori.server"]}
+  :serve    {:main-opts ["-m" "kotori.service.server"]}
   ;; clojure -T:build xxx
   :build    {:deps       {io.github.clojure/tools.build   {:git/tag "v0.8.0" :git/sha "e3e3532"}
                           com.google.cloud.tools/jib-core {:mvn/version "0.20.0"}}

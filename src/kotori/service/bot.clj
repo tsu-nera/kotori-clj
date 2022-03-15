@@ -33,6 +33,11 @@
 
 ;; (defmethod ig/halt-key! ::app [_ app]
 
+(defn -main
+  [& _args]
+  (start!))
+
+
 (comment
   chime/*clock*
  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

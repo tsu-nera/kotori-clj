@@ -1,6 +1,7 @@
 (ns kotori.core
   (:gen-class)
   (:require
+   [clojure.edn :as edn]
    [integrant.core :as ig]
    [taoensso.timbre :as log]
    [clojure.java.io :as io])
@@ -9,7 +10,7 @@
 ;; integrant configuration map
 (def ig-config-file "config.edn")
 
-(defn load-config [config]
+(defn load-ig-config [config]
   (-> config
       io/resource
       slurp
@@ -17,10 +18,17 @@
       (doto
           (ig/load-namespaces))))
 
-(def ig-config (load-config ig-config-file))
+(defn- load-edn [config]
+  (-> config
+      io/file
+      slurp
+      edn/read-string))
+
+(def ig-config (load-ig-config ig-config-file))
 
 (def env-prod {:env       :production
                :cred-path "resources/private/prod/credentials.json"})
+(def config-prod (load-edn "resources/private/prod/config.edn"))
 
 (defonce ^:private system nil)
 
@@ -30,7 +38,9 @@
   (alter-system (constantly
                  (-> ig-config
                      (assoc-in [:kotori.service.firebase/app :config] env-prod)
-                     (ig/init [:kotori.service.firebase/db])))))
+                     (assoc-in [:kotori.model.kotori/db :config] config-prod)
+                     (assoc-in [:kotori.model.tweet/db :config] config-prod)
+                     (ig/init)))))
 
 (defn system-stop []
   (alter-system ig/halt!))

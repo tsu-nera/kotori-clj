@@ -71,8 +71,8 @@
 
 (comment
   ;; FirebaseApp instanceの削除.
-  (require '[kotori.service.firebase :refer [destroy-firebase-app!]])
-  (destroy-firebase-app!)
+  (require '[kotori.service.firebase :refer [delete-app!]])
+  (delete-app!)
   )
 
 (comment

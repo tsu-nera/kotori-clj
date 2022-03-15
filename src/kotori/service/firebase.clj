@@ -24,17 +24,20 @@
 ;;         (.build)
 ;;         (FirebaseApp/initializeApp))))
 
-(defn create-firebase-app!
+(defn create-app!
   [config]
   (init-firebase-app-cred! (:cred-path config)))
 
-;; (destroy-firebase-app!)
-(defn destroy-firebase-app! []
-  (.delete (FirebaseApp/getInstance)))
+(defn get-app []
+  (FirebaseApp/getInstance))
+
+(defn delete-app! []
+  (.delete (get-app)))
+
 
 (defmethod ig/init-key ::app [_ {:keys [config]}]
   (let [env (:env config)
-        app (create-firebase-app! config)]
+        app (create-app! config)]
     (println "create FirebaseApp instance" env)
     {:app app :env env}))
 

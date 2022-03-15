@@ -6,7 +6,8 @@
    [clojure.java.io :as io])
   )
 
-(def config-file "config.edn")
+;; integrant configuration map
+(def ig-config-file "config.edn")
 
 (defn load-config [config]
   (-> config
@@ -14,24 +15,29 @@
       slurp
       ig/read-string
       (doto
-          ig/load-namespaces)))
+          (ig/load-namespaces))))
+
+(def ig-config (load-config ig-config-file))
+
+(def env-prod {:env       :production
+               :cred-path "resources/private/prod/credentials.json"})
+
+(defonce ^:private system nil)
+
+(def alter-system (partial alter-var-root #'system))
+
+(defn system-start []
+  (alter-system (constantly
+                 (-> ig-config
+                     (assoc-in [:kotori.service.firebase/app :config] env-prod)
+                     (ig/init [:kotori.service.firebase/db])))))
+
+(defn system-stop []
+  (alter-system ig/halt!))
 
 (defn -main
   [& _args]
-
-  ;; (-> config-file
-  ;;     (load-config)
-  ;;     (assoc-in [:kotori.service.firebase/app :config] env)
-  ;;     (assoc-in [:kotori.model.kotori/db :config] config)
-  ;;     (assoc-in [:kotori.model.tweet/db :config] config)
-  ;;     (constantly)
-  ;;     (set-prep!))
-  ;; (prep)
-  ;; (init)
-
-  (let [config (load-config config-file)]
-    (ig/init config)))
-
+  (system-start))
 
 ;;;;;;;;;;;;;;;;;;;
 ;; Design Journal
@@ -39,9 +45,11 @@
 
 
 (comment
+  system
+  (system-start)
+  (system-stop)
 
-  (-main)
-
+  (ig/dependency-graph ig-config)
   )
 
 (comment
@@ -85,4 +93,3 @@
 ;;
 ;; ig/load-namespacesでnamespaceも一緒に読み込む.
 ;; (doto (ig/read-string "{}") ig/load-namespaces)
-

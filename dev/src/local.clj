@@ -8,7 +8,9 @@
    [integrant.repl.state :refer [config system]]
    [kotori.core :as kotori-core]
    [kotori.procedure.kotori :refer [tweet]]
-   [kotori.service.bot :as bot]))
+   [kotori.service.bot :as bot]
+
+   ))
 
 
 (def env-dev {:env       :development
@@ -28,10 +30,7 @@
 
 (defn- init-system!
   [env config]
-  (-> kotori-core/config-file
-      (kotori-core/load-config)
-      ;; ductの導入でもっとうまくかけるかも.
-      ;; (dissoc :kotori.service.bot/app)
+  (-> kotori-core/ig-config
       (assoc-in [:kotori.service.firebase/app :config] env)
       (assoc-in [:kotori.model.kotori/db :config] config)
       (assoc-in [:kotori.model.tweet/db :config] config)
@@ -70,6 +69,11 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(comment
+  ;; FirebaseApp instanceの削除.
+  (require '[kotori.service.firebase :refer [destroy-firebase-app!]])
+  (destroy-firebase-app!)
+  )
 
 (comment
   (kotori-core/load-config kotori-core/config-file)

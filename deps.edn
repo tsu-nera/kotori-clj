@@ -8,7 +8,7 @@
   integrant/integrant {:mvn/version "0.8.0"}
 
   ;; utilites
-  yogthos/config                      {:mvn/version "1.1.9"}
+  yogthos/config                      {:mvn/version "1.2.0"}
   cheshire/cheshire                   {:mvn/version "5.10.2"}
   clj-http/clj-http                   {:mvn/version "3.12.3"}
   jarohen/chime                       {:mvn/version "0.3.3"}
@@ -21,7 +21,7 @@
 
   ;; Goole Cloud
   com.google.auth/google-auth-library-oauth2-http {:mvn/version "1.5.3"}
-  com.google.cloud/google-cloud-firestore         {:mvn/version "3.0.13"}
+  com.google.cloud/google-cloud-firestore         {:mvn/version "3.0.19"}
   com.google.firebase/firebase-admin              {:mvn/version "8.1.0"}
 
   ;; for API Server
@@ -41,7 +41,7 @@
   ;; PORT=8888 clojure -M:serve
   :serve    {:main-opts ["-m" "kotori.service.server"]}
   ;; clojure -T:build xxx
-  :build    {:deps       {io.github.clojure/tools.build   {:git/tag "v0.8.0" :git/sha "e3e3532"}
+  :build    {:deps       {io.github.clojure/tools.build   {:git/tag "v0.8.1" :git/sha "7d40500"}
                           com.google.cloud.tools/jib-core {:mvn/version "0.20.0"}}
              :ns-default build}
   ;; clojure -A:dev

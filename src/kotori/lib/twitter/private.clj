@@ -1,12 +1,8 @@
 (ns kotori.lib.twitter.private
   (:require
    [cheshire.core :as json]
-   [clj-http.client :as client]))
-
-(def guest-bearer-token
-  "AAAAAAAAAAAAAAAAAAAAANRILgAAAAAAnNwIzUejRCOuH5E6I8xnZz4puTs%3D1Zv7ttfk8LF81IUq16cHjhLTvJu4FA33AGWWjCpTnA")
-
-(def user-agent "Mozilla/5.0 (X11; Linux x86_64; rv:94.0) Gecko/20100101 Firefox/94.0")
+   [clj-http.client :as client]
+   [kotori.lib.twitter.config :refer [guest-bearer-token user-agent]]))
 
 (def options {:decode-cookies false :cookie-policy :none})
 

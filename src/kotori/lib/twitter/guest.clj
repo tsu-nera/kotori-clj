@@ -1,12 +1,8 @@
 (ns kotori.lib.twitter.guest
   (:require
    [cheshire.core :as json]
-   [clj-http.client :as client]))
-
-(def guest-bearer-token
-  "AAAAAAAAAAAAAAAAAAAAANRILgAAAAAAnNwIzUejRCOuH5E6I8xnZz4puTs%3D1Zv7ttfk8LF81IUq16cHjhLTvJu4FA33AGWWjCpTnA")
-
-(def user-agent "Mozilla/5.0 (X11; Linux x86_64; rv:94.0) Gecko/20100101 Firefox/94.0")
+   [clj-http.client :as client]
+   [kotori.lib.twitter.config :refer [guest-bearer-token user-agent]]))
 
 (def guest-token
   (delay
@@ -33,79 +29,51 @@
          resp (client/get url guest-headers)]
      (-> resp
          :body
-         (json/parse-string true)
-         (dissoc :status)))))
+         (json/parse-string true)))))
 
 (defn resolve-user-id
   [name]
   (:id_str (get-user name)))
 
-;;;;;;;;;;;;;;;;;;;;;
+(defn get-conversation-url [id]
+  (str "https://api.twitter.com/2/timeline/conversation/"
+       id
+       ".json?include_reply_count=0&send_error_codes=true&count=20"))
+
+;; 指定されたIDのツイートとそれにつながる全てのツイートが取れる
+(defn get-conversation [id]
+  (let [url  (get-conversation-url id)
+        resp (client/get url guest-headers)]
+    (-> resp
+        :body
+        (json/parse-string true))))
+
+(defn get-tweet [id]
+  (let [resp   (get-conversation id)
+        id-key (keyword id)]
+    (-> resp
+        :globalObjects
+        :tweets
+        (id-key))))
+
+;;;;;;;;;;;;;;;;
+;; Debug Tools
+;;;;;;;;;;;;;;;;
+(comment
+  (def user (get-user "richhickey"))
+  (resolve-user-id "richhickey"))
+
+(comment
+  (def response (get-conversation "1477034578875277316"))
+  (def response (get-tweet "1477034578875277316"))
+
+  response
+  )
+
+;;;;;;;;;;;;;;;;;;;;
 ;; Design Journals
-;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;
 
-
-(comment
-
-  #_ (def user (get-user "richhickey"))
-  #_(resolve-user-id "richhickey")
-  #_(def user (get-user "46130870"))
-  )
-
-;; 一旦封印. private.cljといい感じに揃えたい.
-(comment
-
-  (defn get-statuses-url [status-id]
-    (str "https://api.twitter.com/2/timeline/conversation/"
-         status-id
-         ".json?include_reply_count=1&send_error_codes=true&count=20"))
-
-  (defn get-statuses [status-id]
-    (let [url (get-statuses-url status-id)]
-      (client/get url guest-headers)))
-
-  (defn get-status [status-id]
-    (let [response (get-statuses status-id)]
-      (-> response
-          :body
-          (json/parse-string true)
-          :globalObjects
-          :tweets
-          (get (keyword status-id)))))
-  )
-
-(comment
-  ;; (def response (get-statuses 1477034578875277316))
-  ;; response
-  ;; (-> response
-  ;;     :body
-  ;;     (json/parse-string true)
-  ;;     :globalObjects
-  ;;     :tweets
-  ;;     :1477034578875277316
-  ;;     )
-
-  ;; (def status (get-status "1477034578875277316"))
-  ;; status
-  )
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; (def response (get-statuses 1477034578875277316))
-;; (-> response
-;;     :body
-;;     (json/parse-string true)
-;;     :globalObjects
-;;     :tweets
-;;     (get (keyword "1477034578875277316"))
-;;     )
-
-;; (def status (get-status "1477034578875277316"))
-
-;; status
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-;; (def response (get-statuses 1477034578875277316))
 ;; (keys response)
 ;; ;; => (:cached
 ;;     :request-time

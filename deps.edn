@@ -48,9 +48,14 @@
   ;; .dir-locals.elのcider-clojure-cli-aliasesにdevを指定することで
   ;; cider-jack-inでもextra-deps/pathsを反映させる.
   :local    {:extra-paths ["dev/src"]
-             :extra-deps  {integrant/repl {:mvn/version "0.3.2"}}}
+             :extra-deps  {integrant/repl                  {:mvn/version "0.3.2"}
+                           io.github.clojure/tools.build   {:git/tag "v0.8.1" :git/sha "7d40500"}
+                           com.google.cloud.tools/jib-core {:mvn/version "0.20.0"}}}
   ;; clojure -M:outdated (--upgrade --force)
   :outdated {:extra-deps {com.github.liquidz/antq {:mvn/version "RELEASE"}}
              :main-opts  ["-m" "antq.core"]}
+  ;; jiblib
+  ;; clojure -Tjib build :aliases "[:run]"
   }
+
  }

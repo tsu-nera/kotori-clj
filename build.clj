@@ -11,15 +11,15 @@
 (def jar-file (format "%s/%s-%s-application.jar" artifacts-dir (name lib) version))
 (def uber-file (format "%s/application.jar" artifacts-dir))
 
-(def src ["src"])
+(def src ["src", "resources"])
 (def basis (b/create-basis {:project "deps.edn"}))
 
 ;; clj -T:build clean
 (defn clean [_]
   ;; "delete the build target directory"
   (println (str "Cleaning... " target-dir))
-  (b/delete {:path "target"}))
-
+  (b/delete {:path "target"})
+  :completed)
 
 ;; clj -T:build jar
 (defn jar [_]
@@ -31,7 +31,8 @@
   (b/copy-dir {:src-dirs   src
                :target-dir class-dir})
   (b/jar {:class-dir class-dir
-          :jar-file  jar-file}))
+          :jar-file  jar-file})
+  :completed)
 
 ;; clj -T:build uber
 (defn uber [_]
@@ -44,7 +45,8 @@
   (b/uber {:class-dir class-dir
            :uber-file uber-file
            :basis     basis
-           }))
+           })
+  :completed)
 
 ;; 1. Compile the code and generate a pom.xml
 (defn prep [_]
@@ -55,11 +57,12 @@
                 :src-dirs  src})
   (b/compile-clj {:basis     basis
                   :src-dirs  src
-                  :class-dir class-dir}))
+                  :class-dir class-dir})
+  :completed)
 
 ;; 2. Containerize with Jib and upload the container to registry
-;; (defn jib [_]
-;; nil)
+(defn jib [_]
+  :completed)
 
 ;; (defn jib [_]
 ;;   (.containerize

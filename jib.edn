@@ -1,0 +1,6 @@
+{
+ :main         "kotori.core"
+ :target-image {:image-name "asia.gcr.io/dmm-fanza/kotori"
+                :type       :registry
+                :authorizer {:fn jibbit.gcloud/authorizer}}
+ }

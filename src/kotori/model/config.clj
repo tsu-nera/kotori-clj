@@ -1,17 +1,17 @@
-(ns kotori.model.config
-  (:require [config.core :as config]
-            [integrant.core :as ig]
-            [clojure.java.io :as io]))
+;; (ns kotori.model.config
+;;   (:require [config.core :as config]
+;;             [integrant.core :as ig]
+;;             [clojure.java.io :as io]))
 
-(defmethod ig/init-key ::config [_ values]
-  (println "prepare config variables")
-  ;;(merge values {:cred-path "resources/private/dev/credentials.json"})
-  (config/reload-env)
-  )
+;; (defmethod ig/init-key ::config [_ values]
+;;   (println "prepare config variables")
+;;   ;;(merge values {:cred-path "resources/private/dev/credentials.json"})
+;;   (config/reload-env)
+;;   )
 
-(defmethod ig/halt-key! ::config [_ _]
-  (println "destroy config variables")
-  nil)
+;; (defmethod ig/halt-key! ::config [_ _]
+;;   (println "destroy config variables")
+;;   nil)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 

@@ -18,4 +18,6 @@ pom.xml.asc
 *.log
 /tmp
 
+# add self
 resources/private
+*.tar

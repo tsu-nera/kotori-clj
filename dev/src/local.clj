@@ -9,7 +9,7 @@
    [kotori.core :as kotori-core]
    [kotori.procedure.kotori :refer [tweet]]
    [kotori.service.bot :as bot]
-
+    ;;;;;;
    ))
 
 
@@ -74,6 +74,14 @@
   (require '[kotori.service.firebase :refer [delete-app!]])
   (delete-app!)
   )
+
+(comment
+  (require '[build :as b])
+  (b/clean nil)
+  (b/jar nil)
+  )
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (comment
   (kotori-core/load-config kotori-core/config-file)

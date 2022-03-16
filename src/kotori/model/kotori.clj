@@ -18,7 +18,6 @@
       (keywordize-keys)
       (rename-keys {:auth_token :auth-token})))
 
-
 (defonce doc nil)
 (defonce twitter-auth nil)
 (defonce proxies nil)
@@ -39,26 +38,28 @@
 (defmethod ig/init-key ::db [_ {:keys [config db]}]
   (let [user-id   (:userid config)
         coll-path (id->coll-path user-id)]
-    (def doc (-> db
-                 (fs/doc coll-path)
-                 (.get)
-                 (deref)
-                 (.getData)
-                 (as-> x (into {} x))
-                 (keywordize-keys)
-                 (as-> x (cske/transform-keys csk/->kebab-case-keyword x))))
+    (def doc
+      (-> db
+          (fs/doc coll-path)
+          (.get)
+          (deref)
+          (.getData)
+          (as-> x (into {} x))
+          (keywordize-keys)
+          (as-> x (cske/transform-keys csk/->kebab-case-keyword x))))
     (def twitter-auth (doc->twitter-auth doc))
 
     (let [proxy-label (:proxy-label doc)
           proxy-path  "configs/proxies"]
-      (def proxies (-> db
-                       (fs/doc proxy-path)
-                       (.get)
-                       (deref)
-                       (.getData)
-                       (get proxy-label)
-                       (proxy-fs-http)
-                       (proxy-port-string->number)))))
+      (def proxies
+        (-> db
+            (fs/doc proxy-path)
+            (.get)
+            (deref)
+            (.getData)
+            (get proxy-label)
+            (proxy-fs-http)
+            (proxy-port-string->number)))))
   :initalized)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

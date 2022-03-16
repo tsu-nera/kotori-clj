@@ -1,12 +1,14 @@
 (ns kotori.procedure.kotori
   (:require
-   [kotori.model.meigen :refer [meigens]]
-   [kotori.model.kotori :refer [twitter-auth proxies]]
-   [kotori.model.tweet :refer [posts]]
+   [firestore-clj.core :as f]
    [kotori.lib.twitter.private :as private]
-   [taoensso.timbre :as log]
-   [firestore-clj.core :as f])
-  (:import [java.text SimpleDateFormat]))
+   [kotori.model.kotori :refer [twitter-auth proxies]]
+   [kotori.model.meigen :refer [meigens]]
+   [kotori.model.tweet :refer [posts]]
+   [taoensso.timbre :as log])
+  (:import
+   (java.text
+    SimpleDateFormat)))
 
 (defn pick-random []
   (rand-nth meigens))

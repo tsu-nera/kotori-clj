@@ -1,9 +1,15 @@
 (ns kotori.service.firebase
-  (:require [clojure.java.io :as io]
-            [integrant.core :as ig])
-  (:import (com.google.auth.oauth2 GoogleCredentials)
-           (com.google.firebase FirebaseApp FirebaseOptions)
-           (com.google.firebase.cloud FirestoreClient)))
+  (:require
+   [clojure.java.io :as io]
+   [integrant.core :as ig])
+  (:import
+   (com.google.auth.oauth2
+    GoogleCredentials)
+   (com.google.firebase
+    FirebaseApp
+    FirebaseOptions)
+   (com.google.firebase.cloud
+    FirestoreClient)))
 
 (defn init-firebase-app-cred!
   [cred-path]
@@ -33,7 +39,6 @@
 
 (defn delete-app! []
   (.delete (get-app)))
-
 
 (defmethod ig/init-key ::app [_ {:keys [config]}]
   (let [env (:env config)
@@ -65,6 +70,7 @@
 (comment
   (FirebaseApp/getInstance)
   )
+
 ;; TODO 初期化失敗時の処理を検討. i.e. firestore接続不可.
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

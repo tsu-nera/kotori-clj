@@ -10,21 +10,22 @@
 
 (def guest-token
   (delay
-    (let [response (client/post
-                    "https://api.twitter.com/1.1/guest/activate.json"
-                    {:cookie-policy :none
-                     :headers       {:authorization (str "Bearer " guest-bearer-token)
-                                     :user-agent    user-agent}})]
-      (-> response
-          :body
-          (json/parse-string true)
-          :guest_token
-          (or (throw (ex-info "Can't get guest token" {:response response})))))))
+   (let [response (client/post
+                   "https://api.twitter.com/1.1/guest/activate.json"
+                   {:cookie-policy :none
+                    :headers       {:authorization (str "Bearer " guest-bearer-token)
+                                    :user-agent    user-agent}})]
+     (-> response
+         :body
+         (json/parse-string true)
+         :guest_token
+         (or (throw (ex-info "Can't get guest token" {:response response})))))))
 
-(def guest-headers {:headers
-                    {:authorization (str "Bearer " guest-bearer-token)
-                     :user-agent    user-agent
-                     :x-guest-token @guest-token}})
+(def guest-headers
+  {:headers
+   {:authorization (str "Bearer " guest-bearer-token)
+    :user-agent    user-agent
+    :x-guest-token @guest-token}})
 
 (defn get-user
   ([name]
@@ -34,7 +35,6 @@
          :body
          (json/parse-string true)
          (dissoc :status)))))
-
 
 (defn resolve-user-id
   [name]

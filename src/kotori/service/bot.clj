@@ -1,12 +1,13 @@
 (ns kotori.service.bot
   (:require
-   [integrant.core :as ig]
    [chime.core :as chime]
+   [integrant.core :as ig]
    [kotori.procedure.kotori :as kotori]
-   [taoensso.timbre :as log]
-   )
+   [taoensso.timbre :as log])
   (:import
-   (java.time Duration Instant)))
+   (java.time
+    Duration
+    Instant)))
 
 ;; TODO あとでなんとかする. とりあえずの対応.
 ;; integrant保留中のためnamespaceに状態をbindingする.
@@ -27,7 +28,6 @@
 (defn stop! [app]
   (.close app))
 
-
 ;; (defmethod ig/init-key ::app [_ _]
 ;;   (start!))
 
@@ -36,7 +36,6 @@
 (defn -main
   [& _args]
   (start!))
-
 
 (comment
   chime/*clock*

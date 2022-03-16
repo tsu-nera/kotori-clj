@@ -2,10 +2,9 @@
   (:gen-class)
   (:require
    [clojure.edn :as edn]
+   [clojure.java.io :as io]
    [integrant.core :as ig]
-   [taoensso.timbre :as log]
-   [clojure.java.io :as io])
-  )
+   [taoensso.timbre :as log]))
 
 ;; integrant configuration map
 (def ig-config-file "config.edn")
@@ -16,7 +15,7 @@
       slurp
       ig/read-string
       (doto
-          (ig/load-namespaces))))
+       (ig/load-namespaces))))
 
 (defn- load-edn [config]
   (-> config
@@ -26,8 +25,10 @@
 
 (def ig-config (load-ig-config ig-config-file))
 
-(def env-prod {:env       :production
-               :cred-path "resources/private/prod/credentials.json"})
+(def env-prod
+  {:env       :production
+   :cred-path "resources/private/prod/credentials.json"})
+
 (def config-prod (load-edn "resources/private/prod/config.edn"))
 
 (defonce ^:private system nil)

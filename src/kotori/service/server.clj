@@ -13,7 +13,6 @@
   (let [tweet (kotori/tweet-random)]
     (response/response "OK")))
 
-
 (defn serve
   ;; [port]
   []
@@ -21,12 +20,10 @@
                  wrap-keyword-params
                  wrap-json-params
                  wrap-json-response
-                 wrap-params
-                 )
+                 wrap-params)
              {:host  "0.0.0.0"
               :port  8888
               :join? false}))
-
 
 (defmethod ig/init-key ::app [_ _]
   (serve))
@@ -35,7 +32,6 @@
 ;; 名前からしてFirebaseAppを消せば勝手にFirestoreも消えそうだな.
 (defmethod ig/halt-key! ::app [_ server]
   (.stop server))
-
 
 ;; (defn -main
 ;;   [& _args]

@@ -38,7 +38,7 @@
         data     (make-fs-tweet result)
         tweet-id (:id_str result)]
     (try
-      (log/info (str "post tweet completed. tweet-id=" tweet-id))
+      (log/info (str "post tweet completed. id=" tweet-id))
       (-> posts
           (.document tweet-id)
           (.set data))
@@ -51,77 +51,16 @@
         status                             (make-status data)]
     (tweet status)))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(defn tweet-morning []
+  (tweet "おはようございます"))
+
+(defn tweet-evening []
+  (tweet "お疲れ様です"))
+
+;;;;;;;;;;;;;;;;;;;;
 ;; Design Journals
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;
 
-(comment
-  (pick-random)
-  (make-status (pick-random))
-
-  (def result (tweet-random))
-
-  result
-
-  ;; posts
-  ;; (:id_str (:user result))
-  ;; (def userid (get-in result [:user :id_str]))
-
-  (def data (make-fs-tweet result))
-  (def status-id (:id_str result))
-
-  (-> posts
-      (.document status-id)
-      (.set data))
-
-  ;; twitterのデータ表現は独自なのでparseする 必要がある.
-  ;; :created_at = "Sat Mar 12 20:34:57 +0000 2022"
-
-  (require '[clj-time.format :as f])
-
-
-
-  ;; (def custom-formatter (f/formatter "EEE MMM dd HH:mm:ss Z yyyy"))
-  ;;
-
-  ;; (def custom-formatter (.withLocale (f/formatter "MMM dd HH:mm:ss")))
-
-  ;; (f/parse custom-formatter twitter-timestamp)
-
-  (f/show-formatters)
-
-  (import '[java.text SimpleDateFormat])
-
-  (def twitter-timestamp "Sat Mar 12 20:34:57 +0000 2022")
-  (def twitter-format "EEE MMM dd HH:mm:ss Z yyyy")
-
-  (defn parse-twitter-timestamp [timestamp]
-    (let [format "EEE MMM dd HH:mm:ss Z yyyy"
-          locale java.util.Locale/US
-          sdf    (SimpleDateFormat. format locale)]
-      (.setTimeZone sdf (java.util.TimeZone/getTimeZone "Asia/Tokyo"))
-      (->> timestamp
-           (.parse sdf))))
-
-  (parse-twitter-timestamp twitter-timestamp)
-
-  (def locale java.util.Locale/US)
-  (def sdf (SimpleDateFormat. twitter-format locale))
-
-  (.setTimeZone sdf (java.util.TimeZone/getTimeZone "UTC"))
-  (def timestamp (.parse sdf twitter-timestamp))
-
-  (type timestamp) ;; => java.util.Date
-
-  ;; DateFormat outputFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm");
-  ;; DateFormat inputFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss ZZZZZ yyyy", Locale.ENGLISH);
-  ;; inputFormat.setLenient(true);
-
-  ;; Date date = inputFormat.parse("Sat Sep 20 19:11:19 ICT 2014");
-  ;; String outputText = outputFormat.format(date);
-
-  ;; System.out.println(outputText);
-  )
 
 (comment
 

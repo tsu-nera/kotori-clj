@@ -14,19 +14,16 @@
     (response/response "OK")))
 
 (defn serve
-  ;; [port]
-  []
+  [opts]
   (run-jetty (-> handler
                  wrap-keyword-params
                  wrap-json-params
                  wrap-json-response
                  wrap-params)
-             {:host  "0.0.0.0"
-              :port  8888
-              :join? false}))
+             opts))
 
-(defmethod ig/init-key ::app [_ _]
-  (serve))
+(defmethod ig/init-key ::app [_ {:keys [opts]}]
+  (serve opts))
 
 ;; Firesore InterfaceはAutoClosableというInteraceを実装しているようで
 ;; 名前からしてFirebaseAppを消せば勝手にFirestoreも消えそうだな.
@@ -54,7 +51,9 @@
      :headers {"Content-Type" "text/html"}
      :body    "Hello World"})
 
-  (def server (serve))
+  (def server (serve {:host  "0.0.0.0"
+                      :port  8888
+                      :join? false}))
 
   server
 

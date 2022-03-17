@@ -1,10 +1,11 @@
 ;; configuration maps for integrant
-{
- ;; services
+{;; services
  :kotori.service.firebase/app {:config {}}
  :kotori.service.firebase/db  {:app #ig/ref :kotori.service.firebase/app}
  ;; :kotori.service.bot/app      {}
- :kotori.service.server/app   {}
+ :kotori.service.server/app   {:opts {:host  "0.0.0.0"
+                                      :port  8888
+                                      :join? false}}
 
  ;; models
  :kotori.model.meigen/db {:db #ig/ref :kotori.service.firebase/db}

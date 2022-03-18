@@ -3,23 +3,25 @@
   (:require
    [integrant.core :as ig]
    [kotori.procedure.kotori :as kotori]
+   [kotori.procedure.router :refer [app]]
    [ring.adapter.jetty :refer [run-jetty]]
    [ring.middleware.json :refer [wrap-json-params wrap-json-response]]
    [ring.middleware.keyword-params :refer [wrap-keyword-params]]
    [ring.middleware.params :refer [wrap-params]]
    [ring.util.response :as response]))
 
-(defn handler [req]
-  (let [tweet (kotori/tweet-random)]
-    (response/response "OK")))
+;; (defn handler [req]
+;;   (let [tweet (kotori/tweet-random)]
+;;     (response/response "OK")))
 
 (defn serve
   [opts]
-  (run-jetty (-> handler
-                 wrap-keyword-params
-                 wrap-json-params
-                 wrap-json-response
-                 wrap-params)
+  (run-jetty app
+             ;; (-> handler
+             ;;     wrap-keyword-params
+             ;;     wrap-json-params
+             ;;     wrap-json-response
+             ;;     wrap-params)
              opts))
 
 (defmethod ig/init-key ::app [_ {:keys [opts]}]
@@ -42,6 +44,18 @@
   (kotori/pick-random)
   (kotori/tweet-random)
   )
+
+(def handler-morning (fn [_] ((println "おはよう"))))
+
+(def opts
+  {:port    8080
+   :handler handler-morning})
+
+(-> opts
+    (dissoc :handler)
+    (assoc :join? false))
+
+;; => {:port 8080, :join? false}
 
 (comment
 

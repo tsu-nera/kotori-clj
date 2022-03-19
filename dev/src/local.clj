@@ -4,20 +4,20 @@
    [clojure.java.io :as io]
    [clojure.repl :refer :all]
    [clojure.tools.namespace.repl :refer [refresh]]
+   [hashp.core]
    [integrant.repl :refer [clear halt go init prep set-prep! reset reset-all suspend resume]]
    [integrant.repl.state :refer [config system]]
    [kotori.core :as kotori-core]
    [kotori.procedure.kotori :refer [tweet]]
-   [kotori.service.bot :as bot]
-    ;;;;;;
-   ))
+   [kotori.service.bot :as bot]))
 
+(def env-dev
+  {:env       :development
+   :cred-path "resources/private/dev/credentials.json"})
 
-(def env-dev {:env       :development
-              :cred-path "resources/private/dev/credentials.json"})
-
-(def env-prod {:env       :production
-               :cred-path "resources/private/prod/credentials.json"})
+(def env-prod
+  {:env       :production
+   :cred-path "resources/private/prod/credentials.json"})
 
 (def config-dev "resources/private/dev/config.edn")
 (def config-prod "resources/private/prod/config.edn")
@@ -66,7 +66,6 @@
   (bot/stop!)
   :stopped)
 
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (comment
@@ -100,7 +99,6 @@
 
   (load-config config-dev)
   )
-
 
 ;; (def config-map (kotori-core/load-config "config.edn"))
 ;; (def dev-map {:local? true :dev? true})

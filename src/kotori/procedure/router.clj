@@ -8,8 +8,8 @@
 
 (defn wrap [handler]
   (fn [request]
-    (handler)
-    resp-ok))
+    (let [resp-data (handler)]
+      (update resp-ok :body (constantly resp-data)))))
 
 (def router
   (ring/router
@@ -22,7 +22,10 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-#_(app {:request-method :post :uri "/api/tweet-evening"})
+#_(assoc resp-ok :body {:test "hoge"})
+#_(update resp-ok :body (constantly {:test "hoge"}))
+
+#_(App {:request-method :post :uri "/api/tweet-evening"})
 
 (comment
   (def router

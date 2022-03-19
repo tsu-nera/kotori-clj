@@ -6,26 +6,23 @@
 
 (def resp-ok {:status 200, :body "ok"})
 
-(defn tweet-morning-handler [_]
-  (kotori/tweet-morning)
-  resp-ok)
-
-(defn tweet-evening-handler [_]
-  (kotori/tweet-evening)
-  resp-ok)
-
-(defn tweet-random-handler [_]
-  (kotori/tweet-random)
-  resp-ok)
+(defn wrap [handler]
+  (fn [request]
+    (handler)
+    resp-ok))
 
 (def router
   (ring/router
-   [["/api"
-     ["/tweet-morning" {:post tweet-morning-handler}]
-     ["/tweet-evening" {:post tweet-evening-handler}]
-     ["/tweet-random" {:post tweet-random-handler}]]]))
+   ["/api" {:middleware [#(wrap %)]}
+    ["/tweet-morning" kotori/tweet-morning]
+    ["/tweet-evening" kotori/tweet-evening]
+    ["/tweet-random" kotori/tweet-random]]))
 
 (def app (ring/ring-handler router))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+#_(app {:request-method :post :uri "/api/tweet-evening"})
 
 (comment
   (def router

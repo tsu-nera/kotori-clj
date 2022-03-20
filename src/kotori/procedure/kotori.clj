@@ -1,6 +1,5 @@
 (ns kotori.procedure.kotori
   (:require
-   [firestore-clj.core :as f]
    [kotori.lib.twitter.private :as private]
    [kotori.model.kotori :refer [twitter-auth proxies]]
    [kotori.model.meigen :refer [meigens]]
@@ -61,9 +60,12 @@
 ;;;;;;;;;;;;;;;;;;;;
 ;; Design Journals
 ;;;;;;;;;;;;;;;;;;;;
-(defn dummy [{:keys [text db] :as req}]
-  (prn req)
-  {:text text})
+(require '[clojure.pprint :as pp])
+
+(defn dummy [{:keys [text screen_name db] :as params}]
+  (println params)
+  {:text        text
+   :screen-name screen_name})
 
 (comment
 

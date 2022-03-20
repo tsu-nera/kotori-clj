@@ -2,11 +2,16 @@
   (:require
    [kotori.procedure.kotori :as kotori]
    [reitit.core :as r]
-   [reitit.ring :as ring]))
+   [reitit.ring :as ring]
+   [ring.util.response :as resp]))
+
+(defn wrap-http [handler]
+  (fn [request]
+    (resp/response (handler (:params request)))))
 
 (def routes
   (ring/router
-   ["/api"  ;; {:middleware [#(wrap-http %)]}
+   ["/api"  {:middleware [#(wrap-http %)]}
     ["/dummy" kotori/dummy]
     ["/tweet" kotori/tweet]
     ["/tweet-morning" kotori/tweet-morning]

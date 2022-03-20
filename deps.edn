@@ -20,6 +20,9 @@
   ;; Logging
   com.taoensso/timbre       {:mvn/version "5.1.2"}
   com.fzakaria/slf4j-timbre {:mvn/version "0.3.21"}
+  ;; org.clojure/tools.logging      {:mvn/version "1.2.4"}
+  ;; No need to specify slf4j-api, it’s required by logback
+  ;; ch.qos.logback/logback-classic {:mvn/version "1.2.11"}
 
   ;; Goole Cloud
   com.google.auth/google-auth-library-oauth2-http {:mvn/version "1.6.0"}

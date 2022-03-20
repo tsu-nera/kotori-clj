@@ -10,27 +10,20 @@
    [ring.middleware.params :refer [wrap-params]]
    [ring.util.response :as resp]))
 
-(defn wrap-http [handler]
-  (fn [request]
-    (-> request
-        :params
-        (handler)
-        (resp/response))))
-
 (defn wrap-db [handler db]
   (fn [request]
     (handler (assoc-in request [:params :db] db))))
 
 (defn serve [opts db]
   (let [app (make-app)]
-    (run-jetty #p (-> app
-                      wrap-keyword-params
-                      wrap-json-params
-                      wrap-json-response
-                      wrap-params
-                      (wrap-db db)
-                      wrap-http)
-               opts)))
+    (run-jetty
+     (-> app
+         wrap-keyword-params
+         wrap-json-params
+         wrap-params
+         wrap-json-response
+         (wrap-db db))
+     opts)))
 
 (defmethod ig/init-key ::app [_ {:keys [opts db]}]
   (serve opts db))
@@ -49,9 +42,32 @@
 
 (comment
 
-  (kotori/pick-random)
-  (kotori/tweet-random)
+  (require '[integrant.repl.state :refer [config system]])
+  (require '[clojure.pprint :refer [pprint]])
+
+  (def app (make-app))
+  (def db (:db (::app config)))
+  (def request-dummy {:request-method :post :uri "/api/dummy"})
+
+  (def handler (wrap-http
+                (wrap-db
+                 (wrap-params
+                  (wrap-json-response
+                   (wrap-json-params
+                    (wrap-keyword-params (make-app)))))
+                 db)))
+
+  ((wrap-keyword-params app)
+   request-dummy)
+
+  (handler {:request-method :post :uri "/api/dummy"})
   )
+
+(comment
+
+(kotori/pick-random)
+(kotori/tweet-random)
+)
 
 (def handler-morning (fn [_] ((println "おはよう"))))
 

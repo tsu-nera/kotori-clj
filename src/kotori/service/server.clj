@@ -7,21 +7,15 @@
    [ring.adapter.jetty :refer [run-jetty]]
    [ring.middleware.json :refer [wrap-json-params wrap-json-response]]
    [ring.middleware.keyword-params :refer [wrap-keyword-params]]
-   [ring.middleware.params :refer [wrap-params]]
-   [ring.util.response :as response]))
-
-;; (defn handler [req]
-;;   (let [tweet (kotori/tweet-random)]
-;;     (response/response "OK")))
+   [ring.middleware.params :refer [wrap-params]]))
 
 (defn serve
   [opts]
-  (run-jetty app
-             ;; (-> handler
-             ;;     wrap-keyword-params
-             ;;     wrap-json-params
-             ;;     wrap-json-response
-             ;;     wrap-params)
+  (run-jetty (-> app
+                 wrap-keyword-params
+                 wrap-json-params
+                 wrap-json-response
+                 wrap-params)
              opts))
 
 (defmethod ig/init-key ::app [_ {:keys [opts]}]

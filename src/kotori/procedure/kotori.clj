@@ -33,7 +33,7 @@
      "created_at" created_at
      "updated_at" created_at}))
 
-(defn tweet [text]
+(defn tweet [{:keys [text]}]
   (let [result   (private/create-tweet twitter-auth proxies text)
         data     (make-fs-tweet result)
         tweet-id (:id_str result)]
@@ -45,22 +45,23 @@
       result
       (catch Exception e (log/error "post tweet Failed." (.getMessage e))))))
 
-(defn tweet-random []
+(defn tweet-random [{:keys [_]}]
   (let [data                               (pick-random)
         {content :content, author :author} data
         status                             (make-status data)]
-    (tweet status)))
+    (tweet {:text status})))
 
-(defn tweet-morning []
-  (tweet "おはようございます"))
+(defn tweet-morning [{:keys [_]}]
+  (tweet {:text "おはようございます"}))
 
-(defn tweet-evening []
-  (tweet "お疲れ様です"))
+(defn tweet-evening [_]
+  (tweet {:text "おはようございます"}))
 
 ;;;;;;;;;;;;;;;;;;;;
 ;; Design Journals
 ;;;;;;;;;;;;;;;;;;;;
-
+(defn dummy [{:keys [text]}]
+  {:text text})
 
 (comment
 

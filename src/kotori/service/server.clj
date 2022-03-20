@@ -1,6 +1,8 @@
 (ns kotori.service.server
   (:gen-class)
   (:require
+   [camel-snake-kebab.core :refer [->kebab-case ->snake_case]]
+   [camel-snake-kebab.extras :refer [transform-keys]]
    [integrant.core :as ig]
    [kotori.procedure.kotori :as kotori]
    [kotori.procedure.router :refer [make-app]]
@@ -14,10 +16,20 @@
   (fn [request]
     (handler (assoc-in request [:params :db] db))))
 
+;; requestをkebab-case, responseを snake_caseに変換.
+(defn wrap-kebab-case-keys [handler]
+  (fn [request]
+    (let [response (-> request
+                       (update :params (partial transform-keys
+                                                #(->kebab-case % :separator \_)))
+                       handler)]
+      (transform-keys #(->snake_case % :separator \-) response))))
+
 (defn serve [opts db]
   (let [app (make-app)]
     (run-jetty
      (-> app
+         wrap-kebab-case-keys
          wrap-keyword-params
          wrap-json-params
          wrap-params

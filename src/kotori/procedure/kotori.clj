@@ -1,5 +1,6 @@
 (ns kotori.procedure.kotori
   (:require
+   [kotori.lib.twitter.guest :as guest]
    [kotori.lib.twitter.private :as private]
    [kotori.model.kotori :refer [twitter-auth proxies]]
    [kotori.model.meigen :refer [meigens]]
@@ -60,12 +61,12 @@
 ;;;;;;;;;;;;;;;;;;;;
 ;; Design Journals
 ;;;;;;;;;;;;;;;;;;;;
-(require '[clojure.pprint :as pp])
 
-(defn dummy [{:keys [text screen_name db] :as params}]
-  (println params)
-  {:text        text
-   :screen-name screen_name})
+(defn dummy [{:keys [text screen-name db] :as params}]
+  (let [user-id (guest/resolve-user-id screen-name)]
+    {:text        text
+     :screen-name screen-name
+     :user-id     user-id}))
 
 (comment
 

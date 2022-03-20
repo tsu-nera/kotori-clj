@@ -45,22 +45,24 @@
       result
       (catch Exception e (log/error "post tweet Failed." (.getMessage e))))))
 
-(defn tweet-random [{:keys [_]}]
+(defn tweet-random [{:keys [db]}]
   (let [data                               (pick-random)
         {content :content, author :author} data
         status                             (make-status data)]
     (tweet {:text status})))
 
-(defn tweet-morning [{:keys [_]}]
+(defn tweet-morning
+  [{:keys [_]}]
   (tweet {:text "おはようございます"}))
 
-(defn tweet-evening [_]
+(defn tweet-evening [{:keys [_]}]
   (tweet {:text "おはようございます"}))
 
 ;;;;;;;;;;;;;;;;;;;;
 ;; Design Journals
 ;;;;;;;;;;;;;;;;;;;;
-(defn dummy [{:keys [text]}]
+(defn dummy [{:keys [text db] :as req}]
+  (prn req)
   {:text text})
 
 (comment

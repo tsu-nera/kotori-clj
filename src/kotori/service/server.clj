@@ -3,23 +3,37 @@
   (:require
    [integrant.core :as ig]
    [kotori.procedure.kotori :as kotori]
-   [kotori.procedure.router :refer [app]]
+   [kotori.procedure.router :refer [make-app]]
    [ring.adapter.jetty :refer [run-jetty]]
    [ring.middleware.json :refer [wrap-json-params wrap-json-response]]
    [ring.middleware.keyword-params :refer [wrap-keyword-params]]
-   [ring.middleware.params :refer [wrap-params]]))
+   [ring.middleware.params :refer [wrap-params]]
+   [ring.util.response :as resp]))
 
-(defn serve
-  [opts]
-  (run-jetty (-> app
-                 wrap-keyword-params
-                 wrap-json-params
-                 wrap-json-response
-                 wrap-params)
-             opts))
+(defn wrap-http [handler]
+  (fn [request]
+    (-> request
+        :params
+        (handler)
+        (resp/response))))
 
-(defmethod ig/init-key ::app [_ {:keys [opts]}]
-  (serve opts))
+(defn wrap-db [handler db]
+  (fn [request]
+    (handler (assoc-in request [:params :db] db))))
+
+(defn serve [opts db]
+  (let [app (make-app)]
+    (run-jetty #p (-> app
+                      wrap-keyword-params
+                      wrap-json-params
+                      wrap-json-response
+                      wrap-params
+                      (wrap-db db)
+                      wrap-http)
+               opts)))
+
+(defmethod ig/init-key ::app [_ {:keys [opts db]}]
+  (serve opts db))
 
 ;; Firesore InterfaceはAutoClosableというInteraceを実装しているようで
 ;; 名前からしてFirebaseAppを消せば勝手にFirestoreも消えそうだな.

@@ -2,26 +2,26 @@
   (:require
    [kotori.procedure.kotori :as kotori]
    [reitit.core :as r]
-   [reitit.ring :as ring]
-   [ring.util.response :refer [response]]))
+   [reitit.ring :as ring]))
 
-(defn wrap [handler]
-  (fn [request]
-    (let [data (handler (:params request))]
-      (response data))))
-
-(def router
+(def routes
   (ring/router
-   ["/api" {:middleware [#(wrap %)]}
+   ["/api"  ;; {:middleware [#(wrap-http %)]}
     ["/dummy" kotori/dummy]
     ["/tweet" kotori/tweet]
     ["/tweet-morning" kotori/tweet-morning]
     ["/tweet-evening" kotori/tweet-evening]
     ["/tweet-random" kotori/tweet-random]]))
 
-(def app (ring/ring-handler router))
+(defn make-app []
+  (ring/ring-handler routes))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(comment
+  (def app (make-app))
+  (app {:request-method :post :uri "/api/dummy"})
+  )
 
 (comment
   (def handler-resp

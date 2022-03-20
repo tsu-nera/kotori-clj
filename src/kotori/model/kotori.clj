@@ -5,10 +5,11 @@
    [clojure.set :refer [rename-keys]]
    [clojure.walk :refer [keywordize-keys]]
    [firestore-clj.core :as fs]
-   [integrant.core :as ig]
-   [kotori.lib.twitter.private :as private]))
+   [integrant.core :as ig]))
 
-(defn id->coll-path [id]  (str "kotoris/" id))
+(def coll-name "kotoris")
+
+(defn id->doc-path [id]  (str coll-name "/" id))
 
 (defn doc->twitter-auth
   [doc]
@@ -36,11 +37,12 @@
     (assoc m :proxy-port (Integer. port))))
 
 (defmethod ig/init-key ::db [_ {:keys [config db]}]
-  (let [user-id   (:userid config)
-        coll-path (id->coll-path user-id)]
+  (let [user-id  (:userid config)
+        doc-path (id->doc-path user-id)
+        coll     (fs/coll db coll-name)]
     (def doc
       (-> db
-          (fs/doc coll-path)
+          (fs/doc doc-path)
           (.get)
           (deref)
           (.getData)
@@ -48,7 +50,6 @@
           (keywordize-keys)
           (as-> x (cske/transform-keys csk/->kebab-case-keyword x))))
     (def twitter-auth (doc->twitter-auth doc))
-
     (let [proxy-label (:proxy-label doc)
           proxy-path  "configs/proxies"]
       (def proxies
@@ -59,8 +60,8 @@
             (.getData)
             (get proxy-label)
             (proxy-fs-http)
-            (proxy-port-string->number)))))
-  :initalized)
+            (proxy-port-string->number))))
+    coll))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 

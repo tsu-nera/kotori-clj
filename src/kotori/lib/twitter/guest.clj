@@ -18,7 +18,8 @@
          (or (throw (ex-info "Can't get guest token" {:response response})))))))
 
 (def guest-headers
-  {:headers
+  {:cookie-policy :standard
+   :headers
    {:authorization (str "Bearer " guest-bearer-token)
     :user-agent    user-agent
     :x-guest-token @guest-token}})

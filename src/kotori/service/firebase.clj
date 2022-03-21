@@ -40,6 +40,9 @@
 (defn delete-app! []
   (.delete (get-app)))
 
+(defn get-db []
+  (FirestoreClient/getFirestore))
+
 (defmethod ig/init-key ::app [_ {:keys [config]}]
   (let [env (:env config)
         app (create-app! config)]

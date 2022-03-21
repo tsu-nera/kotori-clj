@@ -15,7 +15,8 @@
 (defn creds->headers
   [{:keys [auth-token ct0]}]
   (let [cookie (str "auth_token=" auth-token "; ct0=" ct0)]
-    {:headers
+    {:cookie-policy :standard
+     :headers
      {:authorization (str "Bearer " guest-bearer-token)
       :user-agent    user-agent
       :x-csrf-token  ct0

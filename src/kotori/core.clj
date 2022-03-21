@@ -39,7 +39,7 @@
   (alter-system (constantly
                  (-> ig-config
                      (assoc-in [:kotori.service.firebase/app :config] env-prod)
-                     (assoc-in [:kotori.model.kotori/db :config] config-prod)
+                     ;; (assoc-in [:kotori.model.kotori/db :config] config-prod)
                      (assoc-in [:kotori.model.tweet/db :config] config-prod)
                      (ig/init)))))
 

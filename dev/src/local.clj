@@ -8,8 +8,8 @@
    [integrant.repl :refer [clear halt go init prep set-prep! reset reset-all suspend resume]]
    [integrant.repl.state :refer [config system]]
    [kotori.core :as kotori-core]
-   [kotori.procedure.kotori :refer [tweet]]
-   [kotori.service.bot :as bot]))
+   [kotori.service.bot :as bot]
+   [kotori.service.firebase :refer [get-app get-db delete-app!]]))
 
 (def env-dev
   {:env       :development
@@ -32,7 +32,7 @@
   [env config]
   (-> kotori-core/ig-config
       (assoc-in [:kotori.service.firebase/app :config] env)
-      (assoc-in [:kotori.model.kotori/db :config] config)
+      ;; (assoc-in [:kotori.model.kotori/db :config] config)
       (assoc-in [:kotori.model.tweet/db :config] config)
       (constantly)
       (set-prep!))
@@ -69,8 +69,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (comment
-  ;; FirebaseApp instanceの削除.
-  (require '[kotori.service.firebase :refer [delete-app!]])
+  (def db (get-db))
   (delete-app!)
   )
 

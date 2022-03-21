@@ -10,7 +10,7 @@
 
  ;; models
  :kotori.model.meigen/db {:db #ig/ref :kotori.service.firebase/db}
- :kotori.model.kotori/db {:config {} :db #ig/ref :kotori.service.firebase/db}
+ ;; :kotori.model.kotori/db {:config {} :db #ig/ref :kotori.service.firebase/db}
  :kotori.model.tweet/db  {:config {} :db #ig/ref :kotori.service.firebase/db}
 
  ;; :kotori.service.kotori/app   {:config {} :db #ig/ref :kotori.model.firebase/firestore}

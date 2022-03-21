@@ -1,8 +1,13 @@
 (ns kotori.procedure.kotori
   (:require
+   [camel-snake-kebab.core :as csk]
+   [camel-snake-kebab.extras :as cske]
+   [clojure.set :refer [rename-keys]]
+   [clojure.walk :refer [keywordize-keys]]
+   [firestore-clj.core :as fs]
    [kotori.lib.twitter.guest :as guest]
    [kotori.lib.twitter.private :as private]
-   [kotori.model.kotori :refer [twitter-auth proxies]]
+   [kotori.model.kotori :as model]
    [kotori.model.meigen :refer [meigens]]
    [kotori.model.tweet :refer [posts]]
    [taoensso.timbre :as log])
@@ -33,8 +38,11 @@
      "created_at" created_at
      "updated_at" created_at}))
 
-(defn tweet [{:keys [text]}]
-  (let [result   (private/create-tweet twitter-auth proxies text)
+(defn tweet [{:keys [text screen-name db]}]
+  (let [user-id  (guest/resolve-user-id screen-name)
+        creds    (model/user-id->creds db user-id)
+        proxies  (model/user-id->proxies db user-id)
+        result   (private/create-tweet creds proxies text)
         data     (make-fs-tweet result)
         tweet-id (:id_str result)]
     (try
@@ -45,28 +53,34 @@
       result
       (catch Exception e (log/error "post tweet Failed." (.getMessage e))))))
 
-(defn tweet-random [{:keys [db]}]
+(defn tweet-random [{:as params}]
   (let [data                               (pick-random)
         {content :content, author :author} data
-        status                             (make-status data)]
-    (tweet {:text status})))
+        text                               (make-status data)]
+    (tweet (assoc params :text text))))
 
 (defn tweet-morning
-  [{:keys [_]}]
-  (tweet {:text "おはようございます"}))
+  [{:as params}]
+  (tweet (assoc params :text "おはようございます")))
 
-(defn tweet-evening [{:keys [_]}]
-  (tweet {:text "おはようございます"}))
+(defn tweet-evening
+  [{:as params}]
+  (tweet (assoc params :text "お疲れ様です")))
 
 ;;;;;;;;;;;;;;;;;;;;
 ;; Design Journals
 ;;;;;;;;;;;;;;;;;;;;
 
+
 (defn dummy [{:keys [text screen-name db] :as params}]
-  (let [user-id (guest/resolve-user-id screen-name)]
+  (let [user-id (guest/resolve-user-id screen-name)
+        creds   (model/user-id->creds db user-id)
+        proxies (model/user-id->proxies db user-id)]
     {:text        text
      :screen-name screen-name
-     :user-id     user-id}))
+     :user-id     user-id
+     :creds       creds
+     :proxies     proxies}))
 
 (comment
 

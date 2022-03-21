@@ -52,34 +52,12 @@
 ;;   )
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+
 (comment
 
-  (require '[integrant.repl.state :refer [config system]])
-  (require '[clojure.pprint :refer [pprint]])
-
-  (def app (make-app))
-  (def db (:db (::app config)))
-  (def request-dummy {:request-method :post :uri "/api/dummy"})
-
-  (def handler (wrap-http
-                (wrap-db
-                 (wrap-params
-                  (wrap-json-response
-                   (wrap-json-params
-                    (wrap-keyword-params (make-app)))))
-                 db)))
-
-  ((wrap-keyword-params app)
-   request-dummy)
-
-  (handler {:request-method :post :uri "/api/dummy"})
+  (kotori/pick-random)
+  (kotori/tweet-random)
   )
-
-(comment
-
-(kotori/pick-random)
-(kotori/tweet-random)
-)
 
 (def handler-morning (fn [_] ((println "おはよう"))))
 

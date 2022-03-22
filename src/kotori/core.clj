@@ -7,9 +7,10 @@
    [taoensso.timbre :as log]))
 
 ;; integrant configuration map
-(def ig-config-file "config.edn")
+(def config-file "config.edn")
 
-(defn load-ig-config [config]
+(defn load-config
+  [config]
   (-> config
       io/resource
       slurp
@@ -17,50 +18,33 @@
       (doto
        (ig/load-namespaces))))
 
-(defn- load-edn [config]
-  (-> config
-      io/file
-      slurp
-      edn/read-string))
-
-(def ig-config (load-ig-config ig-config-file))
-
-(def env-prod
-  {:env       :production
-   :cred-path "resources/private/prod/credentials.json"})
-
-(def config-prod (load-edn "resources/private/prod/config.edn"))
-
 (defonce ^:private system nil)
 
 (def alter-system (partial alter-var-root #'system))
 
-(defn system-start []
+(defn start-system! []
   (alter-system (constantly
-                 (-> ig-config
-                     (assoc-in [:kotori.service.firebase/app :config] env-prod)
+                 (-> config-file
+                     load-config
+                     ;; (assoc-in [:kotori.service.firebase/app :config] creds-prod)
                      ;; (assoc-in [:kotori.model.kotori/db :config] config-prod)
-                     (assoc-in [:kotori.model.tweet/db :config] config-prod)
+                     ;; (assoc-in [:kotori.model.tweet/db :config] env-prod)
                      (ig/init)))))
 
-(defn system-stop []
+(defn stop-system! []
   (alter-system ig/halt!))
 
 (defn -main
   [& _args]
-  (system-start))
+  (start-system!))
 
 ;;;;;;;;;;;;;;;;;;;
 ;; Design Journal
 ;;;;;;;;;;;;;;;;;;;
 
-
 (comment
-  system
-  (system-start)
-  (system-stop)
-
-  (ig/dependency-graph ig-config)
+  (start-system!)
+  (stop-system!)
   )
 
 (comment

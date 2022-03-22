@@ -1,17 +1,24 @@
-;; (ns kotori.model.config
-;;   (:require [config.core :as config]
-;;             [integrant.core :as ig]
-;;             [clojure.java.io :as io]))
+(ns kotori.service.env
+  (:require
+   [clojure.edn :as edn]
+   [clojure.java.io :as io]
+   ;; [config.core :as config]
+   [integrant.core :as ig]))
 
-;; (defmethod ig/init-key ::config [_ values]
-;;   (println "prepare config variables")
-;;   ;;(merge values {:cred-path "resources/private/dev/credentials.json"})
-;;   (config/reload-env)
-;;   )
+(defn- load-edn [file-path]
+  (-> file-path
+      io/file
+      slurp
+      edn/read-string))
 
-;; (defmethod ig/halt-key! ::config [_ _]
-;;   (println "destroy config variables")
-;;   nil)
+(defmethod ig/init-key ::env [_ {:keys [path]}]
+  (-> path
+      io/resource
+      load-edn))
+
+(defmethod ig/init-key ::creds [_ {:keys [path]}]
+  (-> path
+      io/resource))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -26,7 +33,7 @@
 ;; => #object[java.net.URL 0x4fee40d2 "file:/home/tsu-nera/repo/kotori-clj/resources/config.edn"]
 ;;
 
-;; (io/resource "private/dev/config.edn")
+;;
 ;; (io/resource "private/dev/credentials.json")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

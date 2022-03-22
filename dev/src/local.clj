@@ -7,33 +7,24 @@
    [hashp.core]
    [integrant.repl :refer [clear halt go init prep set-prep! reset reset-all suspend resume]]
    [integrant.repl.state :refer [config system]]
-   [kotori.core :as kotori-core]
+   [kotori.core :as core]
    [kotori.service.bot :as bot]
    [kotori.service.firebase :refer [get-app get-db delete-app!]]))
 
-(def env-dev
-  {:env       :development
-   :cred-path "resources/private/dev/credentials.json"})
-
-(def env-prod
-  {:env       :production
-   :cred-path "resources/private/prod/credentials.json"})
-
-(def config-dev "resources/private/dev/config.edn")
-(def config-prod "resources/private/prod/config.edn")
-
-(defn- load-config [config]
-  (-> config
-      io/file
-      slurp
-      edn/read-string))
+(def creds-dev "private/dev/credentials.json")
+(def env-dev "private/dev/env.edn")
+(def creds-prod "private/prod/credentials.json")
+(def env-prod "private/prod/env.edn")
 
 (defn- init-system!
-  [env config]
-  (-> kotori-core/ig-config
-      (assoc-in [:kotori.service.firebase/app :config] env)
+  [creds env]
+  (-> core/config-file
+      core/load-config
+      (assoc-in [:kotori.service.env/creds :path] creds)
+      (assoc-in [:kotori.service.env/env :path] env)
+      ;; (assoc-in [:kotori.service.firebase/app :config] creds)
       ;; (assoc-in [:kotori.model.kotori/db :config] config)
-      (assoc-in [:kotori.model.tweet/db :config] config)
+      ;; (assoc-in [:kotori.model.tweet/db :config] config)
       (constantly)
       (set-prep!))
   (prep)
@@ -41,22 +32,28 @@
   :initialized)
 
 (defn env []
-  (merge (get-in config [:kotori.service.firebase/app :config])
-         (get-in config [:kotori.model.kotori/db :config])))
+  (get system :kotori.service.env/env))
+
+(defn dev? []
+  (= (:env (env)) :development))
+
+(defn prod? []
+  (= (:env (env)) :production))
 
 (defn dev []
-  (let [config (load-config config-dev)]
-    (init-system! env-dev config)
-    :development))
+  (init-system! creds-dev env-dev)
+  :development)
 
 (defn prod []
-  (let [config (load-config config-prod)]
-    (init-system! env-prod config)
-    :production))
+  (init-system! creds-prod env-prod)
+  :production)
 
-(defn restart []
+;; integrantのconfig.ednをいじったら clearで
+;; 古いconfigの設定を破棄する必要がある.
+(defn stop []
   (clear)
-  (reset-all))
+  (halt)
+  :stopped)
 
 (defn run-kotori []
   (bot/start!)

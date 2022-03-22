@@ -6,11 +6,7 @@
   ;; 状態管理
   integrant/integrant {:mvn/version "0.8.0"}
 
-  ;; router
-  metosin/reitit {:mvn/version "0.5.17"}
-
   ;; utilites
-  yogthos/config                      {:mvn/version "1.2.0"}
   cheshire/cheshire                   {:mvn/version "5.10.2"}
   clj-http/clj-http                   {:mvn/version "3.12.3"}
   jarohen/chime                       {:mvn/version "0.3.3"}
@@ -20,24 +16,20 @@
   ;; Logging
   com.taoensso/timbre       {:mvn/version "5.1.2"}
   com.fzakaria/slf4j-timbre {:mvn/version "0.3.21"}
-  ;; org.clojure/tools.logging      {:mvn/version "1.2.4"}
-  ;; No need to specify slf4j-api, it’s required by logback
-  ;; ch.qos.logback/logback-classic {:mvn/version "1.2.11"}
 
-  ;; Goole Cloud
+  ;; Google Cloud Platform
   com.google.auth/google-auth-library-oauth2-http {:mvn/version "1.6.0"}
   com.google.cloud/google-cloud-firestore         {:mvn/version "3.0.19"}
   com.google.firebase/firebase-admin              {:mvn/version "8.1.0"}
+  lurodrigo/firestore-clj                         {:mvn/version "1.2.1"}
+  ;; firesotre-cljを追加したらio.perfmarkが見つからずにエラーしたので追加.
+  io.perfmark/perfmark-api                        {:mvn/version "0.25.0"}
 
   ;; for API Server
   ring/ring-core          {:mvn/version "1.9.5"}
   ring/ring-jetty-adapter {:mvn/version "1.9.5"}
   ring/ring-json          {:mvn/version "0.5.1"}
-
-  ;; Google Cloud firestore
-  lurodrigo/firestore-clj  {:mvn/version "1.2.1"}
-  ;; firesotre-cljを追加したらio.perfmarkが見つからずにエラーしたので追加.
-  io.perfmark/perfmark-api {:mvn/version "0.25.0"}}
+  metosin/reitit          {:mvn/version "0.5.17"}}
 
  :aliases
  {;; clojure -M:run
@@ -65,18 +57,11 @@
   ;; jiblib
   ;; clojure -Tjib build :aliases "[:run]"
 
-  ;; clojure -M:nrepl
-  :nrepl {:extra-paths ["dev/src"]
-          :extra-deps  {integrant/repl                  {:mvn/version "0.3.2"}
-                        nrepl/nrepl                     {:mvn/version "0.9.0"}
-                        refactor-nrepl/refactor-nrepl   {:mvn/version "3.5.2"}
-                        hashp/hashp                     {:mvn/version "0.2.1"}
-                        cider/cider-nrepl               {:mvn/version "0.28.3"}
-                        io.github.clojure/tools.build   {:git/tag "v0.8.1" :git/sha "7d40500"}
-                        com.google.cloud.tools/jib-core {:mvn/version "0.20.0"}}
-          :main-opts   ["-m"
-                        "nrepl.cmdline"
-                        "-b" "0.0.0.0"
-                        "-p" "34331"
-                        "--middleware"
-                        "[cider.nrepl/cider-middleware,refactor-nrepl.middleware/wrap-refactor]"]}}}
+  ;; clojure -M:nrepl:local
+  ;; cider-connectのためにnreplとlocalの両方のオプションが必要.
+  :nrepl {:main-opts ["-m"
+                      "nrepl.cmdline"
+                      "-b" "0.0.0.0"
+                      "-p" "34331"
+                      "--middleware"
+                      "[cider.nrepl/cider-middleware,refactor-nrepl.middleware/wrap-refactor]"]}}}

@@ -2,7 +2,8 @@
   (:require
    [cheshire.core :as json]
    [clj-http.client :as client]
-   [kotori.lib.twitter.config :refer [guest-bearer-token user-agent]]))
+   [kotori.lib.config :refer [user-agent]]
+   [kotori.lib.twitter.config :refer [guest-bearer-token]]))
 
 (def guest-token
   (delay

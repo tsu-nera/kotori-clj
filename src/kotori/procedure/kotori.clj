@@ -40,8 +40,8 @@
 
 (defn tweet [{:keys [text screen-name db]}]
   (let [user-id  (guest/resolve-user-id screen-name)
-        creds    (kotori/user-id->creds db user-id)
-        proxies  (kotori/user-id->proxies db user-id)
+        creds    (kotori/->creds db user-id)
+        proxies  (kotori/->proxies db user-id)
         result   (private/create-tweet creds proxies text)
         data     (make-fs-tweet result)
         tweet-id (:id_str result)]
@@ -71,8 +71,8 @@
 ;;;;;;;;;;;;;;;;;;;;
 (defn dummy [{:keys [text screen-name db] :as params}]
   (let [user-id (guest/resolve-user-id screen-name)
-        creds   (kotori/user-id->creds db user-id)
-        proxies (kotori/user-id->proxies db user-id)]
+        creds   (kotori/->creds db user-id)
+        proxies (kotori/->proxies db user-id)]
     {:text        text
      :screen-name screen-name
      :user-id     user-id

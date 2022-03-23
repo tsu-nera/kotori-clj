@@ -9,7 +9,7 @@
 (def coll-name "kotoris")
 (defn coll-path [user-id] (str coll-name "/" user-id))
 
-(defn user-id->doc [db user-id]
+(defn ->doc [db user-id]
   (-> db
       (fs/doc (coll-path user-id))
       (.get)
@@ -19,9 +19,9 @@
       (keywordize-keys)
       (as-> x (cske/transform-keys csk/->kebab-case-keyword x))))
 
-(defn user-id->creds
+(defn ->creds
   ([db user-id]
-   (-> (user-id->doc db user-id)
+   (-> (->doc db user-id)
        (:twitter-auth)
        (as-> x (into {} x))
        (keywordize-keys)
@@ -40,9 +40,9 @@
   (let [port (:proxy-port m)]
     (assoc m :proxy-port (Integer. port))))
 
-(defn user-id->proxies
+(defn ->proxies
   [db user-id]
-  (let [doc         (user-id->doc db user-id)
+  (let [doc         (->doc db user-id)
         proxy-label (:proxy-label doc)
         proxy-path  "configs/proxies"]
     (-> db

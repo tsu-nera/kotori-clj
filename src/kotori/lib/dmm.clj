@@ -41,8 +41,9 @@
 (defn search-actress
   "女優検索API: https://affiliate.dmm.com/api/v3/actresssearch.html"
   [^Credentials creds q]
-  (let [url (->endpoint "ActressSearch")]
-    nil))
+  (let [url    (->endpoint "ActressSearch")
+        params (merge creds base-headers base-req-params q)]
+    (get url params)))
 
 (defn search-genre
   "ジャンル 検索API: https://affiliate.dmm.com/api/v3/genresearch.html"
@@ -79,4 +80,6 @@
                          :sort    "date"
                          :keyword "上原亜衣"})
   (search-product creds {:cid "ssis00312"})
+
+  (search-actress creds {:actress_id "1008785"})
   )

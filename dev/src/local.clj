@@ -64,6 +64,16 @@
   (bot/stop!)
   :stopped)
 
+(defn twitter-auth []
+  (-> system
+      (get :kotori.service.env/env)
+      (select-keys [:auth-token :ct0])))
+
+(defn dmm-creds []
+  (-> system
+      (get :kotori.service.env/env)
+      (select-keys [:api_id :affiliate_id])))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (comment

@@ -15,7 +15,7 @@
    :floor   "videoa"
    :output  "json"})
 
-(def headers {:headers {:user-agent user-agent}})
+(def base-headers {:headers {:user-agent user-agent}})
 
 (defrecord Credentials [^String api_id ^String affiliate_id])
 
@@ -29,11 +29,8 @@
   "商品検索API: https://affiliate.dmm.com/api/v3/itemlist.html"
   [^Credentials creds q]
   (let [url    (->endpoint "ItemList")
-        params (merge creds headers base-req-params
-                      {:hits    10
-                       :sort    "date"
-                       :keyword "上原亜衣"})]
-    (get url params {:debug false})))
+        params (merge creds base-headers base-req-params q)]
+    (get url params)))
 
 (defn get-floors
   "フロアAPI: https://affiliate.dmm.com/api/v3/floorlist.html"
@@ -74,7 +71,12 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (comment
-  (def creds (->Credentials "xxxxxxx" "xxxxxxxxxxx"))
+  (require '[local :refer[dmm-creds]])
 
-  (search-product creds {})
+  (def creds (map->Credentials (dmm-creds)))
+
+  (search-product creds {:hits    10
+                         :sort    "date"
+                         :keyword "上原亜衣"})
+  (search-product creds {:cid "ssis00312"})
   )

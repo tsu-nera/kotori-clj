@@ -1,22 +1,9 @@
 ;; configuration maps for integrant
-{;; services
- :kotori.service.env/creds    {:path "private/prod/credentials.json"}
- :kotori.service.env/env      {:path "private/prod/env.edn"}
- :kotori.service.firebase/app {:creds-path #ig/ref :kotori.service.env/creds}
- :kotori.service.firebase/db  {:app #ig/ref :kotori.service.firebase/app}
- ;; :kotori.service.bot/app      {}
- :kotori.service.server/app   {:opts {:host  "0.0.0.0"
-                                      :port  8888
-                                      :join? false}
-                               :db   #ig/ref :kotori.service.firebase/db}
-
- ;; models
- :kotori.model.meigen/db {:db #ig/ref :kotori.service.firebase/db}
- :kotori.model.tweet/db  {:config {} :db #ig/ref :kotori.service.firebase/db}
-
- ;; :kotori.service.kotori/app   {:config {} :db #ig/ref :kotori.model.firebase/firestore}
- ;; :kotori.twitter/account          {:kotori #ig/ref :kotori.kotori/app}
- ;; :kotori.config/config     {}
- ;; :kotori.firebase/firebase {:config #ig/ref :kotori.config/config}
- ;;:kotori.bot/bot           {:db #ig/ref :kotori.firebase/firebase}
- }
+{:kotori.service.env/creds     {:path "private/prod/credentials.json"}
+ :kotori.service.env/env       {:path "private/prod/env.edn"}
+ :kotori.service.firebase/app  {:creds-path #ig/ref :kotori.service.env/creds}
+ :kotori.service.firebase/db   {:app #ig/ref :kotori.service.firebase/app}
+ :kotori.service.server/server {:config {:host  "0.0.0.0"
+                                         :port  8888
+                                         :join? false}
+                                :db     #ig/ref :kotori.service.firebase/db}}

@@ -5,11 +5,11 @@
    [clojure.set :refer [rename-keys]]
    [clojure.walk :refer [keywordize-keys]]
    [firestore-clj.core :as fs]
+   [kotori.domain.kotori :as kotori]
+   [kotori.domain.meigen :refer [meigens]]
+   [kotori.domain.tweet :refer [posts]]
    [kotori.lib.twitter.guest :as guest]
    [kotori.lib.twitter.private :as private]
-   [kotori.model.kotori :as model]
-   [kotori.model.meigen :refer [meigens]]
-   [kotori.model.tweet :refer [posts]]
    [taoensso.timbre :as log])
   (:import
    (java.text
@@ -18,7 +18,7 @@
 (defn pick-random []
   (rand-nth meigens))
 
-(defn make-status [data]
+(defn make-text [data]
   (let [{content :content, author :author} data]
     (str content "\n\n" author)))
 
@@ -40,8 +40,8 @@
 
 (defn tweet [{:keys [text screen-name db]}]
   (let [user-id  (guest/resolve-user-id screen-name)
-        creds    (model/user-id->creds db user-id)
-        proxies  (model/user-id->proxies db user-id)
+        creds    (kotori/user-id->creds db user-id)
+        proxies  (kotori/user-id->proxies db user-id)
         result   (private/create-tweet creds proxies text)
         data     (make-fs-tweet result)
         tweet-id (:id_str result)]
@@ -54,9 +54,8 @@
       (catch Exception e (log/error "post tweet Failed." (.getMessage e))))))
 
 (defn tweet-random [{:as params}]
-  (let [data                               (pick-random)
-        {content :content, author :author} data
-        text                               (make-status data)]
+  (let [data (pick-random)
+        text (make-text data)]
     (tweet (assoc params :text text))))
 
 (defn tweet-morning
@@ -70,17 +69,27 @@
 ;;;;;;;;;;;;;;;;;;;;
 ;; Design Journals
 ;;;;;;;;;;;;;;;;;;;;
-
-
 (defn dummy [{:keys [text screen-name db] :as params}]
   (let [user-id (guest/resolve-user-id screen-name)
-        creds   (model/user-id->creds db user-id)
-        proxies (model/user-id->proxies db user-id)]
+        creds   (kotori/user-id->creds db user-id)
+        proxies (kotori/user-id->proxies db user-id)]
     {:text        text
      :screen-name screen-name
      :user-id     user-id
      :creds       creds
      :proxies     proxies}))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(comment
+  (require '[kotori.service.firebase :refer [get-db]])
+
+  (def text (make-text (pick-random)))
+  (def db (get-db))
+
+  (tweet-random {:db          db
+                 :screen-name "DryokuMeigen"})
+  )
 
 (comment
 

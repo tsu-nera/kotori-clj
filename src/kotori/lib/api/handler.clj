@@ -1,32 +1,44 @@
-(ns kotori.procedure.router
+(ns kotori.lib.api.handler
   (:require
    [kotori.procedure.kotori :as kotori]
+   [kotori.procedure.ping :as ping]
    [reitit.core :as r]
    [reitit.ring :as ring]
    [ring.util.response :as resp]))
 
+(defn http->
+  "HTTP Request Map -> Procedure Input Map."
+  [req]
+  (:params req))
+
+(defn ->http
+  "Procedure Output Map -> HTTP Response Map."
+  [out]
+  (resp/response out))
+
 (defn wrap-http [handler]
-  (fn [request]
-    (resp/response (handler (:params request)))))
+  (fn [req]
+    (-> req
+        http->
+        handler
+        ->http)))
 
 (def routes
   (ring/router
    ["/api"  {:middleware [#(wrap-http %)]}
+    ["/ping" {:post ping/ping-pong}]
     ["/dummy" kotori/dummy]
     ["/tweet" kotori/tweet]
     ["/tweet-morning" kotori/tweet-morning]
     ["/tweet-evening" kotori/tweet-evening]
     ["/tweet-random" kotori/tweet-random]]))
 
-(defn make-app []
+(defn make-endpoint []
   (ring/ring-handler routes))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(comment
-  (def app (make-app))
-  (app {:request-method :post :uri "/api/dummy"})
-  )
+((make-endpoint) {:request-method :post :uri "/api/ping"})
 
 (comment
   (def handler-resp

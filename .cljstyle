@@ -1,4 +1,5 @@
 {:rules {:blank-lines {:max-consecutive 1
+                       :insert-padding? false
                        :padding-lines 1}
          :comments {:enabled? false}
          :functions {:enabled? false}

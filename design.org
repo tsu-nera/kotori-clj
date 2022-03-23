@@ -15,7 +15,7 @@
   - model配下のnamespaceとfirestoreのdocumentを一致させる.
   - modelの初期化をintegrantで実施してfirestoreの情報を取得して定数として保持.
 
-* procedure
+* proc
 
 - serviceから呼び出される手続き, 関数の集合.
   - aka. Handler, Worker, Use Cases, フロー, シーケンス, ストアドプロシージャ.
@@ -43,4 +43,4 @@
 
 - 外部とのやりとりを担当.
   - aka. framework, driver, client, infrastructure
-- procedureから利用される.
+- procから利用される.

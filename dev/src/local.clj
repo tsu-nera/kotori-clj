@@ -5,7 +5,8 @@
    [clojure.repl :refer :all]
    [clojure.tools.namespace.repl :refer [refresh]]
    [hashp.core]
-   [integrant.repl :refer [clear halt go init prep set-prep! reset reset-all suspend resume]]
+   [integrant.repl :refer
+    [clear halt go init prep set-prep! reset reset-all suspend resume]]
    [integrant.repl.state :refer [config system]]
    [kotori.core :as core]
    [kotori.service.bot :as bot]

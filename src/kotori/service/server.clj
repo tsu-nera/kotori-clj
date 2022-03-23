@@ -4,45 +4,47 @@
    [camel-snake-kebab.core :refer [->kebab-case ->snake_case]]
    [camel-snake-kebab.extras :refer [transform-keys]]
    [integrant.core :as ig]
-   [kotori.procedure.kotori :as kotori]
-   [kotori.procedure.router :refer [make-app]]
+   [kotori.lib.api.handler :refer [make-endpoint]]
    [ring.adapter.jetty :refer [run-jetty]]
    [ring.middleware.json :refer [wrap-json-params wrap-json-response]]
    [ring.middleware.keyword-params :refer [wrap-keyword-params]]
-   [ring.middleware.params :refer [wrap-params]]
-   [ring.util.response :as resp]))
+   [ring.middleware.params :refer [wrap-params]]))
 
-(defn wrap-db [handler db]
+(defn wrap-db
+  [handler db]
   (fn [request]
     (handler (assoc-in request [:params :db] db))))
 
-;; requestをkebab-case, responseを snake_caseに変換.
-(defn wrap-kebab-case-keys [handler]
+(defn wrap-kebab-case-keys
+  "Request Map をkebab-case, Response Mapを snake_caseに変換."
+  [handler]
   (fn [request]
-    (let [response (-> request
-                       (update :params (partial transform-keys
-                                                #(->kebab-case % :separator \_)))
-                       handler)]
+    (let [response
+          (-> request
+              (update :params (partial transform-keys
+                                       #(->kebab-case % :separator \_)))
+              handler)]
       (transform-keys #(->snake_case % :separator \-) response))))
 
-(defn serve [opts db]
-  (let [app (make-app)]
-    (run-jetty
-     (-> app
-         wrap-kebab-case-keys
-         wrap-keyword-params
-         wrap-json-params
-         wrap-params
-         wrap-json-response
-         (wrap-db db))
-     opts)))
+(def endpoint (make-endpoint))
 
-(defmethod ig/init-key ::app [_ {:keys [opts db]}]
-  (serve opts db))
+(defn serve [{:keys [db config]}]
+  (run-jetty
+   (-> #'endpoint
+       wrap-kebab-case-keys
+       wrap-keyword-params
+       wrap-json-params
+       wrap-params
+       wrap-json-response
+       (wrap-db db))
+   config))
+
+(defmethod ig/init-key ::server [_ m]
+  (serve m))
 
 ;; Firesore InterfaceはAutoClosableというInteraceを実装しているようで
 ;; 名前からしてFirebaseAppを消せば勝手にFirestoreも消えそうだな.
-(defmethod ig/halt-key! ::app [_ server]
+(defmethod ig/halt-key! ::server [_ server]
   (.stop server))
 
 ;; (defn -main
@@ -51,13 +53,6 @@
 ;;   (serve)
 ;;   )
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-
-(comment
-
-  (kotori/pick-random)
-  (kotori/tweet-random)
-  )
 
 (def handler-morning (fn [_] ((println "おはよう"))))
 
@@ -83,7 +78,7 @@
                       :port  8888
                       :join? false}))
 
-  server
+  #_server
 
   (.stop server)
   (.start server)

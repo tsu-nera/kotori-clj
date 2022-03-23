@@ -1,11 +1,10 @@
-(ns kotori.model.kotori
+(ns kotori.domain.kotori
   (:require
    [camel-snake-kebab.core :as csk]
    [camel-snake-kebab.extras :as cske]
    [clojure.set :refer [rename-keys]]
    [clojure.walk :refer [keywordize-keys]]
-   [firestore-clj.core :as fs]
-   [integrant.core :as ig]))
+   [firestore-clj.core :as fs]))
 
 (def coll-name "kotoris")
 (defn coll-path [user-id] (str coll-name "/" user-id))

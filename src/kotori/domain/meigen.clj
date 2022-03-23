@@ -1,9 +1,8 @@
-(ns kotori.model.meigen
+(ns kotori.domain.meigen
   (:require
    [clojure.walk :refer [keywordize-keys]]
    [clojure.walk :refer [stringify-keys]]
-   [firestore-clj.core :as f]
-   [integrant.core :as ig]))
+   [firestore-clj.core :as f]))
 
 (def meigens
   [{:content "苦悩を抜けて歓喜へ"
@@ -190,17 +189,16 @@
     "地上に住むすべての人は、まず第一に生を愛さなければならないと思いますよ。"
     :author "ドストエフスキー"}])
 
-(defonce coll nil)
 (def coll-path "sources/source_0001/meigens")
 
-(defonce coll-ids [])
-
-(defn get-coll-ids []
+(defn- get-coll-ids [coll]
   (let [docs (.listDocuments coll)]
     (map #(.getId %) docs)))
 
-(defn pick-random []
-  (let [id (rand-nth coll-ids)]
+(defn pick-random [db]
+  (let [coll     (f/coll db coll-path)
+        coll-ids (get-coll-ids coll)
+        id       (rand-nth coll-ids)]
     (-> coll
         (f/doc id)
         (.get)
@@ -209,12 +207,9 @@
         (as-> x (into {} x))
         (keywordize-keys))))
 
-(defmethod ig/init-key ::db [_ {:keys [db]}]
-  (def coll
-    (-> db
-        (f/coll coll-path)))
-  (def coll-ids (get-coll-ids))
-  :initalized)
+(comment
+  (require '[kotori.service.firebase :refer [get-db]])
+  (pick-random (get-db)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -226,27 +221,25 @@
 ;; (type coll)
 ;; (map #(.getId %) resp)
 
-(comment
-  coll
-  coll-ids
+;; (comment
 
-  (def docs (-> coll
-                (.get)
-                (deref)
-                (.getDocuments)
-                ))
-  (def doc (first docs))
+;;   (def docs (-> coll
+;;                 (.get)
+;;                 (deref)
+;;                 (.getDocuments)
+;;                 ))
+;;   (def doc (first docs))
 
-  (defn doc->map [doc]
-    (-> doc
-        (.getData)
-        (as-> x (into {} x))
-        (keywordize-keys)
-        ))
+;;   (defn doc->map [doc]
+;;     (-> doc
+;;         (.getData)
+;;         (as-> x (into {} x))
+;;         (keywordize-keys)
+;;         ))
 
 
-  (def data (into [] (map doc->map docs)))
-  )
+;;   (def data (into [] (map doc->map docs)))
+;;   )
 
 ;; => nil;; => nil
 (comment

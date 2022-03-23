@@ -1,7 +1,8 @@
 {:paths ["src", "resources"]
 
  :deps
- {org.clojure/clojure {:mvn/version "1.10.3"}
+ {;; Clojure
+  org.clojure/clojure {:mvn/version "1.11.0"}
 
   ;; 状態管理
   integrant/integrant {:mvn/version "0.8.0"}

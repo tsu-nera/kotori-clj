@@ -1,6 +1,5 @@
 (ns kotori.lib.twitter.guest
   (:require
-   [cheshire.core :as json]
    [clj-http.client :as client]
    [kotori.lib.config :refer [user-agent]]
    [kotori.lib.twitter.config :refer [guest-bearer-token]]))
@@ -10,16 +9,19 @@
    (let [response (client/post
                    "https://api.twitter.com/1.1/guest/activate.json"
                    {:cookie-policy :none
+                    :as            :json
+                    :accept        :json
                     :headers       {:authorization (str "Bearer " guest-bearer-token)
                                     :user-agent    user-agent}})]
      (-> response
          :body
-         (json/parse-string true)
          :guest_token
          (or (throw (ex-info "Can't get guest token" {:response response})))))))
 
 (def guest-headers
   {:cookie-policy :standard
+   :as            :json
+   :accept        :json
    :headers
    {:authorization (str "Bearer " guest-bearer-token)
     :user-agent    user-agent
@@ -30,8 +32,7 @@
    (let [url  (str "https://api.twitter.com/1.1/users/show.json?screen_name=" name)
          resp (client/get url guest-headers)]
      (-> resp
-         :body
-         (json/parse-string true)))))
+         :body))))
 
 (defn resolve-user-id
   [name]
@@ -47,8 +48,7 @@
   (let [url  (get-conversation-url id)
         resp (client/get url guest-headers)]
     (-> resp
-        :body
-        (json/parse-string true))))
+        :body)))
 
 (defn get-tweet [id]
   (let [resp   (get-conversation id)

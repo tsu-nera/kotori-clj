@@ -1,6 +1,5 @@
 (ns kotori.lib.twitter.private
   (:require
-   [cheshire.core :as json]
    [clj-http.client :as client]
    [kotori.lib.config :refer [user-agent]]
    [kotori.lib.twitter.config :refer [guest-bearer-token]]))
@@ -10,13 +9,14 @@
 (defn- parse-body
   [resp]
   (-> resp
-      :body
-      (json/parse-string true)))
+      :body))
 
 (defn creds->headers
   [{:keys [auth-token ct0]}]
   (let [cookie (str "auth_token=" auth-token "; ct0=" ct0)]
     {:cookie-policy :standard
+     :as            :json
+     :accept        :json
      :headers
      {:authorization (str "Bearer " guest-bearer-token)
       :user-agent    user-agent
@@ -87,6 +87,11 @@
 ;; https://docs.tweepy.org/en/stable/client.html
 
 (comment
+  (require '[local :refer [twitter-auth]])
+  (def user (get-user (twitter-auth) "46130870"))
+  )
+
+(comment
   ;; https://docs.tweepy.org/en/stable/client.html#tweepy.Client.create_tweet
   ;; tweepyは create_tweetになってる. statusという言葉はつかっていない.
   ;; これに従おうか.
@@ -116,8 +121,7 @@
            params  (merge data headers proxy options)
            resp    (client/post url params)]
        (-> resp
-           :body
-           (json/parse-string true)))
+           :body))
      ))
   )
 

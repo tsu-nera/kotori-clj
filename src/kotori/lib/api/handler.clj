@@ -1,5 +1,6 @@
 (ns kotori.lib.api.handler
   (:require
+   [kotori.procedure.dmm :as dmm]
    [kotori.procedure.kotori :as kotori]
    [kotori.procedure.ping :as ping]
    [reitit.core :as r]
@@ -27,11 +28,14 @@
   (ring/router
    ["/api"  {:middleware [#(wrap-http %)]}
     ["/ping" {:post ping/ping-pong}]
-    ["/dummy" kotori/dummy]
-    ["/tweet" kotori/tweet]
-    ["/tweet-morning" kotori/tweet-morning]
-    ["/tweet-evening" kotori/tweet-evening]
-    ["/tweet-random" kotori/tweet-random]]))
+    ["/dmm"
+     ["/get-product" dmm/get-product]]
+    ["/kotori"
+     ["/dummy" kotori/dummy]
+     ["/tweet" kotori/tweet]
+     ["/tweet-morning" kotori/tweet-morning]
+     ["/tweet-evening" kotori/tweet-evening]
+     ["/tweet-random" kotori/tweet-random]]]))
 
 (defn make-endpoint []
   (ring/ring-handler routes))

@@ -19,18 +19,23 @@
 
 (defrecord Credentials [^String api_id ^String affiliate_id])
 
-(defn- get [url params & {:keys [debug] :or {debug false}}]
-  (client/get url
-              {:debug        debug
-               :as           :json
-               :query-params params}))
+(defn- -get [url params & {:keys [debug] :or {debug false}}]
+  (let [resp (client/get url
+                         {:debug        debug
+                          :accept       :json
+                          :as           :json
+                          :query-params params})]
+    (-> resp
+        :body
+        (or (throw (ex-info "Exception occured at dmm http get"
+                            {:response resp}))))))
 
 (defn search-product
   "商品検索API: https://affiliate.dmm.com/api/v3/itemlist.html"
   [^Credentials creds q]
   (let [url    (->endpoint "ItemList")
         params (merge creds base-headers base-req-params q)]
-    (get url params)))
+    (-get url params)))
 
 (defn get-floors
   "フロアAPI: https://affiliate.dmm.com/api/v3/floorlist.html"
@@ -43,7 +48,7 @@
   [^Credentials creds q]
   (let [url    (->endpoint "ActressSearch")
         params (merge creds base-headers base-req-params q)]
-    (get url params)))
+    (-get url params)))
 
 (defn search-genre
   "ジャンル 検索API: https://affiliate.dmm.com/api/v3/genresearch.html"
@@ -72,7 +77,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (comment
-  (require '[local :refer[dmm-creds]])
+  (require '[local :refer [dmm-creds]])
 
   (def creds (map->Credentials (dmm-creds)))
 
@@ -81,5 +86,4 @@
                          :keyword "上原亜衣"})
   (search-product creds {:cid "ssis00312"})
 
-  (search-actress creds {:actress_id "1008785"})
-  )
+  (search-actress creds {:actress_id "1008785"}))

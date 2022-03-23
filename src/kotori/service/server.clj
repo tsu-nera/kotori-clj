@@ -15,6 +15,11 @@
   (fn [request]
     (handler (assoc-in request [:params :db] db))))
 
+(defn wrap-env
+  [handler env]
+  (fn [request]
+    (handler (assoc-in request [:params :env] env))))
+
 (defn wrap-kebab-case-keys
   "Request Map をkebab-case, Response Mapを snake_caseに変換."
   [handler]
@@ -28,7 +33,7 @@
 
 (def endpoint (make-endpoint))
 
-(defn serve [{:keys [db config]}]
+(defn serve [{:keys [db config env]}]
   (run-jetty
    (-> #'endpoint
        wrap-kebab-case-keys
@@ -36,6 +41,7 @@
        wrap-json-params
        wrap-params
        wrap-json-response
+       (wrap-env env)
        (wrap-db db))
    config))
 

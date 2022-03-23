@@ -1,10 +1,5 @@
 (ns kotori.procedure.kotori
   (:require
-   [camel-snake-kebab.core :as csk]
-   [camel-snake-kebab.extras :as cske]
-   [clojure.set :refer [rename-keys]]
-   [clojure.walk :refer [keywordize-keys]]
-   [firestore-clj.core :as fs]
    [kotori.domain.kotori :as kotori]
    [kotori.domain.meigen :refer [meigens]]
    [kotori.domain.tweet :refer [posts]]

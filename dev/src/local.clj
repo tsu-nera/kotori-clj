@@ -10,7 +10,8 @@
    [integrant.repl.state :refer [config system]]
    [kotori.core :as core]
    [kotori.service.bot :as bot]
-   [kotori.service.firebase :refer [get-app get-db delete-app!]]))
+   [kotori.service.firebase :refer [get-app get-db delete-app!]]
+   [portal.api :as p]))
 
 (def creds-dev "private/dev/credentials.json")
 (def env-dev "private/dev/env.edn")
@@ -80,6 +81,17 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (comment
+
+  (def p (p/open))
+  (add-tap #'p/submit)
+
+  (tap> :hello)
+  (p/clear)
+
+  (tap> config)
+  )
+
+(comment
   (def db (get-db))
   (delete-app!)
   )
@@ -88,6 +100,7 @@
   (require '[build :as b])
   (b/clean nil)
   (b/jar nil)
+
   )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

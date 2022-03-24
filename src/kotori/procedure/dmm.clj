@@ -1,16 +1,41 @@
 (ns kotori.procedure.dmm
   (:require
-   [kotori.lib.dmm :as client]))
+   [firestore-clj.core :as f]
+   [kotori.domain.dmm.product :as product]
+   [kotori.lib.provider.dmm :as client]))
 
 (defn get-product [{:keys [cid env]}]
   (let [{:keys [api-id affiliate-id]} env
         creds
-        (client/->Credentials api-id affiliate-id)]
-    (client/search-product creds {:cid cid})))
+        (client/->Credentials api-id affiliate-id)
+        resp
+        (client/search-product creds {:cid cid})]
+    (-> resp
+        (:result)
+        (:items)
+        (first))))
+
+(defn crawl-product [{:keys [cid db] :as m}]
+  "Get and save to Firestore."
+  (let [product (get-product m)
+        obj     (product/->obj product)
+        path    (str "providers/dmm/products/" cid)]
+    (-> db
+        (f/doc path)
+        (f/set! obj))))
 
 (comment
-  (require '[local :refer [env]])
+  (require '[local :refer [env db]])
+  (def product (get-product {:cid "ssis00337" :env (env)}))
 
-  (get-product {:cid "ssis00337"
-                :env (env)})
+  (:content_id product)
+
+  (product/->obj product)
+
+  (defn tmp [{:keys [cid db] :as m}]
+    (let [path (str "providers/dmm/products/" cid)]
+      path))
+  (f/doc (db) "providers/dmm/products/ssis00337")
+
+  (crawl-product {:cid "ssis00337" :env (env) :db (db)})
   )

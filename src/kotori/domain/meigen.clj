@@ -1,7 +1,6 @@
 (ns kotori.domain.meigen
   (:require
    [clojure.walk :refer [keywordize-keys]]
-   [clojure.walk :refer [stringify-keys]]
    [firestore-clj.core :as f]))
 
 (def meigens

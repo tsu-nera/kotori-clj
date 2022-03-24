@@ -1,4 +1,4 @@
-(ns kotori.lib.dmm
+(ns kotori.lib.provider.dmm
   (:require
    [clj-http.client :as client]
    [kotori.lib.config :refer [user-agent]]))

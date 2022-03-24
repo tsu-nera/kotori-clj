@@ -35,6 +35,9 @@
 (defn env []
   (get system :kotori.service.env/env))
 
+(defn db []
+  (get-db))
+
 (defn dev? []
   (= (:env (env)) :development))
 

@@ -3,8 +3,9 @@
    [kotori.lib.dmm :as client]))
 
 (defn get-product [{:keys [cid env]}]
-  (let [creds {:api_id       (:api-id env)
-               :affiliate_id (:affiliate-id env)}]
+  (let [{:keys [api-id affiliate-id]} env
+        creds
+        (client/->Credentials api-id affiliate-id)]
     (client/search-product creds {:cid cid})))
 
 (comment

@@ -1,7 +1,8 @@
 (ns kotori.lib.provider.dmm
   (:require
    [clj-http.client :as client]
-   [kotori.lib.config :refer [user-agent]]))
+   [kotori.lib.config :refer [user-agent]]
+   [kotori.lib.json :as json]))
 
 (def base-url "https://api.dmm.com/affiliate/v3")
 
@@ -19,12 +20,14 @@
 
 (defrecord Credentials [^String api_id ^String affiliate_id])
 
-(defn- -get [url params & {:keys [debug] :or {debug false}}]
-  (let [resp (client/get url
-                         {:debug        debug
-                          :accept       :json
-                          :as           :json
-                          :query-params params})]
+(defn- -get [url creds q & {:keys [debug] :or {debug false}}]
+  (let [creds-json (json/->json creds)
+        params     (merge creds-json base-headers base-req-params q)
+        resp       (client/get url
+                               {:debug        debug
+                                :accept       :json
+                                :as           :json
+                                :query-params params})]
     (-> resp
         :body
         (or (throw (ex-info "Exception occured at dmm http get"
@@ -33,9 +36,8 @@
 (defn search-product
   "商品検索API: https://affiliate.dmm.com/api/v3/itemlist.html"
   [^Credentials creds q]
-  (let [url    (->endpoint "ItemList")
-        params (merge creds base-headers base-req-params q)]
-    (-get url params)))
+  (let [url (->endpoint "ItemList")]
+    (-get url creds q)))
 
 (defn get-floors
   "フロアAPI: https://affiliate.dmm.com/api/v3/floorlist.html"
@@ -46,9 +48,8 @@
 (defn search-actress
   "女優検索API: https://affiliate.dmm.com/api/v3/actresssearch.html"
   [^Credentials creds q]
-  (let [url    (->endpoint "ActressSearch")
-        params (merge creds base-headers base-req-params q)]
-    (-get url params)))
+  (let [url (->endpoint "ActressSearch")]
+    (-get url creds q)))
 
 (defn search-genre
   "ジャンル 検索API: https://affiliate.dmm.com/api/v3/genresearch.html"

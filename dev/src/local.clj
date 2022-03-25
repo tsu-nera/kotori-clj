@@ -76,7 +76,7 @@
 (defn dmm-creds []
   (-> system
       (get :kotori.service.env/env)
-      (select-keys [:api_id :affiliate_id])))
+      (select-keys [:api-id :affiliate-id])))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 

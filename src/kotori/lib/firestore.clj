@@ -25,8 +25,8 @@
      "a.h" 3
      :g_h  1})
 
-  (f/doc (db) "experiments/test")
-
   ;; cljure.core set!と競合
-  (kotori.lib.firestore/set! (db) path m-clj)
+  (def result (kotori.lib.firestore/set! (db) path m-clj))
+
+  result
   )

@@ -5,6 +5,7 @@
    [camel-snake-kebab.extras :refer [transform-keys]]
    [integrant.core :as ig]
    [kotori.lib.api.handler :refer [make-endpoint]]
+   [kotori.lib.json :as json]
    [ring.adapter.jetty :refer [run-jetty]]
    [ring.middleware.json :refer [wrap-json-params wrap-json-response]]
    [ring.middleware.keyword-params :refer [wrap-keyword-params]]
@@ -26,10 +27,9 @@
   (fn [request]
     (let [response
           (-> request
-              (update :params (partial transform-keys
-                                       #(->kebab-case % :separator \_)))
+              (update :params (partial json/->clj))
               handler)]
-      (transform-keys #(->snake_case % :separator \-) response))))
+      (json/->json response))))
 
 (def endpoint (make-endpoint))
 

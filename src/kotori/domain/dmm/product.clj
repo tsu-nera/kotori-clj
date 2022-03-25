@@ -2,7 +2,7 @@
   (:require
    [clojure.walk :refer [stringify-keys]]))
 
-(defn ->obj [product]
+(defn ->doc-data [product]
   ;; (let [[:content_id cid] product]
   (stringify-keys {:cid (:content_id product)
                    :raw product})

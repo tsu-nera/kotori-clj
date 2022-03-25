@@ -15,18 +15,20 @@
         (:items)
         (first))))
 
-(defn crawl-product [{:keys [cid db] :as m}]
+(defn crawl-product [{:keys [db cid] :as m}]
   "Get and save to Firestore."
   (let [product (get-product m)
-        obj     (product/->obj product)
+        data    (product/->doc-data product)
         path    (str "providers/dmm/products/" cid)]
     (-> db
         (f/doc path)
-        (f/set! obj))))
+        (f/set! data))))
 
 (comment
   (require '[local :refer [env db]])
   (def product (get-product {:cid "ssis00337" :env (env)}))
+
+  (tap> product)
 
   (:content_id product)
 

@@ -1,39 +1,55 @@
 (ns kotori.domain.dmm.product
   (:require
    [clojure.string :as string]
-   [java-time :as t]
    [kotori.lib.json :as json]
    [kotori.lib.time :as time]))
 
 (defn- ->actresses [raw]
   (get-in raw [:iteminfo :actress]))
 
-(defn- ->date [raw]
+(defn- ->released-time [raw]
   (let [date-str (:date raw)]
     (-> date-str
         (time/parse-dmm-timestamp)
         (time/->fs-timestamp))))
 
+(defn- ->genres [raw]
+  (get-in raw [:iteminfo :genre]))
+
 (defn ->data [raw]
+  "dmm response map -> firestore doc mapの写像関数"
   (let [cid           (:content_id raw)
         title         (:title raw)
         url           (:URL raw)
         affiliate-url (:affiliateURL raw)
         actresses     (->actresses raw)
-        released-date (->date raw)
+        released-time (->released-time raw)
+        timestamp     (time/->fs-timestamp (time/now))
+        genres        (->genres raw)
         legacy        {:cid         cid
                        :title       title
                        :url         affiliate-url
                        :performer   (string/join
                                      "," (map #(:name %) actresses))
-                       :released_at released-date
-                       :updated_at  released-date}
+                       :released_at released-time
+                       :created_at  timestamp
+                       :updated_at  timestamp
+                       :genre       (string/join
+                                     "," (map #(:name %) genres))
+                       :status      "READY"
+                       :ranking     0
+                       :posted_at   nil
+                       :tweet_link  nil
+                       :tweet_id    nil}
         data          {:cid           cid
                        :title         title
                        :url           url
                        :affiliate_url affiliate-url
                        :actresses     actresses
-                       :released_date released-date}]
+                       :released_time released-time
+                       :genres        genres
+                       :created_time  timestamp
+                       :updated_time  timestamp}]
     (-> data
         (assoc :raw raw)
         (assoc :legacy legacy)
@@ -50,7 +66,7 @@
   (map #(:name %) actresses)
 
   (def data (->data raw))
-  (def legacy (:legacy data))
+
   )
 
 (comment

@@ -6,10 +6,8 @@
 
 (defn get-product [{:keys [cid env]}]
   (let [{:keys [api-id affiliate-id]} env
-        creds
-        (client/->Credentials api-id affiliate-id)
-        resp
-        (client/search-product creds {:cid cid})]
+        creds                         (client/->Credentials api-id affiliate-id)
+        resp                          (client/search-product creds {:cid cid})]
     (-> resp
         (:result)
         (:items)
@@ -18,7 +16,7 @@
 (defn crawl-product [{:keys [db cid] :as m}]
   "Get and save to Firestore."
   (let [product (get-product m)
-        data    (product/->doc-data product)
+        data    (product/->data product)
         path    (str "providers/dmm/products/" cid)]
     (-> db
         (f/doc path)
@@ -28,6 +26,7 @@
   (require '[local :refer [env db]])
   (def product (get-product {:cid "ssis00337" :env (env)}))
 
+  (product/->data product)
   (tap> product)
 
   (:content_id product)

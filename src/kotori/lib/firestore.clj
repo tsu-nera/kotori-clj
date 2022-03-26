@@ -28,5 +28,5 @@
   ;; cljure.core set!と競合
   (def result (kotori.lib.firestore/set! (db) path m-clj))
 
-  result
+  (tap> result)
   )

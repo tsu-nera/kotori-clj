@@ -2,7 +2,7 @@
 ;;   (:require
 ;;    [integrant.core :as ig]
 ;;    [clojure.set :refer [rename-keys]]
-;;    [clojure.walk :refer [keywordize-keys]]
+;; [clojure.walk :refer [keywordize-keys]]
 ;;    [kotori.lib.twitter.guest :as guest]))
 
 ;; (def twitter-account (atom nil))

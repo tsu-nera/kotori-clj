@@ -3,6 +3,7 @@
    [kotori.domain.kotori :as kotori]
    [kotori.domain.meigen :refer [meigens]]
    [kotori.domain.tweet :refer [posts]]
+   [kotori.lib.time :as time]
    [kotori.lib.twitter.guest :as guest]
    [kotori.lib.twitter.private :as private]
    [taoensso.timbre :as log])
@@ -17,15 +18,17 @@
   (let [{content :content, author :author} data]
     (str content "\n\n" author)))
 
-(defn parse-twitter-timestamp [timestamp]
-  (let [format "EEE MMM dd HH:mm:ss Z yyyy"
-        locale java.util.Locale/US
-        sdf    (SimpleDateFormat. format locale)]
-    (.setTimeZone sdf (java.util.TimeZone/getTimeZone "Asia/Tokyo"))
-    (.parse sdf timestamp)))
+;; (defn parse-timestamp [format timestamp]
+;;   (let [locale java.util.Locale/US
+;;         sdf    (SimpleDateFormat. format locale)]
+;;     (.setTimeZone sdf (java.util.TimeZone/getTimeZone "Asia/Tokyo"))
+;;     (.parse sdf timestamp)))
+
+;; (defn parse-twitter-timestamp [timestamp]
+;;   (parse-timestamp "EEE MMM dd HH:mm:ss Z yyyy" timestamp))
 
 (defn make-fs-tweet [tweet]
-  (let [created_at (parse-twitter-timestamp (:created_at tweet))
+  (let [created_at (time/parse-twitter-timestamp (:created_at tweet))
         user       (:user tweet)]
     {"status_id"  (:id_str tweet)
      "user_id"    (:id_str user)
@@ -77,6 +80,12 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (comment
+  (def timestamp "2022-02-18 10:00:57")
+  (def format "yyyy-MM-dd HH:mm:ss")
+
+  (type (time/parse-timestamp format timestamp))
+  )
+(comment
   (require '[kotori.service.firebase :refer [get-db]])
 
   (def text (make-text (pick-random)))
@@ -87,8 +96,8 @@
   )
 
 (comment
-
-  (def tweet (private/get-tweet twitter-auth proxies "1500694005259980800"))
+  (require '[local :refer [twitter-auth]])
+  (def tweet (private/get-tweet (twitter-auth) "1500694005259980800"))
   (def user (private/get-user twitter-auth proxies "46130870"))
   (def resp (private/create-tweet twitter-auth proxies "test"))
 

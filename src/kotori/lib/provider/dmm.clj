@@ -79,7 +79,6 @@
 
 (comment
   (require '[local :refer [dmm-creds]])
-
   (def creds (map->Credentials (dmm-creds)))
 
   (search-product creds {:hits    10
@@ -87,4 +86,7 @@
                          :keyword "上原亜衣"})
   (search-product creds {:cid "ssis00312"})
 
-  (search-actress creds {:actress_id "1008785"}))
+  (search-actress creds {:actress_id "1008785"})
+
+  (def resp (search-product creds {:hits 100 :sort "rank"}))
+  )

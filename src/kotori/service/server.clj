@@ -1,8 +1,6 @@
 (ns kotori.service.server
   (:gen-class)
   (:require
-   [camel-snake-kebab.core :refer [->kebab-case ->snake_case]]
-   [camel-snake-kebab.extras :refer [transform-keys]]
    [integrant.core :as ig]
    [kotori.lib.api.handler :refer [make-endpoint]]
    [kotori.lib.json :as json]
@@ -29,7 +27,7 @@
           (-> request
               (update :params (partial json/->clj))
               handler)]
-      (json/->json response))))
+      (json/->json-keyword response))))
 
 (def endpoint (make-endpoint))
 
@@ -53,39 +51,11 @@
 (defmethod ig/halt-key! ::server [_ server]
   (.stop server))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 ;; (defn -main
 ;;   [& _args]
 ;;   ;; (serve (Long/parseLong (System/getenv "PORT")))
 ;;   (serve)
 ;;   )
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(def handler-morning (fn [_] ((println "おはよう"))))
-
-(def opts
-  {:port    8080
-   :handler handler-morning})
-
-(-> opts
-    (dissoc :handler)
-    (assoc :join? false))
-
-;; => {:port 8080, :join? false}
-
-(comment
-
-  (defn handler [request]
-    (println "handler called")
-    {:status  200
-     :headers {"Content-Type" "text/html"}
-     :body    "Hello World"})
-
-  (def server (serve {:host  "0.0.0.0"
-                      :port  8888
-                      :join? false}))
-
-  #_server
-
-  (.stop server)
-  (.start server)
-  )

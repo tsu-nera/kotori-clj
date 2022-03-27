@@ -29,7 +29,10 @@
    ["/api"  {:middleware [#(wrap-http %)]}
     ["/ping" {:post ping/ping-pong}]
     ["/dmm"
-     ["/get-product" dmm/get-product]]
+     ["/get-product" {:post dmm/get-product}]
+     ["/get-products" {:post dmm/get-products}]
+     ["/crawl-product" {:post dmm/crawl-product}]
+     ["/crawl-products" {:post dmm/crawl-products}]]
     ["/kotori"
      ["/dummy" kotori/dummy]
      ["/tweet" kotori/tweet]
@@ -41,8 +44,12 @@
   (ring/ring-handler routes))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-((make-endpoint) {:request-method :post :uri "/api/ping"})
+(comment
+  ((make-endpoint) {:request-method :post :uri "/api/ping"})
+  ((make-endpoint) {:request-method :post :uri "/api/dmm/get-product"})
+  )
 
 (comment
   (def handler-resp
@@ -74,44 +81,3 @@
 #_(assoc resp-ok :body {:test "hoge"})
 #_(update resp-ok :body (constantly handler-resp))
 #_(App {:request-method :post :uri "/api/tweet-evening"})
-
-(comment
-  (def router
-    (r/router
-     [["/api/ping" ::ping]
-      ["/api/orders/:id" ::order-by-id]]))
-
-  (r/match-by-path router "/api/ping")
-  (r/match-by-name router ::ping)
-
-  (r/match-by-path router "/api/orders/1")
-  (r/match-by-name router ::order-by-id)
-
-  (r/partial-match? (r/match-by-name router ::order-by-id))
-  (r/match-by-name router ::order-by-id {:id 2})
-  )
-
-(comment
-
-  (defn handler [_]
-    {:status 200, :body "ok"})
-
-  (defn wrap [handler id]
-    (fn [request]
-      (update (handler request) :wrap (fnil conj '()) id)))
-
-  (def app
-    (ring/ring-handler
-     (ring/router
-      ["/api" {:middleware [[wrap :api]]}
-       ["/ping" {:get  handler
-                 :name ::ping}]
-       ["/admin" {:middleware [[wrap :admin]]}
-        ["/users" {:get  handler
-                   :post handler}]]])))
-
-  (app {:request-method :get, :uri "/api/admin/users"})
-  (app {:request-method :put, :uri "/api/admin/users"})
-
-  (-> app (ring/get-router) (r/match-by-name ::ping))
-  )

@@ -58,7 +58,7 @@
   (let [data   {:cid           (->cid raw)
                 :title         (->title raw)
                 :url           (->url raw)
-                :affiliate_url (->affiliate-url)
+                :affiliate_url (->affiliate-url raw)
                 :actresses     (->actresses raw)
                 :released_time (->released-time raw)
                 :genres        (->genres raw)

@@ -12,7 +12,7 @@
 (defn ->json
   "Clojure Map into JSON i.e. keyword->string, kebab-case->snake_case."
   [clojure-map]
-  (cske/transform-keys csk/->snake_case clojure-map))
+  (cske/transform-keys csk/->snake_case_string clojure-map))
 
 (defn ->clj
   "JSON into Clojure Map i.e. string->keyword, snake_case->kebab-case"

@@ -49,7 +49,8 @@
   (let [product (get-product m)
         data    (product/->data product)
         path    (str "providers/dmm/products/" cid)]
-    (fs/set! db path data)))
+    (fs/set! db path data)
+    data))
 
 (defn crawl-products "
   TODO 500以上の書き込み対応.
@@ -64,7 +65,8 @@
                            (map product/->data)
                            (fs/make-batch-docs
                             "cid" products-path))]
-    (fs/batch-set! db batch-docs)))
+    (fs/batch-set! db batch-docs)
+    {:result "ok"}))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (comment

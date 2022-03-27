@@ -1,9 +1,7 @@
 (ns kotori.procedure.dmm
   (:require
-   [firestore-clj.core :as f]
    [kotori.domain.dmm.product :as product]
    [kotori.lib.firestore :as fs]
-   [kotori.lib.json :as json]
    [kotori.lib.provider.dmm :as client]))
 
 (defn- ->items [resp]
@@ -51,69 +49,27 @@
   (let [product (get-product m)
         data    (product/->data product)
         path    (str "providers/dmm/products/" cid)]
-    (-> db
-        (f/doc path)
-        (f/set! data))))
+    (fs/set! db path data)))
 
 (defn crawl-products "
+  TODO 500以上の書き込み対応.
   firestroreのbatch writeの仕様で一回の書き込みは500まで.
   そのため500単位でchunkごとに書き込む.
   また Fieldに対するincや配列への追加も1つの書き込みとなる.
   "
-  [{:keys [db] :as m}]
-  ())
+  [{:keys [db] :as params}]
+  (let [products-path "providers/dmm/products/"
+        products      (get-products params)
+        batch-docs    (->> products
+                           (map product/->data)
+                           (fs/make-batch-docs
+                            "cid" products-path))]
+    (fs/batch-set! db batch-docs)))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (comment
   (require '[local :refer [env db]])
+
   (def product (get-product {:cid "ssis00337" :env (env)}))
-
-  (product/->data product)
-  (tap> product)
-
-  (:content_id product)
-
-  (product/->obj product)
-
-  (defn tmp [{:keys [cid db] :as m}]
-    (let [path (str "providers/dmm/products/" cid)]
-      path))
-  (f/doc (db) "providers/dmm/products/ssis00337")
-
-  (crawl-product {:cid "ssis00337" :env (env) :db (db)})
-
-  (def products (get-products {:env (env)}))
-  (def products2 (get-products {:env (env) :offset 101}))
-  (def products3 (get-products {:env (env) :offset 201}))
-  (count products)
-
-  (count (get-products-bulk {:page 10 :env (env)}))
-  )
-
-(comment
-  (require '[local :refer [env db]])
-  (def docs (get-products {:env (env) :hits 20}))
-
-
-  (def one (first docs))
-  (product/->data one)
-
-  (def b (atom (f/batch (db))))
-  (->> docs
-       (map product/->data)
-       (map (fn [data]
-              (let [id (get data "cid")]
-                {:id   id
-                 :path (str "providers/dmm/products/" id)
-                 :data data})
-              ))
-       (map (fn [m] (fs/set (db) @b #p (:path m) (:data m)))))
-  (f/commit! @b)
-
-  (defn set-doc [doc]
-    (let id (get "id" doc))
-    )
-
-  (->> docs
-       (json/->json)
-       (map ))
+  (def products crawl-products {:db (db) :env (env) :hits 40})
   )

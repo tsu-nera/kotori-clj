@@ -1,7 +1,8 @@
 (ns kotori.lib.firestore
-  (:refer-clojure :exclude [set!])
+  (:refer-clojure :exclude [set! set])
   (:require
    [firestore-clj.core :as f]
+   [kotori.domain.dmm.product :as product]
    [kotori.lib.json :as json]))
 
 (defn set!
@@ -11,26 +12,26 @@
         (f/doc path)
         (f/set! data))))
 
-(defn set
+(defn make-batch-docs [id-str path docs]
+  (into [] (map (fn [data]
+                  (let [id (get data id-str)]
+                    {:path (str path id)
+                     :data data}))
+                docs)))
+
+(defn- set
   [db b path m]
   (let [data (json/->json m)
         doc  (f/doc db path)]
     (f/set b doc data)))
 
-#_(defn batch-set! "
-  firestroreのbatch writeの仕様で一回の書き込みは500まで.
-  そのため500単位でchunkごとに書き込む.
-  また Fieldに対するincや配列への追加も1つの書き込みとなる.
-  "
-    [db coll-path doc-ids doc-data-list]
-    (let [b (f/batch db)]
-      (-> docs
-          (json/->json)
-          (set-fn))
-      (f/commit! b)))
+(defn batch-set! [db batch-docs]
+  (let [b (f/batch db)]
+    (doseq [{:keys [path data]} batch-docs]
+      (set db b path data))
+    (f/commit! b)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
 
 (comment
   (require '[local :refer [db]])

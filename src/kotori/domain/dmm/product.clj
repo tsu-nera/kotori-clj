@@ -72,7 +72,7 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (comment
-  (require '[local :refer [env db]])
+  (require '[devtools :refer [env db]])
   (require '[kotori.procedure.dmm :refer [get-product]])
   (def raw
     (get-product {:cid "ssis00335" :env (env)}))

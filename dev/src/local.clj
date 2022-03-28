@@ -4,6 +4,7 @@
    [clojure.java.io :as io]
    [clojure.repl :refer :all]
    [clojure.tools.namespace.repl :refer [refresh]]
+   [devtools :refer :all :as t]
    [hashp.core]
    [integrant.repl :refer
     [clear halt go init prep set-prep! reset reset-all suspend resume]]
@@ -32,18 +33,6 @@
   (prep)
   (init)
   :initialized)
-
-(defn env []
-  (get system :kotori.service.env/env))
-
-(defn db []
-  (get-db))
-
-(defn dev? []
-  (= (:env (env)) :development))
-
-(defn prod? []
-  (= (:env (env)) :production))
 
 (defn dev []
   (init-system! creds-dev env-dev)

@@ -2,7 +2,7 @@
   "REPLからの利用を想定したツール."
   (:require
    [integrant.repl.state :refer [config system]]
-   [kotori.procedure.dmm :refer [get-product get-products get-products-by-campaign]]
+   [kotori.procedure.dmm :refer [get-product get-products get-campaign-products]]
    [kotori.service.firebase :refer [get-app get-db delete-app!]]))
 
 (defn db []

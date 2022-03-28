@@ -2,8 +2,9 @@
   (:refer-clojure :exclude [set! set])
   (:require
    [firestore-clj.core :as f]
-   [kotori.domain.dmm.product :as product]
    [kotori.lib.json :as json]))
+
+(defn doc-path [coll-path doc-id] (str coll-path "/" doc-id))
 
 (defn set!
   [db path m]
@@ -15,7 +16,7 @@
 (defn make-batch-docs [id-str path docs]
   (into [] (map (fn [data]
                   (let [id (get data id-str)]
-                    {:path (str path id)
+                    {:path (doc-path path id)
                      :data data}))
                 docs)))
 

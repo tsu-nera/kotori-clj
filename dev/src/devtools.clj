@@ -1,7 +1,8 @@
 (ns devtools
+  "REPLからの利用を想定したツール."
   (:require
    [integrant.repl.state :refer [config system]]
-   [kotori.procedure.dmm :refer [get-product]]
+   [kotori.procedure.dmm :refer [get-product get-products get-products-by-campaign]]
    [kotori.service.firebase :refer [get-app get-db delete-app!]]))
 
 (defn db []
@@ -17,5 +18,9 @@
   (= (:env (env)) :production))
 
 (defn get-dmm-product [cid]
-  (get-product {:cid cid :env (env)}))
+  (get-product {:env (env) :cid cid}))
 #_(get-dmm-product "ssis00337")
+
+(defn get-dmm-campaign [title]
+  (get-products {:env (env) :hits 10 :keyword title}))
+#_(get-dmm-campaign "新生活応援30％OFF第6弾")

@@ -21,13 +21,24 @@
   1回のget requestで最大100つの情報が取得できる.
   それ以上取得する場合はoffsetによる制御が必要.
   "
-  [{:keys [env offset hits] :or {offset 1 hits 100}}]
+  [{:keys [env offset hits keyword article article-id] :or {offset 1 hits 100}}]
   (let [{:keys [api-id affiliate-id]} env
         creds                         (client/->Credentials api-id affiliate-id)
-        req                           {:offset offset :sort "rank" :hits hits}
+        req                           (cond->
+                                       {:offset offset :sort "rank" :hits hits}
+                                        keyword    (assoc :keyword keyword)
+                                        article    (assoc :article article)
+                                        article-id (assoc :article_id article-id))
         resp                          (client/search-product creds req)]
     (-> resp
         (->items))))
+
+(defn get-products-by-campaign "
+  キャンペーンの動画一覧の取得は
+  keywordにキャンペーン名を指定することで取得可能.
+  "
+  [{:keys [env title]}]
+  (get-products {:env env :keyword title}))
 
 (defn get-products-bulk "
   TODO 並列処理改善. うまくできているか怪しい.

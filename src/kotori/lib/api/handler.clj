@@ -29,10 +29,8 @@
    ["/api"  {:middleware [#(wrap-http %)]}
     ["/ping" {:post ping/ping-pong}]
     ["/dmm"
-     ["/get-product" {:post dmm/get-product}]
-     ["/get-products" {:post dmm/get-products}]
-     ["/crawl-product" {:post dmm/crawl-product}]
-     ["/crawl-products" {:post dmm/crawl-products}]]
+     ["/crawl-product" {:post dmm/crawl-product!}]
+     ["/crawl-products" {:post dmm/crawl-products!}]]
     ["/kotori"
      ["/dummy" kotori/dummy]
      ["/tweet" kotori/tweet]

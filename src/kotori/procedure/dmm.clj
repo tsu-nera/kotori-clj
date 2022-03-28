@@ -8,6 +8,9 @@
 (def products-path "providers/dmm/products")
 (def campaigns-path "providers/dmm/campaigns")
 
+(defn make-campaign-path [id]
+  (str campaigns-path "/" id "/" "products"))
+
 (defn- ->items [resp]
   (-> resp
       :result
@@ -40,8 +43,10 @@
 (defn get-campaign-products "
   キャンペーンの動画一覧の取得は
   keywordにキャンペーン名を指定することで取得可能.
+  キャンペーン対象商品は500に届かないことが多いようなので
+  とりあえずhitsのdefaultを500に設定しておく.
   "
-  [{:keys [env title hits]}]
+  [{:keys [env title hits] :or {hits 500}}]
   (get-products {:env env :keyword title :hits hits}))
 
 (defn get-products-bulk "
@@ -57,7 +62,7 @@
         results  (reduce concat products)]
     results))
 
-(defn crawl-product "
+(defn crawl-product! "
   1. 指定されたcidのcontent情報を取得.
   2. Firestoreへ 情報を保存."
   [{:keys [db cid] :as m}]
@@ -67,7 +72,7 @@
     (fs/set! db path data)
     data))
 
-(defn crawl-products "
+(defn crawl-products! "
   TODO 500以上の書き込み対応.
   firestroreのbatch writeの仕様で一回の書き込みは500まで.
   そのため500単位でchunkごとに書き込む.
@@ -81,19 +86,20 @@
                         (fs/make-batch-docs
                          "cid" products-path))]
     (fs/batch-set! db batch-docs)
-    {:result "ok"
-     :count  count}))
+    {:count count}))
 
 (defn campaign->id
   "引数はDMM APIで取得できた :campaignのkeyに紐づくMapをそのまま利用する.
   {:date_begin \"2022-03-28 10:00:00\",
    :date_end \"2022-03-30 10:09:59\",
    :title \"新生活応援30％OFF第6弾\"}"
-  [{:keys [date_begin title]}]
-  (let [begin (first (str/split date_begin #" "))]
-    (str title "_" begin)))
+  [{:keys [date_begin date_end title]}]
+  (let [begin (first (str/split date_begin #" "))
+        end   (first (str/split date_end #" "))]
+    ;; 文字列ソートのためにbegin_endをprefixsとする.
+    (str begin "_" end "_" title)))
 
-(defn crawl-campaign-products "
+(defn crawl-campaign-products! "
   キャンペーン動画情報をFirestoreに保存する.
   保存の際のキャンペーンIDはキャンペーン期間とタイトルから独自に生成する.
   おそらくキャンペーンタイトルのみをIDにすると定期開催されるものに対応できない.
@@ -101,24 +107,45 @@
   [{:keys [db] :as params}]
   (let [products               (get-campaign-products params)
         count                  (count products)
-        id                     "新生活応援30％OFF第6弾_2022-03-28"
-        campaign-products-path (str campaigns-path "/" id "/products")
+        id                     (-> products
+                                   (first)
+                                   (product->campaign)
+                                   (campaign->id))
+        campaign-products-path (make-campaign-products-path id)
         batch-docs             (->> products
                                     (map product/->data)
                                     (fs/make-batch-docs
                                      "cid" campaign-products-path))]
     (fs/batch-set! db batch-docs)
-    {:result "ok"
-     :count  count}))
+    {:count count}))
+
+(defn- product->campaign [product]
+  (-> product
+      (:campaign)
+      (first)))
+
+(defn prepare-campaign!
+  [{:keys [db env title]}]
+  (let [product   (first (get-campaign-products
+                          {:hits 1 :title title :env env}))
+        campaign  (product->campaign product)
+        id        (campaign->id campaign)
+        coll-path (make-campaign-products-path id)
+        data      (product/->data product)
+        cid       (get data "cid")]
+    (doto db
+      (fs/set! (fs/doc-path coll-path cid) data)
+      (fs/set! (fs/doc-path campaigns-path id) campaign))
+    campaign))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (comment
   (require '[devtools :refer [env db]])
 
   (def product (get-product {:cid "ssis00337" :env (env)}))
-  (def products crawl-products {:db (db) :env (env) :hits 40})
+  (def products crawl-products! {:db (db) :env (env) :hits 40})
 
-  (def products (crawl-campaign-products
+  (def products (crawl-campaign-products!
                  {:db    (db) :env (env)
                   :title "新生活応援30％OFF第6弾"}))
   )
@@ -127,5 +154,9 @@
   (campaign->id {:date_begin "2022-03-28 10:00:00",
                  :date_end   "2022-03-30 10:09:59",
                  :title      "新生活応援30％OFF第6弾"})
+
+  (def campaign (prepare-campaign!
+                 {:db    (db) :env (env)
+                  :title "新生活応援30％OFF第6弾"}))
   )
 ;; => nil;; => nil

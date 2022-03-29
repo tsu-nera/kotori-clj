@@ -46,7 +46,7 @@
    :released_at (->released-time raw)
    :created_at  (->timestamp raw)
    :updated_at  (->timestamp raw)
-   :genre       ()
+   :genre       (->genres raw)
    :status      "READY"
    :ranking     0
    :posted_at   nil

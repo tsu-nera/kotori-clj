@@ -6,6 +6,13 @@
 
 (defn doc-path [coll-path doc-id] (str coll-path "/" doc-id))
 
+(defn get-docs
+  [db path limit]
+  (-> (f/coll db path)
+      (f/limit limit)
+      f/pull))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (defn set!
   [db path m]
   (let [data (json/->json m)]

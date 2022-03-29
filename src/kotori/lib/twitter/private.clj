@@ -38,10 +38,10 @@
          id-key  (keyword id)
          resp    (client/get url params)]
      (-> resp
-         (parse-body)
-         (:globalObjects)
-         (:tweets)
-         (id-key)))))
+         parse-body
+         :globalObjects
+         :tweets
+         id-key))))
 
 (defn get-user
   ([creds id]

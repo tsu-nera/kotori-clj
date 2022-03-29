@@ -56,7 +56,7 @@
     (-> resp
         :globalObjects
         :tweets
-        (id-key))))
+        id-key)))
 
 ;;;;;;;;;;;;;;;;
 ;; Debug Tools

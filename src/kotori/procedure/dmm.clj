@@ -8,7 +8,7 @@
 (def products-path "providers/dmm/products")
 (def campaigns-path "providers/dmm/campaigns")
 
-(defn make-campaign-path [id]
+(defn make-campaign-products-path [id]
   (str campaigns-path "/" id "/" "products"))
 
 (defn- ->items [resp]
@@ -99,6 +99,11 @@
     ;; 文字列ソートのためにbegin_endをprefixsとする.
     (str begin "_" end "_" title)))
 
+(defn- product->campaign [product]
+  (-> product
+      (:campaign)
+      (first)))
+
 (defn crawl-campaign-products! "
   キャンペーン動画情報をFirestoreに保存する.
   保存の際のキャンペーンIDはキャンペーン期間とタイトルから独自に生成する.
@@ -118,11 +123,6 @@
                                      "cid" campaign-products-path))]
     (fs/batch-set! db batch-docs)
     {:count count}))
-
-(defn- product->campaign [product]
-  (-> product
-      (:campaign)
-      (first)))
 
 (defn prepare-campaign!
   [{:keys [db env title]}]

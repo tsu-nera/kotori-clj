@@ -16,12 +16,13 @@
      (-> response
          :body
          :guest_token
-         (or (throw (ex-info "Can't get guest token" {:response response})))))))
+         (or (throw (ex-info "Can't get guest token" {"response" response})))))))
 
 (def guest-headers
+  ;; :accept jsonを有効にしたらBad Guest Requestになった.
   {:cookie-policy :standard
    :as            :json
-   :accept        :json
+   ;; :accept        :json
    :headers
    {:authorization (str "Bearer " guest-bearer-token)
     :user-agent    user-agent
@@ -29,7 +30,8 @@
 
 (defn get-user
   ([name]
-   (let [url  (str "https://api.twitter.com/1.1/users/show.json?screen_name=" name)
+   (let [url
+         (str "https://api.twitter.com/1.1/users/show.json?screen_name=" name)
          resp (client/get url guest-headers)]
      (-> resp
          :body))))

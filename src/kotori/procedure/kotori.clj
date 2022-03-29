@@ -86,13 +86,12 @@
   (type (time/parse-timestamp format timestamp))
   )
 (comment
-  (require '[kotori.service.firebase :refer [get-db]])
+  (require '[devtools :refer [db]])
 
   (def text (make-text (pick-random)))
-  (def db (get-db))
 
-  (tweet-random {:db          db
-                 :screen-name "DryokuMeigen"})
+  (tweet-random {:db          (db)
+                 :screen-name "xxxxxxxx"})
   )
 
 (comment

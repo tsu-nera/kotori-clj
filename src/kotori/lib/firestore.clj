@@ -10,7 +10,11 @@
   [db path limit]
   (-> (f/coll db path)
       (f/limit limit)
-      f/pull))
+      f/pullv
+      (json/->clj)))
+
+(defn query-limit [limit]
+  (f/limit limit))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (defn set!

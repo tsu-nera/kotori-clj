@@ -3,7 +3,6 @@
    [kotori.procedure.dmm :as dmm]
    [kotori.procedure.kotori :as kotori]
    [kotori.procedure.ping :as ping]
-   [reitit.core :as r]
    [reitit.ring :as ring]
    [ring.util.response :as resp]))
 
@@ -41,12 +40,13 @@
 (defn make-endpoint []
   (ring/ring-handler routes))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 
 (comment
   ((make-endpoint) {:request-method :post :uri "/api/ping"})
   ((make-endpoint) {:request-method :post :uri "/api/dmm/get-product"})
+  ((make-endpoint) {:request-method :post :uri "/api/kotori/tweet-random"})
   )
 
 (comment

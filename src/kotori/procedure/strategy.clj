@@ -9,13 +9,38 @@
 ;; TODO 共通化
 (def products-path "providers/dmm/products")
 
-(defn select-product [{:keys [db]}]
+(defn ->next [product]
+  (let [raw   (-> product
+                  (dissoc :legacy)
+                  (dissoc :raw))
+        cid   (:cid raw)
+        title (:title raw)]
+    {:cid   cid
+     :title title
+     ;;:raw   raw
+     }))
+
+(defn select-next-product [{:keys [db]}]
   (-> (fs/get-docs db products-path 1)
-      vals
-      first))
+      first
+      ->next))
+
+(defn select-scheduled-products [{:keys [db limit] :or {limit 20}}]
+  (let [docs (fs/get-docs db products-path limit)]
+    (map ->next docs)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(require '[devtools :refer [env db]])
+(comment
+  ;;;;;;;;;;;
+  (require '[devtools :refer [env db]])
 
-(def product (select-product {:db (db)}))
+  (def product (select-next-product {:db (db)}))
+
+  (def products
+    (into []
+          (select-scheduled-products {:db (db) :limit 8})))
+
+  (->next product)
+  ;;;;;;;;;;;
+  )

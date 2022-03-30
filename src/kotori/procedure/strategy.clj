@@ -59,14 +59,21 @@
   [products]
   (remove ng-product? products))
 
-(defn select-next-product [{:keys [db]}]
-  (-> (fs/get-docs db products-path fs/query-one)
-      first))
+;; TODO 遅延シーケンスとaccumulatorで必要な分のは取得するように改善したい.
+;; (.listDocuments coll) で DocumentReferenceのlistを取得可能.
+;; referenceいうことはまだ通信は発生していない.
+;; このリストから必要な分だけ評価してaccumulateする.
+;; とりあえず今はちょっと多めに取得した上で最後に必要な分だけ限定する.
+(defn select-scheduled-products [{:keys [db limit] :or {limit 5}}]
+  (let [limit-plus (int (* 1.5 limit))
+        query      (fs/query-limit limit-plus)
+        products   (fs/get-docs db products-path query)]
+    (->> products
+         exclude-ng-genres
+         (take limit))))
 
-(defn select-scheduled-products [{:keys [db limit] :or {limit 20}}]
-  (let [query    (fs/query-limit limit)
-        products (fs/get-docs db products-path query)]
-    (exclude-ng-genres products)))
+(defn select-next-product [{:keys [db]}]
+  (first (select-scheduled-products {:db db})))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 

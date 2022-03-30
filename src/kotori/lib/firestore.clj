@@ -92,7 +92,14 @@
 
   (-> (f/coll (db) dmm-path)
       f/pullv
-      json/->clj)
+      json/->clj
+      )
+
+  (def coll-ref (f/coll (db) dmm-path))
+
+  (def doc-refs (.listDocuments coll-ref))
+
+  (.get doc-refs)
 
   (def docs (get-docs (db) dmm-path))
   (count (into [] docs))

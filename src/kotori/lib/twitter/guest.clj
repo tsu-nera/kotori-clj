@@ -16,7 +16,7 @@
      (-> response
          :body
          :guest_token
-         (or (throw (ex-info "Can't get guest token" {"response" response})))))))
+         (or (throw (ex-info "Can't get guest token" {:response response})))))))
 
 (def guest-headers
   ;; :accept jsonを有効にしたらBad Guest Requestになった.

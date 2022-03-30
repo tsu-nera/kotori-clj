@@ -2,6 +2,7 @@
   "商品選択戦略"
   (:require
    [clojure.string :as str]
+   [firestore-clj.core :as f]
    [kotori.domain.dmm.product :as product]
    [kotori.lib.firestore :as fs]
    [kotori.lib.provider.dmm :as client]))
@@ -21,12 +22,14 @@
      }))
 
 (defn select-next-product [{:keys [db]}]
-  (-> (fs/get-docs db products-path 1)
-      first
-      ->next))
+  (let [query-one (fs/query-limit 1)]
+    (-> (fs/get-docs db products-path query-one)
+        first
+        ->next)))
 
 (defn select-scheduled-products [{:keys [db limit] :or {limit 20}}]
-  (let [docs (fs/get-docs db products-path limit)]
+  (let [query (fs/query-limit limit)
+        docs  (fs/get-docs db products-path query)]
     (map ->next docs)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -36,11 +39,18 @@
   (require '[devtools :refer [env db]])
 
   (def product (select-next-product {:db (db)}))
+  (->next product)
 
   (def products
     (into []
           (select-scheduled-products {:db (db) :limit 8})))
+ ;;;;;;;;;;;
+  )
 
-  (->next product)
-  ;;;;;;;;;;;
+(comment
+  (require '[devtools :refer [env db]])
+
+  (def query (fs/query-limit 5))
+
+  (fs/get-docs (db) "providers/dmm/products" query)
   )

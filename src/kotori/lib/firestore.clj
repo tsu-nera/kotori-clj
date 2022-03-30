@@ -6,15 +6,18 @@
 
 (defn doc-path [coll-path doc-id] (str coll-path "/" doc-id))
 
-(defn get-docs
-  [db path limit]
-  (-> (f/coll db path)
-      (f/limit limit)
-      f/pullv
-      (json/->clj)))
-
 (defn query-limit [limit]
-  (f/limit limit))
+  (fn [q]
+    (f/limit q limit)))
+
+(defn get-docs
+  ([db coll-path]
+   (get-docs db coll-path identity))
+  ([db coll-path queries]
+   (-> (f/coll db coll-path)
+       queries
+       f/pullv
+       (json/->clj))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (defn set!
@@ -46,9 +49,11 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (comment
-  (require '[local :refer [db]])
+  (require '[devtools :refer [db]])
 
-  (def path "experiments/test")
+  (def coll-path "experiments")
+  (def dmm-path "providers/dmm/products")
+  (def doc-path "experiments/test")
 
   (def m-clj
     {:a    1
@@ -58,7 +63,30 @@
      :g_h  1})
 
   ;; cljure.core set!と競合
-  (def result (kotori.lib.firestore/set! (db) path m-clj))
+  (def result (kotori.lib.firestore/set! (db) doc-path m-clj))
 
   (tap> result)
+  ;;;;;;;;;;;;;;;;;;;;;;;;;
+
+  (defn get-docs
+    ([db coll-path]
+     (get-docs db coll-path identity))
+    ([db coll-path queries]
+     (-> (f/coll db coll-path)
+         queries
+         f/pullv
+         (json/->clj))))
+
+  (defn query-limit [limit]
+    (fn [q]
+      (f/limit q limit)))
+
+  (def query (query-limit 5))
+
+  (-> (f/coll (db) dmm-path)
+      f/pullv
+      json/->clj)
+
+  (def docs (get-docs (db) dmm-path))
+  (count (into [] docs))
   )

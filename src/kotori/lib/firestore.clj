@@ -6,18 +6,25 @@
 
 (defn doc-path [coll-path doc-id] (str coll-path "/" doc-id))
 
+(defn query-filter-in [query-str]
+  (fn [q]
+    (f/limit q query-str)))
+
 (defn query-limit [limit]
   (fn [q]
     (f/limit q limit)))
+
+(def query-one (query-limit 1))
 
 (defn get-docs
   ([db coll-path]
    (get-docs db coll-path identity))
   ([db coll-path queries]
-   (-> (f/coll db coll-path)
+   (-> db
+       (f/coll coll-path)
        queries
        f/pullv
-       (json/->clj))))
+       json/->clj)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (defn set!

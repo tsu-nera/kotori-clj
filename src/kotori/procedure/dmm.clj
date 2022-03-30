@@ -17,9 +17,10 @@
       :items))
 
 (defn get-product [{:keys [cid env]}]
-  (let [{:keys [api-id affiliate-id]} env
-        creds                         (client/->Credentials api-id affiliate-id)
-        resp                          (client/search-product creds {:cid cid})]
+  (let [{:keys [api-id affiliate-id]}
+        env
+        creds (client/->Credentials api-id affiliate-id)
+        resp  (client/search-product creds {:cid cid})]
     (-> resp
         (->items)
         (first))))
@@ -28,17 +29,19 @@
   1回のget requestで最大100つの情報が取得できる.
   それ以上取得する場合はoffsetによる制御が必要.
   "
-  [{:keys [env offset hits keyword article article-id] :or {offset 1 hits 100}}]
-  (let [{:keys [api-id affiliate-id]} env
-        creds                         (client/->Credentials api-id affiliate-id)
-        req                           (cond->
-                                       {:offset offset :sort "rank" :hits hits}
-                                        keyword    (assoc :keyword keyword)
-                                        article    (assoc :article article)
-                                        article-id (assoc :article_id article-id))
-        resp                          (client/search-product creds req)]
-    (-> resp
-        (->items))))
+  [{:keys [env offset hits keyword article article-id]
+    :or   {offset 1 hits 100}}]
+  (let [{:keys [api-id affiliate-id]}
+        env
+        creds (client/->Credentials api-id affiliate-id)
+        req   (cond->
+               {:offset offset :sort "rank" :hits hits}
+                keyword    (assoc :keyword keyword)
+                article    (assoc :article article)
+                article-id (assoc :article_id article-id))
+        resp  (client/search-product creds req)
+        items (->items resp)]
+    items))
 
 (defn get-campaign-products "
   キャンペーンの動画一覧の取得は
@@ -72,27 +75,28 @@
     (fs/set! db path data)
     data))
 
-(defn crawl-products! "
-  TODO 500以上の書き込み対応.
-  firestroreのbatch writeの仕様で一回の書き込みは500まで.
-  そのため500単位でchunkごとに書き込む.
-  また Fieldに対するincや配列への追加も1つの書き込みとなる.
-  "
+;; TODO 500以上の書き込み対応.
+;; firestroreのbatch writeの仕様で一回の書き込みは500まで.
+;; そのため500単位でchunkごとに書き込む.
+;; また Fieldに対するincや配列への追加も1つの書き込みとなる.
+(defn crawl-products!
   [{:keys [db] :as params}]
   (let [products   (get-products params)
         count      (count products)
-        batch-docs (->> products
+        docs       (->> products
                         (map product/->data)
-                        (fs/make-batch-docs
-                         "cid" products-path))]
+                        (map-indexed product/set-rank-popular))
+        batch-docs (fs/make-batch-docs
+                    "cid" products-path docs)]
     (fs/batch-set! db batch-docs)
-    {:count count}))
+    {:count    count
+     :products docs}))
 
+;; 引数はDMM APIで取得できた :campaignのkeyに紐づくMapをそのまま利用.
+;; {:date_begin \"2022-03-28 10:00:00\",
+;;  :date_end   \"2022-03-30 10:09:59\",
+;;  :title      \"新生活応援30％OFF第6弾\"}
 (defn campaign->id
-  "引数はDMM APIで取得できた :campaignのkeyに紐づくMapをそのまま利用する.
-  {:date_begin \"2022-03-28 10:00:00\",
-   :date_end \"2022-03-30 10:09:59\",
-   :title \"新生活応援30％OFF第6弾\"}"
   [{:keys [date_begin date_end title]}]
   (let [begin (first (str/split date_begin #" "))
         end   (first (str/split date_end #" "))]
@@ -143,7 +147,9 @@
   (require '[devtools :refer [env db]])
 
   (def product (get-product {:cid "ssis00337" :env (env)}))
-  (def products crawl-products! {:db (db) :env (env) :hits 40})
+  (def products (get-products {:env (env) :hits 10}))
+
+  (def products (crawl-products! {:db (db) :env (env) :hits 10}))
 
   (def products (crawl-campaign-products!
                  {:db    (db) :env (env)
@@ -159,4 +165,3 @@
                  {:db    (db) :env (env)
                   :title "新生活応援30％OFF第6弾"}))
   )
-;; => nil;; => nil

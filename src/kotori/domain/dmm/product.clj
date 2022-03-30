@@ -36,7 +36,9 @@
   (string/join
    "," (map #(:name %) (->genres raw))))
 
-(defn- ->timestamp [_] (time/->fs-timestamp (time/now)))
+(defn- ->timestamp
+  ([] (time/->fs-timestamp (time/now)))
+  ([_] (time/->fs-timestamp (time/now))))
 
 (defn ->legacy [raw]
   {:cid         (->cid raw)
@@ -48,13 +50,14 @@
    :updated_at  (->timestamp raw)
    :genre       (->genres raw)
    :status      "READY"
-   :ranking     0
+   :ranking     nil
    :posted_at   nil
    :tweet_link  nil
    :tweet_id    nil})
 
-(defn ->data [raw]
+(defn ->data
   "dmm response map -> firestore doc mapの写像"
+  [raw]
   (let [data   {:cid           (->cid raw)
                 :title         (->title raw)
                 :url           (->url raw)
@@ -69,6 +72,18 @@
         (assoc :raw raw)
         (assoc :legacy legacy)
         (json/->json))))
+
+;; 最新人気ランキングを設定
+;; 他にも価格, レビュー, マッチングのランキングがある.
+;; ユースケースが明らかになったら改造する.
+;; map-indexedとともに呼ばれることを想定.
+;; firestoreの検索を想定してarrayではなくフィールドに保持する.
+(defn set-rank-popular [i data]
+  (let [ranking (+ i 1)]
+    (-> data
+        (assoc "rank_popular" ranking)
+        (assoc "rank_popular_updated_date" (->timestamp))
+        (assoc-in ["legacy" "ranking"] ranking))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (comment

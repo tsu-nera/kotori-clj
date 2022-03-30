@@ -15,13 +15,13 @@
 
 (def antisocial-genre-ids
   "Twitter的にダメなジャンル."
-  #{5015 4021})
+  #{4021 5015})
 
 (def violent-genre-ids
-  #{567 5059 6094 6953 21})
+  #{21 567 5059 6094 6953})
 
 (def dirty-genre-ids
-  #{5007 5012 5013 5014 6151 4018 5011 5024})
+  #{4018 5007 5011 5012 5013 5014 5024 6151})
 
 (def ng-genres
   (into #{} (concat
@@ -88,7 +88,7 @@
 
   (def products
     (into []
-          (select-scheduled-products {:db (db) :limit 8})))
+          (select-scheduled-products {:db (db) :limit 5})))
 
   (map ->next products)
  ;;;;;;;;;;;
@@ -98,8 +98,6 @@
   (require '[devtools :refer [env db]])
 
   (def query (fs/query-limit 5))
-
-  (def q-exclude-genres )
 
   (fs/get-docs (db) "providers/dmm/products" query)
   )

@@ -72,8 +72,8 @@
 ;; とりあえず今はちょっと多めに取得した上で最後に必要な分だけ限定する.
 (defn select-scheduled-products [{:keys [db limit] :or {limit 5}}]
   (let [limit-plus (int (* 1.5 limit))
-        st-limit   (fs/query-limit limit-plus)
-        queries    (fs/make-queries [st-limit strategy-popular])
+        q-limit    (fs/query-limit limit-plus)
+        queries    (fs/make-queries [q-limit strategy-popular])
         products   (fs/get-docs db products-path queries)]
     (->> products
          exclude-ng-genres

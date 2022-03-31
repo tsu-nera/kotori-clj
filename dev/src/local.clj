@@ -10,6 +10,7 @@
     [clear halt go init prep set-prep! reset reset-all suspend resume]]
    [integrant.repl.state :refer [config system]]
    [kotori.core :as core]
+   [kotori.lib.net :refer [get-global-ip]]
    [kotori.service.bot :as bot]
    [kotori.service.firebase :refer [get-app get-db delete-app!]]
    [portal.api :as p]))

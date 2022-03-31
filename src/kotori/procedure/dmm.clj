@@ -56,10 +56,11 @@
                               (map (fn [offset]
                                      {:env env :offset offset :hits 100})))
         req-params-base (into [] xf (range page)) ;; transducer
+        last-offset     (+ (* page 100) 1)
         req-params      (if (zero? mod-hits)
                           req-params-base
                           (conj req-params-base
-                                {:env env :offset 401 :hits mod-hits}))
+                                {:env env :offset last-offset :hits mod-hits}))
         products        (->> req-params
                              (pmap get-products)
                              (doall))]
@@ -163,7 +164,7 @@
 
   (def product (get-product {:cid "ssis00337" :env (env)}))
   (def products (get-products {:env (env) :hits 10}))
-  (def products (get-products-bulk {:env (env) :hits 200}))
+  (def products (get-products-bulk {:env (env) :hits 450}))
   (count products)
 
   (def products (crawl-product! {:db (db) :env (env) :cid "cawd00313"}))

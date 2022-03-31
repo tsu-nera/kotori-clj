@@ -58,15 +58,14 @@
 (defn ->data
   "dmm response map -> firestore doc mapの写像"
   [raw]
-  (let [data   {:cid           (->cid raw)
-                :title         (->title raw)
-                :url           (->url raw)
-                :affiliate_url (->affiliate-url raw)
-                :actresses     (->actresses raw)
-                :released_time (->released-time raw)
-                :genres        (->genres raw)
-                :created_time  (->timestamp raw)
-                :updated_time  (->timestamp raw)}
+  (let [data   {:cid               (->cid raw)
+                :title             (->title raw)
+                :url               (->url raw)
+                :affiliate_url     (->affiliate-url raw)
+                :actresses         (->actresses raw)
+                :released_time     (->released-time raw)
+                :genres            (->genres raw)
+                :last_crawled_time (->timestamp)}
         legacy (->legacy raw)]
     (-> data
         (assoc :raw raw)
@@ -82,7 +81,6 @@
   (let [ranking (+ i 1)]
     (-> data
         (assoc "rank_popular" ranking)
-        (assoc "rank_popular_updated_date" (->timestamp))
         (assoc-in ["legacy" "ranking"] ranking))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

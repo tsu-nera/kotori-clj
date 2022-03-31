@@ -28,11 +28,14 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (defn set!
+  "与えられたデータをFirestoreに書き込む.
+  すでにドキュメントが存在している場合は存在しないフィールドのみ書き込む.
+  存在しているフィールドに対してはなにもしない."
   [db path m]
   (let [data (json/->json m)]
     (-> db
         (f/doc path)
-        (f/set! data))))
+        (f/set! data :merge))))
 
 (defn make-batch-docs [id-str path docs]
   (into [] (map (fn [data]
@@ -45,7 +48,7 @@
   [db b path m]
   (let [data (json/->json m)
         doc  (f/doc db path)]
-    (f/set b doc data)))
+    (f/set b doc data :merge)))
 
 (defn batch-set! [db batch-docs]
   (let [b (f/batch db)]
@@ -98,6 +101,10 @@
   (def coll-ref (f/coll (db) dmm-path))
 
   (def doc-refs (.listDocuments coll-ref))
+
+  (take 20 doc-refs)
+
+
 
   (.get doc-refs)
 

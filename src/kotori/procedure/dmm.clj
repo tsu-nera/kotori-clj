@@ -25,12 +25,14 @@
         (->items)
         (first))))
 
-(defn get-products "
+(defn get-products
+  "
   1回のget requestで最大100つの情報が取得できる.
   それ以上取得する場合はoffsetによる制御が必要.
   "
   [{:keys [env offset hits keyword article article-id]
     :or   {offset 1 hits 100}}]
+  {:pre [(<= hits 100)]}
   (let [{:keys [api-id affiliate-id]}
         env
         creds (client/->Credentials api-id affiliate-id)
@@ -43,6 +45,25 @@
         items (->items resp)]
     items))
 
+(defn get-products-bulk
+  [{:keys [env hits] :as params}]
+  (let [page            (quot hits 100)
+        mod-hits        (mod hits 100)
+        req-params-base (->> (range page)
+                             (map #(+ (* % 100) 1))
+                             (map (fn [offset]
+                                    {:env env :offset offset :hits 100}))
+                             (into []))
+        req-params      (if (zero? mod-hits)
+                          req-params-base
+                          (conj req-params-base
+                                {:env env :offset 401 :hits mod-hits}))
+        products        (->> req-params
+                             (pmap get-products)
+                             (doall))
+        results         (reduce concat products)]
+    results))
+
 (defn get-campaign-products "
   キャンペーンの動画一覧の取得は
   keywordにキャンペーン名を指定することで取得可能.
@@ -50,20 +71,8 @@
   とりあえずhitsのdefaultを500に設定しておく.
   "
   [{:keys [env title hits] :or {hits 500}}]
-  (get-products {:env env :keyword title :hits hits}))
-
-(defn get-products-bulk "
-  TODO 並列処理改善. うまくできているか怪しい.
-  "
-  [{:keys [env page]}]
-  (let [products (->> (range page)
-                      (map #(+ (* % 100) 1))
-                      (map (fn [offset]
-                             {:env env :offset offset :hits 100}))
-                      (pmap get-products)
-                      (doall))
-        results  (reduce concat products)]
-    results))
+  {:pre [(<= hits 500)]}
+  (get-products-bulk {:env env :keyword title :hits hits}))
 
 (defn crawl-product! "
   1. 指定されたcidのcontent情報を取得.
@@ -81,7 +90,7 @@
 ;; また Fieldに対するincや配列への追加も1つの書き込みとなる.
 (defn crawl-products!
   [{:keys [db] :as params}]
-  (let [products   (get-products params)
+  (let [products   (get-products-bulk params)
         count      (count products)
         docs       (->> products
                         (map product/->data)
@@ -148,8 +157,11 @@
 
   (def product (get-product {:cid "ssis00337" :env (env)}))
   (def products (get-products {:env (env) :hits 10}))
+  (def products (get-products-bulk {:env (env) :hits 500}))
+  (count products)
 
-  (def products (crawl-products! {:db (db) :env (env) :hits 10}))
+  (def products (crawl-product! {:db (db) :env (env) :cid "cawd00313"}))
+  (def products (crawl-products! {:db (db) :env (env) :hits 500}))
 
   (def products (crawl-campaign-products!
                  {:db    (db) :env (env)

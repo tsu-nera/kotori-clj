@@ -48,23 +48,22 @@
     items))
 
 (defn get-products-bulk
-  [{:keys [env hits] :as params}]
+  [{:keys [env hits]}]
   (let [page            (quot hits 100)
         mod-hits        (mod hits 100)
-        req-params-base (->> (range page)
-                             (map #(+ (* % 100) 1))
-                             (map (fn [offset]
-                                    {:env env :offset offset :hits 100}))
-                             (into []))
+        xf              (comp (map #(* % 100))
+                              (map #(+ % 1))
+                              (map (fn [offset]
+                                     {:env env :offset offset :hits 100})))
+        req-params-base (into [] xf (range page)) ;; transducer
         req-params      (if (zero? mod-hits)
                           req-params-base
                           (conj req-params-base
                                 {:env env :offset 401 :hits mod-hits}))
         products        (->> req-params
                              (pmap get-products)
-                             (doall))
-        results         (reduce concat products)]
-    results))
+                             (doall))]
+    (reduce concat products)))
 
 (defn get-campaign-products "
   キャンペーンの動画一覧の取得は
@@ -95,11 +94,11 @@
   (let [products   (get-products-bulk params)
         count      (count products)
         ts         (time/->fs-timestamp (time/now))
-        docs       (->> products
-                        (map product/->data)
-                        (map #(product/set-crawled-timestamp ts %))
-                        (map-indexed product/set-rank-popular)
-                        (json/->json))
+        xf         (comp (map product/->data)
+                         (map #(product/set-crawled-timestamp ts %))
+                         (map-indexed product/set-rank-popular)
+                         (map json/->json))
+        docs       (transduce xf conj products)
         batch-docs (fs/make-batch-docs
                     "cid" products-path docs)]
     (fs/batch-set! db batch-docs)
@@ -164,15 +163,30 @@
 
   (def product (get-product {:cid "ssis00337" :env (env)}))
   (def products (get-products {:env (env) :hits 10}))
-  (def products (get-products-bulk {:env (env) :hits 500}))
+  (def products (get-products-bulk {:env (env) :hits 200}))
   (count products)
 
   (def products (crawl-product! {:db (db) :env (env) :cid "cawd00313"}))
-  (def products (crawl-products! {:db (db) :env (env) :hits 500}))
+  (def products (crawl-products! {:db (db) :env (env) :hits 10}))
 
   (def products (crawl-campaign-products!
                  {:db    (db) :env (env)
                   :title "新生活応援30％OFF第6弾"}))
+  )
+
+(comment
+
+  (->> (range 4)
+       (map #(+ (* % 100) 1))
+       (map (fn [offset]
+              {:offset offset :hits 100}))
+       (into []))
+
+  (def xform (comp (map #(+ (* % 100) 1))
+                   (map (fn [offset]
+                          {:offset offset :hits 100}))))
+  (transduce xform conj (range 4))
+  (into [] xform (range 4))
   )
 
 (comment

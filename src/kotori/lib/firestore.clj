@@ -20,7 +20,7 @@
 
 (def query-one (query-limit 1))
 
-(defn make-queries [v]
+(defn make-xquery [v]
   {:pre [(vector? v)]}
   (apply comp v))
 
@@ -28,10 +28,10 @@
   ([db coll-path]
    ;; (get-docs db coll-path identity)
    (get-docs db coll-path (query-limit 5)))
-  ([db coll-path queries]
+  ([db coll-path xquery]
    (-> db
        (f/coll coll-path)
-       queries
+       xquery
        f/pullv
        json/->clj)))
 
@@ -77,7 +77,7 @@
     (query-order-by "last_crawled_time" :desc
                     "rank_popular" :asc))
 
-  (def queries (make-queries [q-limit q-order-popular]))
+  (def queries (make-xquery [q-limit q-order-popular]))
 
   (def docs (get-docs (db) dmm-path queries))
   )

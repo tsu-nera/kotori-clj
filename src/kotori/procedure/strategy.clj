@@ -32,16 +32,18 @@
 
 (defn ->next [product]
   "表示用に情報を間引くことが目的."
-  (let [raw    (-> product
-                   (dissoc :legacy)
-                   (dissoc :raw))
-        cid    (:cid raw)
-        title  (:title raw)
-        genres (str/join "," (map #(get % "name") (:genres raw)))]
+  (let [raw     (-> product
+                    (dissoc :legacy)
+                    (dissoc :raw))
+        cid     (:cid raw)
+        title   (:title raw)
+        genres  (str/join "," (map #(get % "name") (:genres raw)))
+        ranking (:rank-popular raw)]
     (select-keys raw [:cid :title])
-    {:cid    cid
-     :title  title
-     :genres genres
+    {:cid     cid
+     :title   title
+     :genres  genres
+     :ranking ranking
      ;; :raw    raw
      }))
 
@@ -59,6 +61,10 @@
   [products]
   (remove ng-product? products))
 
+(def strategy-popular
+  (fs/query-order-by "last_crawled_time" :desc
+                     "rank_popular" :asc))
+
 ;; TODO 遅延シーケンスとaccumulatorで必要な分のは取得するように改善したい.
 ;; (.listDocuments coll) で DocumentReferenceのlistを取得可能.
 ;; referenceいうことはまだ通信は発生していない.
@@ -66,8 +72,9 @@
 ;; とりあえず今はちょっと多めに取得した上で最後に必要な分だけ限定する.
 (defn select-scheduled-products [{:keys [db limit] :or {limit 5}}]
   (let [limit-plus (int (* 1.5 limit))
-        query      (fs/query-limit limit-plus)
-        products   (fs/get-docs db products-path query)]
+        st-limit   (fs/query-limit limit-plus)
+        queries    (fs/make-queries [st-limit strategy-popular])
+        products   (fs/get-docs db products-path queries)]
     (->> products
          exclude-ng-genres
          (take limit))))

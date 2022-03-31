@@ -10,15 +10,24 @@
   (fn [q]
     (f/limit q query-str)))
 
+(defn query-order-by [& ordering]
+  (fn [q]
+    (apply f/order-by q ordering)))
+
 (defn query-limit [limit]
   (fn [q]
     (f/limit q limit)))
 
 (def query-one (query-limit 1))
 
+(defn make-queries [v]
+  {:pre [(vector? v)]}
+  (apply comp v))
+
 (defn get-docs
   ([db coll-path]
-   (get-docs db coll-path identity))
+   ;; (get-docs db coll-path identity)
+   (get-docs db coll-path (query-limit 5)))
   ([db coll-path queries]
    (-> db
        (f/coll coll-path)
@@ -26,7 +35,6 @@
        f/pullv
        json/->clj)))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (defn set!
   "与えられたデータをFirestoreに書き込む.
   すでにドキュメントが存在している場合は存在しないフィールドのみ書き込む.
@@ -63,51 +71,13 @@
 
   (def coll-path "experiments")
   (def dmm-path "providers/dmm/products")
-  (def doc-path "experiments/test")
 
-  (def m-clj
-    {:a    1
-     :b    2
-     :c    {:d 1 :e 2 "f" 3}
-     "a.h" 3
-     :g_h  1})
+  (def q-limit (query-limit 5))
+  (def q-order-popular
+    (query-order-by "last_crawled_time" :desc
+                    "rank_popular" :asc))
 
-  ;; cljure.core set!と競合
-  (def result (kotori.lib.firestore/set! (db) doc-path m-clj))
+  (def queries (make-queries [q-limit q-order-popular]))
 
-  (tap> result)
-  ;;;;;;;;;;;;;;;;;;;;;;;;;
-
-  (defn get-docs
-    ([db coll-path]
-     (get-docs db coll-path identity))
-    ([db coll-path queries]
-     (-> (f/coll db coll-path)
-         queries
-         f/pullv
-         (json/->clj))))
-
-  (defn query-limit [limit]
-    (fn [q]
-      (f/limit q limit)))
-
-  (def query (query-limit 5))
-
-  (-> (f/coll (db) dmm-path)
-      f/pullv
-      json/->clj
-      )
-
-  (def coll-ref (f/coll (db) dmm-path))
-
-  (def doc-refs (.listDocuments coll-ref))
-
-  (take 20 doc-refs)
-
-
-
-  (.get doc-refs)
-
-  (def docs (get-docs (db) dmm-path))
-  (count (into [] docs))
+  (def docs (get-docs (db) dmm-path queries))
   )

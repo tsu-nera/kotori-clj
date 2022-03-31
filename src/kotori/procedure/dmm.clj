@@ -3,7 +3,9 @@
    [clojure.string :as str]
    [kotori.domain.dmm.product :as product]
    [kotori.lib.firestore :as fs]
-   [kotori.lib.provider.dmm :as client]))
+   [kotori.lib.json :as json]
+   [kotori.lib.provider.dmm :as client]
+   [kotori.lib.time :as time]))
 
 (def products-path "providers/dmm/products")
 (def campaigns-path "providers/dmm/campaigns")
@@ -92,9 +94,12 @@
   [{:keys [db] :as params}]
   (let [products   (get-products-bulk params)
         count      (count products)
+        ts         (time/->fs-timestamp (time/now))
         docs       (->> products
                         (map product/->data)
-                        (map-indexed product/set-rank-popular))
+                        (map #(product/set-crawled-timestamp ts %))
+                        (map-indexed product/set-rank-popular)
+                        (json/->json))
         batch-docs (fs/make-batch-docs
                     "cid" products-path docs)]
     (fs/batch-set! db batch-docs)
@@ -130,8 +135,10 @@
                                    (product->campaign)
                                    (campaign->id))
         campaign-products-path (make-campaign-products-path id)
+        ts                     (time/->fs-timestamp (time/now))
         batch-docs             (->> products
                                     (map product/->data)
+                                    (map #(product/set-crawled-timestamp ts %))
                                     (fs/make-batch-docs
                                      "cid" campaign-products-path))]
     (fs/batch-set! db batch-docs)

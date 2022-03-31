@@ -58,19 +58,17 @@
 (defn ->data
   "dmm response map -> firestore doc mapの写像"
   [raw]
-  (let [data   {:cid               (->cid raw)
-                :title             (->title raw)
-                :url               (->url raw)
-                :affiliate_url     (->affiliate-url raw)
-                :actresses         (->actresses raw)
-                :released_time     (->released-time raw)
-                :genres            (->genres raw)
-                :last_crawled_time (->timestamp)}
+  (let [data   {:cid           (->cid raw)
+                :title         (->title raw)
+                :url           (->url raw)
+                :affiliate_url (->affiliate-url raw)
+                :actresses     (->actresses raw)
+                :released_time (->released-time raw)
+                :genres        (->genres raw)}
         legacy (->legacy raw)]
     (-> data
         (assoc :raw raw)
-        (assoc :legacy legacy)
-        (json/->json))))
+        (assoc :legacy legacy))))
 
 ;; 最新人気ランキングを設定
 ;; 他にも価格, レビュー, マッチングのランキングがある.
@@ -80,8 +78,14 @@
 (defn set-rank-popular [i data]
   (let [ranking (+ i 1)]
     (-> data
-        (assoc "rank_popular" ranking)
-        (assoc-in ["legacy" "ranking"] ranking))))
+        (assoc :rank_popular ranking)
+        (assoc-in [:legacy :ranking] ranking))))
+
+;; docごとにtimestampを生成すると
+;; ms単位の誤差によって正確なソートができないため
+;; 予め生成した共通のtimestampを外部からもらって設定する.
+(defn set-crawled-timestamp [timestamp data]
+  (assoc data :last_crawled_time timestamp))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (comment

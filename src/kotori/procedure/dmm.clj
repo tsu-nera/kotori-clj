@@ -125,7 +125,7 @@
 (defn crawl-campaign-products! "
   キャンペーン動画情報をFirestoreに保存する.
   保存の際のキャンペーンIDはキャンペーン期間とタイトルから独自に生成する.
-  おそらくキャンペーンタイトルのみをIDにすると定期開催されるものに対応できない.
+  キャンペーンタイトルのみをIDにすると定期開催されるものに対応できない.
   "
   [{:keys [db] :as params}]
   (let [products               (get-campaign-products params)
@@ -136,11 +136,12 @@
                                    (campaign->id))
         campaign-products-path (make-campaign-products-path id)
         ts                     (time/->fs-timestamp (time/now))
-        batch-docs             (->> products
-                                    (map product/->data)
-                                    (map #(product/set-crawled-timestamp ts %))
-                                    (fs/make-batch-docs
-                                     "cid" campaign-products-path))]
+        batch-docs             (->>
+                                products
+                                (map product/->data)
+                                (map #(product/set-crawled-timestamp ts %))
+                                (fs/make-batch-docs
+                                 "cid" campaign-products-path))]
     (fs/batch-set! db batch-docs)
     {:count count}))
 
@@ -168,7 +169,7 @@
   (count products)
 
   (def products (crawl-product! {:db (db) :env (env) :cid "cawd00313"}))
-  (def products (crawl-products! {:db (db) :env (env) :hits 10}))
+  (def products (crawl-products! {:db (db) :env (env) :hits 300}))
 
   (def products (crawl-campaign-products!
                  {:db    (db) :env (env)

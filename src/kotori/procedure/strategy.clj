@@ -2,10 +2,7 @@
   "商品選択戦略"
   (:require
    [clojure.string :as str]
-   [firestore-clj.core :as f]
-   [kotori.domain.dmm.product :as product]
-   [kotori.lib.firestore :as fs]
-   [kotori.lib.provider.dmm :as client]))
+   [kotori.lib.firestore :as fs]))
 
 ;; TODO 共通化
 (def products-path "providers/dmm/products")
@@ -30,8 +27,9 @@
              violent-genre-ids
              dirty-genre-ids)))
 
-(defn ->next [product]
+(defn ->next
   "表示用に情報を間引くことが目的."
+  [product]
   (let [raw     (-> product
                     (dissoc :legacy)
                     (dissoc :raw))
@@ -65,6 +63,13 @@
   (fs/query-order-by "last_crawled_time" :desc
                      "rank_popular" :asc))
 
+;; acctress数による絞り込み(where)とrank人気順(orderBy)の
+;; 両方をクエリに含めるときは複数のフィールドで複合インデックスをはらないと
+;; firestoreの制約によりエラーする.
+(def strategy-actress-exists
+  (comp (fs/query-order-by "actress_count")
+        (fs/query-range "actress_count" 1 5)))
+
 ;; TODO 遅延シーケンスとaccumulatorで必要な分のは取得するように改善したい.
 ;; (.listDocuments coll) で DocumentReferenceのlistを取得可能.
 ;; referenceいうことはまだ通信は発生していない.
@@ -73,7 +78,9 @@
 (defn select-scheduled-products [{:keys [db limit] :or {limit 5}}]
   (let [limit-plus (int (* 1.5 limit))
         q-limit    (fs/query-limit limit-plus)
-        queries    (fs/make-xquery [q-limit strategy-popular])
+        queries    (fs/make-xquery [strategy-popular
+                                    strategy-actress-exists
+                                    q-limit])
         products   (fs/get-docs db products-path queries)]
     (->> products
          exclude-ng-genres

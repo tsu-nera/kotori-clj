@@ -1,7 +1,6 @@
 (ns kotori.domain.dmm.product
   (:require
    [clojure.string :as string]
-   [kotori.lib.json :as json]
    [kotori.lib.time :as time]))
 
 (defn- ->cid [raw]
@@ -48,7 +47,7 @@
    :released_at (->released-time raw)
    :created_at  (->timestamp raw)
    :updated_at  (->timestamp raw)
-   :genre       (->genres raw)
+   :genre       (->genre raw)
    :status      "READY"
    :ranking     nil
    :posted_at   nil
@@ -58,14 +57,16 @@
 (defn ->data
   "dmm response map -> firestore doc mapの写像"
   [raw]
-  (let [data   {:cid           (->cid raw)
-                :title         (->title raw)
-                :url           (->url raw)
-                :affiliate_url (->affiliate-url raw)
-                :actresses     (->actresses raw)
-                :released_time (->released-time raw)
-                :genres        (->genres raw)}
-        legacy (->legacy raw)]
+  (let [actresses (->actresses raw)
+        data      {:cid           (->cid raw)
+                   :title         (->title raw)
+                   :url           (->url raw)
+                   :affiliate_url (->affiliate-url raw)
+                   :actresses     actresses
+                   :actress_count (count actresses)
+                   :released_time (->released-time raw)
+                   :genres        (->genres raw)}
+        legacy    (->legacy raw)]
     (-> data
         (assoc :raw raw)
         (assoc :legacy legacy))))
@@ -92,9 +93,10 @@
   (require '[devtools :refer [env db]])
   (require '[kotori.procedure.dmm :refer [get-product]])
   (def raw
-    (get-product {:cid "ssis00335" :env (env)}))
+    (get-product {:cid "ofje00276" :env (env)}))
 
   (def actresses (->actresses raw))
+  (count actresses)
   (map #(:name %) actresses)
 
   (def data (->data raw))

@@ -6,9 +6,9 @@
 
 (defn doc-path [coll-path doc-id] (str coll-path "/" doc-id))
 
-(defn query-filter-in [query-str]
+(defn query-filter-in [^String query-str]
   (fn [q]
-    (f/limit q query-str)))
+    (f/filter-in q query-str)))
 
 (defn query-order-by [& ordering]
   (fn [q]
@@ -17,6 +17,27 @@
 (defn query-limit [limit]
   (fn [q]
     (f/limit q limit)))
+
+(defn query-less [field upper]
+  (fn [q]
+    (f/filter< q field upper)))
+
+(defn query-less= [field upper]
+  (fn [q]
+    (f/filter<= q field upper)))
+
+(defn query-more [field lower]
+  (fn [q]
+    (f/filter> q field lower)))
+
+(defn query-more= [field lower]
+  (fn [q]
+    (f/filter>= q field lower)))
+
+(defn query-range
+  "lower以上upper未満."
+  [field lower upper]
+  (comp (query-more= field lower) (query-less field upper)))
 
 (def query-one (query-limit 1))
 

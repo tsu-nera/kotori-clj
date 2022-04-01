@@ -1,5 +1,5 @@
 (ns kotori.lib.firestore
-  (:refer-clojure :exclude [set! set])
+  (:refer-clojure :exclude [set! set get-in])
   (:require
    [firestore-clj.core :as f]
    [kotori.lib.json :as json]))
@@ -10,9 +10,9 @@
   (fn [q]
     (f/filter= q field value)))
 
-(defn query-filter-in [^String query-str]
+(defn query-filter-in [^String field arr]
   (fn [q]
-    (f/filter-in q query-str)))
+    (f/filter-in q field arr)))
 
 (defn query-order-by [& ordering]
   (fn [q]
@@ -39,15 +39,28 @@
     (f/filter>= q field lower)))
 
 (defn query-range
-  "lower以上upper未満."
+  "lower以上upper未満.
+  rangeによるフィルタリングはさらに他の条件と合わせて複合クエリがつくれない.
+  Firestoreの制約によって複合クエリには同じ方向(asc/desc)のインデックの
+  作成が必要. しかしrangeのような一つのフィールドでの両方向は
+  それ以外のフィールドとインデックスが貼れない.
+  そのためfilter-inによる配列での絞り込みを行う."
   [field lower upper]
-  (comp (query-more= field lower) (query-less field upper)))
+  (query-filter-in field (range lower upper)))
 
 (def query-one (query-limit 1))
 
 (defn make-xquery [v]
   {:pre [(vector? v)]}
   (apply comp v))
+
+(defn get-in [db doc-path ^String field_name]
+  (-> db
+      (f/doc doc-path)
+      .get
+      deref
+      .getData
+      (get field_name)))
 
 (defn get-docs
   ([db coll-path]
@@ -76,6 +89,7 @@
                 docs)))
 
 (defn- set
+  "batch setのためのhelper function"
   [db b path m]
   (let [data (json/->json m)
         doc  (f/doc db path)]
@@ -103,4 +117,6 @@
   (def queries (make-xquery [q-limit q-order-popular]))
 
   (def docs (get-docs (db) dmm-path queries))
+
+  (get-in (db) "providers/dmm" "products_crawled_time")
   )

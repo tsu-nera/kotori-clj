@@ -29,10 +29,8 @@
         (first))))
 
 (defn get-products
-  "
-  1回のget requestで最大100つの情報が取得できる.
-  それ以上取得する場合はoffsetによる制御が必要.
-  "
+  "1回のget requestで最大100つの情報が取得できる.
+  それ以上取得する場合はoffsetによる制御が必要."
   [{:keys [env offset hits keyword article article-id]
     :or   {offset 1 hits 100}}]
   {:pre [(<= hits 100)]}
@@ -67,12 +65,11 @@
                              (doall))]
     (reduce concat products)))
 
-(defn get-campaign-products "
-  キャンペーンの動画一覧の取得は
+(defn get-campaign-products
+  "キャンペーンの動画一覧の取得は
   keywordにキャンペーン名を指定することで取得可能.
   キャンペーン対象商品は500に届かないことが多いようなので
-  とりあえずhitsのdefaultを500に設定しておく.
-  "
+  とりあえずhitsのdefaultを500に設定しておく."
   [{:keys [env title hits] :or {hits 500}}]
   {:pre [(<= hits 500)]}
   (get-products-bulk {:env env :keyword title :hits hits}))
@@ -125,11 +122,10 @@
       (:campaign)
       (first)))
 
-(defn crawl-campaign-products! "
-  キャンペーン動画情報をFirestoreに保存する.
+(defn crawl-campaign-products!
+  "キャンペーン動画情報をFirestoreに保存する.
   保存の際のキャンペーンIDはキャンペーン期間とタイトルから独自に生成する.
-  キャンペーンタイトルのみをIDにすると定期開催されるものに対応できない.
-  "
+  キャンペーンタイトルのみをIDにすると定期開催されるものに対応できない."
   [{:keys [db] :as params}]
   (let [products               (get-campaign-products params)
         count                  (count products)

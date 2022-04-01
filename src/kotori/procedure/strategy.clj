@@ -5,6 +5,7 @@
    [kotori.lib.firestore :as fs]))
 
 ;; TODO 共通化
+(def dmm-doc-path "providers/dmm")
 (def products-path "providers/dmm/products")
 
 (def vr-genre-ids
@@ -30,18 +31,24 @@
 (defn ->next
   "表示用に情報を間引くことが目的."
   [product]
-  (let [raw     (-> product
-                    (dissoc :legacy)
-                    (dissoc :raw))
-        cid     (:cid raw)
-        title   (:title raw)
-        genres  (str/join "," (map #(get % "name") (:genres raw)))
-        ranking (:rank-popular raw)]
+  (let [raw       (-> product
+                      (dissoc :legacy)
+                      (dissoc :raw))
+        cid       (:cid raw)
+        title     (let [title (:title raw)]
+                    (if (< (count title) 15)
+                      title
+                      (subs title 0 15)))
+        actresses (str/join "," (map #(get % "name") (:actresses raw)))
+        ;; genres  (str/join "," (map #(get % "name") (:genres raw)))
+        ranking   (:rank-popular raw)]
     (select-keys raw [:cid :title])
-    {:cid     cid
-     :title   title
-     :genres  genres
-     :ranking ranking
+    {:cid               cid
+     :title             title
+     ;; :genres  genres
+     :ranking           ranking
+     :actresses         actresses
+     :last-crawled-time (:last-crawled-time raw)
      ;; :raw    raw
      }))
 
@@ -59,16 +66,14 @@
   [products]
   (remove ng-product? products))
 
-(def strategy-popular
-  (fs/query-order-by "last_crawled_time" :desc
-                     "rank_popular" :asc))
+(def st-popular
+  (fs/query-order-by "rank_popular"))
 
 ;; acctress数による絞り込み(where)とrank人気順(orderBy)の
 ;; 両方をクエリに含めるときは複数のフィールドで複合インデックスをはらないと
 ;; firestoreの制約によりエラーする.
-(def strategy-actress-exists
-  (comp (fs/query-order-by "actress_count")
-        (fs/query-range "actress_count" 1 5)))
+(def st-actress-exists
+  (fs/query-range "actress_count" 1 5))
 
 ;; TODO 遅延シーケンスとaccumulatorで必要な分のは取得するように改善したい.
 ;; (.listDocuments coll) で DocumentReferenceのlistを取得可能.
@@ -76,12 +81,15 @@
 ;; このリストから必要な分だけ評価してaccumulateする.
 ;; とりあえず今はちょっと多めに取得した上で最後に必要な分だけ限定する.
 (defn select-scheduled-products [{:keys [db limit] :or {limit 5}}]
-  (let [limit-plus (int (* 1.5 limit))
-        q-limit    (fs/query-limit limit-plus)
-        queries    (fs/make-xquery [strategy-popular
-                                    strategy-actress-exists
-                                    q-limit])
-        products   (fs/get-docs db products-path queries)]
+  (let [limit-plus        (int (* 1.5 limit))
+        q-limit           (fs/query-limit limit-plus)
+        last-crawled-time (fs/get-in db dmm-doc-path "products_crawled_time")
+        st-last-crawled   (fs/query-filter "last_crawled_time" last-crawled-time)
+        queries           (fs/make-xquery [st-last-crawled
+                                           st-actress-exists
+                                           st-popular
+                                           q-limit])
+        products          (fs/get-docs db products-path queries)]
     (->> products
          exclude-ng-genres
          (take limit))))
@@ -98,11 +106,9 @@
   (def product (select-next-product {:db (db)}))
   (->next product)
 
-  (str/join "," (map #(get % "name") genres))
-
   (def products
     (into []
-          (select-scheduled-products {:db (db) :limit 5})))
+          (select-scheduled-products {:db (db) :limit 20})))
 
   (map ->next products)
  ;;;;;;;;;;;

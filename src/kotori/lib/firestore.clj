@@ -6,6 +6,10 @@
 
 (defn doc-path [coll-path doc-id] (str coll-path "/" doc-id))
 
+(defn query-filter [^String field value]
+  (fn [q]
+    (f/filter= q field value)))
+
 (defn query-filter-in [^String query-str]
   (fn [q]
     (f/filter-in q query-str)))
@@ -57,13 +61,11 @@
        json/->clj)))
 
 (defn set!
-  "与えられたデータをFirestoreに書き込む.
-  すでにドキュメントが存在している場合は存在しないフィールドのみ書き込む.
-  存在しているフィールドに対してはなにもしない."
-  [db path m]
+  "与えられたデータをFirestoreに書き込む."
+  [db doc-path m]
   (let [data (json/->json m)]
     (-> db
-        (f/doc path)
+        (f/doc doc-path)
         (f/set! data :merge))))
 
 (defn make-batch-docs [id-str path docs]

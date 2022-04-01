@@ -7,6 +7,7 @@
    [kotori.lib.provider.dmm :as client]
    [kotori.lib.time :as time]))
 
+(def dmm-doc-path "providers/dmm")
 (def products-path "providers/dmm/products")
 (def campaigns-path "providers/dmm/campaigns")
 
@@ -103,8 +104,10 @@
         batch-docs (fs/make-batch-docs
                     "cid" products-path docs)]
     (fs/batch-set! db batch-docs)
-    {:count    count
-     :products docs}))
+    (fs/set! db dmm-doc-path {:products-crawled-time ts})
+    {:count     count
+     :timestamp ts
+     :products  docs}))
 
 ;; 引数はDMM APIで取得できた :campaignのkeyに紐づくMapをそのまま利用.
 ;; {:date_begin \"2022-03-28 10:00:00\",
@@ -162,6 +165,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (comment
   (require '[devtools :refer [env db]])
+  (require '[firestore-clj.core :as f])
 
   (def product (get-product {:cid "ssis00337" :env (env)}))
   (def products (get-products {:env (env) :hits 10}))
@@ -169,11 +173,14 @@
   (count products)
 
   (def products (crawl-product! {:db (db) :env (env) :cid "cawd00313"}))
-  (def products (crawl-products! {:db (db) :env (env) :hits 300}))
+  (def products (crawl-products! {:db (db) :env (env) :hits 100}))
 
   (def products (crawl-campaign-products!
                  {:db    (db) :env (env)
                   :title "新生活応援30％OFF第6弾"}))
+
+  (fs/set! (db) dmm-doc-path {:products-crawled-time
+                              (time/->fs-timestamp (time/now))})
   )
 
 (comment

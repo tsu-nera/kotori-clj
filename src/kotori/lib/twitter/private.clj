@@ -87,7 +87,7 @@
 ;; https://docs.tweepy.org/en/stable/client.html
 
 (comment
-  (require '[local :refer [twitter-auth]])
+  (require '[devtools :refer [twitter-auth]])
   (def user (get-user (twitter-auth) "46130870"))
   )
 

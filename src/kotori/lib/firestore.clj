@@ -62,10 +62,14 @@
       .getData
       (get field_name)))
 
+;; 基本的な方針として複雑な条件処理は全てクライアントで実施する.
+;; Firestoreの複数フィールドに対するクエリの制限が面倒.
+;; せいぜい1000以下にクエリ結果がなるようにxqueryを構築.
 (defn get-docs
   ([db coll-path]
    ;; (get-docs db coll-path identity)
-   (get-docs db coll-path (query-limit 5)))
+   ;; どうせこのルートはデバッグ用なので小さい値を入れておく.
+   (get-docs db coll-path (query-limit 3)))
   ([db coll-path xquery]
    (-> db
        (f/coll coll-path)

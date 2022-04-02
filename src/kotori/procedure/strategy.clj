@@ -2,7 +2,8 @@
   "商品選択戦略"
   (:require
    [clojure.string :as str]
-   [kotori.lib.firestore :as fs]))
+   [kotori.lib.firestore :as fs]
+   [kotori.lib.time :as time]))
 
 ;; TODO 共通化
 (def dmm-doc-path "providers/dmm")
@@ -28,6 +29,53 @@
              violent-genre-ids
              dirty-genre-ids)))
 
+(defn ng-genre? [id]
+  (contains? ng-genres id))
+
+(defn ng-product? [product]
+  (some true? (map
+               (comp ng-genre? #(get % "id"))
+               (:genres product))))
+
+(def st-exclude-ng-genres
+  (remove ng-product?))
+
+(def st-exclude-amateur
+  (remove #(zero? (:actress-count %))))
+
+(def st-exclude-omnibus
+  (remove #(> (:actress-count %) 4)))
+
+(def st-exclude-recently-tweeted
+  "最終投稿から1ヶ月以上経過"
+  (remove
+   (fn [p]
+     (let [past-time (time/weeks-ago 4)
+           last-time (:last-tweet-time p)]
+       (and last-time
+            (time/after? (time/->tz-jst last-time) past-time))))))
+
+(defn select-scheduled-products [{:keys [db limit] :or {limit 5}}]
+  (let [last-crawled-time (fs/get-in db dmm-doc-path
+                                     "products_crawled_time")
+        st-last-crawled   (fs/query-filter
+                           "last_crawled_time" last-crawled-time)
+        products          (fs/get-docs
+                           db products-path st-last-crawled)
+        xstrategy         (comp
+                           st-exclude-recently-tweeted
+                           st-exclude-ng-genres
+                           st-exclude-amateur
+                           st-exclude-omnibus)]
+    (->> (into [] xstrategy products)
+         ;; sortはtransducerに組み込まないほうが楽.
+         (sort-by :rank-popular)
+         (take limit))))
+
+(defn select-next-product [{:keys [db]}]
+  (first (select-scheduled-products {:db db})))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (defn ->next
   "表示用に情報を間引くことが目的."
   [product]
@@ -52,53 +100,6 @@
      ;; :raw    raw
      }))
 
-(defn ng-genre? [id]
-  (contains? ng-genres id))
-
-(defn ng-product? [product]
-  (some true? (map
-               (comp ng-genre? #(get % "id"))
-               (:genres product))))
-
-(defn exclude-ng-genres "
-  firestore側で除外のフィルタリングをすることができない(難しい)ため,
-  アプリ側で除外を実施する."
-  [products]
-  (remove ng-product? products))
-
-(def st-popular
-  (fs/query-order-by "rank_popular"))
-
-;; acctress数による絞り込み(where)とrank人気順(orderBy)の
-;; 両方をクエリに含めるときは複数のフィールドで複合インデックスをはらないと
-;; firestoreの制約によりエラーする.
-(def st-actress-exists
-  (fs/query-range "actress_count" 1 5))
-
-;; TODO 遅延シーケンスとaccumulatorで必要な分のは取得するように改善したい.
-;; (.listDocuments coll) で DocumentReferenceのlistを取得可能.
-;; referenceいうことはまだ通信は発生していない.
-;; このリストから必要な分だけ評価してaccumulateする.
-;; とりあえず今はちょっと多めに取得した上で最後に必要な分だけ限定する.
-(defn select-scheduled-products [{:keys [db limit] :or {limit 5}}]
-  (let [limit-plus        (int (* 1.5 limit))
-        q-limit           (fs/query-limit limit-plus)
-        last-crawled-time (fs/get-in db dmm-doc-path "products_crawled_time")
-        st-last-crawled   (fs/query-filter "last_crawled_time" last-crawled-time)
-        queries           (fs/make-xquery [st-last-crawled
-                                           st-actress-exists
-                                           st-popular
-                                           q-limit])
-        products          (fs/get-docs db products-path queries)]
-    (->> products
-         exclude-ng-genres
-         (take limit))))
-
-(defn select-next-product [{:keys [db]}]
-  (first (select-scheduled-products {:db db})))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
 (comment
   ;;;;;;;;;;;
   (require '[devtools :refer [env db]])
@@ -106,11 +107,25 @@
   (def product (select-next-product {:db (db)}))
   (->next product)
 
+
+  (time/after? (time/->tz-jst (:last-crawled-time product))
+               (time/weeks-ago 4))
+
   (def products
     (into []
-          (select-scheduled-products {:db (db) :limit 20})))
+          (select-scheduled-products {:db (db) :limit 10})))
 
-  (map ->next products)
+  (count products)
+
+  (def xst (comp
+            st-exclude-ng-genres
+            st-exclude-amateur
+            st-exclude-omnibus
+            (take 3)))
+
+  (def result (into [] xst products))
+
+  (map ->next (select-scheduled-products {:db (db) :limit 10}))
  ;;;;;;;;;;;
   )
 

@@ -7,6 +7,12 @@
 (def format-twitter "EEE MMM dd HH:mm:ss Z yyyy")
 (def format-dmm "yyyy-MM-dd HH:mm:ss")
 
+(defn before? [t1 t2]
+  (t/before? t1 t2))
+
+(defn after? [t1 t2]
+  (t/after? t1 t2))
+
 (defn ->tz-jst
   "TimezoneにJSTを設定."
   [timestamp]
@@ -18,6 +24,11 @@
 (defn now []
   "現雑時刻(日本標準時)のjava timeを返す"
   (->tz-jst (t/local-date-time)))
+
+(defn weeks-ago
+  "現雑時刻(日本標準時)のX週間前を返す"
+  [x]
+  (->tz-jst (t/minus (now) (t/weeks x))))
 
 (defn parse-twitter-timestamp
   "月と曜日が英語表記の場合のparseがうまくいかないので
@@ -40,6 +51,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 #_(now)
+#_(weeks-ago 4)
 
 (comment
   (def dmm-timestamp "2022-02-18 10:00:57")
@@ -58,4 +70,8 @@
     (parse-timestamp-sdf format-twitter timestamp))
 
   (parse-twitter-timestamp-sdf twitter-timestamp)
+  )
+
+(comment
+  (t/minus (now) (t/weeks 3))
   )

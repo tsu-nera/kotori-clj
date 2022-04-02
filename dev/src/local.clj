@@ -26,6 +26,7 @@
       core/load-config
       (assoc-in [:kotori.service.env/creds :path] creds)
       (assoc-in [:kotori.service.env/env :path] env)
+      (assoc-in [:firebase/app :dev] {})
       ;; (assoc-in [:kotori.service.firebase/app :config] creds)
       ;; (assoc-in [:kotori.model.kotori/db :config] config)
       ;; (assoc-in [:kotori.model.tweet/db :config] config)

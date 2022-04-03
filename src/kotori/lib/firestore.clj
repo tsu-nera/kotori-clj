@@ -1,5 +1,5 @@
 (ns kotori.lib.firestore
-  (:refer-clojure :exclude [set! set get-in assoc!])
+  (:refer-clojure :exclude [set! set get-in assoc! assoc])
   (:require
    [firestore-clj.core :as f]
    [kotori.lib.json :as json]))
@@ -93,6 +93,23 @@
     (-> db
         (f/doc doc-path)
         (f/merge! data))))
+
+(defn- assoc
+  [db tx doc-path field value]
+  (let [data (json/->json value)
+        doc  (f/doc db doc-path)]
+    (f/assoc tx doc field data)))
+
+(defn update!
+  "merge!改良版:
+  f/merge!だとドット表記を含むkeyがうまく処理できないため,
+  トランザクションの中でmapの各key-valueごとassocを呼ぶように修正.
+  mapのkeyはStringで渡すことが必要."
+  [db doc-path map]
+  (f/transact! db
+               (fn [tx]
+                 (doseq [[^String k v] map]
+                   (assoc db tx doc-path k v)))))
 
 (defn set!
   "与えられたデータをFirestoreに書き込む(merge)."

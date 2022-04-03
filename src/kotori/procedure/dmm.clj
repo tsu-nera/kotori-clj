@@ -191,7 +191,7 @@
 
   (->> (range 4)
        (map #(+ (* % 100) 1))
-       (map (fn [offset]q
+       (map (fn [offset]
               {:offset offset :hits 100}))
        (into []))
 

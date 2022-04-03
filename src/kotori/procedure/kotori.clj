@@ -2,7 +2,7 @@
   (:require
    [kotori.domain.kotori :as kotori]
    [kotori.domain.meigen :refer [meigens]]
-   [kotori.domain.tweet :refer [posts]]
+   [kotori.domain.tweet.post :refer [posts]]
    [kotori.lib.time :as time]
    [kotori.lib.twitter.guest :as guest]
    [kotori.lib.twitter.private :as private]

@@ -1,5 +1,7 @@
 (ns kotori.domain.tweet.post)
 
+(defonce posts)
+
 (defn ->coll-path [user-id]  (str "tweets/" user-id "/posts"))
 
 ;; (defonce posts nil)

@@ -107,15 +107,13 @@
   (def product (select-next-product {:db (db)}))
   (->next product)
 
-
-  (time/after? (time/->tz-jst (:last-crawled-time product))
-               (time/weeks-ago 4))
-
+  ;; cf. https://www.dmm.co.jp/digital/videoa/-/list/=/sort=ranking/
   (def products
     (into []
           (select-scheduled-products {:db (db) :limit 10})))
 
   (count products)
+  (map ->next products)
 
   (def xst (comp
             st-exclude-ng-genres

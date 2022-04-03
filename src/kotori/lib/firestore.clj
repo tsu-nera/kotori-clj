@@ -1,5 +1,5 @@
 (ns kotori.lib.firestore
-  (:refer-clojure :exclude [set! set get-in])
+  (:refer-clojure :exclude [set! set get-in assoc!])
   (:require
    [firestore-clj.core :as f]
    [kotori.lib.json :as json]))
@@ -75,10 +75,27 @@
        (f/coll coll-path)
        xquery
        f/pullv
+       ;; ここで通信が発生してデータ取得-> vectorへ(遅延ではない).
        json/->clj)))
 
+(defn assoc!
+  "与えられたデータでFirestoreのdocを更新する(1フィールドのみ)"
+  [db doc-path field value]
+  (let [data (json/->json value)]
+    (-> db
+        (f/doc doc-path)
+        (f/assoc! field data))))
+
+(defn merge!
+  "与えられたデータでFirestoreのdocを更新する(複数フィールド)"
+  [db doc-path map]
+  (let [data (json/->json map)]
+    (-> db
+        (f/doc doc-path)
+        (f/merge! data))))
+
 (defn set!
-  "与えられたデータをFirestoreに書き込む."
+  "与えられたデータをFirestoreに書き込む(merge)."
   [db doc-path m]
   (let [data (json/->json m)]
     (-> db

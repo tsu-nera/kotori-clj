@@ -79,9 +79,12 @@
   2. Firestoreへ 情報を保存."
   [{:keys [db cid] :as m}]
   (let [product (get-product m)
-        data    (product/->data product)
+        ts      (time/->fs-timestamp (time/now))
+        data    (-> product
+                    product/->data)
         path    (fs/doc-path products-path cid)]
     (fs/set! db path data)
+    (fs/set! db path {:last-crawled-time ts})
     data))
 
 ;; TODO 500以上の書き込み対応.
@@ -105,6 +108,11 @@
     {:count     count
      :timestamp ts
      :products  docs}))
+
+;; TODO
+;; (defn assoc-tweet->product!
+;;   [{:keys [db] :as params}]
+;;   nil)
 
 ;; 引数はDMM APIで取得できた :campaignのkeyに紐づくMapをそのまま利用.
 ;; {:date_begin \"2022-03-28 10:00:00\",
@@ -168,8 +176,8 @@
   (def products (get-products-bulk {:env (env) :hits 450}))
   (count products)
 
-  (def products (crawl-product! {:db (db) :env (env) :cid "cawd00313"}))
-  (def products (crawl-products! {:db (db) :env (env) :hits 100}))
+  (def product (crawl-product! {:db (db) :env (env) :cid "hnd00967"}))
+  (def products (crawl-products! {:db (db) :env (env) :hits 300}))
 
   (def products (crawl-campaign-products!
                  {:db    (db) :env (env)
@@ -183,7 +191,7 @@
 
   (->> (range 4)
        (map #(+ (* % 100) 1))
-       (map (fn [offset]
+       (map (fn [offset]q
               {:offset offset :hits 100}))
        (into []))
 

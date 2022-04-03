@@ -88,11 +88,6 @@
   (require '[integrant.repl.state :refer [config system]])
   (def userid (:userid (:config (::app config))))
 
-  (def doc (-> db
-               (fs/doc (id->coll-path userid))))
-
-  @(.get doc)
-
   (-> db
       (fs/doc "configs/proxies")
       (.get)

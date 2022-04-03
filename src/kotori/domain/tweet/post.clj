@@ -1,11 +1,8 @@
-(ns kotori.domain.tweet
-  (:require
-   [firestore-clj.core :as f]))
+(ns kotori.domain.tweet.post)
 
-(defonce posts nil)
+(defn ->coll-path [user-id]  (str "tweets/" user-id "/posts"))
 
-(defn id->coll-path [id]  (str "tweets/" id "/posts"))
-
+;; (defonce posts nil)
 ;; (defmethod ig/init-key ::db [_ {:keys [config db]}]
 ;;   (let [user-id   (:user-id config)
 ;;         coll-path (id->coll-path user-id)]

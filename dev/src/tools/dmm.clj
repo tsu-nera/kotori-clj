@@ -4,11 +4,12 @@
    [firebase :refer [db-dev db-prod]]
    [firestore-clj.core :as f]
    [kotori.lib.firestore :as fs]
-   [kotori.lib.json :as json]
    [kotori.procedure.dmm :as dmm]
    [kotori.procedure.tweet.post :as post]))
 
-(defn make-dmm-tweet [post]
+(def dmm-coll-path "providers/dmm/products")
+
+(defn make-dmm-tweet [screen-name post]
   {:cid         (:cid post)
    :media-id    (:media-id post)
    :media-key   (:media-key post)
@@ -25,40 +26,39 @@
    "last_tweet_time"           (:tweet-time data)})
 
 (defn ->path [data]
-  (str "providers/dmm/products/" (:cid data)))
+  (str dmm-coll-path "/" (:cid data)))
+
+(defn- update-with-recovery! [db path post]
+  (if (fs/doc-exists? (db-dev) path)
+    (fs/update! db path post)
+    (doto db
+      (fs/set!
+       path
+       (select-keys post ["last_tweet_name" "last_tweet_time"]))
+      (fs/update!
+       path
+       (dissoc post "last_tweet_name" "last_tweet_time")))))
 
 (defn assoc-post [db screen-name post]
   (->> post
-       (make-dmm-tweet)
+       (make-dmm-tweet screen-name)
        ((juxt ->path
               #(->tweet screen-name %)))
        ((fn [[path tweet]]
-          (fs/update! db path tweet)))))
-
-(defn assoc-post [db screen-name post]
-  (->> post
-       (make-dmm-tweet)
-       ((juxt ->path
-              #(->tweet screen-name %)))
-       ((fn [[path tweet]]
-          (fs/update! db path tweet)))))
+          (update-with-recovery! db path tweet)))))
 
 (defn assoc-posts [db screen-name posts]
   (->> posts
-       (map make-dmm-tweet)
+       (map make-dmm-tweet screen-name)
        (map (juxt ->path
                   #(->tweet screen-name %)))
        (map (fn [[path tweet]]
-              (fs/update! db path tweet)))))
+              (update-with-recovery! db path tweet)))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(comment
-  ;;;
+(comment  ;;;
   (require '[firebase :refer [db-dev db-prod]])
-
-  (def screen-name "")
-  (def user-id "")
 
   (def resp (post/get-video-posts {:db      (db-prod)
                                    :user-id user-id
@@ -69,6 +69,20 @@
   (def post (first resp))
   (assoc-post (db-dev) screen-name post)
 
+  (->> post
+       ((partial make-dmm-tweet screen-name))
+       ((juxt ->path
+              #(->tweet screen-name %)))
+       ((fn [[path tweet]]
+          (update-with-recovery! (db-dev) path tweet)))
+       )
+
+
+  (def data (->tweet screen-name (make-dmm-tweet screen-name post)))
+  (dissoc data "last_tweet_name" "last_tweet_time")
+  (first data)
+
+
   ;;;;;;;;;;;;;;;;;;;;;;
 
   (def posts (take 3 resp))
@@ -77,7 +91,7 @@
   ;;;;
 
   (require '[kotori.procedure.dmm :as dmm])
-  (def product (dmm/crawl-product! {:db (db-dev) :env (env) :cid "waaa00067"}))
+  (def product (dmm/crawl-product! {:db (db-dev) :env (env) :cid "cjod00289"}))
 
-  ;;;
+ ;;;
   )

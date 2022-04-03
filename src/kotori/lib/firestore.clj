@@ -113,8 +113,8 @@
 
 (defn set!
   "与えられたデータをFirestoreに書き込む(merge)."
-  [db doc-path m]
-  (let [data (json/->json m)]
+  [db doc-path map]
+  (let [data (json/->json map)]
     (-> db
         (f/doc doc-path)
         (f/set! data :merge))))
@@ -139,6 +139,15 @@
       (set db b path data))
     (f/commit! b)))
 
+(defn doc-exists? [db path]
+  "Documentの存在判定はDocumentSnapshotから,
+   言い換えれば通信(get)によって実際に取得しないとわからない."
+  (let [doc (f/doc db path)]
+    (-> doc
+        .get
+        deref
+        .exists)))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (comment
@@ -157,4 +166,10 @@
   (def docs (get-docs (db) dmm-path queries))
 
   (get-in (db) "providers/dmm" "products_crawled_time")
+
+  ;;;
+
+
+
+
   )

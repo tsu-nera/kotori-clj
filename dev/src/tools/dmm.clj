@@ -47,8 +47,6 @@
        ((fn [[path tweet]]
           (update-with-recovery! db path tweet)))))
 
-;; TODO バッチにしたほうがいいかもしれない...
-;; 基本的にwriteの方針は１秒間に１回.
 (defn assoc-posts [db screen-name posts]
   (->> posts
        (map #(make-dmm-tweet screen-name %))
@@ -66,19 +64,15 @@
                                    :user-id     user-id
                                    :since-weeks 1
                                    :days        7}))
+  (count resp)
+  (assoc-posts (db-dev) screen-name resp)
+
   ;;;;;;;;;;;;;;;
   (def post (first resp))
   (assoc-post (db-dev) screen-name post)
   ;;;;;;;;;;;;;;;;;;;;;;
-  (count resp)
-  (def posts (take 10 resp))
-  #_(assoc-posts (db-dev) screen-name posts)
-
-  (assoc-posts (db-dev) screen-name resp)
-  ;;;;
 
   (require '[kotori.procedure.dmm :as dmm])
   (def product (dmm/crawl-product! {:db (db-dev) :env (env) :cid "cjod00289"}))
-
  ;;;
   )

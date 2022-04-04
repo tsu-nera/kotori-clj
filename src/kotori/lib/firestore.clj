@@ -147,6 +147,12 @@
         doc  (f/doc db path)]
     (f/set b doc data :merge)))
 
+(defn create-batch [db]
+  (f/batch db))
+
+(defn commit-batch! [b]
+  (f/commit! b))
+
 (defn batch-set! [db batch-docs]
   (let [b (f/batch db)]
     (doseq [{:keys [path data]} batch-docs]

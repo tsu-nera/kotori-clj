@@ -91,13 +91,14 @@
         ;; genres  (str/join "," (map #(get % "name") (:genres raw)))
         ranking   (:rank-popular raw)]
     (select-keys raw [:cid :title])
-    {:cid               cid
-     :title             title
+    {:cid             cid
+     :title           title
      ;; :genres  genres
-     :ranking           ranking
-     :actresses         actresses
-     :last-crawled-time (:last-crawled-time raw)
+     :ranking         ranking
+     :actresses       actresses
+     ;; :last-crawled-time (:last-crawled-time raw)
      ;; :raw    raw
+     ;; :last-tweet-time (:last-tweet-time raw)
      }))
 
 (comment
@@ -110,7 +111,7 @@
   ;; cf. https://www.dmm.co.jp/digital/videoa/-/list/=/sort=ranking/
   (def products
     (into []
-          (select-scheduled-products {:db (db) :limit 10})))
+          (select-scheduled-products {:db (db) :limit 100})))
 
   (count products)
   (map ->next products)
@@ -123,7 +124,7 @@
 
   (def result (into [] xst products))
 
-  (map ->next (select-scheduled-products {:db (db) :limit 10}))
+  (map ->next (select-scheduled-products {:db (db) :limit 20}))
  ;;;;;;;;;;;
   )
 

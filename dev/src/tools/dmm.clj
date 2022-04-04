@@ -2,7 +2,6 @@
   (:require
    [devtools :refer [env]]
    [firebase :refer [db-dev db-prod]]
-   [firestore-clj.core :as f]
    [kotori.lib.firestore :as fs]
    [kotori.procedure.dmm :as dmm]
    [kotori.procedure.tweet.post :as post]))
@@ -21,9 +20,12 @@
    :user-id     (:user-id post)})
 
 (defn ->tweet [screen-name data]
-  {(str "tweets." screen-name) data
-   "last_tweet_name"           screen-name
-   "last_tweet_time"           (:tweet-time data)})
+  (let [tweet-id   (:tweet-id data)
+        tweet-time (:tweet-time data)]
+    {(str "tweets" "." screen-name "." tweet-id) data
+     "last_tweet_name"                           screen-name
+     "last_tweet_time"                           tweet-time
+     "last_tweet_id"                             tweet-id}))
 
 (defn ->path [data]
   (str dmm-coll-path "/" (:cid data)))
@@ -34,10 +36,14 @@
     (doto db
       (fs/set!
        path
-       (select-keys post ["last_tweet_name" "last_tweet_time"]))
+       (select-keys post
+                    ["last_tweet_name"
+                     "last_tweet_time"
+                     "last_tweet_id"]))
       (fs/update!
        path
-       (dissoc post "last_tweet_name" "last_tweet_time")))))
+       (dissoc post
+               "last_tweet_name" "last_tweet_time" "last_tweet_id")))))
 
 (defn assoc-post [db screen-name post]
   (->> post
@@ -60,12 +66,15 @@
 (comment  ;;;
   (require '[firebase :refer [db-dev db-prod]])
 
+
   (def resp (post/get-video-posts {:db          (db-prod)
                                    :user-id     user-id
-                                   :since-weeks 1
-                                   :days        7}))
+                                   :since-weeks 4
+                                   :days        14}))
   (count resp)
   (assoc-posts (db-dev) screen-name resp)
+
+
 
   ;;;;;;;;;;;;;;;
   (def post (first resp))
@@ -73,6 +82,7 @@
   ;;;;;;;;;;;;;;;;;;;;;;
 
   (require '[kotori.procedure.dmm :as dmm])
-  (def product (dmm/crawl-product! {:db (db-dev) :env (env) :cid "cjod00289"}))
+  (def product (dmm/crawl-product!
+                {:db (db-dev) :env (env) :cid "cjod00289"}))
  ;;;
   )

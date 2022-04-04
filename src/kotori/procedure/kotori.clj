@@ -67,7 +67,7 @@
 ;;;;;;;;;;;;;;;;;;;;
 ;; Design Journals
 ;;;;;;;;;;;;;;;;;;;;
-(defn dummy [{:keys [text screen-name db] :as params}]
+(defn dummy [{:keys [text screen-name db]}]
   (let [user-id (guest/resolve-user-id screen-name)
         creds   (kotori/->creds db user-id)
         proxies (kotori/->proxies db user-id)]
@@ -79,6 +79,7 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+
 (comment
   (def timestamp "2022-02-18 10:00:57")
   (def format "yyyy-MM-dd HH:mm:ss")
@@ -86,9 +87,9 @@
   (type (time/parse-timestamp format timestamp))
   )
 (comment
-  (require '[devtools :refer [db]])
+  (require '[firebase :refer [db]])
 
-  (def text (make-text (pick-random)))
+  (def text (make-text (picks-random)))
 
   (tweet-random {:db          (db)
                  :screen-name "xxxxxxxx"})

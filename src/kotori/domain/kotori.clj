@@ -1,31 +1,21 @@
 (ns kotori.domain.kotori
   (:require
-   [camel-snake-kebab.core :as csk]
-   [camel-snake-kebab.extras :as cske]
    [clojure.set :refer [rename-keys]]
    [clojure.walk :refer [keywordize-keys]]
-   [firestore-clj.core :as fs]))
+   [kotori.lib.firestore :as fs]))
 
 (def coll-name "kotoris")
 (defn coll-path [user-id] (str coll-name "/" user-id))
 
-(defn ->doc [db user-id]
-  (-> db
-      (fs/doc (coll-path user-id))
-      (.get)
-      (deref)
-      (.getData)
-      (as-> x (into {} x))
-      (keywordize-keys)
-      (as-> x (cske/transform-keys csk/->kebab-case-keyword x))))
-
 (defn ->creds
   ([db user-id]
-   (-> (->doc db user-id)
-       (:twitter-auth)
-       (as-> x (into {} x))
-       (keywordize-keys)
-       (rename-keys {:auth_token :auth-token}))))
+   (let [doc-path (fs/doc-path coll-name user-id)]
+     (-> db
+         (fs/get-doc doc-path)
+         :twitter-auth
+         (as-> x (into {} x))
+         keywordize-keys
+         (rename-keys {:auth_token :auth-token})))))
 
 (defn- proxy-fs-http [m]
   (-> m
@@ -42,75 +32,21 @@
 
 (defn ->proxies
   [db user-id]
-  (let [doc         (->doc db user-id)
-        proxy-label (:proxy-label doc)
+  (let [doc-path    (fs/doc-path coll-name user-id)
+        doc         (fs/get-doc db doc-path)
+        proxy-label (keyword (:proxy-label doc))
         proxy-path  "configs/proxies"]
     (-> db
-        (fs/doc proxy-path)
-        (.get)
-        (deref)
-        (.getData)
-        (get proxy-label)
+        (fs/get-doc proxy-path)
+        proxy-label
         (proxy-fs-http)
         (proxy-port-string->number))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; (defmethod ig/init-key ::db [_ {:keys [config db]}]
-;;   (let [user-id  (:userid config)
-;;         doc-path (id->doc-path user-id)
-;;         coll     (fs/coll db coll-name)]
-;;     (def doc
-;;       (-> db
-;;           (fs/doc doc-path)
-;;           (.get)
-;;           (deref)
-;;           (.getData)
-;;           (as-> x (into {} x))
-;;           (keywordize-keys)
-;;           (as-> x (cske/transform-keys csk/->kebab-case-keyword x))))
-;;     (def twitter-auth (doc->twitter-auth doc))
-;;     (let [proxy-label (:proxy-label doc)
-;;           proxy-path  "configs/proxies"]
-;;       (def proxies
-;;         (-> db
-;;             (fs/doc proxy-path)
-;;             (.get)
-;;             (deref)
-;;             (.getData)
-;;             (get proxy-label)
-;;             (proxy-fs-http)
-;;             (proxy-port-string->number))))
-;;     coll))
-
 (comment
+  (require '[firebase :refer [db]])
 
-  (require '[integrant.repl.state :refer [config system]])
-  (def userid (:userid (:config (::app config))))
-
-  (-> db
-      (fs/doc "configs/proxies")
-      (.get)
-      (deref)
-      (.getData)
-      (get "sakura")
-      (proxy-fs-http)
-      ;; (as-> x (into {} x))
-      ;; (keywordize-keys)
-      ;; (rename-keys {"ip" :proxy-host "port" :proxy-port "username" :proxy-user "password" :proxy-pass})
-      )
-
-  )
-
-(comment
-  doc
-
-  ;; うーん, firestoreとのやりとりで
-  ;; いちいちclojure hash-mapと java mapの変換が冗長だな.
-  ;; こういうときにマクロを書くんだろうな.
-  (def twitter-auth (->> doc
-                         (:twitter_auth)
-                         (into {} )
-                         (keywordize-keys)))
-  twitter-auth
+  (->creds (db) "")
+  (->proxies (db) "")
   )

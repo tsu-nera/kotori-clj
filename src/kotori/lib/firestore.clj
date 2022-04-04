@@ -76,6 +76,16 @@
       .getData
       (get field_name)))
 
+(defn get-doc
+  [db doc-path]
+  (-> db
+      (f/doc doc-path)
+      .get
+      deref
+      .getData
+      (as-> x (into {} x))
+      json/->clj))
+
 ;; 基本的な方針として複雑な条件処理は全てクライアントで実施する.
 ;; Firestoreの複数フィールドに対するクエリの制限が面倒.
 ;; せいぜい1000以下にクエリ結果がなるようにxqueryを構築.

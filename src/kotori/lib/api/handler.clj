@@ -46,6 +46,7 @@
 (comment
   ((make-endpoint) {:request-method :post :uri "/api/ping"})
   ((make-endpoint) {:request-method :post :uri "/api/dmm/get-product"})
+  ((make-endpoint) {:request-method :post :uri "/api/kotori/dummy"})
   ((make-endpoint) {:request-method :post :uri "/api/kotori/tweet-random"})
   )
 

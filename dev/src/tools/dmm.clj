@@ -47,9 +47,11 @@
        ((fn [[path tweet]]
           (update-with-recovery! db path tweet)))))
 
+;; TODO バッチにしたほうがいいかもしれない...
+;; 基本的にwriteの方針は１秒間に１回.
 (defn assoc-posts [db screen-name posts]
   (->> posts
-       (map make-dmm-tweet screen-name)
+       (map #(make-dmm-tweet screen-name %))
        (map (juxt ->path
                   #(->tweet screen-name %)))
        (map (fn [[path tweet]]
@@ -60,34 +62,19 @@
 (comment  ;;;
   (require '[firebase :refer [db-dev db-prod]])
 
-  (def resp (post/get-video-posts {:db      (db-prod)
-                                   :user-id user-id
-                                   :weeks   1}))
-  (count resp)
+  (def resp (post/get-video-posts {:db          (db-prod)
+                                   :user-id     user-id
+                                   :since-weeks 1
+                                   :days        7}))
   ;;;;;;;;;;;;;;;
-
   (def post (first resp))
   (assoc-post (db-dev) screen-name post)
-
-  (->> post
-       ((partial make-dmm-tweet screen-name))
-       ((juxt ->path
-              #(->tweet screen-name %)))
-       ((fn [[path tweet]]
-          (update-with-recovery! (db-dev) path tweet)))
-       )
-
-
-  (def data (->tweet screen-name (make-dmm-tweet screen-name post)))
-  (dissoc data "last_tweet_name" "last_tweet_time")
-  (first data)
-
-
   ;;;;;;;;;;;;;;;;;;;;;;
+  (count resp)
+  (def posts (take 10 resp))
+  #_(assoc-posts (db-dev) screen-name posts)
 
-  (def posts (take 3 resp))
-  (assoc-posts (db-dev) screen-name posts)
-
+  (assoc-posts (db-dev) screen-name resp)
   ;;;;
 
   (require '[kotori.procedure.dmm :as dmm])

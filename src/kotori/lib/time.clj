@@ -21,14 +21,34 @@
 (defn str->java-time [format timestamp]
   (->tz-jst (t/local-date-time format timestamp)))
 
-(defn now []
+(defn now
   "現雑時刻(日本標準時)のjava timeを返す"
+  []
   (->tz-jst (t/local-date-time)))
 
-(defn weeks-ago
-  "現雑時刻(日本標準時)のX週間前を返す"
-  [x]
-  (->tz-jst (t/minus (now) (t/weeks x))))
+(defn date->days-ago
+  ([x]
+   (date->days-ago x (now)))
+  ([x date]
+   (->tz-jst (t/minus date (t/days x)))))
+
+(defn date->days-later
+  ([x]
+   (date->days-later x (now)))
+  ([x date]
+   (->tz-jst (t/plus date (t/days x)))))
+
+(defn date->weeks-ago
+  ([x]
+   (date->weeks-ago x (now)))
+  ([x date]
+   (->tz-jst (t/minus date (t/weeks x)))))
+
+(defn date->weeks-later
+  ([x]
+   (date->weeks-later x (now)))
+  ([x date]
+   (->tz-jst (t/plus date (t/weeks x)))))
 
 (defn parse-twitter-timestamp
   "月と曜日が英語表記の場合のparseがうまくいかないので
@@ -43,7 +63,8 @@
   (str->java-time format-dmm str))
 
 (defn ->fs-timestamp "
-  java.time型のタイムスタンプをFirestoreに 送信するとオブジェクトとして保存される.
+  java.time型のタイムスタンプをFirestoreに 送信すると
+  オブジェクトとして保存される.
   java.util.Dateに変換して送信するとタイムスタンプとして扱われる."
   [timestamp]
   (t/java-date timestamp))

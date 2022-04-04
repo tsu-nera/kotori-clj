@@ -14,9 +14,9 @@
   (fn [q]
     (f/filter-in q field arr)))
 
-(defn query-order-by [& ordering]
+(defn query-order-by [keyword]
   (fn [q]
-    (apply f/order-by q ordering)))
+    (f/order-by q keyword)))
 
 (defn query-limit [limit]
   (fn [q]
@@ -38,6 +38,14 @@
   (fn [q]
     (f/filter>= q field lower)))
 
+(defn query-start-at [date]
+  (fn [q]
+    (f/start-at q date)))
+
+(defn query-end-before [date]
+  (fn [q]
+    (f/end-before q date)))
+
 (defn query-range
   "lower以上upper未満.
   rangeによるフィルタリングはさらに他の条件と合わせて複合クエリがつくれない.
@@ -48,11 +56,17 @@
   [field lower upper]
   (query-filter-in field (range lower upper)))
 
+;; (defn query-range-date
+;;   [field from-data to-date]
+;;   (query-filter-in field (range lower upper)))
+
 (def query-one (query-limit 1))
 
+;; xqueryのvectorは末尾から適用されるため
+;; 表記のために上から昇順で作成されたリストはreverseで降順にする.
 (defn make-xquery [v]
   {:pre [(vector? v)]}
-  (apply comp v))
+  (apply comp (reverse v)))
 
 (defn get-in [db doc-path ^String field_name]
   (-> db

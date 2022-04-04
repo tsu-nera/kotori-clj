@@ -50,7 +50,7 @@
   "最終投稿から1ヶ月以上経過"
   (remove
    (fn [p]
-     (let [past-time (time/weeks-ago 4)
+     (let [past-time (time/date->weeks-ago 4)
            last-time (:last-tweet-time p)]
        (and last-time
             (time/after? (time/->tz-jst last-time) past-time))))))

@@ -2,8 +2,15 @@
   (:require
    [clojure.java.io :as io]
    [integrant.core :as ig]
-   [kotori.service.firebase :refer [create-app! get-db]]
-   [local :refer [creds-dev creds-prod]]))
+   [kotori.service.firebase :refer [create-app! get-db]]))
+
+(def creds-dev "private/dev/credentials.json")
+(def creds-prod "private/prod/credentials.json")
+
+(defn db
+  "i.e. name=[DEFAULT]"
+  []
+  (get-db))
 
 (defn db-dev []
   (get-db "dev"))
@@ -21,6 +28,6 @@
   (.delete prod))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
+#_(db)
 #_(db-dev)
 #_(db-prod)

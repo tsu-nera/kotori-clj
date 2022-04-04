@@ -5,6 +5,7 @@
    [clojure.repl :refer :all]
    [clojure.tools.namespace.repl :refer [refresh]]
    [devtools :refer :all :as t]
+   [firebase :refer [creds-dev creds-prod]]
    [hashp.core]
    [integrant.repl :refer
     [clear halt go init prep set-prep! reset reset-all suspend resume]]
@@ -15,9 +16,7 @@
    [kotori.service.firebase :refer [get-app get-db delete-app!]]
    [portal.api :as p]))
 
-(def creds-dev "private/dev/credentials.json")
 (def env-dev "private/dev/env.edn")
-(def creds-prod "private/prod/credentials.json")
 (def env-prod "private/prod/env.edn")
 
 (defn- init-system!
@@ -26,7 +25,7 @@
       core/load-config
       (assoc-in [:kotori.service.env/creds :path] creds)
       (assoc-in [:kotori.service.env/env :path] env)
-      (assoc-in [:firebase/app :dev] {})
+      (assoc :firebase/app {})
       ;; (assoc-in [:kotori.service.firebase/app :config] creds)
       ;; (assoc-in [:kotori.model.kotori/db :config] config)
       ;; (assoc-in [:kotori.model.tweet/db :config] config)

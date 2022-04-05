@@ -72,12 +72,14 @@
          (sort-by :rank-popular)
          (take limit))))
 
-(defn select-next-product [{:keys [db]}]
-  (first (select-scheduled-products {:db db})))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (defn ->next
-  "表示用に情報を間引くことが目的."
+  [product]
+  (let [cid   (:cid product)
+        title (:title product)]
+    {:cid   cid
+     :title title}))
+
+(defn ->print
   [product]
   (let [raw       (-> product
                       (dissoc :legacy)
@@ -91,22 +93,26 @@
         ;; genres  (str/join "," (map #(get % "name") (:genres raw)))
         ranking   (:rank-popular raw)]
     (select-keys raw [:cid :title])
-    {:cid             cid
-     :title           title
+    {:cid       cid
+     :ranking   ranking
+     :title     title
+     :actresses actresses
      ;; :genres  genres
-     :ranking         ranking
-     :actresses       actresses
      ;; :last-crawled-time (:last-crawled-time raw)
      ;; :raw    raw
      ;; :last-tweet-time (:last-tweet-time raw)
      }))
 
+(defn select-next-product [{:keys [db]}]
+  (->next (first (select-scheduled-products {:db db}))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 (comment
   ;;;;;;;;;;;
-  (require '[devtools :refer [env db]])
+  (require '[firebase :refer [db]])
 
   (def product (select-next-product {:db (db)}))
-  (->next product)
 
   ;; cf. https://www.dmm.co.jp/digital/videoa/-/list/=/sort=ranking/
   (def products

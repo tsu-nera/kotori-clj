@@ -31,7 +31,7 @@
   (str dmm-coll-path "/" (:cid data)))
 
 (defn- update-with-recovery! [db path post]
-  (if (fs/doc-exists? (db-dev) path)
+  (if (fs/doc-exists? db path)
     (fs/update! db path post)
     (doto db
       (fs/set!
@@ -66,12 +66,15 @@
 (comment  ;;;
   (require '[firebase :refer [db-dev db-prod]])
 
+  (def user-id "")
+  (def screen-name "")
+
   (def resp (post/get-video-posts {:db       (db-prod)
                                    :user-id  user-id
-                                   :days-ago 1
-                                   :days     1}))
+                                   :days-ago 63
+                                   :days     7}))
   (count resp)
-  (assoc-posts (db-dev) screen-name resp)
+  (assoc-posts (db-prod) screen-name resp)
 
 
 

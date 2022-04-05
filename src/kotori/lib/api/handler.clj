@@ -3,6 +3,7 @@
    [kotori.procedure.dmm :as dmm]
    [kotori.procedure.kotori :as kotori]
    [kotori.procedure.ping :as ping]
+   [kotori.procedure.strategy :as strategy]
    [reitit.ring :as ring]
    [ring.util.response :as resp]))
 
@@ -29,7 +30,8 @@
     ["/ping" {:post ping/ping-pong}]
     ["/dmm"
      ["/crawl-product" {:post dmm/crawl-product!}]
-     ["/crawl-products" {:post dmm/crawl-products!}]]
+     ["/crawl-products" {:post dmm/crawl-products!}]
+     ["/select-next-product" {:get strategy/select-next-product}]]
     ["/kotori"
      ["/dummy" kotori/dummy]
      ["/tweet" kotori/tweet]

@@ -19,12 +19,15 @@
   (t/zoned-date-time timestamp tz-jst))
 
 (defn str->java-time [format timestamp]
-  (->tz-jst (t/local-date-time format timestamp)))
+  (->tz-jst
+   (t/local-date-time format timestamp)))
 
 (defn now
   "現雑時刻(日本標準時)のjava timeを返す"
   []
-  (->tz-jst (t/local-date-time)))
+  (->tz-jst
+   ;; (t/local-date-time)
+   (t/zoned-date-time)))
 
 (defn date->days-ago
   ([x]
@@ -72,7 +75,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 #_(now)
-#_(weeks-ago 4)
+#_(date->weeks-ago 4)
 
 (comment
   (def dmm-timestamp "2022-02-18 10:00:57")

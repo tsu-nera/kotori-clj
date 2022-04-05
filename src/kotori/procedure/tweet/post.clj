@@ -5,8 +5,8 @@
    [kotori.lib.firestore :as fs]
    [kotori.lib.time :as t]))
 
-(defn get-video-posts [{:keys [user-id db since-weeks days]}]
-  (let [base-time (t/date->weeks-ago since-weeks)
+(defn get-video-posts [{:keys [user-id db days-ago days]}]
+  (let [base-time (t/date->days-ago days-ago)
         from-time (t/->fs-timestamp base-time)
         to-time   (t/->fs-timestamp (t/date->days-later days base-time))
         xquery

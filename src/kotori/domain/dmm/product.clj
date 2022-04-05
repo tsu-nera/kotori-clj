@@ -90,8 +90,10 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (comment
-  (require '[devtools :refer [env db]])
+  (require '[firebase :refer [db]])
+  (require '[devtools :refer [env]])
   (require '[kotori.procedure.dmm :refer [get-product]])
+
   (def raw
     (get-product {:cid "ofje00276" :env (env)}))
 
@@ -100,6 +102,8 @@
   (map #(:name %) actresses)
 
   (def data (->data raw))
+
+  (->released-time raw)
   )
 
 (comment

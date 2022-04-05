@@ -66,11 +66,10 @@
 (comment  ;;;
   (require '[firebase :refer [db-dev db-prod]])
 
-
-  (def resp (post/get-video-posts {:db          (db-prod)
-                                   :user-id     user-id
-                                   :since-weeks 4
-                                   :days        14}))
+  (def resp (post/get-video-posts {:db       (db-prod)
+                                   :user-id  user-id
+                                   :days-ago 1
+                                   :days     1}))
   (count resp)
   (assoc-posts (db-dev) screen-name resp)
 

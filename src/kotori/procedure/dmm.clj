@@ -168,7 +168,8 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (comment
-  (require '[devtools :refer [env db]])
+  (require '[devtools :refer [env]])
+  (require '[firebase :refer [db]])
   (require '[firestore-clj.core :as f])
 
   (def product (get-product {:cid "ssis00337" :env (env)}))
@@ -177,7 +178,7 @@
   (count products)
 
   (def product (crawl-product! {:db (db) :env (env) :cid "hnd00967"}))
-  (def products (crawl-products! {:db (db) :env (env) :hits 300}))
+  (def products (crawl-products! {:db (db) :env (env) :hits 10}))
 
   (def products (crawl-campaign-products!
                  {:db    (db) :env (env)

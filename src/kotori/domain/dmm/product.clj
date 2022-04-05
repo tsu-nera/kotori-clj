@@ -39,6 +39,9 @@
   ([] (time/->fs-timestamp (time/now)))
   ([_] (time/->fs-timestamp (time/now))))
 
+(defn- sample-movie? [raw]
+  (contains? raw :sampleMovieURL))
+
 (defn ->legacy [raw]
   {:cid         (->cid raw)
    :title       (->title raw)
@@ -58,14 +61,15 @@
   "dmm response map -> firestore doc mapの写像"
   [raw]
   (let [actresses (->actresses raw)
-        data      {:cid           (->cid raw)
-                   :title         (->title raw)
-                   :url           (->url raw)
-                   :affiliate_url (->affiliate-url raw)
-                   :actresses     actresses
-                   :actress_count (count actresses)
-                   :released_time (->released-time raw)
-                   :genres        (->genres raw)}
+        data      {:cid             (->cid raw)
+                   :title           (->title raw)
+                   :url             (->url raw)
+                   :affiliate_url   (->affiliate-url raw)
+                   :actresses       actresses
+                   :actress_count   (count actresses)
+                   :released_time   (->released-time raw)
+                   :genres          (->genres raw)
+                   :no_sample_movie (not (sample-movie? raw))}
         legacy    (->legacy raw)]
     (-> data
         (assoc :raw raw)
@@ -95,7 +99,9 @@
   (require '[kotori.procedure.dmm :refer [get-product]])
 
   (def raw
-    (get-product {:cid "ofje00276" :env (env)}))
+    (get-product {:cid "ssis00165" :env (env)}))
+
+  (contains? raw :sampleMovieURL)
 
   (def actresses (->actresses raw))
   (count actresses)

@@ -32,10 +32,16 @@
 (defn ng-genre? [id]
   (contains? ng-genres id))
 
+(defn no-sample-movie? [product]
+  (:no-sample-movie product))
+
 (defn ng-product? [product]
   (some true? (map
                (comp ng-genre? #(get % "id"))
                (:genres product))))
+
+(def st-exclude-no-sample-movie
+  (remove no-sample-movie?))
 
 (def st-exclude-ng-genres
   (remove ng-product?))
@@ -47,10 +53,10 @@
   (remove #(> (:actress-count %) 4)))
 
 (def st-exclude-recently-tweeted
-  "最終投稿から1ヶ月以上経過"
+  "最終投稿から2ヶ月以上経過"
   (remove
    (fn [p]
-     (let [past-time (time/date->weeks-ago 4)
+     (let [past-time (time/date->weeks-ago 8)
            last-time (:last-tweet-time p)]
        (and last-time
             (time/after? (time/->tz-jst last-time) past-time))))))
@@ -63,6 +69,7 @@
         products          (fs/get-docs
                            db products-path st-last-crawled)
         xstrategy         (comp
+                           st-exclude-no-sample-movie
                            st-exclude-recently-tweeted
                            st-exclude-ng-genres
                            st-exclude-amateur
@@ -92,14 +99,14 @@
         actresses (str/join "," (map #(get % "name") (:actresses raw)))
         ;; genres  (str/join "," (map #(get % "name") (:genres raw)))
         ranking   (:rank-popular raw)]
-    (select-keys raw [:cid :title])
-    {:cid       cid
-     :ranking   ranking
-     :title     title
-     :actresses actresses
+    {:cid             cid
+     :ranking         ranking
+     :title           title
+     :actresses       actresses
+     :no-sample-movie (:no-sample-movie raw)
      ;; :genres  genres
      ;; :last-crawled-time (:last-crawled-time raw)
-     ;; :raw    raw
+     ;; :raw             raw
      ;; :last-tweet-time (:last-tweet-time raw)
      }))
 
@@ -110,9 +117,9 @@
 
 (comment
   ;;;;;;;;;;;
-  (require '[firebase :refer [db]])
+  (require '[firebase :refer [db-prod]])
 
-  (def product (select-next-product {:db (db)}))
+  (def product (select-next-product {:db (db-prod)}))
 
   ;; cf. https://www.dmm.co.jp/digital/videoa/-/list/=/sort=ranking/
   (def products
@@ -130,7 +137,7 @@
 
   (def result (into [] xst products))
 
-  (map ->next (select-scheduled-products {:db (db) :limit 20}))
+  (map ->print (select-scheduled-products {:db (db-prod) :limit 20}))
  ;;;;;;;;;;;
   )
 

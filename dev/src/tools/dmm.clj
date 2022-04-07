@@ -86,5 +86,10 @@
   (require '[kotori.procedure.dmm :as dmm])
   (def product (dmm/crawl-product!
                 {:db (db-dev) :env (env) :cid "cjod00289"}))
+
+  (def product (dmm/crawl-product!
+                {:db (db-prod) :env (env) :cid "jusd00912"}))
+  (def products (dmm/crawl-products!
+                 {:db (db-prod) :env (env) :hits 300}))
  ;;;
   )

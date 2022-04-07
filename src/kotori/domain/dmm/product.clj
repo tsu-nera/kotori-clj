@@ -42,6 +42,9 @@
 (defn- sample-movie? [raw]
   (contains? raw :sampleMovieURL))
 
+(defn- sample-image? [raw]
+  (contains? raw :sampleImageURL))
+
 (defn ->legacy [raw]
   {:cid         (->cid raw)
    :title       (->title raw)
@@ -69,7 +72,8 @@
                    :actress_count   (count actresses)
                    :released_time   (->released-time raw)
                    :genres          (->genres raw)
-                   :no_sample_movie (not (sample-movie? raw))}
+                   :no_sample_movie (not (sample-movie? raw))
+                   :no_sample_image (not (sample-image? raw))}
         legacy    (->legacy raw)]
     (-> data
         (assoc :raw raw)
@@ -100,8 +104,12 @@
 
   (def raw
     (get-product {:cid "ssis00165" :env (env)}))
+  (def product
+    (get-product {:cid "jusd00912" :env (env)}))
+
 
   (contains? raw :sampleMovieURL)
+  (contains? product :sampleImageURL)
 
   (def actresses (->actresses raw))
   (count actresses)

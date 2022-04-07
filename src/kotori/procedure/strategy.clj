@@ -35,13 +35,16 @@
 (defn no-sample-movie? [product]
   (:no-sample-movie product))
 
+(defn no-sample-image? [product]
+  (:no-sample-image product))
+
 (defn ng-product? [product]
   (some true? (map
                (comp ng-genre? #(get % "id"))
                (:genres product))))
 
-(def st-exclude-no-sample-movie
-  (remove no-sample-movie?))
+(def st-exclude-no-samples
+  (remove (or no-sample-movie? no-sample-image?)))
 
 (def st-exclude-ng-genres
   (remove ng-product?))
@@ -72,7 +75,7 @@
         products          (fs/get-docs
                            db products-path st-last-crawled)
         xstrategy         (comp
-                           st-exclude-no-sample-movie
+                           st-exclude-no-samples
                            st-exclude-recently-tweeted
                            st-exclude-ng-genres
                            st-exclude-amateur

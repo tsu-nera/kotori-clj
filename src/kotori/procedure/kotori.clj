@@ -56,6 +56,13 @@
         text (make-text data)]
     (tweet (assoc params :text text))))
 
+(defn tweet-with-quoted-video
+  "引用動画ツイート"
+  [{:as params}]
+  (let [data (pick-random)
+        text (make-text data)]
+    (tweet (assoc params :text text))))
+
 (defn tweet-morning
   [{:as params}]
   (tweet (assoc params :text "おはようございます")))

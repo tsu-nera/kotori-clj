@@ -14,6 +14,16 @@
   (fn [q]
     (f/filter-in q field arr)))
 
+(defn query-exists
+  "Fieldの存在判定にorder-byが利用できる. nullは除外される."
+  ([keyword]
+   (fn [q]
+     (f/order-by q keyword)))
+  ([keyword ordering]
+   ;; ordering = :asc or :desc
+   (fn [q]
+     (f/order-by q keyword ordering))))
+
 (defn query-order-by [keyword]
   (fn [q]
     (f/order-by q keyword)))

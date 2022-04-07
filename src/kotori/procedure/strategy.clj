@@ -61,6 +61,9 @@
        (and last-time
             (time/after? (time/->tz-jst last-time) past-time))))))
 
+(def st-already-tweeted
+  (filter #(contains? % :last_tweet_id)))
+
 (defn select-scheduled-products [{:keys [db limit] :or {limit 5}}]
   (let [last-crawled-time (fs/get-in db dmm-doc-path
                                      "products_crawled_time")
@@ -79,12 +82,42 @@
          (sort-by :rank-popular)
          (take limit))))
 
+(defn select-tweeted-products [{:keys [db limit] :or {limit 5}}]
+  (let [q-already-tweeted (fs/query-exists "last_tweet_time" :desc)
+        products          (fs/get-docs db products-path q-already-tweeted)
+        ;; xstrategy         (comp
+        ;;                    st-exclude-no-sample-movie
+        ;;                    st-exclude-recently-tweeted
+        ;;                    st-exclude-ng-genres
+        ;;                    st-exclude-amateur
+        ;;                    st-exclude-omnibus)
+        ]
+    (->> products
+         ;; (into [] xstrategy)
+         ;; sortはtransducerに組み込まないほうが楽.
+         ;; (sort-by :rank-popular)
+         (take limit))))
+
 (defn ->next
   [product]
   (let [cid   (:cid product)
         title (:title product)]
     {:cid   cid
      :title title}))
+
+(defn ->next-qvt
+  [product]
+  (let [cid             (:cid product)
+        title           (:title product)
+        tweet-id        (:last-tweet-id product)
+        screen-name     (:last-tweet-name product)
+        last-tweet-time (:last-tweet-time product)
+        url             (str "https://twitter.com/" screen-name
+                             "/status/" tweet-id "/video/1")]
+    {:url             url
+     :last-tweet-time last-tweet-time
+     :cid             cid
+     :title           title}))
 
 (defn ->print
   [product]
@@ -99,11 +132,11 @@
         actresses (str/join "," (map #(get % "name") (:actresses raw)))
         ;; genres  (str/join "," (map #(get % "name") (:genres raw)))
         ranking   (:rank-popular raw)]
-    {:cid             cid
-     :ranking         ranking
-     :title           title
-     :actresses       actresses
-     :no-sample-movie (:no-sample-movie raw)
+    {:cid       cid
+     :ranking   ranking
+     :title     title
+     :actresses actresses
+     ;; :no-sample-movie (:no-sample-movie raw)
      ;; :genres  genres
      ;; :last-crawled-time (:last-crawled-time raw)
      ;; :raw             raw
@@ -113,7 +146,21 @@
 (defn select-next-product [{:keys [db]}]
   (->next (first (select-scheduled-products {:db db}))))
 
+(defn select-next-qvt-product [{:keys [db]}]
+  (->next-qvt (first (select-tweeted-products {:db db}))))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(comment
+  (require '[firebase :refer [db-prod]])
+
+  (def products
+    (into []
+          (select-tweeted-products {:db (db-prod) :limit 10})))
+
+  (def qrt-products (map ->next-qvt products))
+  (def product (select-next-qvt-product {:db (db-prod) :limit 10}))
+  )
 
 (comment
   ;;;;;;;;;;;

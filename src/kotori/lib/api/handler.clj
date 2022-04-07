@@ -35,6 +35,7 @@
     ["/kotori"
      ["/dummy" kotori/dummy]
      ["/tweet" kotori/tweet]
+     ["/tweet-with-quoted-video" kotori/tweet-with-quoted-video]
      ["/tweet-morning" kotori/tweet-morning]
      ["/tweet-evening" kotori/tweet-evening]
      ["/tweet-random" kotori/tweet-random]]]))

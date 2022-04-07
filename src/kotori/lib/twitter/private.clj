@@ -92,6 +92,11 @@
   )
 
 (comment
+  (require '[devtools :refer [twitter-auth]])
+  (def tweet (get-tweet (twitter-auth) ""))
+  )
+
+(comment
   ;; https://docs.tweepy.org/en/stable/client.html#tweepy.Client.create_tweet
   ;; tweepyは create_tweetになってる. statusという言葉はつかっていない.
   ;; これに従おうか.

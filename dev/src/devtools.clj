@@ -7,6 +7,9 @@
    [kotori.procedure.dmm :refer [get-product get-products]]
    [kotori.service.firebase :refer [get-app get-db delete-app!]]))
 
+(defn db []
+  (get-db))
+
 (defn env []
   (get system :kotori.service.env/env))
 

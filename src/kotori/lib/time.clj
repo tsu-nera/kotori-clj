@@ -3,9 +3,16 @@
   (:require
    [java-time :as t]))
 
-(def tz-jst "Asia/Tokyo")
+;; Locale.JAPAN -----> ja_JP
+;; Locale.JAPANESE	--> ja
+;; (def locale-jp "ja_JP")
+(def locale-jst java.util.Locale/JAPAN)
+(def tz-jst-str "Asia/Tokyo")
 (def format-twitter "EEE MMM dd HH:mm:ss Z yyyy")
 (def format-dmm "yyyy-MM-dd HH:mm:ss")
+
+;; python codeとの互換性を考慮してこのformatにしておく
+(def format-log "yyyy-MM-dd HH:mm:ss,SSS")
 
 (defn before? [t1 t2]
   (t/before? t1 t2))
@@ -13,10 +20,13 @@
 (defn after? [t1 t2]
   (t/after? t1 t2))
 
+(def tz-jst
+  (java.util.TimeZone/getTimeZone tz-jst-str))
+
 (defn ->tz-jst
   "TimezoneにJSTを設定."
   [timestamp]
-  (t/zoned-date-time timestamp tz-jst))
+  (t/zoned-date-time timestamp tz-jst-str))
 
 (defn str->java-time [format timestamp]
   (->tz-jst
@@ -59,7 +69,7 @@
   [str]
   (let [locale java.util.Locale/US
         sdf    (java.text.SimpleDateFormat. format-twitter locale)]
-    (.setTimeZone sdf (java.util.TimeZone/getTimeZone tz-jst))
+    (.setTimeZone sdf tz-jst)
     (.parse sdf str)))
 
 (defn parse-dmm-timestamp [str]
@@ -83,19 +93,4 @@
 
   (def twitter-timestamp "Sat Mar 26 02:15:15 +0000 2022")
   (parse-twitter-timestamp twitter-timestamp)
-
-  (defn parse-timestamp-sdf [format timestamp]
-    (let [locale java.util.Locale/US
-          sdf    (java.text.SimpleDateFormat. format locale)]
-      (.setTimeZone sdf (java.util.TimeZone/getTimeZone "Asia/Tokyo"))
-      (.parse sdf timestamp)))
-
-  (defn parse-twitter-timestamp-sdf [timestamp]
-    (parse-timestamp-sdf format-twitter timestamp))
-
-  (parse-twitter-timestamp-sdf twitter-timestamp)
-  )
-
-(comment
-  (t/minus (now) (t/weeks 3))
   )

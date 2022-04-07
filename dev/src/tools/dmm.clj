@@ -90,6 +90,6 @@
   (def product (dmm/crawl-product!
                 {:db (db-prod) :env (env) :cid "jusd00912"}))
   (def products (dmm/crawl-products!
-                 {:db (db-prod) :env (env) :hits 300}))
+                 {:db (db-dev) :env (env) :hits 100}))
  ;;;
   )

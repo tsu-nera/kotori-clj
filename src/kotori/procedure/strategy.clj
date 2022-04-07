@@ -75,7 +75,8 @@
   (let [last-crawled-time           (fs/get-in db dmm-doc-path
                                                "products_crawled_time")
         st-last-crawled             (fs/query-filter
-                                     "last_crawled_time" last-crawled-time)
+                                     "last_crawled_time"
+                                     last-crawled-time)
         st-exclude-recently-tweeted (make-st-exclude-recently-tweeted 8)
         products                    (fs/get-docs
                                      db products-path st-last-crawled)
@@ -91,27 +92,23 @@
          (take limit))))
 
 (defn select-tweeted-products [{:keys [db limit] :or {limit 5}}]
-  (let [q-already-tweeted           (fs/query-exists "last_tweet_time" :desc)
-        products                    (fs/get-docs db products-path q-already-tweeted)
+  (let [q-already-tweeted           (fs/query-exists
+                                     "last_tweet_time" :desc)
+        products                    (fs/get-docs
+                                     db products-path q-already-tweeted)
         st-exclude-recently-tweeted (make-st-exclude-recently-tweeted 4)
         xstrategy                   (comp
-                                     st-exclude-not-yet-crawled
-                                     st-exclude-recently-tweeted
-                                     ;;                    st-exclude-no-sample-movie
-                                     ;; st-exclude-recently-tweeted
-                                     ;;                    st-exclude-ng-genres
-                                     ;;                    st-exclude-amateur
-                                     ;;                    st-exclude-omnibus
-                                     )]
+                                     ;; st-exclude-not-yet-crawled
+                                     st-exclude-recently-tweeted)]
     (->> products
          (into [] xstrategy)
-         ;; sortはtransducerに組み込まないほうが楽.
-         ;; (sort-by :rank-popular)
+         (sort-by :last-tweet-time)
          (take limit))))
 
 (defn ->next
   [product]
-  (let [cid   (:cid product)
+  (let [cid (:cid product)
+
         title (:title product)]
     {:cid   cid
      :title title}))
@@ -127,8 +124,8 @@
                              "/status/" tweet-id "/video/1")]
     {:url             url
      :last-tweet-time last-tweet-time
-     :cid             cid
-     :title           title}))
+     :cid             (if cid cid :not-yet-crawled)
+     :title           (if title title :not-yet-crawled)}))
 
 (defn ->print
   [product]
@@ -166,7 +163,7 @@
 
   (def products
     (into []
-          (select-tweeted-products {:db (db-dev) :limit 100})))
+          (select-tweeted-products {:db (db-prod) :limit 100})))
   (count products)
   (map ->print products)
 

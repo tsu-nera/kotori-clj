@@ -104,7 +104,6 @@
         xstrategy                   (comp
                                      ;; st-exclude-not-yet-crawled
                                      st-exclude-recently-tweeted)]
-    (println (count products))
     (->> products
          (into [] xstrategy)
          ;; 新しい順に並び替える

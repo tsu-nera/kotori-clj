@@ -5,8 +5,8 @@
    [kotori.domain.tweet.post :refer [->doc-path]]
    [kotori.lib.firestore :as fs]
    [kotori.lib.time :as time]
-   [kotori.lib.twitter.guest :as guest]
-   [kotori.lib.twitter.private :as private]))
+   [kotori.lib.twitter.private :as private]
+   [kotori.procedure.strategy :as st]))
 
 (defn pick-random []
   (rand-nth meigens))
@@ -46,10 +46,15 @@
         text (make-text data)]
     (tweet (assoc params :text text))))
 
+(defn make-qvt-text [db]
+  (let [product (st/select-next-qvt-product {:db db})
+        url     (:url product)]
+    (str "やべーよ!\n" url)))
+
 (defn tweet-with-quoted-video
   "引用動画ツイート"
-  [{:as params}]
-  (let [text "TODO"]
+  [{:keys [db] :as params}]
+  (let [text (make-qvt-text db)]
     (tweet (assoc params :text text))))
 
 (defn tweet-morning
@@ -77,6 +82,7 @@
   (tweet-random params)
   (tweet-evening params)
 
+  (tweet-with-quoted-video params)
  ;;;
   )
 

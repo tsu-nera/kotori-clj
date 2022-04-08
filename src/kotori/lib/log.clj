@@ -1,10 +1,7 @@
 (ns kotori.lib.log
   (:require
    [kotori.lib.time :as time]
-   [taoensso.timbre :as log])
-  (:import
-   (java.time
-    Instant)))
+   [taoensso.timbre :as log]))
 
 (def timbre-config
   {:timestamp-opts {:pattern  time/format-log

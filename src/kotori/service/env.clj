@@ -1,20 +1,12 @@
 (ns kotori.service.env
   (:require
-   [clojure.edn :as edn]
-   [clojure.java.io :as io]
-   ;; [config.core :as config]
-   [integrant.core :as ig]))
-
-(defn- load-edn [file-path]
-  (-> file-path
-      io/file
-      slurp
-      edn/read-string))
+   [integrant.core :as ig]
+   [kotori.lib.io :as io]
+   [kotori.procedure.kotori :as kotori]))
 
 (defmethod ig/init-key ::env [_ {:keys [path]}]
   (-> path
-      io/resource
-      load-edn))
+      io/load-edn))
 
 (defmethod ig/init-key ::creds [_ {:keys [path]}]
   (-> path

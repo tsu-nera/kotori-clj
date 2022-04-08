@@ -1,10 +1,15 @@
 ;; configuration maps for integrant
-{:kotori.service.env/creds     {:path "private/prod/credentials.json"}
- :kotori.service.env/env       {:path "private/prod/env.edn"}
- :kotori.service.firebase/app  {:creds-path #ig/ref :kotori.service.env/creds}
- :kotori.service.firebase/db   {:app #ig/ref :kotori.service.firebase/app}
- :kotori.service.server/server {:config {:host  "0.0.0.0"
-                                         :port  8888
-                                         :join? false}
-                                :env    #ig/ref :kotori.service.env/env
-                                :db     #ig/ref :kotori.service.firebase/db}}
+{:kotori.service.env/creds       {:path "private/prod/credentials.json"}
+ :kotori.service.env/env         {:path "private/prod/env.edn"}
+ :kotori.service.firebase/app    {:creds-path #ig/ref :kotori.service.env/creds}
+ :kotori.service.firebase/db     {:app #ig/ref :kotori.service.firebase/app}
+ :kotori.service.kotori/by-ids   {:path "private/kotori.edn"}
+ :kotori.service.kotori/by-names #ig/ref :kotori.service.kotori/by-ids
+ :kotori.service.kotori/by-codes #ig/ref :kotori.service.kotori/by-ids
+ :kotori.service.handler/app     {:bot #ig/ref :kotori.service.kotori/by-names}
+ :kotori.service.server/server   {:config  {:host  "0.0.0.0"
+                                            :port  8888
+                                            :join? false}
+                                  :env     #ig/ref :kotori.service.env/env
+                                  :db      #ig/ref :kotori.service.firebase/db
+                                  :handler #ig/ref :kotori.service.handler/app}}

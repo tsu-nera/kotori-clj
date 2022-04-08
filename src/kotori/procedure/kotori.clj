@@ -1,8 +1,9 @@
 (ns kotori.procedure.kotori
   (:require
-   [kotori.domain.kotori :as kotori]
+   [kotori.domain.kotori :as d]
    [kotori.domain.meigen :refer [meigens]]
-   [kotori.domain.tweet.post :refer [posts]]
+   [kotori.domain.tweet.post :refer [->doc-path]]
+   [kotori.lib.firestore :as fs]
    [kotori.lib.time :as time]
    [kotori.lib.twitter.guest :as guest]
    [kotori.lib.twitter.private :as private]))
@@ -14,6 +15,10 @@
   (let [{content :content, author :author} data]
     (str content "\n\n" author)))
 
+(defn make-info [{:keys [screen-name user-id auth-token ct0]}]
+  (let [creds (d/->Creds auth-token ct0)]
+    (d/->Info screen-name user-id creds {})))
+
 (defn make-fs-tweet [tweet]
   (let [created_at (time/parse-twitter-timestamp (:created_at tweet))
         user       (:user tweet)]
@@ -23,20 +28,18 @@
      "created_at" created_at
      "updated_at" created_at}))
 
-(defn tweet [{:keys [text screen-name db]}]
-  (let [user-id  (guest/resolve-user-id screen-name)
-        creds    (kotori/->creds db user-id)
-        proxies  (kotori/->proxies db user-id)
-        result   (private/create-tweet creds proxies text)
-        data     (make-fs-tweet result)
-        tweet-id (:id_str result)]
+(defn tweet [{:keys [^d/INFO info db text]}]
+  (let [{:keys [user-id creds proxies]} info
+        result                          (private/create-tweet creds proxies text)
+        data                            (make-fs-tweet result)
+        tweet-id                        (:id_str result)
+        doc-path                        (->doc-path user-id tweet-id)]
     (try
       (println (str "post tweet completed. id=" tweet-id))
-      (-> posts
-          (.document tweet-id)
-          (.set data))
+      (fs/set! db doc-path data)
       result
-      (catch Exception e (println "post tweet Failed." (.getMessage e))))))
+      (catch Exception e
+        (println "post tweet Failed." (.getMessage e))))))
 
 (defn tweet-random [{:as params}]
   (let [data (pick-random)
@@ -55,61 +58,33 @@
 
 (defn tweet-evening
   [{:as params}]
-  (tweet (assoc params :text "お疲れ様です")))
+  (tweet (assoc params :text "今日もお疲れ様でした")))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(defn dummy [{:keys [text screen-name db]}]
-  (let [user-id (guest/resolve-user-id screen-name)
-        creds   (kotori/->creds db user-id)
-        proxies (kotori/->proxies db user-id)]
-    {:text        text
-     :screen-name screen-name
-     :user-id     user-id
-     :creds       creds
-     :proxies     proxies}))
+(defn dummy [{:keys [^d/INFO info db text]}]
+  (assoc info :text text))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (comment
   ;;;
   (require '[firebase :refer [db]]
-           '[devtools :refer [env]])
+           '[devtools :refer [kotori-info]])
+
+  (def params {:db (db) :info (kotori-info "0003")})
 
   (def text (make-text (pick-random)))
-  (tweet-random {:db (db)})
+  (tweet-random params)
+  (tweet-evening params)
 
-  (defn dtweet [{:keys [text screen-name db env]}]
-    (let [screen-name (or screen-name (:screen-name env))
-          user-id     (guest/resolve-user-id screen-name)
-          ;; creds       (kotori/->creds db user-id)
-          ;; proxies     (kotori/->proxies db user-id)
-          ;; result      (private/create-tweet creds proxies text)
-          ;; data        (make-fs-tweet result)
-          ;; tweet-id    (:id_str result)
-          ]
-      ;; (try
-      ;;   (log/info (str "post tweet completed. id=" tweet-id))
-      ;;   (-> posts
-      ;;       (.document tweet-id)
-      ;;       (.set data))
-      ;;   result
-      ;;   (catch Exception e (log/error "post tweet Failed." (.getMessage e))))
-      user-id
-      )
-    )
-
-  (defn dtweet-with-quoted-video
-    "引用動画ツイート"
-    [{:as params}]
-    (let [text "TODO"]
-      (dtweet (assoc params :text text))))
-
-  (dtweet-with-quoted-video {:db (db) :env (env)})
  ;;;
   )
 
 (comment
   ;;;
-  (require '[local :refer [twitter-auth]])
+  (require '[devtools :refer [twitter-auth]])
+  (def auth (twitter-auth))
+
   (def tweet (private/get-tweet (twitter-auth) "1500694005259980800"))
   (def user (private/get-user (twitter-auth) "46130870"))
   (def resp (private/create-tweet (twitter-auth) "test"))
@@ -117,4 +92,5 @@
   (def status-id (:id_str resp))
   (def resp (private/delete-tweet (twitter-auth) status-id))
   ;;;
+
   )

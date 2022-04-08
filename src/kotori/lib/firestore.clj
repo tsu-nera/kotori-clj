@@ -145,6 +145,14 @@
                  (doseq [[^String k v] map]
                    (assoc db tx doc-path k v)))))
 
+(defn overwrite!
+  "与えられたデータをFirestoreに書き込む"
+  [db doc-path map]
+  (let [data (json/->json map)]
+    (-> db
+        (f/doc doc-path)
+        (f/set! data))))
+
 (defn set!
   "与えられたデータをFirestoreに書き込む(merge)."
   [db doc-path map]

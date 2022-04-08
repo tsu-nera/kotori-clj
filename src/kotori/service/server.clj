@@ -2,7 +2,6 @@
   (:gen-class)
   (:require
    [integrant.core :as ig]
-   [kotori.lib.api.handler :refer [make-endpoint]]
    [kotori.lib.json :as json]
    [ring.adapter.jetty :refer [run-jetty]]
    [ring.middleware.json :refer [wrap-json-params wrap-json-response]]
@@ -29,11 +28,9 @@
               handler)]
       (json/->json-keyword response))))
 
-(def endpoint (make-endpoint))
-
-(defn serve [{:keys [db config env]}]
+(defn serve [{:keys [db config env endpoint]}]
   (run-jetty
-   (-> #'endpoint
+   (-> endpoint
        wrap-kebab-case-keys
        wrap-keyword-params
        wrap-json-params

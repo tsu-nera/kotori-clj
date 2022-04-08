@@ -1,4 +1,4 @@
-(ns kotori.domain.meigen
+(ns kotori.domain.source.meigen
   (:require
    [clojure.walk :refer [keywordize-keys]]
    [firestore-clj.core :as f]))

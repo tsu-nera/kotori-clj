@@ -1,10 +1,9 @@
 (ns kotori.procedure.kotori
   (:require
    [kotori.domain.kotori :as d]
-   [kotori.domain.meigen :refer [meigens]]
-   [kotori.domain.tweet.post :refer [->doc-path]]
+   [kotori.domain.source.meigen :refer [meigens]]
+   [kotori.domain.tweet.post :as post]
    [kotori.lib.firestore :as fs]
-   [kotori.lib.time :as time]
    [kotori.lib.twitter.private :as private]
    [kotori.procedure.strategy :as st]))
 
@@ -19,21 +18,13 @@
   (let [creds (d/->Creds auth-token ct0)]
     (d/->Info screen-name user-id creds {})))
 
-(defn make-fs-tweet [tweet]
-  (let [created_at (time/parse-twitter-timestamp (:created_at tweet))
-        user       (:user tweet)]
-    {"status_id"  (:id_str tweet)
-     "user_id"    (:id_str user)
-     "text"       (:text tweet)
-     "created_at" created_at
-     "updated_at" created_at}))
-
-(defn tweet [{:keys [^d/INFO info db text]}]
-  (let [{:keys [user-id creds proxies]} info
-        result                          (private/create-tweet creds proxies text)
-        data                            (make-fs-tweet result)
-        tweet-id                        (:id_str result)
-        doc-path                        (->doc-path user-id tweet-id)]
+(defn tweet [{:keys [^d/Info info db text]}]
+  (let [{:keys [user-id creds proxies]}
+        info
+        result   (private/create-tweet creds proxies text)
+        tweet-id (:id_str result)
+        doc-path (post/->doc-path user-id tweet-id)
+        data     (post/->data result)]
     (try
       (println (str "post tweet completed. id=" tweet-id))
       (fs/set! db doc-path data)
@@ -48,11 +39,12 @@
 
 (defn make-qvt-text [db]
   (let [product (st/select-next-qvt-product {:db db})
-        url     (:url product)]
-    (str "やべーよ!\n" url)))
+        url     (:url product)
+        message "やべーよ!"]
+    (str message "\n" url)))
 
 (defn tweet-with-quoted-video
-  "引用動画ツイート"
+  "動画引用ツイート"
   [{:keys [db] :as params}]
   (let [text (make-qvt-text db)]
     (tweet (assoc params :text text))))
@@ -66,7 +58,7 @@
   (tweet (assoc params :text "今日もお疲れ様でした")))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(defn dummy [{:keys [^d/INFO info db text]}]
+(defn dummy [{:keys [^d/Info info db text]}]
   (assoc info :text text))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

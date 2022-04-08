@@ -3,7 +3,8 @@
   (:require
    [clojure.string :as str]
    [kotori.lib.firestore :as fs]
-   [kotori.lib.time :as time]))
+   [kotori.lib.time :as time]
+   [kotori.lib.twitter.util :as util]))
 
 ;; TODO 共通化
 (def dmm-doc-path "providers/dmm")
@@ -125,12 +126,11 @@
         tweet-id        (:last-tweet-id product)
         screen-name     (:last-tweet-name product)
         last-tweet-time (:last-tweet-time product)
-        url             (str "https://twitter.com/" screen-name
-                             "/status/" tweet-id "/video/1")]
+        url             (util/->quoted-video-url screen-name tweet-id)]
     {:url             url
      :last-tweet-time last-tweet-time
-     :cid             (if cid cid :not-yet-crawled)
-     :title           (if title title :not-yet-crawled)}))
+     :cid             (or cid :not-yet-crawled)
+     :title           (or title :not-yet-crawled)}))
 
 (defn ->print
   [product]

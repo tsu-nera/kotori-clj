@@ -2,9 +2,9 @@
   "商品選択戦略"
   (:require
    [clojure.string :as str]
+   [kotori.domain.tweet.core :as tweet]
    [kotori.lib.firestore :as fs]
-   [kotori.lib.time :as time]
-   [kotori.lib.twitter.util :as util]))
+   [kotori.lib.time :as time]))
 
 ;; TODO 共通化
 (def dmm-doc-path "providers/dmm")
@@ -126,7 +126,7 @@
         tweet-id        (:last-tweet-id product)
         screen-name     (:last-tweet-name product)
         last-tweet-time (:last-tweet-time product)
-        url             (util/->quoted-video-url screen-name tweet-id)]
+        url             (tweet/->quoted-video-url screen-name tweet-id)]
     {:url             url
      :last-tweet-time last-tweet-time
      :cid             (or cid :not-yet-crawled)

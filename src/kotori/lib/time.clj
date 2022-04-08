@@ -8,7 +8,6 @@
 ;; (def locale-jp "ja_JP")
 (def locale-jst java.util.Locale/JAPAN)
 (def tz-jst-str "Asia/Tokyo")
-(def format-twitter "EEE MMM dd HH:mm:ss Z yyyy")
 (def format-dmm "yyyy-MM-dd HH:mm:ss")
 
 ;; python codeとの互換性を考慮してこのformatにしておく
@@ -63,14 +62,11 @@
   ([x date]
    (->tz-jst (t/plus date (t/weeks x)))))
 
-(defn parse-twitter-timestamp
-  "月と曜日が英語表記の場合のparseがうまくいかないので
-  とりあえず実績のあるSimpleDateFormatで対処することにした."
-  [str]
+(defn parse-timestamp-sdf [format ^String timestamp]
   (let [locale java.util.Locale/US
-        sdf    (java.text.SimpleDateFormat. format-twitter locale)]
+        sdf    (java.text.SimpleDateFormat.  format locale)]
     (.setTimeZone sdf tz-jst)
-    (.parse sdf str)))
+    (.parse sdf timestamp)))
 
 (defn parse-dmm-timestamp [str]
   (str->java-time format-dmm str))
@@ -90,7 +86,4 @@
 (comment
   (def dmm-timestamp "2022-02-18 10:00:57")
   (parse-dmm-timestamp dmm-timestamp)
-
-  (def twitter-timestamp "Sat Mar 26 02:15:15 +0000 2022")
-  (parse-twitter-timestamp twitter-timestamp)
   )

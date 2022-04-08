@@ -92,17 +92,23 @@
          (take limit))))
 
 (defn select-tweeted-products [{:keys [db limit] :or {limit 5}}]
-  (let [q-already-tweeted           (fs/query-exists
-                                     "last_tweet_time" :desc)
-        products                    (fs/get-docs
-                                     db products-path q-already-tweeted)
+  (let [q-already-tweeted           (fs/query-exists "last_tweet_time")
+        ;; 一応個数制限(仮)
+        q-limit                     (fs/query-limit 100)
+        xquery                      (fs/make-xquery [q-already-tweeted
+                                                     q-limit])
+        products                    (fs/get-docs db
+                                                 products-path
+                                                 xquery)
         st-exclude-recently-tweeted (make-st-exclude-recently-tweeted 4)
         xstrategy                   (comp
                                      ;; st-exclude-not-yet-crawled
                                      st-exclude-recently-tweeted)]
+    (println (count products))
     (->> products
          (into [] xstrategy)
-         (sort-by :last-tweet-time)
+         ;; 新しい順に並び替える
+         (sort-by :last-tweet-time #(compare %2 %1))
          (take limit))))
 
 (defn ->next
@@ -163,12 +169,12 @@
 
   (def products
     (into []
-          (select-tweeted-products {:db (db-prod) :limit 100})))
+          (select-tweeted-products {:db (db-prod)})))
   (count products)
   (map ->print products)
 
   (def qvt-products (map ->next-qvt products))
-  (def product (select-next-qvt-product {:db (db-prod) :limit 10}))
+  (def product (select-next-qvt-product {:db (db-prod)}))
   )
 
 (comment

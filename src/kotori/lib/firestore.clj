@@ -14,7 +14,18 @@
   (fn [q]
     (f/filter-in q field arr)))
 
+(defn query-filter-not
+  "firestore-cljがwhereNotEqualTo未サポートのため"
+  ([q field value]
+   (.whereNotEqualTo q field value)))
+
 (defn query-exists
+  ([^String keyword]
+   (fn [q]
+     (query-filter-not q keyword false))))
+
+;; 結果のcollにソートが入ることに注意. それが嫌ならquery-existsを使う.
+(defn query-exists-by-order
   "Fieldの存在判定にorder-byが利用できる. nullは除外される."
   ([keyword]
    (fn [q]

@@ -62,16 +62,16 @@
   (def app (make-app (kotori-names)))
   (def screen-name (->screen-name "0003"))
 
-  ((make-app nil) {:request-method :post :uri "/api/ping"})
-  ((make-app) {:request-method :post :uri "/api/dmm/get-product"})
+  (app {:request-method :post :uri "/api/ping"})
+  (app {:request-method :post :uri "/api/dmm/get-product"})
 
-  ((make-app bot) {:request-method :post
-                   :uri            "/api/kotori/dummy"
-                   :params         {:text        "テスト投稿"
-                                    :screen-name ""}})
+  (app {:request-method :post
+        :uri            "/api/kotori/dummy"
+        :params         {:text        "テスト投稿"
+                         :screen-name ""}})
 
-  ((make-app) {:request-method :post
-               :uri            "/api/kotori/tweet-random"})
+  (app {:request-method :post
+        :uri            "/api/kotori/tweet-random"})
 
   (app {:request-method :post
         :params         {:db          (db)

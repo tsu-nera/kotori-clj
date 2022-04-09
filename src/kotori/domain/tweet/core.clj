@@ -7,6 +7,16 @@
   [screen-name tweet-id]
   (str "https://twitter.com/" screen-name "/status/" tweet-id))
 
+(defn ->user-home-url
+  "ユーザホーム"
+  [screen-name]
+  (str "https://twitter.com/" screen-name))
+
+(defn ->user-home-url-by-id
+  "ユーザホームhttps://twitter.com/i/user/:user_id"
+  [user-id]
+  (str "https://twitter.com/i/user/" user-id))
+
 (defn ->quoted-video-url
   "動画引用ツイート用URL"
   [screen-name tweet-id]

@@ -1,7 +1,7 @@
 (ns kotori.service.firebase
   (:require
-   [clojure.java.io :as io]
-   [integrant.core :as ig])
+   [integrant.core :as ig]
+   [kotori.lib.io :as io])
   (:import
    (com.google.auth.oauth2
     GoogleCredentials)
@@ -58,8 +58,8 @@
   ([name]
    (FirestoreClient/getFirestore (get-app name))))
 
-(defmethod ig/init-key ::app [_ {:keys [creds-path]}]
-  (let [app (create-app! creds-path)]
+(defmethod ig/init-key ::app [_ {:keys [path]}]
+  (let [app (create-app! (io/resource path))]
     (println "create FirebaseApp instance")
     app))
 ;; Firesore InterfaceはAutoClosableというInteraceを実装しているようで

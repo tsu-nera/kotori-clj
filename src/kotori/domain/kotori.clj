@@ -8,7 +8,7 @@
 (defn coll-path [user-id] (str coll-name "/" user-id))
 
 (defrecord Creds [auth-token ct0])
-(defrecord Proxies [ip port username password])
+(defrecord Proxies [proxy-host proxy-port proxy-user proxy-pass])
 (defrecord Info
   [screen-name user-id ^Creds creds ^Proxies proxies])
 

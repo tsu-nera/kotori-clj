@@ -58,11 +58,11 @@
 (defn create-tweet
   ([creds text]
    (create-tweet creds {} text))
-  ([creds proxy text]
+  ([creds proxies text]
    (let [url     "https://twitter.com/i/api/1.1/statuses/update.json"
          data    {:form-params {:status text}}
          headers (creds->headers creds)
-         params  (merge data headers proxy options)
+         params  (merge data headers proxies options)
          resp    (client/post url params)]
      (-> resp
          (parse-body)
@@ -97,40 +97,6 @@
   )
 
 (comment
-  ;; https://docs.tweepy.org/en/stable/client.html#tweepy.Client.create_tweet
-  ;; tweepyは create_tweetになってる. statusという言葉はつかっていない.
-  ;; これに従おうか.
-  ;;
-  ;;
-
-  (defn delete-tweet
-    ([creds id]
-     (create-tweet creds {} id))
-    ([creds proxy id]
-     (let [url     "https://twitter.com/i/api/1.1/statuses/destroy.json"
-           data    {:form-params {:id id}}
-           headers (creds->headers creds)
-           params  (merge data headers proxy options)
-           resp    (client/post url params)]
-       (-> resp
-           (parse-body)))))
-
-
-  (defn create-tweet
-    ([creds text]
-     (create-tweet creds {} text))
-    ([creds proxy text]
-     (let [url     "https://twitter.com/i/api/1.1/statuses/update.json"
-           data    {:form-params {:status text}}
-           headers (creds->headers creds)
-           params  (merge data headers proxy options)
-           resp    (client/post url params)]
-       (-> resp
-           :body))
-     ))
-  )
-
-(comment
 
   (require '[clj-http.client :as client])
   client/*current-middleware*
@@ -138,57 +104,3 @@
 
   )
 
-(comment
-  ;; (defrecord TwitterCreds [auth-token ct0])
-  ;; (def creds (apply ->TwitterCreds auth))
-  ;; (defrecord Proxy [host port user pass])
-
-  (defn get-statuses [status-id]
-    (let [url (str "https://api.twitter.com/2/timeline/conversation/"
-                   status-id
-                   ".json?include_reply_count=1&send_error_codes=true&count=20")]
-      (client/get url headers)))
-
-  (defn get-status [status-id]
-    (let [response (get-statuses status-id)]
-      (-> response
-          :body
-          (json/parse-string true)
-          :globalObjects
-          :tweets
-          (get (keyword status-id)))))
-
-  )
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; (def status (get-status "1477034578875277316"))
-;; (def response (update-status "test5"))
-
-;; 理想的にはREPL起動時のcore初期化をしてグローバルな参照を取得したい.
-;; (def user-id (env :user-id))
-;; (def db (get-fs))
-;; (def auth (let [kotori-coll-path (str "kotoris" "/" user-id)
-;;                 coll             (.doc db kotori-coll-path)
-;;                 query            (.get coll)]
-;;             (->>
-;;              (.getDocuments @query)
-;;              (map #(.getData %)))))
-
-;; (def db (get-fs))
-;; (def kotori-coll-path (str "kotoris" "/" user-id))
-;; (def docref (.document db kotori-coll-path))
-;; (def future (.get docref))
-;; (def doc (.get future))
-;; (def d (.getData doc))
-
-;; そうか, このdataはjava.util.HashMapなのでひと工夫必要.
-;; (def data (into {} d))
-;; (def auth (get data "twitter_auth"))
-
-;; やっと取れた.
-;; auth
-
-;; hashmapをkeywordにしたい.
-;; kebabみたいなライブラリつかえないか？
-;; firestoreのファイルにユーティリティををまとめたい.
-;; 遅延評価を取り入れたい.

@@ -1,13 +1,13 @@
 (ns devtools
   "REPLからの利用を想定したツール."
+  (:refer-clojure :exclude [proxy])
   (:require
    [integrant.repl.state :refer [config system]]
-   [kotori.domain.kotori :as d]
    [kotori.lib.twitter.guest :as guest]
    [kotori.lib.twitter.private :as private]
    [kotori.procedure.dmm :refer [get-product get-products]]
    [kotori.procedure.kotori :refer [make-info]]
-   [kotori.service.firebase :refer [get-app get-db delete-app!]]))
+   [kotori.service.firebase :refer [get-db]]))
 
 (defn db []
   (get-db))
@@ -34,7 +34,12 @@
       (get :kotori.service.env/env)
       (select-keys [:api-id :affiliate-id])))
 
-(defn kotori-configs [])
+(defn proxies []
+  (-> system
+      :kotori.service.env/proxies))
+
+(defn proxy [label]
+  (get (proxies) label))
 
 (defn kotori-ids []
   (-> system

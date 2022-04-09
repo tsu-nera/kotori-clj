@@ -25,14 +25,14 @@
         handler
         ->http)))
 
-(defn wrap-kotori [bot-configs handler]
+(defn wrap-kotori [config-map handler]
   (fn [req]
     (let [screen-name (:screen-name req)
-          bot         (get bot-configs screen-name)
-          info        (kotori/make-info bot)]
+          config      (get config-map screen-name)
+          info        (kotori/make-info config)]
       (handler (assoc req :info info)))))
 
-(defn make-app [bot-configs]
+(defn make-app [config-map]
   (ring/ring-handler
    (ring/router
     ["/api" {:middleware [#(wrap-http %)]}
@@ -41,7 +41,7 @@
       ["/crawl-product" {:post dmm/crawl-product!}]
       ["/crawl-products" {:post dmm/crawl-products!}]
       ["/select-next-product" {:get strategy/select-next-product}]]
-     ["/kotori" {:middleware [#(wrap-kotori bot-configs %)]}
+     ["/kotori" {:middleware [#(wrap-kotori config-map %)]}
       ["/dummy" kotori/dummy]
       ["/tweet" kotori/tweet]
       ["/tweet-quoted-video"
@@ -50,8 +50,8 @@
       ["/tweet-evening" kotori/tweet-evening]
       ["/tweet-random" kotori/tweet-random]]])))
 
-(defmethod ig/init-key ::app [_ {:keys [bot]}]
-  (make-app bot))
+(defmethod ig/init-key ::app [_ {:keys [config-map]}]
+  (make-app config-map))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -68,7 +68,7 @@
   (app {:request-method :post
         :uri            "/api/kotori/dummy"
         :params         {:text        "テスト投稿"
-                         :screen-name ""}})
+                         :screen-name screen-name}})
 
   (app {:request-method :post
         :uri            "/api/kotori/tweet-random"})

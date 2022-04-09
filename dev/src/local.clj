@@ -22,8 +22,8 @@
   [creds env]
   (-> core/config-file
       core/load-config
-      (assoc-in [:kotori.service.env/creds :path] creds)
       (assoc-in [:kotori.service.env/env :path] env)
+      (assoc-in [:kotori.service.firebase/app :path] creds)
       (assoc :firebase/app {})
       (constantly)
       (set-prep!))

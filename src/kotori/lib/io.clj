@@ -3,11 +3,14 @@
    [clojure.edn :as edn]
    [clojure.java.io :as io]))
 
-(defn resource [n]
-  (io/resource n))
+(defn resource [args]
+  (io/resource args))
+
+(defn input-stream [args]
+  (io/input-stream args))
 
 (defn load-edn [file-path]
   (-> file-path
-      io/resource
+      resource
       slurp
       edn/read-string))

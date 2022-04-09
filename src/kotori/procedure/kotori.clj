@@ -16,11 +16,12 @@
   (let [{content :content, author :author} data]
     (str content "\n\n" author)))
 
-(defn make-info [{:keys [screen-name user-id auth-token ct0]}]
-  (let [creds (d/->Creds auth-token ct0)]
-    (d/->Info screen-name user-id creds {})))
+(defn make-info [{:keys [screen-name user-id auth-token ct0 proxy]}]
+  (let [creds   (d/->Creds auth-token ct0)
+        proxies (d/map->Proxies proxy)]
+    (d/->Info screen-name user-id creds proxies)))
 
-(defn tweet [{:keys [^d/Info info db text]} & exinfo]
+(defn tweet [{:keys [^d/Info info db text]}]
   (let [{:keys [user-id creds proxies]}
         info
         result   (private/create-tweet creds proxies text)

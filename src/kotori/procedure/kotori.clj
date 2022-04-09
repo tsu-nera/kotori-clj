@@ -1,7 +1,9 @@
 (ns kotori.procedure.kotori
   (:require
+   [kotori.domain.dmm.product :as product]
    [kotori.domain.kotori :as d]
    [kotori.domain.source.meigen :refer [meigens]]
+   [kotori.domain.tweet.core :as tweet]
    [kotori.domain.tweet.post :as post]
    [kotori.lib.firestore :as fs]
    [kotori.lib.twitter.private :as private]
@@ -18,7 +20,7 @@
   (let [creds (d/->Creds auth-token ct0)]
     (d/->Info screen-name user-id creds {})))
 
-(defn tweet [{:keys [^d/Info info db text]}]
+(defn tweet [{:keys [^d/Info info db text]} & exinfo]
   (let [{:keys [user-id creds proxies]}
         info
         result   (private/create-tweet creds proxies text)
@@ -37,17 +39,47 @@
         text (make-text data)]
     (tweet (assoc params :text text))))
 
-(defn make-qvt-text [db]
-  (let [product (st/select-next-qvt-product {:db db})
-        url     (:url product)
+(defn ->qvt-text [qvt]
+  (let [url     (:url qvt)
         message "やべーよ!"]
     (str message "\n" url)))
+
+;; TODO とりあえずuser-idは必要なユースケースが現れたら対応.
+;; それまえはコメントアウトしておく.
+(defn make-qvt-data [qvt tweet]
+  (let [screen-name      (get-in tweet [:user :screen_name])
+        tweet-id         (tweet/->id tweet)
+        tweet-time       (tweet/->created-time tweet)
+        tweet_link       (tweet/->url screen-name tweet-id)
+        quoted-tweet-key (fs/make-nested-key ["quoted_tweets"
+                                              screen-name tweet-id])
+        quoted-tweet-val {"screen_name"        screen-name
+                          ;; "user_id"            user-id
+                          "tweet_id"           tweet-id
+                          "tweet_time"         tweet-time
+                          "tweet_link"         tweet_link
+                          "text"               (:text tweet)
+                          "cid"                (:cid qvt)
+                          "quoted_tweet_id"    (:tweet-id qvt)
+                          ;; "quoted_user_id"     (:user-id qvt)
+                          "quoted_screen_name" (:screen-name qvt)}]
+    {"last_quoted_time"     tweet-time
+     "last_quoted_name"     screen-name
+     "last_quoted_tweet_id" tweet-id
+     quoted-tweet-key       quoted-tweet-val}))
 
 (defn tweet-with-quoted-video
   "動画引用ツイート"
   [{:keys [db] :as params}]
-  (let [text (make-qvt-text db)]
-    (tweet (assoc params :text text))))
+  (let [qvt      (st/select-next-qvt-product {:db db})
+        cid      (:cid qvt)
+        text     (->qvt-text qvt)
+        doc-path (product/doc-path cid)
+        result   (tweet (assoc params :text text))
+        qvt-data (make-qvt-data qvt result)]
+    ;; dmm/products/{cid} の情報を更新
+    (fs/update! db doc-path qvt-data)
+    result))
 
 (defn tweet-morning
   [{:as params}]
@@ -70,11 +102,18 @@
 
   (def params {:db (db) :info (kotori-info "0003")})
 
+  ;;;;;;;;;;;;;
+
   (def text (make-text (pick-random)))
   (tweet-random params)
   (tweet-evening params)
 
-  (tweet-with-quoted-video params)
+  ;;;;;;;;;;;;;
+
+  (def qvt (st/select-next-qvt-product {:db (db)}))
+  (def result (tweet-with-quoted-video params))
+
+  (def qvt-data (make-qvt-data qvt tweet))
  ;;;
   )
 
@@ -90,5 +129,4 @@
   (def status-id (:id_str resp))
   (def resp (private/delete-tweet (twitter-auth) status-id))
   ;;;
-
   )

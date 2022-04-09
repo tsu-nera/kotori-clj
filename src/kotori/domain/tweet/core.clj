@@ -2,11 +2,15 @@
   (:require
    [kotori.lib.time :as t]))
 
+(defn ->url
+  "ツイートURL"
+  [screen-name tweet-id]
+  (str "https://twitter.com/" screen-name "/status/" tweet-id))
+
 (defn ->quoted-video-url
   "動画引用ツイート用URL"
   [screen-name tweet-id]
-  (str "https://twitter.com/" screen-name
-       "/status/" tweet-id "/video/1"))
+  (str (->url screen-name tweet-id) "/video/1"))
 
 (def timestamp-format "EEE MMM dd HH:mm:ss Z yyyy")
 
@@ -15,6 +19,12 @@
   とりあえず実績のあるSimpleDateFormatで対処することにした."
   [^String timestamp]
   (t/parse-timestamp-sdf timestamp-format timestamp))
+
+(defn ->id [tweet]
+  (:id_str tweet))
+
+(defn ->created-time [tweet]
+  (parse-timestamp (:created_at tweet)))
 
 (comment
   (def timestamp "Sat Mar 26 02:15:15 +0000 2022")

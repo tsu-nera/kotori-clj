@@ -2,13 +2,11 @@
   "商品選択戦略"
   (:require
    [clojure.string :as str]
+   [kotori.domain.dmm.core :as dmm]
+   [kotori.domain.dmm.product :as product]
    [kotori.domain.tweet.core :as tweet]
    [kotori.lib.firestore :as fs]
    [kotori.lib.time :as time]))
-
-;; TODO 共通化
-(def dmm-doc-path "providers/dmm")
-(def products-path "providers/dmm/products")
 
 (def vr-genre-ids
   #{6793 6925})
@@ -73,21 +71,22 @@
   (filter #(contains? % :last_tweet_id)))
 
 (defn select-scheduled-products [{:keys [db limit] :or {limit 5}}]
-  (let [last-crawled-time           (fs/get-in db dmm-doc-path
+  (let [last-crawled-time           (fs/get-in db dmm/doc-path
                                                "products_crawled_time")
         st-last-crawled             (fs/query-filter
                                      "last_crawled_time"
                                      last-crawled-time)
         st-exclude-recently-tweeted (make-st-exclude-recently-tweeted 8)
         products                    (fs/get-docs
-                                     db products-path st-last-crawled)
+                                     db product/coll-path st-last-crawled)
         xstrategy                   (comp
                                      st-exclude-no-samples
                                      st-exclude-recently-tweeted
                                      st-exclude-ng-genres
                                      st-exclude-amateur
                                      st-exclude-omnibus)]
-    (->> (into [] xstrategy products)
+    (->> products
+         (into [] xstrategy)
          ;; sortはtransducerに組み込まないほうが楽.
          (sort-by :rank-popular)
          (take limit))))
@@ -98,14 +97,18 @@
         q-limit                     (fs/query-limit 100)
         xquery                      (fs/make-xquery [q-already-tweeted
                                                      q-limit])
-        products                    (fs/get-docs db
-                                                 products-path
-                                                 xquery)
+        products                    (fs/get-id-doc-map db
+                                                       product/coll-path
+                                                       xquery)
         st-exclude-recently-tweeted (make-st-exclude-recently-tweeted 4)
         xstrategy                   (comp
                                      ;; st-exclude-not-yet-crawled
                                      st-exclude-recently-tweeted)]
     (->> products
+         ;; cidをidには入れたけどdocに入れ忘れたのでhotfix
+         ;; keyを :cidとしてvalに取り付ける.これは特別対応.
+         (map (juxt key val))
+         (map (fn [[k v]] (assoc v :cid k)))
          (into [] xstrategy)
          ;; 新しい順に並び替える
          (sort-by :last-tweet-time #(compare %2 %1))
@@ -121,16 +124,18 @@
 
 (defn ->next-qvt
   [product]
-  (let [cid             (:cid product)
-        title           (:title product)
-        tweet-id        (:last-tweet-id product)
-        screen-name     (:last-tweet-name product)
-        last-tweet-time (:last-tweet-time product)
-        url             (tweet/->quoted-video-url screen-name tweet-id)]
-    {:url             url
-     :last-tweet-time last-tweet-time
-     :cid             (or cid :not-yet-crawled)
-     :title           (or title :not-yet-crawled)}))
+  (let [cid         (:cid product)
+        title       (:title product)
+        tweet-id    (:last-tweet-id product)
+        screen-name (:last-tweet-name product)
+        tweet-time  (:last-tweet-time product)
+        url         (tweet/->quoted-video-url screen-name tweet-id)]
+    {:url         url
+     :cid         (or cid :not-yet-crawled)
+     :title       (or title :not-yet-crawled)
+     :tweet-id    tweet-id
+     :screen-name screen-name
+     :tweet-time  tweet-time}))
 
 (defn ->print
   [product]
@@ -164,11 +169,11 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (comment
-  (require '[firebase :refer [db-prod db-dev]])
+  (require '[firebase :refer [db-prod db-dev db]])
 
   (def products
     (into []
-          (select-tweeted-products {:db (db-prod)})))
+          (select-tweeted-products {:db (db)})))
   (count products)
   (map ->print products)
 

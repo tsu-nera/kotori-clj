@@ -8,14 +8,28 @@
 (defn ->doc-path [user-id tweet-id]
   (str (->coll-path user-id) "/" tweet-id))
 
-(defn- created-time [tweet]
-  (tweet/parse-timestamp (:created_at tweet)))
-
 (defn ->data [tweet]
-  (let [created-time (created-time tweet)
+  (let [created-time (tweet/->created-time tweet)
+        tweet-id     (tweet/->id tweet)
         user         (:user tweet)]
-    {:tweet_id   (:id_str tweet)
+    {:tweet_id   tweet-id
      :user_id    (:id_str user)
      :text       (:text tweet)
      :created_at created-time
      :updated_at created-time}))
+
+(defrecord QuotedVideo
+  [last-quoted-time
+   last-quoted-name
+   quoted-tweets])
+
+(comment
+;;;
+
+  (defmulti ->ex-data (fn [ex tweet] (type ex)))
+  (defmethod ->ex-data QuotedVideo [ex tweet] tweet)
+
+  (def info (map->QuotedVideo {:last-quoted-name "test"}))
+  (->ex-data info {})
+;;;
+  )

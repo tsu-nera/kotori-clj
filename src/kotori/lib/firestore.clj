@@ -1,6 +1,7 @@
 (ns kotori.lib.firestore
   (:refer-clojure :exclude [set! set get-in assoc! assoc])
   (:require
+   [clojure.string :as string]
    [firestore-clj.core :as f]
    [kotori.lib.json :as json]))
 
@@ -119,9 +120,23 @@
    (-> db
        (f/coll coll-path)
        xquery
-       f/pullv
+       f/pullv                                        ; f/pullv
        ;; ここで通信が発生してデータ取得-> vectorへ(遅延ではない).
+       ;; ここでdoc.idの情報は失うことに注意.
+       ;; id情報も一緒に取得ならばf/pullでMapが帰る.
        json/->clj)))
+
+(defn get-id-doc-map
+  ([db coll-path]
+   (get-id-doc-map db coll-path (query-limit 3)))
+  ([db coll-path xquery]
+   (-> db
+       (f/coll coll-path)
+       xquery
+       f/pull
+       (as-> x (reduce-kv (fn [m k v]
+                            (clojure.core/assoc
+                             m k (json/->clj v))) {} x)))))
 
 (defn assoc!
   "与えられたデータでFirestoreのdocを更新する(1フィールドのみ)"
@@ -144,6 +159,11 @@
   (let [data (json/->json value)
         doc  (f/doc db doc-path)]
     (f/assoc tx doc field data)))
+
+(defn make-nested-key
+  "firestoreのネストしたfieldをupdateするときはdot表記のキーを指定"
+  [field-list]
+  (string/join "." field-list))
 
 (defn update!
   "merge!改良版:
@@ -216,13 +236,13 @@
   (def dmm-path "providers/dmm/products")
 
   (def q-limit (query-limit 5))
-  (def q-order-popular
-    (query-order-by "last_crawled_time" :desc
-                    "rank_popular" :asc))
 
   (def queries (make-xquery [q-limit q-order-popular]))
 
-  (def docs (get-docs (db) dmm-path queries))
+  (def id-doc-map (get-id-doc-map (db) dmm-path))
+
+  (reduce-kv (fn [m k v]
+               (clojure.core/assoc m k (json/->clj v))) {} id-doc-map)
 
   (get-in (db) "providers/dmm" "products_crawled_time")
 

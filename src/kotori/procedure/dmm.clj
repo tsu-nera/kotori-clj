@@ -1,14 +1,13 @@
 (ns kotori.procedure.dmm
   (:require
    [clojure.string :as str]
+   [kotori.domain.dmm.core :as dmm]
    [kotori.domain.dmm.product :as product]
    [kotori.lib.firestore :as fs]
    [kotori.lib.json :as json]
    [kotori.lib.provider.dmm :as client]
    [kotori.lib.time :as time]))
 
-(def dmm-doc-path "providers/dmm")
-(def products-path "providers/dmm/products")
 (def campaigns-path "providers/dmm/campaigns")
 
 (defn make-campaign-products-path [id]
@@ -82,7 +81,7 @@
         ts      (time/->fs-timestamp (time/now))
         data    (-> product
                     product/->data)
-        path    (fs/doc-path products-path cid)]
+        path    (fs/doc-path product/coll-path cid)]
     (fs/set! db path data)
     (fs/set! db path {:last-crawled-time ts})
     data))
@@ -102,9 +101,9 @@
                          (map json/->json))
         docs       (transduce xf conj products)
         batch-docs (fs/make-batch-docs
-                    "cid" products-path docs)]
+                    "cid" product/coll-path docs)]
     (fs/batch-set! db batch-docs)
-    (fs/set! db dmm-doc-path {:products-crawled-time ts})
+    (fs/set! db dmm/doc-path {:products-crawled-time ts})
     {:count     count
      :timestamp ts
      :products  docs}))

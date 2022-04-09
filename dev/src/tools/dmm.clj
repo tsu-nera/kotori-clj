@@ -2,11 +2,10 @@
   (:require
    [devtools :refer [env]]
    [firebase :refer [db-dev db-prod]]
+   [kotori.domain.dmm.product :as product]
    [kotori.lib.firestore :as fs]
    [kotori.procedure.dmm :as dmm]
    [kotori.procedure.tweet.post :as post]))
-
-(def dmm-coll-path "providers/dmm/products")
 
 (defn make-dmm-tweet [screen-name post]
   {:cid         (:cid post)
@@ -20,15 +19,19 @@
    :user-id     (:user-id post)})
 
 (defn ->tweet [screen-name data]
-  (let [tweet-id   (:tweet-id data)
-        tweet-time (:tweet-time data)]
-    {(str "tweets" "." screen-name "." tweet-id) data
-     "last_tweet_name"                           screen-name
-     "last_tweet_time"                           tweet-time
-     "last_tweet_id"                             tweet-id}))
+  (let [cid        (:cid data)
+        tweet-id   (:tweet-id data)
+        tweet-time (:tweet-time data)
+        tweets-key (fs/make-nested-key
+                    ["tweets" screen-name tweet-id])]
+    {"cid"             cid
+     "last_tweet_name" screen-name
+     "last_tweet_time" tweet-time
+     "last_tweet_id"   tweet-id
+     tweets-key        data}))
 
 (defn ->path [data]
-  (str dmm-coll-path "/" (:cid data)))
+  (str product/coll-path "/" (:cid data)))
 
 (defn- update-with-recovery! [db path post]
   (if (fs/doc-exists? db path)
@@ -37,13 +40,15 @@
       (fs/set!
        path
        (select-keys post
-                    ["last_tweet_name"
+                    ["cid"
+                     "last_tweet_name"
                      "last_tweet_time"
                      "last_tweet_id"]))
       (fs/update!
        path
        (dissoc post
-               "last_tweet_name" "last_tweet_time" "last_tweet_id")))))
+               "cid" "last_tweet_name"
+               "last_tweet_time" "last_tweet_id")))))
 
 (defn assoc-post [db screen-name post]
   (->> post
@@ -64,17 +69,19 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (comment  ;;;
-  (require '[firebase :refer [db-dev db-prod]])
+  (require '[firebase :refer [db-dev db-prod]]
+           '[devtools :refer [kotori-info]])
 
-  (def user-id "")
-  (def screen-name "")
+  (def info (kotori-info "0001"))
+  (def user-id (:user-id info))
+  (def screen-name (:screen-name info))
 
   (def resp (post/get-video-posts {:db       (db-prod)
                                    :user-id  user-id
-                                   :days-ago 63
+                                   :days-ago 7
                                    :days     7}))
   (count resp)
-  (assoc-posts (db-prod) screen-name resp)
+  (assoc-posts (db-dev) screen-name resp)
 
 
 

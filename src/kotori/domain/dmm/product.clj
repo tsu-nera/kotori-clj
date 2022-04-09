@@ -1,7 +1,11 @@
 (ns kotori.domain.dmm.product
   (:require
    [clojure.string :as string]
+   [kotori.domain.dmm.core :as dmm]
    [kotori.lib.time :as time]))
+
+(def coll-path (str dmm/doc-path "/products"))
+(defn doc-path [cid] (str coll-path "/" cid))
 
 (defn- ->cid [raw]
   (:content_id raw))

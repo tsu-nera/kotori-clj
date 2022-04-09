@@ -67,6 +67,12 @@
 (defn kotori-info [code]
   (make-info (kotori-by-code code)))
 
+(defn ->screen-name [code]
+  (:screen-name (kotori-info code)))
+
+(defn ->user-id [code]
+  (:user-id (kotori-info code)))
+
 (defn get-tweet-private
   ([id]
    (private/get-tweet (twitter-auth) (str id)))

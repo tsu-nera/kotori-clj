@@ -70,13 +70,15 @@
 
 (defn tweet-with-quoted-video
   "動画引用ツイート"
-  [{:keys [db] :as params}]
-  (let [qvt      (st/select-next-qvt-product {:db db})
-        cid      (:cid qvt)
-        text     (->qvt-text qvt)
-        doc-path (product/doc-path cid)
-        result   (tweet (assoc params :text text))
-        qvt-data (make-qvt-data qvt result)]
+  [{:keys [^d/Info info db] :as params}]
+  (let [screen-name (:screen-name info)
+        qvt         (st/select-next-qvt-product
+                     {:db db :screen-name screen-name})
+        cid         (:cid qvt)
+        text        (->qvt-text qvt)
+        doc-path    (product/doc-path cid)
+        result      (tweet (assoc params :text text))
+        qvt-data    (make-qvt-data qvt result)]
     ;; dmm/products/{cid} の情報を更新
     (fs/update! db doc-path qvt-data)
     result))
@@ -109,11 +111,10 @@
   (tweet-evening params)
 
   ;;;;;;;;;;;;;
-
-  (def qvt (st/select-next-qvt-product {:db (db)}))
   (def result (tweet-with-quoted-video params))
 
-  (def qvt-data (make-qvt-data qvt tweet))
+  (def qvt (st/select-next-qvt-product {:db (db)}))
+  (def qvt-data (make-qvt-data qvt result))
  ;;;
   )
 

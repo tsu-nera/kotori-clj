@@ -67,6 +67,25 @@
        (and last-time
             (time/after? (time/->tz-jst last-time) past-time))))))
 
+(defn make-st-exclude-recently-quoted
+  "最終引用投稿からX日以上経過"
+  [days]
+  (remove
+   (fn [p]
+     (let [past-time (time/date->days-ago days)
+           last-time (:last-quoted-time p)]
+       (and last-time
+            (time/after? (time/->tz-jst last-time) past-time))))))
+
+(defn make-st-exclude-last-quoted-self
+  "最終引用が自分だったら除外"
+  [screen-name]
+  (remove
+   (fn [p]
+     (let [last-quoted-name (:last-quoted-name p)]
+       (and last-quoted-name
+            (= last-quoted-name screen-name))))))
+
 (def st-already-tweeted
   (filter #(contains? % :last_tweet_id)))
 
@@ -91,7 +110,9 @@
          (sort-by :rank-popular)
          (take limit))))
 
-(defn select-tweeted-products [{:keys [db limit] :or {limit 5}}]
+(defn select-tweeted-products [{:keys [db limit screen-name]
+                                :or   {limit 5}}]
+  {:pre [(string? screen-name)]}
   (let [q-already-tweeted           (fs/query-exists "last_tweet_time")
         ;; 一応個数制限(仮)
         q-limit                     (fs/query-limit 100)
@@ -100,10 +121,14 @@
         products                    (fs/get-id-doc-map db
                                                        product/coll-path
                                                        xquery)
+        st-exclude-last-quoted-self (make-st-exclude-last-quoted-self
+                                     screen-name)
         st-exclude-recently-tweeted (make-st-exclude-recently-tweeted 4)
+        st-exclude-recently-quoted  (make-st-exclude-recently-quoted 3)
         xstrategy                   (comp
-                                     ;; st-exclude-not-yet-crawled
-                                     st-exclude-recently-tweeted)]
+                                     st-exclude-recently-tweeted
+                                     st-exclude-last-quoted-self
+                                     st-exclude-recently-quoted)]
     (->> products
          ;; cidをidには入れたけどdocに入れ忘れたのでhotfix
          ;; keyを :cidとしてvalに取り付ける.これは特別対応.
@@ -163,17 +188,19 @@
 (defn select-next-product [{:keys [db]}]
   (->next (first (select-scheduled-products {:db db}))))
 
-(defn select-next-qvt-product [{:keys [db]}]
-  (->next-qvt (first (select-tweeted-products {:db db}))))
+(defn select-next-qvt-product [{:as params}]
+  (->next-qvt (first (select-tweeted-products params))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (comment
-  (require '[firebase :refer [db-prod db-dev db]])
+  (require '[firebase :refer [db-prod db-dev db]]
+           '[devtools :refer [->screen-name]])
 
   (def products
-    (into []
-          (select-tweeted-products {:db (db)})))
+    (into [] (select-tweeted-products
+              {:db          (db) :limit 10
+               :screen-name (->screen-name "0003")})))
   (count products)
   (map ->print products)
 

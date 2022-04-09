@@ -44,7 +44,8 @@
      ["/kotori" {:middleware [#(wrap-kotori bot-configs %)]}
       ["/dummy" kotori/dummy]
       ["/tweet" kotori/tweet]
-      ["/tweet-with-quoted-video" kotori/tweet-with-quoted-video]
+      ["/tweet-quoted-video"
+       {:post kotori/tweet-quoted-video}]
       ["/tweet-morning" kotori/tweet-morning]
       ["/tweet-evening" kotori/tweet-evening]
       ["/tweet-random" kotori/tweet-random]]])))
@@ -56,8 +57,10 @@
 
 
 (comment
-  (require '[devtools :refer [kotori-names]])
-  (def bot (kotori-names))
+  (require '[devtools :refer [kotori-names ->screen-name]]
+           '[firebase :refer [db]])
+  (def app (make-app (kotori-names)))
+  (def screen-name (->screen-name "0003"))
 
   ((make-app nil) {:request-method :post :uri "/api/ping"})
   ((make-app) {:request-method :post :uri "/api/dmm/get-product"})
@@ -69,5 +72,9 @@
 
   ((make-app) {:request-method :post
                :uri            "/api/kotori/tweet-random"})
-  )
 
+  (app {:request-method :post
+        :params         {:db          (db)
+                         :screen-name screen-name}
+        :uri            "/api/kotori/tweet-quoted-video"})
+  )

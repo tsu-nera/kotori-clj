@@ -68,7 +68,7 @@
      "last_quoted_tweet_id" tweet-id
      quoted-tweet-key       quoted-tweet-val}))
 
-(defn tweet-with-quoted-video
+(defn tweet-quoted-video
   "動画引用ツイート"
   [{:keys [^d/Info info db] :as params}]
   (let [screen-name (:screen-name info)
@@ -111,7 +111,7 @@
   (tweet-evening params)
 
   ;;;;;;;;;;;;;
-  (def result (tweet-with-quoted-video params))
+  (def result (tweet-quoted-video params))
 
   (def qvt (st/select-next-qvt-product {:db (db)}))
   (def qvt-data (make-qvt-data qvt result))

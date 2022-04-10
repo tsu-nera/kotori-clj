@@ -1,8 +1,8 @@
-{:paths ["src", "resources"]
+{:paths ["src", "resources" "lib/twitter-clj/src"]
 
  :deps
  {;; Clojure
-  org.clojure/clojure {:mvn/version "1.11.0"}
+  org.clojure/clojure {:mvn/version "1.11.1"}
 
   ;; 状態管理
   integrant/integrant {:mvn/version "0.8.0"}
@@ -21,9 +21,12 @@
   com.taoensso/timbre       {:mvn/version "5.2.1"}
   com.fzakaria/slf4j-timbre {:mvn/version "0.3.21"}
 
+  ;; tsu-nera/twitter-clj {:git/url "git@github.com:tsu-nera/twitter-clj.git"}
+  tsu-nera/twitter-clj {:local/root "lib/twitter-clj"}
+
   ;; Google Cloud Platform
   com.google.auth/google-auth-library-oauth2-http {:mvn/version "1.6.0"}
-  com.google.cloud/google-cloud-firestore         {:mvn/version "3.0.20"}
+  com.google.cloud/google-cloud-firestore         {:mvn/version "3.0.21"}
   com.google.firebase/firebase-admin              {:mvn/version "8.1.0"}
   lurodrigo/firestore-clj                         {:mvn/version "1.2.1"}
   ;; firesotre-cljを追加したらio.perfmarkが見つからずにエラーしたので追加.
@@ -33,7 +36,7 @@
   ring/ring-core          {:mvn/version "1.9.5"}
   ring/ring-jetty-adapter {:mvn/version "1.9.5"}
   ring/ring-json          {:mvn/version "0.5.1"}
-  metosin/reitit          {:mvn/version "0.5.17"}}
+  metosin/reitit          {:mvn/version "0.5.18"}}
 
  :aliases
  {;; clojure -M:run
@@ -42,7 +45,7 @@
   :serve    {:main-opts ["-m" "kotori.service.server"]}
   ;; clojure -T:build xxx
   :build    {:deps       {io.github.clojure/tools.build   {:git/tag "v0.8.1" :git/sha "7d40500"}
-                          com.google.cloud.tools/jib-core {:mvn/version "0.20.0"}}
+                          com.google.cloud.tools/jib-core {:mvn/version "0.21.0"}}
              :ns-default build}
   ;; clojure -A:dev
   ;; .dir-locals.elのcider-clojure-cli-aliasesにdevを指定することで
@@ -54,8 +57,8 @@
                            refactor-nrepl/refactor-nrepl   {:mvn/version "3.5.2"}
                            cider/cider-nrepl               {:mvn/version "0.28.3"}
                            io.github.clojure/tools.build   {:git/tag "v0.8.1" :git/sha "7d40500"}
-                           com.google.cloud.tools/jib-core {:mvn/version "0.20.0"}
-                           djblue/portal                   {:mvn/version "0.22.1"}
+                           com.google.cloud.tools/jib-core {:mvn/version "0.21.0"}
+                           djblue/portal                   {:mvn/version "0.23.0"}
                            clj-commons/pomegranate         {:mvn/version "1.2.1"}}}
   ;; clojure -M:outdated (--upgrade --download)
   :outdated {:extra-deps {com.github.liquidz/antq {:mvn/version "RELEASE"}}

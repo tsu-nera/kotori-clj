@@ -3,11 +3,11 @@
   (:refer-clojure :exclude [proxy])
   (:require
    [integrant.repl.state :refer [config system]]
-   [kotori.lib.twitter.guest :as guest]
-   [kotori.lib.twitter.private :as private]
    [kotori.procedure.dmm :refer [get-product get-products]]
    [kotori.procedure.kotori :refer [make-info]]
-   [kotori.service.firebase :refer [get-db]]))
+   [kotori.service.firebase :refer [get-db]]
+   [twitter-clj.guest :as guest]
+   [twitter-clj.private :as private]))
 
 (defn db []
   (get-db))
@@ -91,3 +91,4 @@
 (defn get-dmm-campaign [title]
   (get-products {:env (env) :hits 10 :keyword title}))
 #_(get-dmm-campaign "新生活応援30％OFF第6弾")
+

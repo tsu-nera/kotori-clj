@@ -21,3 +21,4 @@ pom.xml.asc
 # add self
 resources/private
 *.tar
+lib

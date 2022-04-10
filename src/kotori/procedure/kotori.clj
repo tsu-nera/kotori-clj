@@ -6,8 +6,8 @@
    [kotori.domain.tweet.core :as tweet]
    [kotori.domain.tweet.post :as post]
    [kotori.lib.firestore :as fs]
-   [kotori.lib.twitter.private :as private]
-   [kotori.procedure.strategy :as st]))
+   [kotori.procedure.strategy :as st]
+   [twitter-clj.private :as private]))
 
 (defn pick-random []
   (rand-nth meigens))
@@ -106,10 +106,11 @@
   (def params {:db (db) :info (kotori-info "0003")})
 
   ;;;;;;;;;;;;;
+  (tweet-morning params)
+  (tweet-evening params)
 
   (def text (make-text (pick-random)))
   (tweet-random params)
-  (tweet-evening params)
 
   ;;;;;;;;;;;;;
   (def result (tweet-quoted-video params))

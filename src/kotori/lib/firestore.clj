@@ -99,14 +99,16 @@
       (get field_name)))
 
 (defn get-doc
-  [db doc-path]
-  (-> db
-      (f/doc doc-path)
-      .get
-      deref
-      .getData
-      (as-> x (into {} x))
-      json/->clj))
+  ([db doc-path]
+   (-> db
+       (f/doc doc-path)
+       .get
+       deref
+       .getData
+       (as-> x (into {} x))
+       json/->clj))
+  ([db coll-path doc-id]
+   (get-doc db (doc-path coll-path doc-id))))
 
 ;; 基本的な方針として複雑な条件処理は全てクライアントで実施する.
 ;; Firestoreの複数フィールドに対するクエリの制限が面倒.
@@ -125,6 +127,13 @@
        ;; ここでdoc.idの情報は失うことに注意.
        ;; id情報も一緒に取得ならばf/pullでMapが帰る.
        json/->clj)))
+
+(defn get-coll-ids
+  [db coll-path]
+  (-> db
+      (f/coll coll-path)
+      (.listDocuments)
+      (as-> x (map #(.getId %) x))))
 
 (defn get-id-doc-map
   ([db coll-path]

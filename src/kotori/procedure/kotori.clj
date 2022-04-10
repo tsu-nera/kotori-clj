@@ -2,19 +2,12 @@
   (:require
    [kotori.domain.dmm.product :as product]
    [kotori.domain.kotori :as d]
-   [kotori.domain.source.meigen :refer [meigens]]
+   [kotori.domain.source.meigen :as meigen]
    [kotori.domain.tweet.core :as tweet]
    [kotori.domain.tweet.post :as post]
    [kotori.lib.firestore :as fs]
    [kotori.procedure.strategy :as st]
    [twitter-clj.private :as private]))
-
-(defn pick-random []
-  (rand-nth meigens))
-
-(defn make-text [data]
-  (let [{content :content, author :author} data]
-    (str content "\n\n" author)))
 
 (defn make-info [{:keys [screen-name user-id auth-token ct0 proxy]}]
   (let [creds   (d/->Creds auth-token ct0)
@@ -36,8 +29,7 @@
         (println "post tweet Failed." (.getMessage e))))))
 
 (defn tweet-random [{:as params}]
-  (let [data (pick-random)
-        text (make-text data)]
+  (let [text (meigen/make-tweet-text)]
     (tweet (assoc params :text text))))
 
 (defn ->qvt-text [qvt]
@@ -108,8 +100,6 @@
   ;;;;;;;;;;;;;
   (tweet-morning params)
   (tweet-evening params)
-
-  (def text (make-text (pick-random)))
   (tweet-random params)
 
   ;;;;;;;;;;;;;

@@ -60,7 +60,10 @@
   (require '[devtools :refer [kotori-names ->screen-name]]
            '[firebase :refer [db]])
   (def app (make-app (kotori-names)))
+
   (def screen-name (->screen-name "0003"))
+  (def params {:db          (db)
+               :screen-name screen-name})
 
   (app {:request-method :post :uri "/api/ping"})
   (app {:request-method :post :uri "/api/dmm/get-product"})
@@ -71,10 +74,10 @@
                          :screen-name screen-name}})
 
   (app {:request-method :post
-        :uri            "/api/kotori/tweet-random"})
+        :uri            "/api/kotori/tweet-random"
+        :params         params})
 
   (app {:request-method :post
-        :params         {:db          (db)
-                         :screen-name screen-name}
-        :uri            "/api/kotori/tweet-quoted-video"})
+        :uri            "/api/kotori/tweet-quoted-video"
+        :params         params })
   )

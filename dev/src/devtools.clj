@@ -29,6 +29,10 @@
       (get :kotori.service.env/env)
       :twitter-auth))
 
+(defn get-tweet-private
+  ([id]
+   (private/get-tweet (twitter-auth) id)))
+
 (defn dmm-creds []
   (-> system
       (get :kotori.service.env/env)
@@ -78,12 +82,6 @@
 (defn ->user-id [code]
   (:user-id (kotori-info code)))
 
-(defn get-tweet-private
-  ([id]
-   (private/get-tweet (twitter-auth) (str id)))
-  ([screen-name id]
-   nil))
-
 (defn get-dmm-product [cid]
   (get-product {:env (env) :cid cid}))
 #_(get-dmm-product "ssis00337")
@@ -91,4 +89,3 @@
 (defn get-dmm-campaign [title]
   (get-products {:env (env) :hits 10 :keyword title}))
 #_(get-dmm-campaign "新生活応援30％OFF第6弾")
-

@@ -1,4 +1,5 @@
 (ns local
+  (:refer-clojure :exclude [proxy])
   (:require
    [clojure.edn :as edn]
    [clojure.java.io :as io]

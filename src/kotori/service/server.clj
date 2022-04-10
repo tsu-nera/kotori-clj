@@ -28,9 +28,9 @@
               handler)]
       (json/->json-keyword response))))
 
-(defn serve [{:keys [db config env endpoint]}]
+(defn serve [{:keys [db config env handler]}]
   (run-jetty
-   (-> endpoint
+   (-> handler
        wrap-kebab-case-keys
        wrap-keyword-params
        wrap-json-params

@@ -20,7 +20,7 @@
   (let [{content :content, author :author} (pick-random)]
     (str content "\n\n" author)))
 
-(defn download-source [db]
+(defn download! [db]
   (let [docs (fs/get-docs-with-assoc-id db coll-path)]
     (io/dump-edn file-path docs)))
 
@@ -37,6 +37,6 @@
   (fs/get-doc (db-dev) coll-path doc-id)
 
   ;;;
-  (download-source (db-dev))
+  (download! (db-dev))
    ;;;
   )

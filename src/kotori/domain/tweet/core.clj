@@ -33,6 +33,9 @@
 (defn ->id [tweet]
   (:id_str tweet))
 
+(defn ->screen-name [tweet]
+  (get-in tweet [:user :screen_name]))
+
 (defn ->created-time [tweet]
   (parse-timestamp (:created_at tweet)))
 

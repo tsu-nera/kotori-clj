@@ -5,6 +5,7 @@
    [kotori.domain.source.meigen :as meigen]
    [kotori.domain.tweet.core :as tweet]
    [kotori.domain.tweet.post :as post]
+   [kotori.lib.discord :as discord]
    [kotori.lib.firestore :as fs]
    [kotori.procedure.strategy :as st]
    [twitter-clj.private :as private]))
@@ -42,17 +43,17 @@
 ;; TODO とりあえずuser-idは必要なユースケースが現れたら対応.
 ;; それまえはコメントアウトしておく.
 (defn make-qvt-data [qvt tweet]
-  (let [screen-name      (get-in tweet [:user :screen_name])
+  (let [screen-name      (tweet/->screen-name tweet)
         tweet-id         (tweet/->id tweet)
         tweet-time       (tweet/->created-time tweet)
-        tweet_link       (tweet/->url screen-name tweet-id)
+        tweet-link       (tweet/->url screen-name tweet-id)
         quoted-tweet-key (fs/make-nested-key ["quoted_tweets"
                                               screen-name tweet-id])
         quoted-tweet-val {"screen_name"        screen-name
                           ;; "user_id"            user-id
                           "tweet_id"           tweet-id
                           "tweet_time"         tweet-time
-                          "tweet_link"         tweet_link
+                          "tweet_link"         tweet-link
                           "text"               (:text tweet)
                           "cid"                (:cid qvt)
                           "quoted_tweet_id"    (:tweet-id qvt)
@@ -62,6 +63,19 @@
      "last_quoted_name"     screen-name
      "last_quoted_tweet_id" tweet-id
      quoted-tweet-key       quoted-tweet-val}))
+
+(defn qvt->discord! [qvt tweet]
+  (let [screen-name        (tweet/->screen-name tweet)
+        tweet-id           (tweet/->id tweet)
+        tweet-link         (tweet/->url screen-name tweet-id)
+        quoted-screen-name (:screen-name qvt)
+        quoted-tweet-id    (:tweet-id qvt)
+        quoted-link        (tweet/->url
+                            quoted-screen-name quoted-tweet-id)
+        message            (str screen-name " post qvt completed.\n"
+                                tweet-link "\n"
+                                quoted-link "\n")]
+    (discord/notify! :kotori-qvt message)))
 
 (defn tweet-quoted-video
   "動画引用ツイート"
@@ -75,7 +89,9 @@
         result      (tweet (assoc params :text text))
         qvt-data    (make-qvt-data qvt result)]
     ;; dmm/products/{cid} の情報を更新
-    (fs/update! db doc-path qvt-data)
+    (do
+      (fs/update! db doc-path qvt-data)
+      (qvt->discord! qvt result))
     result))
 
 (defn tweet-morning

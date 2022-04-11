@@ -8,6 +8,9 @@
 (def file-path "private/discord.edn")
 (def source (io/load-edn file-path))
 
+(defn get-url [channel-name]
+  (channel-name source))
+
 (defn download! [db]
   (let [data (fs/get-in db doc-path "channels")]
     (->> data
@@ -18,4 +21,6 @@
 (comment
   (require '[firebase :refer [db-prod]])
   (download! (db-prod))
+
+  (get-url :kotori-qvt)
   )

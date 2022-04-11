@@ -137,7 +137,7 @@
 
 (defn get-id-doc-map
   ([db coll-path]
-   (get-id-doc-map db coll-path (query-limit 3)))
+   (get-id-doc-map db coll-path identity))
   ([db coll-path xquery]
    (-> db
        (f/coll coll-path)
@@ -146,6 +146,13 @@
        (as-> x (reduce-kv (fn [m k v]
                             (clojure.core/assoc
                              m k (json/->clj v))) {} x)))))
+
+(defn get-docs-with-assoc-id
+  [db coll-path]
+  (let [doc-map (get-id-doc-map db coll-path)]
+    (->> doc-map
+         (map (juxt key val))
+         (map (fn [[k v]] (clojure.core/assoc v :id k))))))
 
 (defn assoc!
   "与えられたデータでFirestoreのdocを更新する(1フィールドのみ)"
@@ -227,9 +234,9 @@
       (set db b path data))
     (f/commit! b)))
 
+;; Documentの存在判定はDocumentSnapshotから.
+;; 言い換えれば通信(get)によって実際に取得しないとわからない.
 (defn doc-exists? [db path]
-  "Documentの存在判定はDocumentSnapshotから,
-   言い換えれば通信(get)によって実際に取得しないとわからない."
   (let [doc (f/doc db path)]
     (-> doc
         .get
@@ -239,25 +246,25 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (comment
-  (require '[devtools :refer [db]])
+(require '[devtools :refer [db]])
 
-  (def coll-path "experiments")
-  (def dmm-path "providers/dmm/products")
+(def coll-path "experiments")
+(def dmm-path "providers/dmm/products")
 
-  (def q-limit (query-limit 5))
+(def q-limit (query-limit 5))
 
-  (def queries (make-xquery [q-limit q-order-popular]))
+(def queries (make-xquery [q-limit q-order-popular]))
 
-  (def id-doc-map (get-id-doc-map (db) dmm-path))
+(def id-doc-map (get-id-doc-map (db) dmm-path))
 
-  (reduce-kv (fn [m k v]
-               (clojure.core/assoc m k (json/->clj v))) {} id-doc-map)
+(reduce-kv (fn [m k v]
+             (clojure.core/assoc m k (json/->clj v))) {} id-doc-map)
 
-  (get-in (db) "providers/dmm" "products_crawled_time")
+(get-in (db) "providers/dmm" "products_crawled_time")
 
   ;;;
 
 
 
 
-  )
+)

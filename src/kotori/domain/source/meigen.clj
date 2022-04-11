@@ -1,10 +1,7 @@
 (ns kotori.domain.source.meigen
   (:require
-   [clojure.walk :refer [keywordize-keys]]
-   [firestore-clj.core :as f]
    [kotori.lib.firestore :as fs]
-   [kotori.lib.io :as io]
-   [kotori.procedure.kotori :as kotori]))
+   [kotori.lib.io :as io]))
 
 (def coll-path "sources/source_0001/meigens")
 (def file-path "sources/meigen.edn")
@@ -23,6 +20,10 @@
   (let [{content :content, author :author} (pick-random)]
     (str content "\n\n" author)))
 
+(defn download-source [db]
+  (let [docs (fs/get-docs-with-assoc-id db coll-path)]
+    (io/dump-edn file-path docs)))
+
 (comment
   ;;;
   (require '[firebase :refer [db-dev]])
@@ -34,6 +35,8 @@
   ;;;
   (def doc-id (rand-nth (fs/get-coll-ids (db-dev) coll-path)))
   (fs/get-doc (db-dev) coll-path doc-id)
-  ;;;
-  )
 
+  ;;;
+  (download-source (db-dev))
+   ;;;
+  )

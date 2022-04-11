@@ -32,9 +32,11 @@
   (let [text (meigen/make-tweet-text)]
     (tweet (assoc params :text text))))
 
+(def qvt-text-data ["やべーよ!" "まじやべーよ!" "くそやべーよ!"])
+
 (defn ->qvt-text [qvt]
   (let [url     (:url qvt)
-        message "やべーよ!"]
+        message (rand-nth qvt-text-data)]
     (str message "\n" url)))
 
 ;; TODO とりあえずuser-idは必要なユースケースが現れたら対応.

@@ -5,6 +5,7 @@
    [kotori.domain.source.meigen :as meigen]
    [kotori.domain.tweet.core :as tweet]
    [kotori.domain.tweet.post :as post]
+   [kotori.domain.tweet.qvt :as qvt]
    [kotori.lib.discord :as discord]
    [kotori.lib.firestore :as fs]
    [kotori.procedure.strategy :as st]
@@ -33,37 +34,6 @@
   (let [text (meigen/make-tweet-text)]
     (tweet (assoc params :text text))))
 
-(def qvt-text-data ["やべーよ!" "まじやべーよ!" "くそやべーよ!"])
-
-(defn ->qvt-text [qvt]
-  (let [url     (:url qvt)
-        message (rand-nth qvt-text-data)]
-    (str message "\n" url)))
-
-;; TODO とりあえずuser-idは必要なユースケースが現れたら対応.
-;; それまえはコメントアウトしておく.
-(defn make-qvt-data [qvt tweet]
-  (let [screen-name      (tweet/->screen-name tweet)
-        tweet-id         (tweet/->id tweet)
-        tweet-time       (tweet/->created-time tweet)
-        tweet-link       (tweet/->url screen-name tweet-id)
-        quoted-tweet-key (fs/make-nested-key ["quoted_tweets"
-                                              screen-name tweet-id])
-        quoted-tweet-val {"screen_name"        screen-name
-                          ;; "user_id"            user-id
-                          "tweet_id"           tweet-id
-                          "tweet_time"         tweet-time
-                          "tweet_link"         tweet-link
-                          "text"               (:text tweet)
-                          "cid"                (:cid qvt)
-                          "quoted_tweet_id"    (:tweet-id qvt)
-                          ;; "quoted_user_id"     (:user-id qvt)
-                          "quoted_screen_name" (:screen-name qvt)}]
-    {"last_quoted_time"     tweet-time
-     "last_quoted_name"     screen-name
-     "last_quoted_tweet_id" tweet-id
-     quoted-tweet-key       quoted-tweet-val}))
-
 (defn qvt->discord! [qvt tweet]
   (let [screen-name        (tweet/->screen-name tweet)
         tweet-id           (tweet/->id tweet)
@@ -84,10 +54,10 @@
         qvt         (st/select-next-qvt-product
                      {:db db :screen-name screen-name})
         cid         (:cid qvt)
-        text        (->qvt-text qvt)
+        text        (qvt/->tweet-text qvt)
         doc-path    (product/doc-path cid)
         result      (tweet (assoc params :text text))
-        qvt-data    (make-qvt-data qvt result)]
+        qvt-data    (qvt/->data qvt result)]
     ;; dmm/products/{cid} の情報を更新
     (do
       (fs/update! db doc-path qvt-data)

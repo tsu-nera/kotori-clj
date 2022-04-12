@@ -18,13 +18,13 @@
      :created_at created-time
      :updated_at created-time}))
 
-(defrecord QuotedVideo
-  [last-quoted-time
-   last-quoted-name
-   quoted-tweets])
-
 (comment
 ;;;
+  ;; recordとmultimethodの技術検証
+  (defrecord QuotedVideo
+      [last-quoted-time
+       last-quoted-name
+       quoted-tweets])
 
   (defmulti ->ex-data (fn [ex tweet] (type ex)))
   (defmethod ->ex-data QuotedVideo [ex tweet] tweet)

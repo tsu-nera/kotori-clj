@@ -2,21 +2,43 @@
   (:require
    [kotori.domain.tweet.core :as tweet]))
 
+(def data-type
+  {:text  "text"
+   :video "video"
+   :photo "photo"
+   :qvt   "quoted_video"})
+
 (defn ->coll-path [user-id]
   (str "tweets/" user-id "/posts"))
 
 (defn ->doc-path [user-id tweet-id]
   (str (->coll-path user-id) "/" tweet-id))
 
-(defn ->data [tweet]
-  (let [created-time (tweet/->created-time tweet)
-        tweet-id     (tweet/->id tweet)
-        user         (:user tweet)]
-    {:tweet_id   tweet-id
-     :user_id    (:id_str user)
-     :text       (:text tweet)
-     :created_at created-time
-     :updated_at created-time}))
+(defn ->data
+  ([tweet]
+   (let [created-time (tweet/->created-time tweet)
+         screen-name  (tweet/->screen-name tweet)
+         tweet-id     (tweet/->id tweet)
+         url          (tweet/->url screen-name tweet-id)
+         user-id      (tweet/->user-id tweet)]
+     {:user_id             user-id
+      :screen_name         screen-name
+      :tweet_id            tweet-id
+      :tweet_link          url
+      :text                (:text tweet)
+      :created_at          created-time
+      :updated_at          created-time
+      :like_count          0
+      :retweet_count       0
+      :self_retweet        false
+      :self_retweet_count  0
+      :other_retweet       false
+      :other_retweet_count 0}))
+  ([tweet type]
+   (-> tweet
+       ->data
+       (cond-> type
+         (assoc :type (type data-type))))))
 
 (comment
 ;;;

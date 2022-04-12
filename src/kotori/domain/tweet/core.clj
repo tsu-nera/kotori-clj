@@ -2,11 +2,6 @@
   (:require
    [kotori.lib.time :as t]))
 
-(defn ->url
-  "ツイートURL"
-  [screen-name tweet-id]
-  (str "https://twitter.com/" screen-name "/status/" tweet-id))
-
 (defn ->user-home-url
   "ユーザホーム"
   [screen-name]
@@ -16,11 +11,6 @@
   "ユーザホームhttps://twitter.com/i/user/:user_id"
   [user-id]
   (str "https://twitter.com/i/user/" user-id))
-
-(defn ->quoted-video-url
-  "動画引用ツイート用URL"
-  [screen-name tweet-id]
-  (str (->url screen-name tweet-id) "/video/1"))
 
 (def timestamp-format "EEE MMM dd HH:mm:ss Z yyyy")
 
@@ -35,6 +25,21 @@
 
 (defn ->screen-name [tweet]
   (get-in tweet [:user :screen_name]))
+
+(defn ->user-id [tweet]
+  (get-in tweet [:user :id_str]))
+
+(defn ->url
+  "ツイートURL"
+  ([tweet]
+   (->url (->screen-name tweet) (->id tweet)))
+  ([screen-name tweet-id]
+   (str "https://twitter.com/" screen-name "/status/" tweet-id)))
+
+(defn ->quoted-video-url
+  "動画引用ツイート用URL"
+  [screen-name tweet-id]
+  (str (->url screen-name tweet-id) "/video/1"))
 
 (defn ->created-time [tweet]
   (parse-timestamp (:created_at tweet)))

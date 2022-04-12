@@ -16,13 +16,13 @@
         proxies (d/map->Proxies proxy)]
     (d/->Info screen-name user-id creds proxies)))
 
-(defn tweet [{:keys [^d/Info info db text]}]
+(defn tweet [{:keys [^d/Info info db text type]}]
   (let [{:keys [user-id creds proxies]}
         info
         result   (private/create-tweet creds proxies text)
         tweet-id (:id_str result)
         doc-path (post/->doc-path user-id tweet-id)
-        data     (post/->data result)]
+        data     (post/->data result type)]
     (try
       (println (str "post tweet completed. id=" tweet-id))
       (fs/set! db doc-path data)
@@ -32,7 +32,7 @@
 
 (defn tweet-random [{:as params}]
   (let [text (meigen/make-tweet-text)]
-    (tweet (assoc params :text text))))
+    (tweet (assoc params :text text :type :text))))
 
 (defn qvt->discord! [qvt tweet]
   (let [screen-name        (tweet/->screen-name tweet)
@@ -56,21 +56,21 @@
         cid         (:cid qvt)
         text        (qvt/->tweet-text qvt)
         doc-path    (product/doc-path cid)
-        result      (tweet (assoc params :text text))
+        result      (tweet (assoc params :text text :type :qvt))
         qvt-data    (qvt/->data qvt result)]
-    ;; dmm/products/{cid} の情報を更新
     (do
+      ;; dmm/products/{cid} の情報を更新
       (fs/update! db doc-path qvt-data)
       (qvt->discord! qvt result))
     result))
 
 (defn tweet-morning
   [{:as params}]
-  (tweet (assoc params :text "おはようございます")))
+  (tweet (assoc params :text "おはようございます" :type :text)))
 
 (defn tweet-evening
   [{:as params}]
-  (tweet (assoc params :text "今日もお疲れ様でした")))
+  (tweet (assoc params :text "今日もお疲れ様でした" :type :text)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (defn dummy [{:keys [^d/Info info db text]}]
@@ -94,7 +94,7 @@
   (def result (tweet-quoted-video params))
 
   (def qvt (st/select-next-qvt-product {:db (db)}))
-  (def qvt-data (make-qvt-data qvt result))
+  (def qvt-data (qvt/->data qvt result))
  ;;;
   )
 

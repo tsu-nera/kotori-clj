@@ -21,12 +21,16 @@
 (def dirty-genre-ids
   #{4018 5007 5011 5012 5013 5014 5024 6151})
 
+(def trans-genre-ids
+  #{3036 4015})
+
 (def ng-genres
   (into #{} (concat
              vr-genre-ids
              antisocial-genre-ids
              violent-genre-ids
-             dirty-genre-ids)))
+             dirty-genre-ids
+             trans-genre-ids)))
 
 (defn ng-genre? [id]
   (contains? ng-genres id))

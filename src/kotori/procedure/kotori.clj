@@ -1,5 +1,6 @@
 (ns kotori.procedure.kotori
   (:require
+   [clojure.spec.alpha :as s]
    [kotori.domain.dmm.product :as product]
    [kotori.domain.kotori :as d]
    [kotori.domain.source.meigen :as meigen]
@@ -47,11 +48,14 @@
                                 quoted-link "\n")]
     (discord/notify! :kotori-qvt message)))
 
+(defn select-next-qvt-product [{:as params}]
+  (st/->next-qvt (first (st/select-tweeted-products params))))
+
 (defn tweet-quoted-video
   "動画引用ツイート"
   [{:keys [^d/Info info db] :as params}]
   (let [screen-name (:screen-name info)
-        qvt         (st/select-next-qvt-product
+        qvt         (select-next-qvt-product
                      {:db db :screen-name screen-name})
         cid         (:cid qvt)
         text        (qvt/->tweet-text qvt)
@@ -71,6 +75,11 @@
 (defn tweet-evening
   [{:as params}]
   (tweet (assoc params :text "今日もお疲れ様でした" :type :text)))
+
+(defn select-next-product [{:keys [db screen-name]}]
+  {:pre [(s/valid? ::d/screen-name screen-name)]}
+  (st/->next (first (st/select-scheduled-products
+                     {:db db :screen-name screen-name}))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (defn dummy [{:keys [^d/Info info db text]}]
@@ -93,7 +102,7 @@
   ;;;;;;;;;;;;;
   (def result (tweet-quoted-video params))
 
-  (def qvt (st/select-next-qvt-product {:db (db)}))
+  (def qvt (select-next-qvt-product {:db (db)}))
   (def qvt-data (qvt/->data qvt result))
  ;;;
   )

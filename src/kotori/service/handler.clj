@@ -39,8 +39,7 @@
      ["/ping" {:post ping/ping-pong}]
      ["/dmm"
       ["/crawl-product" {:post dmm/crawl-product!}]
-      ["/crawl-products" {:post dmm/crawl-products!}]
-      ["/select-next-product" {:get strategy/select-next-product}]]
+      ["/crawl-products" {:post dmm/crawl-products!}]]
      ["/kotori" {:middleware [#(wrap-kotori config-map %)]}
       ["/dummy" kotori/dummy]
       ["/tweet" kotori/tweet]
@@ -48,7 +47,9 @@
        {:post kotori/tweet-quoted-video}]
       ["/tweet-morning" kotori/tweet-morning]
       ["/tweet-evening" kotori/tweet-evening]
-      ["/tweet-random" kotori/tweet-random]]])))
+      ["/tweet-random" kotori/tweet-random]
+      ["/select-next-product"
+       {:get kotori/select-next-product}]]])))
 
 (defmethod ig/init-key ::app [_ {:keys [config-map]}]
   (make-app config-map))
@@ -68,6 +69,10 @@
   (app {:request-method :post :uri "/api/ping"})
   (app {:request-method :post :uri "/api/dmm/get-product"})
 
+  (app {:request-method :get
+        :uri            "/api/kotori/select-next-product"
+        :params         {:db (db)}})
+
   (app {:request-method :post
         :uri            "/api/kotori/dummy"
         :params         {:text        "テスト投稿"
@@ -80,4 +85,5 @@
   (app {:request-method :post
         :uri            "/api/kotori/tweet-quoted-video"
         :params         params })
+
   )

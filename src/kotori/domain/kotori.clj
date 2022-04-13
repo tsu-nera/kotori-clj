@@ -1,6 +1,7 @@
 (ns kotori.domain.kotori
   (:require
    [clojure.set :refer [rename-keys]]
+   [clojure.spec.alpha :as s]
    [clojure.walk :refer [keywordize-keys]]
    [kotori.lib.firestore :as fs]))
 
@@ -11,6 +12,8 @@
 (defrecord Proxies [proxy-host proxy-port proxy-user proxy-pass])
 (defrecord Info
   [screen-name user-id ^Creds creds ^Proxies proxies])
+
+(s/def :screen-name string?)
 
 (defn ->creds
   ([db user-id]

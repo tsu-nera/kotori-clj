@@ -72,16 +72,16 @@
   (require '[firebase :refer [db-dev db-prod]]
            '[devtools :refer [kotori-info]])
 
-  (def info (kotori-info "0001"))
+  (def info (kotori-info "0005"))
   (def user-id (:user-id info))
   (def screen-name (:screen-name info))
 
   (def resp (post/get-video-posts {:db       (db-prod)
                                    :user-id  user-id
-                                   :days-ago 7
+                                   :days-ago 63
                                    :days     7}))
   (count resp)
-  (assoc-posts (db-dev) screen-name resp)
+  (assoc-posts (db-prod) screen-name resp)
 
 
 

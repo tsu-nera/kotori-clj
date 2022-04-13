@@ -59,12 +59,36 @@
 
 (defn make-st-exclude-recently-tweeted
   "最終投稿からX週間以上経過"
-  [weeks]
+  [days]
   (remove
    (fn [p]
-     (let [past-time (time/date->weeks-ago weeks)
+     (let [past-time (time/date->days-ago days)
            last-time (:last-tweet-time p)]
        (and last-time
+            (time/after? (time/->tz-jst last-time) past-time))))))
+
+;; TODO refactor
+(defn make-st-exclude-recently-tweeted-self
+  [target-screen-name days]
+  (remove
+   (fn [p]
+     (let [past-time        (time/date->days-ago days)
+           last-time        (:last-tweet-time p)
+           last-screen-name (:last-tweet-name p)]
+       (and last-time
+            (= last-screen-name target-screen-name)
+            (time/after? (time/->tz-jst last-time) past-time))))))
+
+;; TODO refactor
+(defn make-st-exclude-recently-tweeted-others
+  [target-screen-name days]
+  (remove
+   (fn [p]
+     (let [past-time        (time/date->days-ago days)
+           last-time        (:last-tweet-time p)
+           last-screen-name (:last-tweet-name p)]
+       (and last-time
+            (not= last-screen-name target-screen-name)
             (time/after? (time/->tz-jst last-time) past-time))))))
 
 (defn make-st-exclude-recently-quoted
@@ -89,21 +113,26 @@
 (def st-already-tweeted
   (filter #(contains? % :last_tweet_id)))
 
-(defn select-scheduled-products [{:keys [db limit] :or {limit 5}}]
-  (let [last-crawled-time           (fs/get-in db dmm/doc-path
-                                               "products_crawled_time")
-        st-last-crawled             (fs/query-filter
-                                     "last_crawled_time"
-                                     last-crawled-time)
-        st-exclude-recently-tweeted (make-st-exclude-recently-tweeted 8)
-        products                    (fs/get-docs
-                                     db product/coll-path st-last-crawled)
-        xstrategy                   (comp
-                                     st-exclude-no-samples
-                                     st-exclude-recently-tweeted
-                                     st-exclude-ng-genres
-                                     st-exclude-amateur
-                                     st-exclude-omnibus)]
+(defn select-scheduled-products [{:keys [db limit screen-name]
+                                  :or   {limit 5}}]
+  (let [last-crawled-time (fs/get-in db dmm/doc-path
+                                     "products_crawled_time")
+        st-last-crawled   (fs/query-filter
+                           "last_crawled_time"
+                           last-crawled-time)
+        st-exclude-recently-tweeted-self
+        (make-st-exclude-recently-tweeted-self screen-name 28)
+        st-exclude-recently-tweeted-others
+        (make-st-exclude-recently-tweeted-others screen-name 14)
+        products          (fs/get-docs
+                           db product/coll-path st-last-crawled)
+        xstrategy         (comp
+                           st-exclude-no-samples
+                           st-exclude-recently-tweeted-self
+                           st-exclude-recently-tweeted-others
+                           st-exclude-ng-genres
+                           st-exclude-amateur
+                           st-exclude-omnibus)]
     (->> products
          (into [] xstrategy)
          ;; sortはtransducerに組み込まないほうが楽.
@@ -185,12 +214,6 @@
      ;; :raw             raw
      :last-tweet-time (:last-tweet-time raw)}))
 
-(defn select-next-product [{:keys [db]}]
-  (->next (first (select-scheduled-products {:db db}))))
-
-(defn select-next-qvt-product [{:as params}]
-  (->next-qvt (first (select-tweeted-products params))))
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (comment
@@ -210,9 +233,9 @@
 
 (comment
   ;;;;;;;;;;;
-  (require '[firebase :refer [db-prod]])
+  (require '[firebase :refer [db db-prod]])
 
-  (def product (select-next-product {:db (db-prod)}))
+  (def product (select-next-product {:db (db)}))
 
   ;; cf. https://www.dmm.co.jp/digital/videoa/-/list/=/sort=ranking/
   (def products

@@ -90,9 +90,9 @@
 (comment
   ;;;
   (require '[firebase :refer [db]]
-           '[devtools :refer [kotori-info]])
+           '[devtools :refer [info-dev]])
 
-  (def params {:db (db) :info (kotori-info "0003")})
+  (def params {:db (db) :info @info-dev})
 
   ;;;;;;;;;;;;;
   (tweet-morning params)

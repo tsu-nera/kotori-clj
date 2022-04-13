@@ -61,39 +61,25 @@
 (def st-exclude-not-yet-crawled
   (filter #(contains? % :cid)))
 
-(defn make-st-exclude-recently-tweeted
-  "最終投稿からX週間以上経過"
-  [days]
+(defn- make-st-exclude-recently-tweeted
+  "最終投稿からXdays以上経過"
+  [self? days]
   (remove
    (fn [p]
-     (let [past-time (time/date->days-ago days)
-           last-time (:last-tweet-time p)]
+     (let [past-time        (time/date->days-ago days)
+           last-time        (:last-tweet-time p)
+           last-screen-name (:last-tweet-name p)]
        (and last-time
+            (self? last-screen-name)
             (time/after? (time/->tz-jst last-time) past-time))))))
 
-;; TODO refactor
 (defn make-st-exclude-recently-tweeted-self
   [target-screen-name days]
-  (remove
-   (fn [p]
-     (let [past-time        (time/date->days-ago days)
-           last-time        (:last-tweet-time p)
-           last-screen-name (:last-tweet-name p)]
-       (and last-time
-            (= last-screen-name target-screen-name)
-            (time/after? (time/->tz-jst last-time) past-time))))))
+  (make-st-exclude-recently-tweeted #(= target-screen-name %) days))
 
-;; TODO refactor
 (defn make-st-exclude-recently-tweeted-others
   [target-screen-name days]
-  (remove
-   (fn [p]
-     (let [past-time        (time/date->days-ago days)
-           last-time        (:last-tweet-time p)
-           last-screen-name (:last-tweet-name p)]
-       (and last-time
-            (not= last-screen-name target-screen-name)
-            (time/after? (time/->tz-jst last-time) past-time))))))
+  (make-st-exclude-recently-tweeted #(not= target-screen-name %) days))
 
 (defn make-st-exclude-recently-quoted
   "最終引用投稿からX日以上経過"
@@ -156,10 +142,11 @@
                                                        xquery)
         st-exclude-last-quoted-self (make-st-exclude-last-quoted-self
                                      screen-name)
-        st-exclude-recently-tweeted (make-st-exclude-recently-tweeted 4)
+        st-exclude-recently-tweeted-others
+        (make-st-exclude-recently-tweeted-others screen-name 28)
         st-exclude-recently-quoted  (make-st-exclude-recently-quoted 3)
         xstrategy                   (comp
-                                     st-exclude-recently-tweeted
+                                     st-exclude-recently-tweeted-others
                                      st-exclude-last-quoted-self
                                      st-exclude-recently-quoted)]
     (->> products
@@ -228,23 +215,26 @@
     (into [] (select-tweeted-products
               {:db          (db) :limit 10
                :screen-name (->screen-name "0003")})))
+
   (count products)
   (map ->print products)
 
   (def qvt-products (map ->next-qvt products))
-  (def product (select-next-qvt-product {:db (db-prod)}))
   )
 
 (comment
   ;;;;;;;;;;;
-  (require '[firebase :refer [db db-prod]])
+  (require '[firebase :refer [db]]
+           '[devtools :refer [->screen-name]])
 
-  (def product (select-next-product {:db (db)}))
+  (def screen-name (->screen-name "0003"))
 
   ;; cf. https://www.dmm.co.jp/digital/videoa/-/list/=/sort=ranking/
   (def products
     (into []
-          (select-scheduled-products {:db (db) :limit 100})))
+          (select-scheduled-products {:db          (db)
+                                      :limit       10
+                                      :screen-name screen-name})))
 
   (count products)
   (map ->next products)

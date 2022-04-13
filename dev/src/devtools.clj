@@ -76,6 +76,8 @@
 (defn kotori-info [code]
   (make-info (kotori-by-code code)))
 
+(def info-dev (delay (kotori-info "0003")))
+
 (defn ->screen-name [code]
   (:screen-name (kotori-info code)))
 

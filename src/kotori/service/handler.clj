@@ -71,7 +71,7 @@
 
   (app {:request-method :get
         :uri            "/api/kotori/select-next-product"
-        :params         {:db (db)}})
+        :params         {:db (db) :screen-name screen-name}})
 
   (app {:request-method :post
         :uri            "/api/kotori/dummy"

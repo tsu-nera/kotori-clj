@@ -13,7 +13,7 @@
 (defrecord Info
   [screen-name user-id ^Creds creds ^Proxies proxies])
 
-(s/def :screen-name string?)
+(s/def ::screen-name string?)
 
 (defn ->creds
   ([db user-id]

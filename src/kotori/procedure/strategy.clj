@@ -174,13 +174,15 @@
         tweet-id    (:last-tweet-id product)
         screen-name (:last-tweet-name product)
         tweet-time  (:last-tweet-time product)
+        crawled?    (contains? product :last-crawled-time)
         url         (tweet/->quoted-video-url screen-name tweet-id)]
     {:url         url
      :cid         (or cid :not-yet-crawled)
      :title       (or title :not-yet-crawled)
      :tweet-id    tweet-id
      :screen-name screen-name
-     :tweet-time  tweet-time}))
+     :tweet-time  tweet-time
+     :crawled?    crawled?}))
 
 (defn ->print
   [product]
@@ -224,7 +226,7 @@
 
 (comment
   ;;;;;;;;;;;
-  (require '[firebase :refer [db]]
+  (require '[firebase :refer [db db-prod]]
            '[devtools :refer [->screen-name]])
 
   (def screen-name (->screen-name "0003"))
@@ -232,7 +234,7 @@
   ;; cf. https://www.dmm.co.jp/digital/videoa/-/list/=/sort=ranking/
   (def products
     (into []
-          (select-scheduled-products {:db          (db)
+          (select-scheduled-products {:db          (db-prod)
                                       :limit       10
                                       :screen-name screen-name})))
 

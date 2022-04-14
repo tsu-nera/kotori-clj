@@ -9,6 +9,7 @@
    [kotori.domain.tweet.qvt :as qvt]
    [kotori.lib.discord :as discord]
    [kotori.lib.firestore :as fs]
+   [kotori.procedure.dmm :as dmm]
    [kotori.procedure.strategy :as st]
    [twitter-clj.private :as private]))
 
@@ -53,18 +54,27 @@
 
 (defn tweet-quoted-video
   "動画引用ツイート"
-  [{:keys [^d/Info info db] :as params}]
-  (let [screen-name (:screen-name info)
-        qvt         (select-next-qvt-product
-                     {:db db :screen-name screen-name})
-        cid         (:cid qvt)
-        text        (qvt/->tweet-text qvt)
-        doc-path    (product/doc-path cid)
-        result      (tweet (assoc params :text text :type :qvt))
-        qvt-data    (qvt/->data qvt result)]
+  [{:keys [^d/Info info db env] :as params}]
+  (let [screen-name  (:screen-name info)
+        qvt          (select-next-qvt-product
+                      {:db db :screen-name screen-name})
+        cid          (:cid qvt)
+        text         (qvt/->tweet-text qvt)
+        doc-path     (product/doc-path cid)
+        crawled?     (:craweled? qvt)
+        tweet-params (assoc params :text text :type :qvt)
+        result       (tweet tweet-params)]
     (do
-      ;; dmm/products/{cid} の情報を更新
-      (fs/update! db doc-path qvt-data)
+      ;; DMM商品情報 collectionを更新.
+      (->> result
+           (qvt/->data qvt)
+           ;; dmm/products/{cid} の情報を更新
+           (fs/update! db doc-path))
+      ;; crawledされてない場合はここで追加で処理をする.
+      ;; 通常はcrawledされているのでtoolで追加した場合がこうなる.
+      ;; そんなに時間かからないと思うので同期処理
+      (when-not crawled?
+        (dmm/crawl-product! {:db db :env env :cid cid}))
       (qvt->discord! qvt result))
     result))
 
@@ -90,7 +100,7 @@
 (comment
   ;;;
   (require '[firebase :refer [db]]
-           '[devtools :refer [info-dev]])
+           '[devtools :refer [env kotori-info ->screen-name]])
 
   (def params {:db (db) :info @info-dev})
 
@@ -100,9 +110,15 @@
   (tweet-random params)
 
   ;;;;;;;;;;;;;
-  (def result (tweet-quoted-video params))
+  (def info (kotori-info "0003"))
+  (def result (tweet-quoted-video {:db   (db)
+                                   :env  (env)
+                                   :info info}))
 
-  (def qvt (select-next-qvt-product {:db (db)}))
+  ;;;
+  (def screen-name (->screen-name "0003"))
+  (def qvt (select-next-qvt-product {:db          (db)
+                                     :screen-name screen-name}))
   (def qvt-data (qvt/->data qvt result))
  ;;;
   )

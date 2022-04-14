@@ -47,7 +47,8 @@
                (:genres product))))
 
 (def st-exclude-no-samples
-  (remove (or no-sample-movie? no-sample-image?)))
+  (remove #(or (no-sample-movie? %)
+               (no-sample-image? %))))
 
 (def st-exclude-ng-genres
   (remove ng-product?))

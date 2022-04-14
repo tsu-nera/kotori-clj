@@ -104,6 +104,9 @@
 (def st-already-tweeted
   (filter #(contains? % :last_tweet_id)))
 
+(def st-skip-debug
+  (remove #(get % :debug)))
+
 (defn select-scheduled-products [{:keys [db limit screen-name]
                                   :or   {limit 5}}]
   (let [last-crawled-time (fs/get-in db dmm/doc-path
@@ -118,6 +121,7 @@
         products          (fs/get-docs
                            db product/coll-path st-last-crawled)
         xstrategy         (comp
+                           st-skip-debug
                            st-exclude-no-samples
                            st-exclude-recently-tweeted-self
                            st-exclude-recently-tweeted-others
@@ -147,6 +151,7 @@
         (make-st-exclude-recently-tweeted-others screen-name 28)
         st-exclude-recently-quoted  (make-st-exclude-recently-quoted 3)
         xstrategy                   (comp
+                                     st-skip-debug
                                      st-exclude-recently-tweeted-others
                                      st-exclude-last-quoted-self
                                      st-exclude-recently-quoted)]

@@ -243,28 +243,38 @@
         deref
         .exists)))
 
+(defn doc-field-exists?
+  "指定したpathの指定したfieldが存在するかチェック.
+  存在しないpathが指定されると .getDataがnilになりcontains?はfalse.
+  "
+  [db path field]
+  (let [doc (f/doc db path)]
+    (-> doc
+        .get
+        deref
+        .getData
+        (contains? field))))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (comment
-(require '[devtools :refer [db]])
+  (require '[devtools :refer [db]])
 
-(def coll-path "experiments")
-(def dmm-path "providers/dmm/products")
+  (def coll-path "experiments")
+  (def dmm-path "providers/dmm/products")
 
-(def q-limit (query-limit 5))
+  (def q-limit (query-limit 5))
 
-(def queries (make-xquery [q-limit q-order-popular]))
+  (def queries (make-xquery [q-limit q-order-popular]))
 
-(def id-doc-map (get-id-doc-map (db) dmm-path))
+  (def id-doc-map (get-id-doc-map (db) dmm-path))
 
-(reduce-kv (fn [m k v]
-             (clojure.core/assoc m k (json/->clj v))) {} id-doc-map)
+  (reduce-kv (fn [m k v]
+               (clojure.core/assoc m k (json/->clj v))) {} id-doc-map)
 
-(get-in (db) "providers/dmm" "products_crawled_time")
+  (def crawled-time
+    (get-in (db) "providers/dmm" "products_crawled_time"))
 
-  ;;;
-
-
-
-
-)
+  (doc-field-exists? (db) "providers/dmmmm" "foo")
+ ;;;
+  )

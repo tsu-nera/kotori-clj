@@ -34,21 +34,22 @@
   (str product/coll-path "/" (:cid data)))
 
 (defn- update-with-recovery! [db path post]
-  (if (fs/doc-exists? db path)
-    (fs/update! db path post)
-    (doto db
-      (fs/set!
-       path
-       (select-keys post
-                    ["cid"
-                     "last_tweet_name"
-                     "last_tweet_time"
-                     "last_tweet_id"]))
-      (fs/update!
-       path
-       (dissoc post
-               "cid" "last_tweet_name"
-               "last_tweet_time" "last_tweet_id")))))
+  (let [params (select-keys post
+                            ["cid"
+                             "last_tweet_name"
+                             "last_tweet_time"
+                             "last_tweet_id"])
+        tweet  (dissoc post
+                       "cid" "last_tweet_name"
+                       "last_tweet_time" "last_tweet_id")]
+    (if (fs/doc-exists? db path)
+      (if (fs/doc-field-exists? db path "last_tweet_time")
+        ;; last_tweet_timeが存在しているならば上書きはしない.
+        (fs/update! db path tweet)
+        (fs/update! db path post))
+      (doto db
+        (fs/set! path params)
+        (fs/update! path tweet)))))
 
 (defn assoc-post [db screen-name post]
   (->> post
@@ -72,21 +73,19 @@
   (require '[firebase :refer [db-dev db-prod]]
            '[devtools :refer [kotori-info]])
 
-  (def info (kotori-info "0005"))
+  (def info (kotori-info "0007"))
   (def user-id (:user-id info))
   (def screen-name (:screen-name info))
 
   (def resp (post/get-video-posts {:db       (db-prod)
                                    :user-id  user-id
-                                   :days-ago 63
+                                   :days-ago 7
                                    :days     7}))
   (count resp)
   (assoc-posts (db-prod) screen-name resp)
 
-
-
   ;;;;;;;;;;;;;;;
-  (def post (first resp))
+  (def post (second resp))
   (assoc-post (db-dev) screen-name post)
   ;;;;;;;;;;;;;;;;;;;;;;
 

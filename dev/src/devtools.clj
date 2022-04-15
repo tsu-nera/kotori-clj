@@ -91,3 +91,9 @@
 (defn get-dmm-campaign [title]
   (get-products {:env (env) :hits 10 :keyword title}))
 #_(get-dmm-campaign "新生活応援30％OFF第6弾")
+
+(defn get-tweet-with-info
+  ([code id]
+   (let [creds (:creds (kotori-info code))]
+     (private/get-tweet creds (str id)))))
+#_(get-tweet-with-info "0001" "")

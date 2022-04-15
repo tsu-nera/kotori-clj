@@ -2,6 +2,7 @@
   "商品選択戦略"
   (:require
    [clojure.string :as str]
+   [firestore-clj.core :as f]
    [kotori.domain.dmm.core :as dmm]
    [kotori.domain.dmm.product :as product]
    [kotori.domain.tweet.core :as tweet]
@@ -137,19 +138,20 @@
 (defn select-tweeted-products [{:keys [db limit screen-name]
                                 :or   {limit 5}}]
   {:pre [(string? screen-name)]}
-  (let [q-already-tweeted           (fs/query-exists "last_tweet_time")
+  (let [q-already-tweeted           (fs/query-between
+                                     35 7 "last_tweet_time")
         ;; 一応個数制限(仮)
-        q-limit                     (fs/query-limit 100)
-        xquery                      (fs/make-xquery [q-already-tweeted
-                                                     q-limit])
+        ;; q-limit                     (fs/query-limit 100)
+        ;; xquery                      (fs/make-xquery [q-already-tweeted
+        ;;                                              q-limit])
         products                    (fs/get-id-doc-map db
                                                        product/coll-path
-                                                       xquery)
+                                                       q-already-tweeted)
         st-exclude-last-quoted-self (make-st-exclude-last-quoted-self
                                      screen-name)
         st-exclude-recently-tweeted-others
         (make-st-exclude-recently-tweeted-others screen-name 28)
-        st-exclude-recently-quoted  (make-st-exclude-recently-quoted 3)
+        st-exclude-recently-quoted  (make-st-exclude-recently-quoted 7)
         xstrategy                   (comp
                                      st-skip-debug
                                      st-exclude-recently-tweeted-others
@@ -221,8 +223,8 @@
 
   (def products
     (into [] (select-tweeted-products
-              {:db          (db) :limit 10
-               :screen-name (->screen-name "0003")})))
+              {:db          (db-prod) :limit 10
+               :screen-name (->screen-name "0019")})))
 
   (count products)
   (map ->print products)

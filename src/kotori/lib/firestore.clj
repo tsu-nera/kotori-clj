@@ -3,9 +3,16 @@
   (:require
    [clojure.string :as string]
    [firestore-clj.core :as f]
-   [kotori.lib.json :as json]))
+   [kotori.lib.json :as json]
+   [kotori.lib.time :as t]))
 
 (defn doc-path [coll-path doc-id] (str coll-path "/" doc-id))
+
+;; xqueryのvectorは末尾から適用されるため
+;; 表記のために上から昇順で作成されたリストはreverseで降順にする.
+(defn make-xquery [v]
+  {:pre [(vector? v)]}
+  (apply comp (reverse v)))
 
 (defn query-filter [^String field value]
   (fn [q]
@@ -20,6 +27,7 @@
   ([q field value]
    (.whereNotEqualTo q field value)))
 
+;; どうもkeywordで暗黙の昇順の並び替えが入っている気がする...
 (defn query-exists
   ([^String keyword]
    (fn [q]
@@ -68,6 +76,14 @@
   (fn [q]
     (f/end-before q date)))
 
+(defn query-between [days-ago days field]
+  (let [base-time (t/date->days-ago days-ago)
+        from-time (t/->fs-timestamp base-time)
+        to-time   (t/->fs-timestamp (t/date->days-later days base-time))]
+    (make-xquery [(query-order-by field)
+                  (query-start-at from-time)
+                  (query-end-before to-time)])))
+
 (defn query-range
   "lower以上upper未満.
   rangeによるフィルタリングはさらに他の条件と合わせて複合クエリがつくれない.
@@ -83,12 +99,6 @@
 ;;   (query-filter-in field (range lower upper)))
 
 (def query-one (query-limit 1))
-
-;; xqueryのvectorは末尾から適用されるため
-;; 表記のために上から昇順で作成されたリストはreverseで降順にする.
-(defn make-xquery [v]
-  {:pre [(vector? v)]}
-  (apply comp (reverse v)))
 
 (defn get-in [db doc-path ^String field_name]
   (-> db

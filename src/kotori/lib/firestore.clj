@@ -138,6 +138,12 @@
        ;; id情報も一緒に取得ならばf/pullでMapが帰る.
        json/->clj)))
 
+(defn ids->docs
+  ([db coll-path doc-ids]
+   (-> db
+       (f/coll coll-path)
+       (f/docs doc-ids))))
+
 (defn get-coll-ids
   [db coll-path]
   (-> db

@@ -138,15 +138,16 @@
 (defn select-tweeted-products [{:keys [db limit screen-name]
                                 :or   {limit 5}}]
   {:pre [(string? screen-name)]}
-  (let [q-already-tweeted           (fs/query-between
-                                     35 7 "last_tweet_time")
-        ;; 一応個数制限(仮)
-        ;; q-limit                     (fs/query-limit 100)
-        ;; xquery                      (fs/make-xquery [q-already-tweeted
-        ;;                                              q-limit])
-        products                    (fs/get-id-doc-map db
-                                                       product/coll-path
-                                                       q-already-tweeted)
+  (let [q-already-tweeted
+        ;; 5週間前から1週間分を候補にする.
+        (fs/query-between 35 7 "last_tweet_time")
+        ;; 一応個数制限
+        q-limit                     (fs/query-limit 100)
+        xquery                      (fs/make-xquery [q-already-tweeted
+                                                     q-limit])
+        products                    (fs/get-id-doc-map
+                                     db
+                                     product/coll-path xquery)
         st-exclude-last-quoted-self (make-st-exclude-last-quoted-self
                                      screen-name)
         st-exclude-recently-tweeted-others
@@ -225,6 +226,26 @@
     (into [] (select-tweeted-products
               {:db          (db-prod) :limit 10
                :screen-name (->screen-name "0019")})))
+
+  ;; (def ids-by-name (reduce (fn [acc product]
+  ;;                            (let [screen-name (:last-tweet-name product)
+  ;;                                  tweet-id    (:last-tweet-id product)
+  ;;                                  ids         ((fnil #(get % screen-name) []) acc)]
+  ;;                              (assoc acc screen-name (conj ids tweet-id))
+  ;;                              ))
+  ;;                          {}
+  ;;                          products))
+
+  (def group-by-name (group-by
+                      :last-tweet-name
+                      products))
+
+  (def ids-byname (reduce-kv (fn [m k v]
+                               (assoc m k (map :last-tweet-id v))
+                               )
+                             {}
+                             group-by-name
+                             ))
 
   (count products)
   (map ->print products)

@@ -13,10 +13,9 @@
    [kotori.procedure.strategy :as st]
    [twitter-clj.private :as private]))
 
-(defn make-info [{:keys [screen-name user-id auth-token ct0 proxy]}]
-  (let [creds   (d/->Creds auth-token ct0)
-        proxies (d/map->Proxies proxy)]
-    (d/->Info screen-name user-id creds proxies)))
+(defn make-info [{:keys [screen-name user-id auth-token ct0 proxy-map]}]
+  (d/make-info screen-name user-id
+               {:auth-token auth-token :ct0 ct0} proxy-map))
 
 (defn tweet [{:keys [^d/Info info db text type]}]
   (let [{:keys [user-id creds proxies]}
@@ -31,10 +30,6 @@
       result
       (catch Exception e
         (println "post tweet Failed." (.getMessage e))))))
-
-(defn tweet-random [{:as params}]
-  (let [text (meigen/make-tweet-text)]
-    (tweet (assoc params :text text :type :text))))
 
 (defn qvt->discord! [qvt tweet]
   (let [screen-name        (tweet/->screen-name tweet)
@@ -85,6 +80,14 @@
 (defn tweet-evening
   [{:as params}]
   (tweet (assoc params :text "今日もお疲れ様でした" :type :text)))
+
+(defn tweet-random [{:as params}]
+  (let [text (meigen/make-tweet-text)]
+    (tweet (assoc params :text text :type :text))))
+
+(defn tweet-source [{:keys [^d/Info info db env] :as params}]
+  (let [text (meigen/make-tweet-text)]
+    (tweet (assoc params :text text :type :text))))
 
 (defn select-next-product [{:keys [db screen-name]}]
   {:pre [(s/valid? ::d/screen-name screen-name)]}

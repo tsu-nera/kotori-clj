@@ -4,7 +4,6 @@
    [kotori.procedure.dmm :as dmm]
    [kotori.procedure.kotori :as kotori]
    [kotori.procedure.ping :as ping]
-   [kotori.procedure.strategy :as strategy]
    [reitit.ring :as ring]
    [ring.util.response :as resp]))
 

@@ -78,6 +78,9 @@
   [timestamp]
   (t/java-date timestamp))
 
+(defn fs-now []
+  (t/java-date (now)))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 #_(now)

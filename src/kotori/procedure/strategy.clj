@@ -2,7 +2,6 @@
   "商品選択戦略"
   (:require
    [clojure.string :as str]
-   [firestore-clj.core :as f]
    [kotori.domain.dmm.core :as dmm]
    [kotori.domain.dmm.product :as product]
    [kotori.domain.tweet.core :as tweet]

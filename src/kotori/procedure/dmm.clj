@@ -78,7 +78,7 @@
   2. Firestoreへ 情報を保存."
   [{:keys [db cid] :as m}]
   (let [product (get-product m)
-        ts      (time/->fs-timestamp (time/now))
+        ts      (time/fs-now)
         data    (-> product
                     product/->data)
         path    (fs/doc-path product/coll-path cid)]
@@ -94,7 +94,7 @@
   [{:keys [db] :as params}]
   (let [products   (get-products-bulk params)
         count      (count products)
-        ts         (time/->fs-timestamp (time/now))
+        ts         (time/fs-now)
         xf         (comp (map product/->data)
                          (map #(product/set-crawled-timestamp ts %))
                          (map-indexed product/set-rank-popular)
@@ -141,7 +141,7 @@
                                    (product->campaign)
                                    (campaign->id))
         campaign-products-path (make-campaign-products-path id)
-        ts                     (time/->fs-timestamp (time/now))
+        ts                     (time/fs-now)
         batch-docs             (->>
                                 products
                                 (map product/->data)
@@ -184,7 +184,7 @@
                   :title "新生活応援30％OFF第6弾"}))
 
   (fs/set! (db) dmm-doc-path {:products-crawled-time
-                              (time/->fs-timestamp (time/now))})
+                              (time/fs-now)})
   )
 
 (comment

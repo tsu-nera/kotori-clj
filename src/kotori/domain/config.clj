@@ -1,11 +1,9 @@
 (ns kotori.domain.config
   (:require
-   [kotori.domain.discord :as discord]
-   [kotori.domain.source.meigen :as meigen]))
+   [kotori.domain.discord :as discord]))
 
 (defn download-all! [db]
   (doto db
-    (meigen/download!)
     (discord/download!)))
 
 (comment

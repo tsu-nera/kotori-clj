@@ -16,7 +16,7 @@
     (->> data
          (into {})
          (json/->clj)
-         (io/dump-edn file-path))))
+         (io/dump-edn! file-path))))
 
 (comment
   (require '[firebase :refer [db-prod]])

@@ -40,8 +40,8 @@
    "," (map #(:name %) (->genres raw))))
 
 (defn- ->timestamp
-  ([] (time/->fs-timestamp (time/now)))
-  ([_] (time/->fs-timestamp (time/now))))
+  ([] (time/fs-now))
+  ([_] (time/fs-now)))
 
 (defn- sample-movie? [raw]
   (contains? raw :sampleMovieURL))

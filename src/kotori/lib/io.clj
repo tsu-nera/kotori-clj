@@ -16,8 +16,9 @@
       slurp
       edn/read-string))
 
-(defn dump-edn [file-path data]
+(defn dump-edn! [file-path data]
   (let [save-data (with-out-str (pprint data))]
-    (-> file-path
-        io/resource
+    ;; io/resouceはfileが存在しないときはnilを返す.
+    ;; fileが存在しない場合は新規作成したいので io/resouceは使わない.
+    (-> (str "resources/" file-path)
         (spit save-data))))

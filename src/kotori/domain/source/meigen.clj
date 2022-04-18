@@ -1,12 +1,15 @@
 (ns kotori.domain.source.meigen
   (:require
+   [kotori.domain.source.core :as core]
    [kotori.lib.firestore :as fs]
    [kotori.lib.io :as io]))
 
 (def coll-path "sources/source_0001/meigens")
 (def file-path "sources/meigen.edn")
 
-(def source (io/load-edn file-path))
+(def label "meigen")
+(def info (core/->info label))
+(def source (core/->source label))
 
 (defn pick-random
   ([]
@@ -22,7 +25,7 @@
 
 (defn download! [db]
   (let [docs (fs/get-docs-with-assoc-id db coll-path)]
-    (io/dump-edn file-path docs)))
+    (io/dump-edn! file-path docs)))
 
 (comment
   ;;;
@@ -38,5 +41,7 @@
 
   ;;;
   (download! (db-dev))
-   ;;;
+
+  (core/upload! (db-dev) label)
+  ;;;
   )

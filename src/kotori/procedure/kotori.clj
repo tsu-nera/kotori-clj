@@ -103,7 +103,7 @@
 (comment
   ;;;
   (require '[firebase :refer [db]]
-           '[devtools :refer [env kotori-info ->screen-name]])
+           '[devtools :refer [env kotori-info ->screen-name info-dev]])
 
   (def params {:db (db) :info @info-dev})
 

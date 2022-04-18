@@ -22,7 +22,7 @@
 (s/def ::proxy-user string?)
 (s/def ::proxy-pass string?)
 (s/def ::proxy
-  (s/keys :req-un [::proxy-host ::proxy-port ::proxy-user ::proxy-pass]))
+  (s/keys :opt-un [::proxy-host ::proxy-port ::proxy-user ::proxy-pass]))
 
 (s/def ::screen-name string?)
 (s/def ::user-id string?)
@@ -30,9 +30,13 @@
   (s/keys :req-un [::screen-name ::user-id ::cred]
           :opt-un [::proxy]))
 
+(let [proxy (s/conform ::proxy (map->Proxy))]
+  proxy)
+
 (defn make-info [screen-name user-id cred-map proxy-map]
-  (let [cred  (s/conform ::cred (map->Cred cred-map))
-        proxy (s/conform ::proxy (map->Proxy proxy-map))]
+  (let [cred       (s/conform ::cred (map->Cred cred-map))
+        test-proxy (s/conform ::proxy (map->Proxy proxy-map))
+        proxy      (if-not (s/invalid? test-proxy) test-proxy {})]
     (s/conform ::info (->Info screen-name user-id cred proxy))))
 
 (defn fs->cred

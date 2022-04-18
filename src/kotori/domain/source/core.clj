@@ -5,14 +5,14 @@
    [kotori.lib.time :as time]))
 
 (def coll-path "sources")
+(def dir-path coll-path)
+(def info-path (str dir-path "/" "info.edn"))
 
 (defn ->source-path [source-id]
   (str coll-path "/" source-id))
+
 (defn ->items-path [source-id]
   (str (->source-path source-id) "/items"))
-
-(def dir-path "sources")
-(def info-path (str dir-path "/" "info.edn"))
 
 (defn ->source [name]
   (let [file-path (str dir-path "/" name ".edn")]

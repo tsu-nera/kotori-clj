@@ -30,9 +30,6 @@
   (s/keys :req-un [::screen-name ::user-id ::cred]
           :opt-un [::proxy]))
 
-(let [proxy (s/conform ::proxy (map->Proxy))]
-  proxy)
-
 (defn make-info [screen-name user-id cred-map proxy-map]
   (let [cred       (s/conform ::cred (map->Cred cred-map))
         test-proxy (s/conform ::proxy (map->Proxy proxy-map))

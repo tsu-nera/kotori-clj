@@ -18,9 +18,9 @@
                {:auth-token auth-token :ct0 ct0} proxy-map))
 
 (defn tweet [{:keys [^d/Info info db text type]}]
-  (let [{:keys [user-id creds proxies]}
+  (let [{:keys [user-id cred proxy]}
         info
-        result   (private/create-tweet creds proxies text)
+        result   (private/create-tweet cred proxy text)
         tweet-id (:id_str result)
         doc-path (post/->doc-path user-id tweet-id)
         data     (post/->data result type)]

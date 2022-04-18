@@ -8,7 +8,7 @@
     (let [label (:proxy-label v)
           new-v (if label
                   (assoc v :proxy (label proxies))
-                  v)]
+                  (assoc v :proxy {}))]
       (assoc m k new-v))))
 
 (defmethod ig/init-key ::by-ids [_ {:keys [path proxies]}]

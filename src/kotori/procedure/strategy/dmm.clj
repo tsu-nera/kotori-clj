@@ -1,4 +1,4 @@
-(ns kotori.procedure.strategy
+(ns kotori.procedure.strategy.dmm
   "商品選択戦略"
   (:require
    [clojure.string :as str]

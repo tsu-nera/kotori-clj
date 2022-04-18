@@ -10,12 +10,16 @@
    [kotori.lib.discord :as discord]
    [kotori.lib.firestore :as fs]
    [kotori.procedure.dmm :as dmm]
-   [kotori.procedure.strategy :as st]
+   [kotori.procedure.strategy.core :as st]
+   [kotori.procedure.strategy.dmm :as st-dmm]
    [twitter-clj.private :as private]))
 
 (defn make-info [{:keys [screen-name user-id auth-token ct0 proxy-map]}]
   (d/make-info screen-name user-id
                {:auth-token auth-token :ct0 ct0} proxy-map))
+
+(defn make-text [source strategy builder]
+  (builder (strategy source)))
 
 (defn tweet [{:keys [^d/Info info db text type]}]
   (let [{:keys [user-id cred proxy]}
@@ -45,7 +49,7 @@
     (discord/notify! :kotori-qvt message)))
 
 (defn select-next-qvt-product [{:as params}]
-  (st/->next-qvt (first (st/select-tweeted-products params))))
+  (st-dmm/->next-qvt (first (st-dmm/select-tweeted-products params))))
 
 (defn tweet-quoted-video
   "動画引用ツイート"
@@ -81,24 +85,30 @@
   [{:as params}]
   (tweet (assoc params :text "今日もお疲れ様でした" :type :text)))
 
-(defn tweet-random [{:as params}]
-  (let [text (meigen/make-tweet-text)]
-    (tweet (assoc params :text text :type :text))))
-
-(defn tweet-source [{:keys [^d/Info info db env] :as params}]
-  (let [text (meigen/make-tweet-text)]
+(defn tweet-random [{:keys [^d/Info info db env] :as params}]
+  (let [source       meigen/source
+        strategy     st/pick-random
+        text-builder meigen/build-text
+        text         (make-text source strategy text-builder)]
     (tweet (assoc params :text text :type :text))))
 
 (defn select-next-product [{:keys [db screen-name]}]
   {:pre [(s/valid? ::d/screen-name screen-name)]}
-  (st/->next (first (st/select-scheduled-products
-                     {:db db :screen-name screen-name}))))
+  (st-dmm/->next (first (st-dmm/select-scheduled-products
+                         {:db db :screen-name screen-name}))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (defn dummy [{:keys [^d/Info info db text]}]
   (assoc info :text text))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(comment
+  (let [source   meigen/source
+        strategy rand-nth]
+    (strategy source))
+
+  )
 
 (comment
   ;;;

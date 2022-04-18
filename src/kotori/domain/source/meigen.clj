@@ -9,18 +9,19 @@
 
 (def label "meigen")
 (def info (core/->info label))
+
 (def source (core/->source label))
 
-(defn pick-random
-  ([]
-   (rand-nth source))
-  ([db]
-   (let [coll-ids (fs/get-coll-ids db coll-path)
-         doc-id   (rand-nth coll-ids)]
-     (fs/get-doc db coll-path doc-id))))
+#_(defn pick-random
+    ([]
+     (rand-nth source))
+    ([db]
+     (let [coll-ids (fs/get-coll-ids db coll-path)
+           doc-id   (rand-nth coll-ids)]
+       (fs/get-doc db coll-path doc-id))))
 
-(defn make-tweet-text []
-  (let [{content :content, author :author} (pick-random)]
+(defn build-text [data]
+  (let [{content :content, author :author} data]
     (str content "\n\n" author)))
 
 (defn download! [db]
@@ -30,12 +31,7 @@
 (comment
   ;;;
   (require '[firebase :refer [db-dev]])
-  ;;;
-  (pick-random)
-  (pick-random (db-dev))
 
-  (make-tweet-text)
-  ;;;
   (def doc-id (rand-nth (fs/get-coll-ids (db-dev) coll-path)))
   (fs/get-doc (db-dev) coll-path doc-id)
 

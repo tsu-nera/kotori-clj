@@ -3,6 +3,7 @@
   (:refer-clojure :exclude [proxy])
   (:require
    [integrant.repl.state :refer [config system]]
+   [kotori.domain.dmm.core :as dmm]
    [kotori.procedure.dmm :refer [get-product get-products]]
    [kotori.procedure.kotori :refer [make-info]]
    [kotori.service.firebase :refer [get-db]]
@@ -83,6 +84,9 @@
 
 (defn ->user-id [code]
   (:user-id (kotori-info code)))
+
+(defn ->dmm-url [cid]
+  (dmm/->url cid))
 
 (defn get-dmm-product [cid]
   (get-product {:env (env) :cid cid}))

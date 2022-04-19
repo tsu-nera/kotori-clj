@@ -5,22 +5,9 @@
    [kotori.lib.firestore :as fs]))
 
 (def label "qvt_0001")
-(def file-path "sources/qvt/qvt_0001.edn")
 
 (def info (core/->info label))
 (def source (core/->source label))
-
-#_(def source
-    ["やべーよ!"
-     "超やべーよ!"
-     "まじやべーよ!"
-     "くそやべーよ!"
-     "クッソやべーよ！"
-     "ぱねーよ!"
-     "まじぱねーよ!"
-     "女神かよ！"
-     "天使かよ！"
-     "奇跡かよ！"])
 
 (defn build-text [qvt data]
   (let [url  (:url qvt)

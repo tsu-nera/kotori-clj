@@ -30,9 +30,28 @@
     (fs/assoc! db source-path "id" source-id)
     source-id))
 
+(defn source-text->items [source]
+  (map (fn [text] {:text text}) source))
+
 (defn- register-items! [db source-id items]
   (let [items-path (->items-path source-id)]
     (fs/batch-add! db items-path items)))
+
+(defn download-info! [db]
+  (let [id-map (fs/coll->id-map db coll-path :label)]
+    (io/dump-edn! info-path id-map)))
+
+(defn download-items!
+  ([db label]
+   (download-items! db label (str "sources/" label ".edn")))
+  ([db label file-path]
+   (let [info       (->info (keyword label))
+         items-path (->items-path (:id info))
+         docs       (fs/get-docs-with-assoc-id db items-path)
+         data       (reduce
+                     (fn [acc doc]
+                       (conj acc doc)) [] docs)]
+     (io/dump-edn! file-path data))))
 
 (defn register!
   "テキストの配列からソースをFirestoreに登録する.
@@ -58,25 +77,6 @@
          source)
     (fs/assoc! db source-path "update_time" (time/fs-now))))
 
-(defn download-info! [db]
-  (let [docs (fs/get-docs db coll-path)
-        data (reduce
-              (fn [acc doc]
-                (assoc acc (:label doc) doc)) {} docs)]
-    (io/dump-edn! info-path data)))
-
-(defn download-items!
-  ([db label]
-   (download-items! db label (str "sources/" label ".edn")))
-  ([db label file-path]
-   (let [info       (->info label)
-         items-path (->items-path (:id info))
-         docs       (fs/get-docs-with-assoc-id db items-path)
-         data       (reduce
-                     (fn [acc doc]
-                       (conj acc doc)) [] docs)]
-     (io/dump-edn! file-path data))))
-
 ;; (defn download-all!
 ;;   [db]
 ;;   (doto db
@@ -94,9 +94,27 @@
   (def result (register-items! (db) source-id items))
 
   (download-info! (db))
-  (->info "test")
+  (->info :test)
   (download-items! (db) "test")
   (register! (db) "test" items)
+  )
+
+(comment
+  (def source
+    ["やべーよ!"
+     "超やべーよ!"
+     "まじやべーよ!"
+     "くそやべーよ!"
+     "クッソやべーよ！"
+     "ぱねーよ!"
+     "まじぱねーよ!"
+     "女神かよ！"
+     "天使かよ！"
+     "奇跡かよ！"])
+
+  (def items (source-text->items source))
+  (register! (db) "qvt_0001" items)
+
   )
 
 (comment

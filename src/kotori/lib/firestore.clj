@@ -288,6 +288,18 @@
         .getData
         (contains? field))))
 
+(defn coll->id-map
+  ([db coll-path]
+   (coll->id-map db coll-path :id))
+  ([db coll-path id-key]
+   (let [docs (get-docs-with-assoc-id db coll-path)]
+     (reduce
+      (fn [acc doc]
+        (clojure.core/assoc
+         acc (keyword (get doc id-key)) doc)) {} docs))))
+
+#_ (defn fs->edn [db coll-path file-path])
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (comment

@@ -1,8 +1,6 @@
 (ns kotori.domain.source.meigen
   (:require
-   [kotori.domain.source.core :as core]
-   [kotori.lib.firestore :as fs]
-   [kotori.lib.io :as io]))
+   [kotori.domain.source.core :as core]))
 
 (def label "meigen")
 (def file-path "sources/meigen.edn")
@@ -23,19 +21,9 @@
   (let [{content :content, author :author} data]
     (str content "\n\n" author)))
 
-(defn download! [db]
-  (let [docs (fs/get-docs-with-assoc-id db coll-path)]
-    (io/dump-edn! file-path docs)))
-
 (comment
   ;;;
   (require '[firebase :refer [db-dev]])
-
-  (def doc-id (rand-nth (fs/get-coll-ids (db-dev) coll-path)))
-  (fs/get-doc (db-dev) coll-path doc-id)
-
-  ;;;
-  (download! (db-dev))
 
   (core/upload! (db-dev) label)
   ;;;

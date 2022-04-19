@@ -15,7 +15,8 @@
 
 (defn ->info [label]
   (let [info (io/load-edn info-path)]
-    (get info label)))
+    (get info (keyword label))))
 
 (defn ->items-path [source-id]
   (str (->source-path source-id) "/items"))
+

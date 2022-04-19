@@ -15,9 +15,9 @@
     (fs/assoc! db source-path "id" source-id)
     source-id))
 
-(defn- register-items! [db source-id source]
+(defn- register-items! [db source-id items]
   (let [items-path (src/->items-path source-id)]
-    (fs/batch-add! db items-path source)))
+    (fs/batch-add! db items-path items)))
 
 (defn download-info! [db]
   (let [id-map (fs/coll->id-map db src/coll-path :label)]
@@ -40,11 +40,11 @@
   1. Firestore /sourcesにdocを新規作成. doc-idは自動生成.
   2. /sources/{id}/itemsにdatasetsを格納. dataごとにidを自動生成.
   3. source-idとdata-idを取得してローカルファイルに保存."
-  [db label source]
+  [db label items]
   (let [ts        (time/fs-now)
         source-id (register-info db label ts)]
     (doto db
-      (register-items! source-id source)
+      (register-items! source-id items)
       (download-info!)
       (download-items! label))))
 
@@ -62,7 +62,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (comment
-  (register! (db) "qvt_dev" (item/->source item/qvt-dev))
+  (register! (db) "qvt_0003" (item/->items item/qvt-0003))
   )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

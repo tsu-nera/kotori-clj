@@ -138,7 +138,7 @@
   (def result (tweet-quoted-video {:db           (db)
                                    :env          (env)
                                    :info         info
-                                   :source-label "qvt_0003"}))
+                                   :source-label "qvt_dev"}))
  ;;;
   (def screen-name (->screen-name "0003"))
   (def qvt (select-next-qvt-product {:db          (db)

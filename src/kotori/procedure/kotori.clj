@@ -53,12 +53,12 @@
 
 (defn tweet-quoted-video
   "動画引用ツイート"
-  [{:keys [^d/Info info db env] :as params}]
+  [{:keys [^d/Info info db env source-label] :as params}]
   (let [screen-name  (:screen-name info)
         qvt          (select-next-qvt-product
                       {:db db :screen-name screen-name})
         cid          (:cid qvt)
-        source       qvt/source
+        source       (qvt/get-source source-label)
         strategy     st/pick-random
         text-builder (partial qvt/build-text qvt)
         text         (make-text source strategy text-builder)
@@ -66,18 +66,17 @@
         crawled?     (:craweled? qvt)
         tweet-params (assoc params :text text :type :qvt)
         result       (tweet tweet-params)]
-    (do
-      ;; DMM商品情報 collectionを更新.
-      (->> result
-           (qvt/->data qvt)
-           ;; dmm/products/{cid} の情報を更新
-           (fs/update! db doc-path))
-      ;; crawledされてない場合はここで追加で処理をする.
-      ;; 通常はcrawledされているのでtoolで追加した場合がこうなる.
-      ;; そんなに時間かからないと思うので同期処理
-      (when-not crawled?
-        (dmm/crawl-product! {:db db :env env :cid cid}))
-      (qvt->discord! qvt result))
+    ;; DMM商品情報 collectionを更新.
+    (->> result
+         (qvt/->data qvt)
+         ;; dmm/products/{cid} の情報を更新
+         (fs/update! db doc-path))
+    ;; crawledされてない場合はここで追加で処理をする.
+    ;; 通常はcrawledされているのでtoolで追加した場合がこうなる.
+    ;; そんなに時間かからないと思うので同期処理
+    (when-not crawled?
+      (dmm/crawl-product! {:db db :env env :cid cid}))
+    (qvt->discord! qvt result)
     result))
 
 (defn tweet-morning
@@ -136,9 +135,10 @@
 
   ;;;;;;;;;;;;;
   (def info (kotori-info "0003"))
-  (def result (tweet-quoted-video {:db   (db)
-                                   :env  (env)
-                                   :info info}))
+  (def result (tweet-quoted-video {:db           (db)
+                                   :env          (env)
+                                   :info         info
+                                   :source-label "qvt_0003"}))
  ;;;
   (def screen-name (->screen-name "0003"))
   (def qvt (select-next-qvt-product {:db          (db)

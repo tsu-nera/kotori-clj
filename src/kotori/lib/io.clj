@@ -10,11 +10,14 @@
 (defn input-stream [args]
   (io/input-stream args))
 
+(defn exists [file-path]
+  (.exists (io/as-file file-path)))
+
 (defn load-edn [file-path]
-  (-> file-path
-      resource
-      slurp
-      edn/read-string))
+  (when-let [file (resource file-path)]
+    (-> file
+        slurp
+        edn/read-string)))
 
 (defn dump-edn! [file-path data]
   (let [save-data (with-out-str (pprint data))]

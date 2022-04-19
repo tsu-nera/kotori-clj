@@ -4,14 +4,19 @@
    [kotori.domain.tweet.core :as tweet]
    [kotori.lib.firestore :as fs]))
 
-(def label "qvt_0001")
+(def default "qvt_0001")
 
-(def info (core/->info label))
-(def source (core/->source label))
+(defn get-source
+  "与えられたラベル名に対応するソースを返す.
+  ラベル名が未知のときはdefault(qvt_0001)を返す."
+  [label]
+  (or
+   (core/->source label)
+   (core/->source default)))
 
 (defn build-text [qvt data]
   (let [url  (:url qvt)
-        text data]
+        text (:text data)]
     (str text "\n" url)))
 
 ;; TODO とりあえずuser-idは必要なユースケースが現れたら対応.
@@ -37,3 +42,11 @@
      "last_quoted_name"     screen-name
      "last_quoted_tweet_id" tweet-id
      quoted-tweet-key       quoted-tweet-val}))
+
+;;;;;;;;;;;;;;;;;
+
+(comment
+
+  (core/->source default)
+
+  )

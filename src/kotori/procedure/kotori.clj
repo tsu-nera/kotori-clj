@@ -58,7 +58,10 @@
         qvt          (select-next-qvt-product
                       {:db db :screen-name screen-name})
         cid          (:cid qvt)
-        text         (qvt/->tweet-text qvt)
+        source       qvt/source
+        strategy     st/pick-random
+        text-builder (partial qvt/build-text qvt)
+        text         (make-text source strategy text-builder)
         doc-path     (product/doc-path cid)
         crawled?     (:craweled? qvt)
         tweet-params (assoc params :text text :type :qvt)
@@ -104,9 +107,18 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (comment
-  (let [source   meigen/source
-        strategy rand-nth]
-    (strategy source))
+  (require '[firebase :refer [db]]
+           '[devtools :refer [->screen-name]])
+
+  (def screen-name (->screen-name "0003"))
+  (def )
+
+  (let [qvt          (select-next-qvt-product {:db          (db)
+                                               :screen-name screen-name})
+        source       qvt/source
+        strategy     st/pick-random
+        text-builder (partial qvt/build-text qvt)]
+    (make-text source strategy text-builder))
 
   )
 
@@ -127,8 +139,7 @@
   (def result (tweet-quoted-video {:db   (db)
                                    :env  (env)
                                    :info info}))
-
-  ;;;
+ ;;;
   (def screen-name (->screen-name "0003"))
   (def qvt (select-next-qvt-product {:db          (db)
                                      :screen-name screen-name}))

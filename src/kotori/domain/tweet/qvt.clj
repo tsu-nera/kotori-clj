@@ -3,7 +3,7 @@
    [kotori.domain.tweet.core :as tweet]
    [kotori.lib.firestore :as fs]))
 
-(def source-text
+(def source
   ["やべーよ!"
    "超やべーよ!"
    "まじやべーよ!"
@@ -14,9 +14,9 @@
    "天使かよ！"
    "奇跡かよ！"])
 
-(defn ->tweet-text [qvt]
+(defn build-text [qvt data]
   (let [url  (:url qvt)
-        text (rand-nth source-text)]
+        text data]
     (str text "\n" url)))
 
 ;; TODO とりあえずuser-idは必要なユースケースが現れたら対応.

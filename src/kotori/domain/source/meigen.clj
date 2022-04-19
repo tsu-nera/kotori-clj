@@ -4,10 +4,9 @@
    [kotori.lib.firestore :as fs]
    [kotori.lib.io :as io]))
 
-(def coll-path "sources/source_0001/meigens")
+(def label "meigen")
 (def file-path "sources/meigen.edn")
 
-(def label "meigen")
 (def info (core/->info label))
 
 (def source (core/->source label))

@@ -216,6 +216,14 @@
         (f/doc doc-path)
         (f/set! data))))
 
+(defn add!
+  "与えられたデータをFirestoreに書き込む. IDは自動採番."
+  [db coll-path map]
+  (let [data (json/->json map)]
+    (-> db
+        (f/coll coll-path)
+        (f/add! data))))
+
 (defn set!
   "与えられたデータをFirestoreに書き込む(merge)."
   [db doc-path map]
@@ -249,6 +257,15 @@
     (doseq [{:keys [path data]} batch-docs]
       (set db b path data))
     (f/commit! b)))
+
+(defn batch-add!
+  "バッチ書き込みはaddをサポートしていない(set,udpate,deleteのみ).
+  この 関数ではデータの数だけadd!をして結果をvectorで返すのみ.
+  mapは遅延シーケンスを返すのでintoで評価を強制しないといけない."
+  [db coll-path docs]
+  (into [] (map
+            #(add! db coll-path (json/->json %))
+            docs)))
 
 ;; Documentの存在判定はDocumentSnapshotから.
 ;; 言い換えれば通信(get)によって実際に取得しないとわからない.

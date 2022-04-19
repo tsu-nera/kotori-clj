@@ -1,6 +1,6 @@
 (ns tools.source
   (:require
-   [firebase :refer [db]]
+   [firebase :refer [db db-dev db-prod]]
    [kotori.domain.source.core :as src]
    [kotori.lib.firestore :as fs]
    [kotori.lib.io :as io]
@@ -8,7 +8,7 @@
    [tools.item :as item]))
 
 (defn- register-info [db label ts]
-  (let [info        {:label label :created-at ts :updated-at ts}
+  (let [info        {:label label :created-time ts :updated-time ts}
         source-id   (-> (fs/add! db src/coll-path info)
                         .getId)
         source-path (src/->source-path source-id)]
@@ -50,19 +50,23 @@
 
 (defn upload! [db label]
   (let [source      (src/->source label)
-        source-id   (:id (src/->info label))
+        info        (src/->info label)
+        source-id   (:id info)
         source-path (src/->source-path source-id)
         items-path  (src/->items-path source-id)]
+    (fs/set! db source-path
+             (assoc info :updated-time (time/fs-now)))
     (map (fn [data]
            (let [doc-path (str items-path "/" (:id data))]
              (fs/set! db doc-path data)))
-         source)
-    (fs/assoc! db source-path "update_time" (time/fs-now))))
+         source)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (comment
-  (register! (db) "qvt_0003" (item/->items item/qvt-0003))
+  (register! (db-dev) "qvt_0003" (item/->items item/qvt-0003))
+
+  (upload! (db-prod) "meigen")
   )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -72,7 +76,7 @@
   (def result (register-items! (db) source-id item/qvt-dev))
 
   (download-info! (db))
-  (src/->info :test)
+  (src/->info "qvt_dev")
   (download-items! (db) "test")
   (register! (db) "test" item/qvt-dev)
   )

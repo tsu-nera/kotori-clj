@@ -83,6 +83,6 @@
 
   (app {:request-method :post
         :uri            "/api/kotori/tweet-quoted-video"
-        :params         params })
+        :params         params})
 
   )

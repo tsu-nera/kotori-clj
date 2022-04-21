@@ -1,4 +1,4 @@
-(ns kotori.procedure.strategy.dmm
+(ns kotori.procedure.strategy
   "商品選択戦略"
   (:require
    [clojure.string :as str]
@@ -138,10 +138,10 @@
                                 :or   {limit 5}}]
   {:pre [(string? screen-name)]}
   (let [q-already-tweeted
-        ;; 5週間前から1週間分を候補にする.
-        (fs/query-between 35 7 "last_tweet_time")
+        ;; 40日前から10日分を候補にする.
+        (fs/query-between 40 10 "last_tweet_time")
         ;; 一応個数制限
-        q-limit                     (fs/query-limit 100)
+        q-limit                     (fs/query-limit 200)
         xquery                      (fs/make-xquery [q-already-tweeted
                                                      q-limit])
         products                    (fs/get-id-doc-map
@@ -213,6 +213,8 @@
      ;; :genres  genres
      ;; :last-crawled-time (:last-crawled-time raw)
      ;; :raw             raw
+     :last-tweet-id   (:last-tweet-id raw)
+     :last-tweet-name (:last-tweet-name raw)
      :last-tweet-time (:last-tweet-time raw)}))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -225,26 +227,6 @@
     (into [] (select-tweeted-products
               {:db          (db-prod) :limit 10
                :screen-name (->screen-name "0019")})))
-
-  ;; (def ids-by-name (reduce (fn [acc product]
-  ;;                            (let [screen-name (:last-tweet-name product)
-  ;;                                  tweet-id    (:last-tweet-id product)
-  ;;                                  ids         ((fnil #(get % screen-name) []) acc)]
-  ;;                              (assoc acc screen-name (conj ids tweet-id))
-  ;;                              ))
-  ;;                          {}
-  ;;                          products))
-
-  (def group-by-name (group-by
-                      :last-tweet-name
-                      products))
-
-  (def ids-byname (reduce-kv (fn [m k v]
-                               (assoc m k (map :last-tweet-id v))
-                               )
-                             {}
-                             group-by-name
-                             ))
 
   (count products)
   (map ->print products)

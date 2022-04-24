@@ -5,6 +5,7 @@
    [kotori.domain.dmm.product :as product]
    [kotori.lib.firestore :as fs]
    [kotori.procedure.dmm :as dmm]
+   [kotori.procedure.strategy.dmm :as st]
    [kotori.procedure.tweet.post :as post]))
 
 (defn make-dmm-tweet [screen-name post]
@@ -67,7 +68,26 @@
        (map (fn [[path tweet]]
               (update-with-recovery! db path tweet)))))
 
+(defn tweeted-products->cids [db screen-name limit]
+  (let [products (st/select-tweeted-products
+                  {:db db :screen-name screen-name :limit limit})
+        cids     (map #(:cid %) products)]
+    cids))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(comment
+  (require '[firebase :refer [db-dev db-prod]]
+           '[devtools :refer [kotori-info]])
+
+  (def info (kotori-info "0019"))
+  (def screen-name (:screen-name info))
+
+  (def products (st/select-tweeted-products
+                 {:db (db-prod) :screen-name screen-name :limit 100}))
+
+  (tweeted-products->cids (db-prod) screen-name 100)
+
+  )
 
 (comment  ;;;
   (require '[firebase :refer [db-dev db-prod]]

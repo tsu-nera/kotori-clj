@@ -27,6 +27,15 @@
         (->items)
         (first))))
 
+(defn get-product-by-cids
+  "APIの並列実行をする.呼び出し回数制限もあるためリストのサイズに注意"
+  [{:keys [cids env]}]
+  (let [products (->> cids
+                      (map (fn [cid] {:env env :cid cid}))
+                      (pmap get-product)
+                      (doall))]
+    (into [] products)))
+
 (defn get-products
   "1回のget requestで最大100つの情報が取得できる.
   それ以上取得する場合はoffsetによる制御が必要."
@@ -172,6 +181,9 @@
   (require '[firestore-clj.core :as f])
 
   (def product (get-product {:cid "ssis00337" :env (env)}))
+  (def products (get-product-bulk {:cids ["ssis00337" "hnd00967"]
+                                   :env  (env)}))
+
   (def products (get-products {:env (env) :hits 10}))
   (def products (get-products-bulk {:env (env) :hits 450}))
   (count products)

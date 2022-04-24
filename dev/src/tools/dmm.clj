@@ -77,15 +77,19 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (comment
   (require '[firebase :refer [db-dev db-prod]]
-           '[devtools :refer [kotori-info]])
+           '[devtools :refer [kotori-info env]])
 
   (def info (kotori-info "0019"))
   (def screen-name (:screen-name info))
 
   (def products (st/select-tweeted-products
-                 {:db (db-prod) :screen-name screen-name :limit 100}))
+                 {:db (db-prod) :screen-name screen-name :limit 10}))
 
-  (tweeted-products->cids (db-prod) screen-name 100)
+  (def cids (tweeted-products->cids (db-prod) screen-name 10))
+
+  (def products (dmm/get-products-by-cids {:cids cids :env (env)}))
+  (def result (dmm/crawl-products-by-cids! {:cids cids
+                                            :db   (db-prod) :env (env)}))
 
   )
 

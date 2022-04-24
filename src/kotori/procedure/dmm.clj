@@ -27,7 +27,7 @@
         (->items)
         (first))))
 
-(defn get-product-by-cids
+(defn get-products-by-cids
   "APIの並列実行をする.呼び出し回数制限もあるためリストのサイズに注意"
   [{:keys [cids env]}]
   (let [products (->> cids
@@ -94,6 +94,23 @@
     (fs/set! db path data)
     (fs/set! db path {:last-crawled-time ts})
     data))
+
+;; ランキングとdmm collへのtimestamp書き込みはしない.
+(defn crawl-products-by-cids!
+  [{:keys [db] :as params}]
+  (let [products   (get-products-by-cids params)
+        count      (count products)
+        ts         (time/fs-now)
+        xf         (comp (map product/->data)
+                         (map #(product/set-crawled-timestamp ts %))
+                         (map json/->json))
+        docs       (transduce xf conj products)
+        batch-docs (fs/make-batch-docs
+                    "cid" product/coll-path docs)]
+    (fs/batch-set! db batch-docs)
+    {:count     count
+     :timestamp ts
+     :products  docs}))
 
 ;; TODO 500以上の書き込み対応.
 ;; firestroreのbatch writeの仕様で一回の書き込みは500まで.

@@ -138,10 +138,10 @@
                                 :or   {limit 5}}]
   {:pre [(string? screen-name)]}
   (let [q-already-tweeted
-        ;; 40日前から10日分を候補にする.
-        (fs/query-between 40 10 "last_tweet_time")
+        ;; 42日前から14日分を候補にする.
+        (fs/query-between 42 14 "last_tweet_time")
         ;; 一応個数制限
-        q-limit                     (fs/query-limit 200)
+        q-limit                     (fs/query-limit 300)
         xquery                      (fs/make-xquery [q-already-tweeted
                                                      q-limit])
         products                    (fs/get-id-doc-map
@@ -226,7 +226,7 @@
 
   (def products
     (into [] (select-tweeted-products
-              {:db          (db-prod) :limit 10
+              {:db          (db-prod) :limit 300
                :screen-name (->screen-name "0019")})))
 
   (count products)

@@ -73,7 +73,7 @@
          doc-path     (product/doc-path cid)
          crawled?     (:craweled? qvt)
          tweet-params (assoc params :text text :type :qvt)]
-     (if qvt
+     (if (and qvt (:url qvt))
        (when-let [result (tweet tweet-params)]
          ;; DMM商品情報 collectionを更新.
          (->> result
@@ -88,7 +88,7 @@
          (qvt->discord! qvt result)
          result)
        (do
-         (println "next quoted video not exists!")
+         (println "quoted video url not found.")
          {})))))
 
 (defn tweet-morning
@@ -158,7 +158,13 @@
                                      :screen-name screen-name}))
   (def qvt-data (qvt/->doc qvt result))
  ;;;
-  (def qvt (get-qvt {:db (db-dev) :cid "ssis00015"}))
+  (def cid "mrss00085")
+  (def qvt (get-qvt {:db (db-dev) :cid cid}))
+
+  (def result (tweet-quoted-video {:db           (db-dev)
+                                   :env          (env)
+                                   :info         info
+                                   :source-label "qvt_0003"} qvt))
  ;;;
   )
 

@@ -39,7 +39,8 @@
 (defn ->quoted-video-url
   "動画引用ツイート用URL"
   [screen-name tweet-id]
-  (str (->url screen-name tweet-id) "/video/1"))
+  (when (and screen-name tweet-id)
+    (str (->url screen-name tweet-id) "/video/1")))
 
 (defn ->created-time [tweet]
   (parse-timestamp (:created_at tweet)))

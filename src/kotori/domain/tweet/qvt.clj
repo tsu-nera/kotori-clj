@@ -23,7 +23,7 @@
 
 ;; TODO とりあえずuser-idは必要なユースケースが現れたら対応.
 ;; それまえはコメントアウトしておく.
-(defn ->data [qvt tweet]
+(defn ->doc [qvt tweet]
   (let [screen-name      (tweet/->screen-name tweet)
         tweet-id         (tweet/->id tweet)
         tweet-time       (tweet/->created-time tweet)
@@ -44,6 +44,26 @@
      "last_quoted_name"     screen-name
      "last_quoted_tweet_id" tweet-id
      quoted-tweet-key       quoted-tweet-val}))
+
+(defn doc-> [data]
+  (let [cid         (:cid data)
+        title       (:title data)
+        tweet-id    (:last-tweet-id data)
+        screen-name (:last-tweet-name data)
+        tweet-time  (:last-tweet-time data)
+        crawled?    (contains? data :last-crawled-time)
+        summary     (:summary data)
+        description (:description data)
+        url         (tweet/->quoted-video-url screen-name tweet-id)]
+    {:url         url
+     :cid         (or cid :not-yet-crawled)
+     :title       (or title :not-yet-crawled)
+     :tweet-id    tweet-id
+     :screen-name screen-name
+     :tweet-time  tweet-time
+     :summary     summary
+     :description description
+     :crawled?    crawled?}))
 
 ;;;;;;;;;;;;;;;;;
 

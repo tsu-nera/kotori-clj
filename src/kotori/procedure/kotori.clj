@@ -50,39 +50,46 @@
 
 (defn select-next-qvt-product [{:as params}]
   (when-let [product (first (st-dmm/select-tweeted-products params))]
-    (st-dmm/->next-qvt product)))
+    (qvt/doc-> product)))
+
+(defn get-qvt [{:keys [db cid]}]
+  (let [doc-path (product/doc-path cid)
+        doc      (fs/get-doc db doc-path)]
+    (qvt/doc-> doc)))
 
 (defn tweet-quoted-video
   "動画引用ツイート"
-  [{:keys [^d/Info info db env source-label] :as params}]
-  (let [screen-name  (:screen-name info)
-        qvt          (select-next-qvt-product
-                      {:db db :screen-name screen-name})
-        cid          (:cid qvt)
-        source       (qvt/get-source source-label)
-        strategy     st/pick-random
-        text-builder (partial qvt/build-text qvt)
-        text         (make-text source strategy text-builder)
-        doc-path     (product/doc-path cid)
-        crawled?     (:craweled? qvt)
-        tweet-params (assoc params :text text :type :qvt)]
-    (if qvt
-      (when-let [result (tweet tweet-params)]
-        ;; DMM商品情報 collectionを更新.
-        (->> result
-             (qvt/->data qvt)
-             ;; dmm/products/{cid} の情報を更新
-             (fs/update! db doc-path))
-        ;; crawledされてない場合はここで追加で処理をする.
-        ;; 通常はcrawledされているのでtoolで追加した場合がこうなる.
-        ;; そんなに時間かからないと思うので同期処理
-        (when-not crawled?
-          (dmm/crawl-product! {:db db :env env :cid cid}))
-        (qvt->discord! qvt result)
-        result)
-      (do
-        (println "next quoted video not exists!")
-        {}))))
+  ([{:keys [^d/Info info db] :as params}]
+   (let [screen-name (:screen-name info)
+         qvt         (select-next-qvt-product
+                      {:db db :screen-name screen-name})]
+     (tweet-quoted-video params qvt)))
+  ([{:keys [db env source-label] :as params} qvt]
+   (let [cid          (:cid qvt)
+         source       (qvt/get-source source-label)
+         strategy     st/pick-random
+         text-builder (partial qvt/build-text qvt)
+         text         (make-text source strategy text-builder)
+         doc-path     (product/doc-path cid)
+         crawled?     (:craweled? qvt)
+         tweet-params (assoc params :text text :type :qvt)]
+     (if qvt
+       (when-let [result (tweet tweet-params)]
+         ;; DMM商品情報 collectionを更新.
+         (->> result
+              (qvt/->doc qvt)
+              ;; dmm/products/{cid} の情報を更新
+              (fs/update! db doc-path))
+         ;; crawledされてない場合はここで追加で処理をする.
+         ;; 通常はcrawledされているのでtoolで追加した場合がこうなる.
+         ;; そんなに時間かからないと思うので同期処理
+         (when-not crawled?
+           (dmm/crawl-product! {:db db :env env :cid cid}))
+         (qvt->discord! qvt result)
+         result)
+       (do
+         (println "next quoted video not exists!")
+         {})))))
 
 (defn tweet-morning
   [{:as params}]
@@ -128,7 +135,7 @@
 
 (comment
   ;;;
-  (require '[firebase :refer [db db-prod]]
+  (require '[firebase :refer [db db-prod db-dev]]
            '[devtools :refer [env kotori-info ->screen-name info-dev]])
 
   (def params {:db (db) :info @info-dev})
@@ -139,16 +146,19 @@
   (tweet-random params)
 
   ;;;;;;;;;;;;;
-  (def info (kotori-info "0025"))
-  (def result (tweet-quoted-video {:db           (db-prod)
+  (def info (kotori-info "0003"))
+  (def result (tweet-quoted-video {:db           (db)
                                    :env          (env)
                                    :info         info
                                    :source-label "qvt_0003"}))
+
  ;;;
-  (def screen-name (->screen-name "0025"))
-  (def qvt (select-next-qvt-product {:db          (db-prod)
+  (def screen-name (->screen-name "0003"))
+  (def qvt (select-next-qvt-product {:db          (db-dev)
                                      :screen-name screen-name}))
-  (def qvt-data (qvt/->data qvt result))
+  (def qvt-data (qvt/->doc qvt result))
+ ;;;
+  (def qvt (get-qvt {:db (db-dev) :cid "ssis00015"}))
  ;;;
   )
 

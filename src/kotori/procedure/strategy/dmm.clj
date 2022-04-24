@@ -138,10 +138,12 @@
                                 :or   {limit 5}}]
   {:pre [(string? screen-name)]}
   (let [q-already-tweeted
-        ;; 42日前から14日分を候補にする.
-        (fs/query-between 42 14 "last_tweet_time")
+        ;; 42日前から21日分を候補にする.
+        (fs/query-between 49 21 "last_tweet_time")
         ;; 一応個数制限
-        q-limit                     (fs/query-limit 300)
+        ;; 200だと7s,300だと10sなので150程度に調整.
+        ;; その分query-betweenの期間を拡張して様子見.
+        q-limit                     (fs/query-limit 150)
         xquery                      (fs/make-xquery [q-already-tweeted
                                                      q-limit])
         products                    (fs/get-id-doc-map
@@ -150,8 +152,8 @@
         st-exclude-last-quoted-self (make-st-exclude-last-quoted-self
                                      screen-name)
         st-exclude-recently-tweeted-others
-        (make-st-exclude-recently-tweeted-others screen-name 28)
-        st-exclude-recently-quoted  (make-st-exclude-recently-quoted 7)
+        (make-st-exclude-recently-tweeted-others screen-name 14)
+        st-exclude-recently-quoted  (make-st-exclude-recently-quoted 4)
         xstrategy                   (comp
                                      st-skip-debug
                                      st-exclude-recently-tweeted-others
@@ -174,24 +176,6 @@
         title (:title product)]
     {:cid   cid
      :title title}))
-
-(defn ->next-qvt
-  [product]
-  (let [cid         (:cid product)
-        title       (:title product)
-        tweet-id    (:last-tweet-id product)
-        screen-name (:last-tweet-name product)
-        tweet-time  (:last-tweet-time product)
-        crawled?    (contains? product :last-crawled-time)
-        url         (tweet/->quoted-video-url screen-name tweet-id)]
-    {:url         url
-     :cid         (or cid :not-yet-crawled)
-     :title       (or title :not-yet-crawled)
-     :tweet-id    tweet-id
-     :screen-name screen-name
-     :tweet-time  tweet-time
-     :summary     nil
-     :crawled?    crawled?}))
 
 (defn ->print
   [product]
@@ -226,13 +210,11 @@
 
   (def products
     (into [] (select-tweeted-products
-              {:db          (db-prod) :limit 300
+              {:db          (db-prod) :limit 200
                :screen-name (->screen-name "0019")})))
 
   (count products)
   (map ->print products)
-
-  (def qvt-products (map ->next-qvt products))
   )
 
 (comment

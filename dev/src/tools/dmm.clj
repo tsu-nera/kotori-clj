@@ -3,10 +3,11 @@
    [clojure.string :as string]
    [devtools :refer [env]]
    [firebase :refer [db-dev db-prod]]
+   [kotori.domain.dmm.core :as model]
    [kotori.domain.dmm.product :as product]
    [kotori.lib.firestore :as fs]
    [kotori.lib.io :as io]
-   [kotori.procedure.dmm :as dmm]
+   [kotori.procedure.dmm :as proc]
    [kotori.procedure.strategy.dmm :as st]
    [kotori.procedure.tweet.post :as post]))
 
@@ -80,6 +81,23 @@
   (let [cids (tweeted-products->cids db screen-name limit)]
     (io/dump-str! file-path (string/join "\n" cids))))
 
+(defn ->dmm-url [cid]
+  (model/->url cid))
+
+(defn get-dmm-product [cid]
+  (proc/get-product {:env (env) :cid cid}))
+#_(get-dmm-product "ssis00337")
+
+(defn get-dmm-campaign [title]
+  (proc/get-products {:env (env) :hits 10 :keyword title}))
+#_(get-dmm-campaign "新生活応援30％OFF第6弾")
+
+(defn crawl-product!
+  ([cid]
+   (crawl-product! cid (db-dev)))
+  ([cid db]
+   (proc/crawl-product! {:db db :cid cid :env (env)})))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (comment
   (require '[firebase :refer [db-dev db-prod]]
@@ -120,12 +138,11 @@
   (assoc-post (db-dev) screen-name post)
   ;;;;;;;;;;;;;;;;;;;;;;
 
-  (require '[kotori.procedure.dmm :as dmm])
   (def product (dmm/crawl-product!
                 {:db (db-dev) :env (env) :cid "cjod00289"}))
 
-  (def product (dmm/crawl-product!
-                {:db (db-prod) :env (env) :cid "jusd00912"}))
+  (def result (crawl-product! "mrss00085"))
+
   (def products (dmm/crawl-products!
                  {:db (db-dev) :env (env) :hits 100}))
  ;;;

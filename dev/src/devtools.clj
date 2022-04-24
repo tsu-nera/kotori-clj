@@ -3,8 +3,6 @@
   (:refer-clojure :exclude [proxy])
   (:require
    [integrant.repl.state :refer [config system]]
-   [kotori.domain.dmm.core :as dmm]
-   [kotori.procedure.dmm :refer [get-product get-products]]
    [kotori.procedure.kotori :refer [make-info]]
    [kotori.service.firebase :refer [get-db]]
    [twitter-clj.guest :as guest]
@@ -84,17 +82,6 @@
 
 (defn ->user-id [code]
   (:user-id (kotori-info code)))
-
-(defn ->dmm-url [cid]
-  (dmm/->url cid))
-
-(defn get-dmm-product [cid]
-  (get-product {:env (env) :cid cid}))
-#_(get-dmm-product "ssis00337")
-
-(defn get-dmm-campaign [title]
-  (get-products {:env (env) :hits 10 :keyword title}))
-#_(get-dmm-campaign "新生活応援30％OFF第6弾")
 
 (defn get-tweet-with-info
   ([code id]

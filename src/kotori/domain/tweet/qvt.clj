@@ -17,7 +17,9 @@
 (defn build-text [qvt data]
   (let [url  (:url qvt)
         text (:text data)]
-    (str text "\n" url)))
+    (if-let [summary (:summary qvt)]
+      (str summary "\n\n" text "\n" url)
+      (str text "\n" url))))
 
 ;; TODO とりあえずuser-idは必要なユースケースが現れたら対応.
 ;; それまえはコメントアウトしておく.

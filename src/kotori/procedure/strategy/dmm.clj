@@ -1,4 +1,4 @@
-(ns kotori.procedure.strategy
+(ns kotori.procedure.strategy.dmm
   "商品選択戦略"
   (:require
    [clojure.string :as str]
@@ -190,6 +190,7 @@
      :tweet-id    tweet-id
      :screen-name screen-name
      :tweet-time  tweet-time
+     :summary     nil
      :crawled?    crawled?}))
 
 (defn ->print

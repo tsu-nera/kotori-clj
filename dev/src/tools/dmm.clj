@@ -1,9 +1,11 @@
 (ns tools.dmm
   (:require
+   [clojure.string :as string]
    [devtools :refer [env]]
    [firebase :refer [db-dev db-prod]]
    [kotori.domain.dmm.product :as product]
    [kotori.lib.firestore :as fs]
+   [kotori.lib.io :as io]
    [kotori.procedure.dmm :as dmm]
    [kotori.procedure.strategy.dmm :as st]
    [kotori.procedure.tweet.post :as post]))
@@ -72,7 +74,11 @@
   (let [products (st/select-tweeted-products
                   {:db db :screen-name screen-name :limit limit})
         cids     (map #(:cid %) products)]
-    cids))
+    (into [] cids)))
+
+(defn tweeted-products->cids->file! [db screen-name limit file-path]
+  (let [cids (tweeted-products->cids db screen-name limit)]
+    (io/dump-str! file-path (string/join "\n" cids))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (comment
@@ -85,9 +91,10 @@
   (def products (st/select-tweeted-products
                  {:db (db-prod) :screen-name screen-name :limit 10}))
 
-  (def cids (tweeted-products->cids (db-prod) screen-name 10))
+  (def cids (tweeted-products->cids (db-prod) screen-name 100))
+  (io/dump-str! "tmp/cids.txt" (string/join "\n" cids))
 
-  (def products (dmm/get-products-by-cids {:cids cids :env (env)}))
+  (def cids (dmm/get-products-by-cids {:cids cids :env (env)}))
   (def result (dmm/crawl-products-by-cids! {:cids cids
                                             :db   (db-prod) :env (env)}))
 

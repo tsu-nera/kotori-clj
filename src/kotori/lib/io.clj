@@ -25,3 +25,6 @@
     ;; fileが存在しない場合は新規作成したいので io/resouceは使わない.
     (-> (str "resources/" file-path)
         (spit save-data))))
+
+(defn dump-str! [file-path data]
+  (spit file-path data))

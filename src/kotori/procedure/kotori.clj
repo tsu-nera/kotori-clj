@@ -1,6 +1,7 @@
 (ns kotori.procedure.kotori
   (:require
    [clojure.spec.alpha :as s]
+   [clojure.string :as string]
    [kotori.domain.dmm.product :as product]
    [kotori.domain.kotori :as d]
    [kotori.domain.source.meigen :as meigen]
@@ -64,11 +65,11 @@
          qvt         (select-next-qvt-product
                       {:db db :screen-name screen-name})]
      (tweet-quoted-video params qvt)))
-  ([{:keys [db env source-label] :as params} qvt]
+  ([{:keys [db env source-label message-type] :as params} qvt]
    (let [cid          (:cid qvt)
          source       (qvt/get-source source-label)
          strategy     st/pick-random
-         text-builder (partial qvt/build-text qvt)
+         text-builder (fn [data] (qvt/build-text qvt message-type data))
          text         (make-text source strategy text-builder)
          doc-path     (product/doc-path cid)
          crawled?     (:craweled? qvt)
@@ -158,13 +159,18 @@
                                      :screen-name screen-name}))
   (def qvt-data (qvt/->doc qvt result))
  ;;;
-  (def cid "mrss00085")
+  (def cid "mide00897")
   (def qvt (get-qvt {:db (db-dev) :cid cid}))
+
+  (def desc (:description qvt))
+  (count desc)
+  (count (qvt/truncate-desc desc))
 
   (def result (tweet-quoted-video {:db           (db-dev)
                                    :env          (env)
                                    :info         info
-                                   :source-label "qvt_0003"} qvt))
+                                   :source-label "qvt_0003"
+                                   :message-type "description"} qvt))
  ;;;
   )
 

@@ -14,12 +14,25 @@
    (core/->source label)
    (core/->source default)))
 
-(defn build-text [qvt data]
-  (let [url  (:url qvt)
-        text (:text data)]
-    (if-let [summary (:summary qvt)]
-      (str summary "\n\n" text "\n" url)
-      (str text "\n" url))))
+(defn truncate-desc [text & {:keys [limit] :or {limit 50}}]
+  (when text
+    (if (< (count text) limit)
+      text
+      (str (subs text 0 limit) "..."))))
+
+(defn build-text [qvt type data]
+  (let [url     (:url qvt)
+        text    (:text data)
+        default (str text "\n" url)
+        message (cond
+                  (= type "title")       (:title qvt)
+                  (= type "description") (truncate-desc
+                                          (:description qvt))
+                  (= type "summary")     (:summary qvt)
+                  :else                  nil)]
+    (if message
+      (str message "\n\n" default)
+      default)))
 
 ;; TODO とりあえずuser-idは必要なユースケースが現れたら対応.
 ;; それまえはコメントアウトしておく.

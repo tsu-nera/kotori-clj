@@ -139,9 +139,9 @@
   ;;;;;;;;;;;;;;;;;;;;;;
 
   (def product (dmm/crawl-product!
-                {:db (db-dev) :env (env) :cid "cjod00289"}))
+                {:db (db-dev) :env (env) :cid "mide00990"}))
 
-  (def result (crawl-product! "mrss00085"))
+  (def result (crawl-product! "mide00897"))
 
   (def products (dmm/crawl-products!
                  {:db (db-dev) :env (env) :hits 100}))

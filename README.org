@@ -1,9 +1,9 @@
 #+STARTUP: showall
 #+TITLE: kotori-clj
 
-ref: https://github.com/tsu-nera/kotori
+* Commit log and Emoji Rules
 
-* commit log emoji
+なるべくこれで統一. 
 
 | Type     | Emoji | code  |
 |----------+-------+-------|
@@ -17,3 +17,14 @@ ref: https://github.com/tsu-nera/kotori
 | build    | :package:   | `:package:` |
 | ci       | :construction_worker:   | `:construction_worker:` |
 | chore    | :wrench:   | `:wrench:` |
+
+* References
+
+関連リポジトリ. 
+
+- https://github.com/tsu-nera/kotori
+  - Pythonは飽きたのでClojureで書き直す. 
+- https://github.com/tsu-nera/kotori-ml
+  - 機械学習関連のPythonコード. 
+- https://github.com/tsu-nera/kotori-doc
+  - ドキュメント関連. 

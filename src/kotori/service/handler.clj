@@ -3,6 +3,7 @@
    [integrant.core :as ig]
    [kotori.procedure.dmm :as dmm]
    [kotori.procedure.kotori.core :as kotori]
+   [kotori.procedure.kotori.qvt :as qvt]
    [kotori.procedure.ping :as ping]
    [reitit.ring :as ring]
    [ring.util.response :as resp]))
@@ -43,7 +44,7 @@
       ["/dummy" kotori/dummy]
       ["/tweet" kotori/tweet]
       ["/tweet-quoted-video"
-       {:post kotori/tweet-quoted-video}]
+       {:post qvt/tweet-quoted-video}]
       ["/tweet-morning" kotori/tweet-morning]
       ["/tweet-evening" kotori/tweet-evening]
       ["/tweet-random" kotori/tweet-random]

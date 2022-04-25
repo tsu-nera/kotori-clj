@@ -23,8 +23,9 @@
 関連リポジトリ. 
 
 - https://github.com/tsu-nera/kotori
-  - Pythonは飽きたのでClojureで書き直す. 
+  - Pythonで書いた旧コード. 
+  - Pythonは飽きたのでClojureでkotori-cljに書き直し中... 
 - https://github.com/tsu-nera/kotori-ml
-  - 機械学習関連のPythonコード. 
+  - 機械学習関連のPythonコードはこっちに移植中... 
 - https://github.com/tsu-nera/kotori-doc
   - ドキュメント関連. 

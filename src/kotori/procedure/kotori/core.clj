@@ -1,7 +1,6 @@
-(ns kotori.procedure.kotori
+(ns kotori.procedure.kotori.core
   (:require
    [clojure.spec.alpha :as s]
-   [clojure.string :as string]
    [kotori.domain.dmm.product :as product]
    [kotori.domain.kotori :as d]
    [kotori.domain.source.meigen :as meigen]

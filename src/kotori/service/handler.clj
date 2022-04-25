@@ -2,7 +2,7 @@
   (:require
    [integrant.core :as ig]
    [kotori.procedure.dmm :as dmm]
-   [kotori.procedure.kotori :as kotori]
+   [kotori.procedure.kotori.core :as kotori]
    [kotori.procedure.ping :as ping]
    [reitit.ring :as ring]
    [ring.util.response :as resp]))

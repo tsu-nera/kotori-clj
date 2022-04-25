@@ -7,7 +7,8 @@
    [kotori.domain.dmm.product :as product]
    [kotori.lib.firestore :as fs]
    [kotori.lib.io :as io]
-   [kotori.procedure.dmm :as proc]
+   [kotori.procedure.dmm :as dmm]
+   [kotori.procedure.kotori.qvt :as qvt]
    [kotori.procedure.strategy.dmm :as st]
    [kotori.procedure.tweet.post :as post]))
 
@@ -71,46 +72,42 @@
        (map (fn [[path tweet]]
               (update-with-recovery! db path tweet)))))
 
-(defn tweeted-products->cids [db screen-name limit]
-  (let [products (st/select-tweeted-products
-                  {:db db :screen-name screen-name :limit limit})
-        cids     (map #(:cid %) products)]
-    (into [] cids)))
-
-(defn tweeted-products->cids->file! [db screen-name limit file-path]
-  (let [cids (tweeted-products->cids db screen-name limit)]
+(defn qvt-without-desc->cids->file! [db screen-name limit file-path]
+  (let [cids (map
+              :cid (qvt/get-qvts-without-desc
+                    {:db db :screen-name screen-name :limit limit}))]
     (io/dump-str! file-path (string/join "\n" cids))))
 
 (defn ->dmm-url [cid]
   (model/->url cid))
 
 (defn get-dmm-product [cid]
-  (proc/get-product {:env (env) :cid cid}))
+  (dmm/get-product {:env (env) :cid cid}))
 #_(get-dmm-product "ssis00337")
 
 (defn get-dmm-campaign [title]
-  (proc/get-products {:env (env) :hits 10 :keyword title}))
+  (dmm/get-products {:env (env) :hits 10 :keyword title}))
 #_(get-dmm-campaign "新生活応援30％OFF第6弾")
 
 (defn crawl-product!
   ([cid]
    (crawl-product! cid (db-dev)))
   ([cid db]
-   (proc/crawl-product! {:db db :cid cid :env (env)})))
+   (dmm/crawl-product! {:db db :cid cid :env (env)})))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (comment
   (require '[firebase :refer [db-dev db-prod]]
            '[devtools :refer [kotori-info env]])
 
-  (def info (kotori-info "0019"))
+  (def info (kotori-info "0025"))
   (def screen-name (:screen-name info))
 
   (def products (st/select-tweeted-products
                  {:db (db-prod) :screen-name screen-name :limit 10}))
 
-  (def cids (tweeted-products->cids (db-prod) screen-name 100))
-  (tweeted-products->cids->file! (db-prod) screen-name 100 "tmp/inputs.txt")
+  (qvt-without-desc->cids->file!
+   (db-prod) screen-name 200 "tmp/inputs.txt")
 
   (def cids (dmm/get-products-by-cids {:cids cids :env (env)}))
   (def result (dmm/crawl-products-by-cids! {:cids cids

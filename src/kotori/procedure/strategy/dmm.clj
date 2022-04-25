@@ -140,7 +140,7 @@
         ;; 一応個数制限
         ;; 200だと7s,300だと10sなので150程度に調整.
         ;; その分query-betweenの期間を拡張して様子見.
-        q-limit                     (fs/query-limit 150)
+        q-limit                     (fs/query-limit 200)
         xquery                      (fs/make-xquery [q-already-tweeted
                                                      q-limit])
         products                    (fs/get-id-doc-map

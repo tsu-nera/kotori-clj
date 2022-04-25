@@ -110,7 +110,7 @@
                  {:db (db-prod) :screen-name screen-name :limit 10}))
 
   (def cids (tweeted-products->cids (db-prod) screen-name 100))
-  (io/dump-str! "tmp/cids.txt" (string/join "\n" cids))
+  (tweeted-products->cids->file! (db-prod) screen-name 100 "tmp/inputs.txt")
 
   (def cids (dmm/get-products-by-cids {:cids cids :env (env)}))
   (def result (dmm/crawl-products-by-cids! {:cids cids
@@ -122,18 +122,18 @@
   (require '[firebase :refer [db-dev db-prod]]
            '[devtools :refer [kotori-info]])
 
-  (def info (kotori-info "0007"))
+  (def info (kotori-info "0001"))
   (def user-id (:user-id info))
   (def screen-name (:screen-name info))
 
   (def resp (post/get-video-posts {:db       (db-prod)
                                    :user-id  user-id
-                                   :days-ago 7
+                                   :days-ago 35
                                    :days     7}))
   (count resp)
-  (assoc-posts (db-prod) screen-name resp)
+  (assoc-posts (db-dev) screen-name resp)
 
-  ;;;;;;;;;;;;;;;
+    ;;;;;;;;;;;;;;;
   (def post (second resp))
   (assoc-post (db-dev) screen-name post)
   ;;;;;;;;;;;;;;;;;;;;;;

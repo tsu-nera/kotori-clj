@@ -59,9 +59,6 @@
 (def st-exclude-omnibus
   (remove #(> (:actress-count %) 4)))
 
-(def st-exclude-not-yet-crawled
-  (filter #(contains? % :cid)))
-
 (defn- make-st-exclude-recently-tweeted
   "最終投稿からXdays以上経過"
   [self? days]

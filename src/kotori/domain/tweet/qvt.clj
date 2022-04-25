@@ -69,8 +69,8 @@
         description (:description data)
         url         (tweet/->quoted-video-url screen-name tweet-id)]
     {:url         url
-     :cid         (or cid :not-yet-crawled)
-     :title       (or title :not-yet-crawled)
+     :cid         cid
+     :title       title
      :tweet-id    tweet-id
      :screen-name screen-name
      :tweet-time  tweet-time

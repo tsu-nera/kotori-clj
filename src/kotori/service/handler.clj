@@ -1,7 +1,7 @@
 (ns kotori.service.handler
   (:require
    [integrant.core :as ig]
-   [kotori.procedure.dmm.core :as dmm]
+   [kotori.procedure.dmm.api :as dmm]
    [kotori.procedure.kotori.core :as kotori]
    [kotori.procedure.kotori.qvt :as qvt]
    [kotori.procedure.ping :as ping]

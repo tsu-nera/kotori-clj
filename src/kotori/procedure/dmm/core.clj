@@ -1,4 +1,4 @@
-(ns kotori.procedure.dmm
+(ns kotori.procedure.dmm.core
   (:require
    [clojure.string :as str]
    [kotori.domain.dmm.core :as dmm]

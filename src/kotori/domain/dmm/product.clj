@@ -104,13 +104,11 @@
 (comment
   (require '[firebase :refer [db]])
   (require '[devtools :refer [env]])
-  (require '[kotori.procedure.dmm :refer [get-product]])
 
   (def raw
-    (get-product {:cid "ssis00165" :env (env)}))
+    (dmm/get-product {:cid "ssis00165" :env (env)}))
   (def product
-    (get-product {:cid "jusd00912" :env (env)}))
-
+    (dmm/get-product {:cid "jusd00912" :env (env)}))
 
   (contains? raw :sampleMovieURL)
   (contains? product :sampleImageURL)
@@ -127,6 +125,6 @@
 (comment
   (require '[portal.api :as p])
   (def d (p/open))
-  (reset! d (->data (get-product {:cid "ssis00335" :env (env)})))
+  (reset! d (->data (dmm/get-product {:cid "ssis00335" :env (env)})))
   @d
   )

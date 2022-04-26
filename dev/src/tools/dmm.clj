@@ -7,7 +7,7 @@
    [kotori.domain.dmm.product :as product]
    [kotori.lib.firestore :as fs]
    [kotori.lib.io :as io]
-   [kotori.procedure.dmm :as dmm]
+   [kotori.procedure.dmm.core :as dmm]
    [kotori.procedure.kotori.qvt :as qvt]
    [kotori.procedure.strategy.dmm :as st]
    [kotori.procedure.tweet.post :as post]))

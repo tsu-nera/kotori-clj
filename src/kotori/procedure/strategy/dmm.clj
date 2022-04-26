@@ -4,9 +4,11 @@
    [clojure.string :as str]
    [kotori.domain.dmm.core :as dmm]
    [kotori.domain.dmm.product :as product]
-   [kotori.domain.tweet.core :as tweet]
    [kotori.lib.firestore :as fs]
    [kotori.lib.time :as time]))
+
+(def amateur-genre-ids
+  #{4024})
 
 (def vr-genre-ids
   #{6793 6925})
@@ -53,8 +55,15 @@
 (def st-exclude-ng-genres
   (remove ng-product?))
 
+(defn no-actress? [product]
+  (zero? (:actress-count product)))
+
 (def st-exclude-amateur
-  (remove #(zero? (:actress-count %))))
+  (remove #(or (no-actress? %)
+               (contains? amateur-genre-ids %))))
+
+#_(def st-exclude-amateur
+    (remove #((no-actress? %))))
 
 (def st-exclude-omnibus
   (remove #(> (:actress-count %) 4)))

@@ -5,7 +5,7 @@
    [kotori.domain.dmm.product :as product]
    [kotori.lib.firestore :as fs]
    [kotori.lib.json :as json]
-   [kotori.lib.provider.dmm :as client]
+   [kotori.lib.provider.dmm.api :as api]
    [kotori.lib.time :as time]))
 
 (def campaigns-path "providers/dmm/campaigns")
@@ -21,8 +21,8 @@
 (defn get-product [{:keys [cid env]}]
   (let [{:keys [api-id affiliate-id]}
         env
-        creds (client/->Credentials api-id affiliate-id)
-        resp  (client/search-product creds {:cid cid})]
+        creds (api/->Credentials api-id affiliate-id)
+        resp  (api/search-product creds {:cid cid})]
     (-> resp
         (->items)
         (first))))
@@ -44,13 +44,13 @@
   {:pre [(<= hits 100)]}
   (let [{:keys [api-id affiliate-id]}
         env
-        creds (client/->Credentials api-id affiliate-id)
+        creds (api/->Credentials api-id affiliate-id)
         req   (cond->
                {:offset offset :sort "rank" :hits hits}
                 keyword    (assoc :keyword keyword)
                 article    (assoc :article article)
                 article-id (assoc :article_id article-id))
-        resp  (client/search-product creds req)
+        resp  (api/search-product creds req)
         items (->items resp)]
     items))
 

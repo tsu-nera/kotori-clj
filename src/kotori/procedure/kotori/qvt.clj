@@ -6,7 +6,7 @@
    [kotori.domain.tweet.qvt :as qvt]
    [kotori.lib.discord :as discord]
    [kotori.lib.firestore :as fs]
-   [kotori.procedure.dmm.api :as dmm]
+   [kotori.procedure.dmm :as dmm]
    [kotori.procedure.kotori.core :as kotori]
    [kotori.procedure.strategy.core :as st]
    [kotori.procedure.strategy.dmm :as st-dmm]))

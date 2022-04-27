@@ -36,7 +36,7 @@
       :content
       (str/split #"<br>")
       first
-      (str/split #"】")
+      (str/split #"ファンザ\)】")
       rest
       first))
 
@@ -47,11 +47,10 @@
     {:cid cid :title title :description desc}))
 
 (comment
-
-  (def cid "pfes00034")
+  (def cid "ebod00874")
   (def url (domain/->url cid))
-  (def page (get-page {:cid cid}))
+  (def data (get-page-data cid))
 
-  (def title (->title page))
-  (def description (->description page))
+  (def title (->title data))
+  (def description (->description data))
   )

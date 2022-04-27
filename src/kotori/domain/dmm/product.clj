@@ -83,8 +83,7 @@
         (assoc :raw raw)
         (assoc :legacy legacy))))
 
-(defn page->data [raw]
-  raw)
+(defn page->data [raw])
 
 ;; 最新人気ランキングを設定
 ;; 他にも価格, レビュー, マッチングのランキングがある.
@@ -102,6 +101,9 @@
 ;; 予め生成した共通のtimestampを外部からもらって設定する.
 (defn set-crawled-timestamp [timestamp data]
   (assoc data :last_crawled_time timestamp))
+
+(defn set-scraped-timestamp [timestamp data]
+  (assoc data :last_scraped_time timestamp))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (comment

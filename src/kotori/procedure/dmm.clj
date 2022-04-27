@@ -83,6 +83,39 @@
   {:pre [(<= hits 500)]}
   (get-products-bulk {:env env :keyword title :hits hits}))
 
+(defn get-page [{:keys [cid]}]
+  (public/get-page cid))
+
+(defn scrape-page!
+  [{:keys [db cid] :as m}]
+  (let [page (get-page m)
+        ts   (time/fs-now)
+        data (product/page->data page)
+        path (fs/doc-path product/coll-path cid)]
+    (fs/set! db path data)
+    (fs/set! db path {:last-scraped-time ts})
+    data))
+
+(defn get-page-bulk
+  "パラレルでスクレイピングをかけるため一瞬で終わる, すごい."
+  [{:keys [cids]}]
+  (->> cids
+       (map (fn [cid] {:cid cid}))
+       (pmap get-page)
+       (into [])))
+
+(defn scrape-pages!
+  "パラレルでスクレイピングをかけるため一瞬で終わる, すごい."
+  [{:keys [cids db]}]
+  (let [pages (get-page-bulk {:cids cids})
+        ts    (time/fs-now)]
+    (->> pages
+         (map #(product/set-scraped-timestamp ts %))
+         (map #(json/->json %))
+         (fs/make-batch-docs "cid" product/coll-path)
+         (fs/batch-set! db))
+    ts))
+
 (defn crawl-product! "
   1. 指定されたcidのcontent情報を取得.
   2. Firestoreへ 情報を保存."
@@ -120,6 +153,7 @@
 (defn crawl-products!
   [{:keys [db] :as params}]
   (let [products   (get-products-bulk params)
+        cids       (map :content_id products)
         count      (count products)
         ts         (time/fs-now)
         xf         (comp (map product/->data)
@@ -131,6 +165,7 @@
                     "cid" product/coll-path docs)]
     (fs/batch-set! db batch-docs)
     (fs/set! db dmm/doc-path {:products-crawled-time ts})
+    (scrap-pages! {:db db :cids cids})
     {:count     count
      :timestamp ts
      :products  docs}))
@@ -192,19 +227,6 @@
       (fs/set! (fs/doc-path campaigns-path id) campaign))
     campaign))
 
-(defn get-page [{:keys [cid]}]
-  (public/get-page cid))
-
-(defn scrap-page!
-  [{:keys [db cid] :as m}]
-  (let [page (get-page m)
-        ts   (time/fs-now)
-        data (product/page->data page)
-        path (fs/doc-path product/coll-path cid)]
-    (fs/set! db path data)
-    (fs/set! db path {:last-scraped-time ts})
-    data))
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (comment
   (require '[devtools :refer [env]])
@@ -219,11 +241,19 @@
   (count products)
 
   (def product (crawl-product! {:db (db) :env (env) :cid "hnd00967"}))
-  (def products (crawl-products! {:db (db) :env (env) :hits 10}))
+  (def products (crawl-products! {:db (db) :env (env) :hits 300}))
 
   ;; 1秒以内に終わる
   (def page (get-page {:cid "hnd00967"}))
-  (def resp (scrap-page! {:cid "ebod00874" :db (db)}))
+  (def resp (scrape-page! {:cid "ebod00874" :db (db)}))
+
+  (def cids (->> (get-products {:env (env) :hits 100})
+                 (map :content_id)
+                 (into [])))
+  ;; 並列実行で1秒で完了.
+  (def resp (get-page-bulk {:cids cids :db (db)}))
+  (def resp (scrape-pages! {:cids cids :db (db)}))
+
 
   (def products (crawl-campaign-products!
                  {:db    (db) :env (env)

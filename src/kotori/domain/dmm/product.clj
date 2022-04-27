@@ -64,7 +64,7 @@
    :tweet_link  nil
    :tweet_id    nil})
 
-(defn ->data
+(defn api->data
   "dmm response map -> firestore doc mapの写像"
   [raw]
   (let [actresses (->actresses raw)
@@ -82,6 +82,9 @@
     (-> data
         (assoc :raw raw)
         (assoc :legacy legacy))))
+
+(defn page->data [raw]
+  raw)
 
 ;; 最新人気ランキングを設定
 ;; 他にも価格, レビュー, マッチングのランキングがある.

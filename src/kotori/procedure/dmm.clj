@@ -6,6 +6,7 @@
    [kotori.lib.firestore :as fs]
    [kotori.lib.json :as json]
    [kotori.lib.provider.dmm.api :as api]
+   [kotori.lib.provider.dmm.public :as public]
    [kotori.lib.time :as time]))
 
 (def campaigns-path "providers/dmm/campaigns")
@@ -89,7 +90,7 @@
   (let [product (get-product m)
         ts      (time/fs-now)
         data    (-> product
-                    product/->data)
+                    product/api->data)
         path    (fs/doc-path product/coll-path cid)]
     (fs/set! db path data)
     (fs/set! db path {:last-crawled-time ts})
@@ -101,7 +102,7 @@
   (let [products   (get-products-by-cids params)
         count      (count products)
         ts         (time/fs-now)
-        xf         (comp (map product/->data)
+        xf         (comp (map product/api->data)
                          (map #(product/set-crawled-timestamp ts %))
                          (map json/->json))
         docs       (transduce xf conj products)
@@ -170,7 +171,7 @@
         ts                     (time/fs-now)
         batch-docs             (->>
                                 products
-                                (map product/->data)
+                                (map product/api->data)
                                 (map #(product/set-crawled-timestamp ts %))
                                 (fs/make-batch-docs
                                  "cid" campaign-products-path))]
@@ -184,18 +185,30 @@
         campaign  (product->campaign product)
         id        (campaign->id campaign)
         coll-path (make-campaign-products-path id)
-        data      (product/->data product)
+        data      (product/api->data product)
         cid       (get data "cid")]
     (doto db
       (fs/set! (fs/doc-path coll-path cid) data)
       (fs/set! (fs/doc-path campaigns-path id) campaign))
     campaign))
 
+(defn get-page [{:keys [cid]}]
+  (public/get-page cid))
+
+(defn scrap-page!
+  [{:keys [db cid] :as m}]
+  (let [page (get-page m)
+        ts   (time/fs-now)
+        data (product/page->data page)
+        path (fs/doc-path product/coll-path cid)]
+    (fs/set! db path data)
+    (fs/set! db path {:last-scraped-time ts})
+    data))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (comment
   (require '[devtools :refer [env]])
   (require '[firebase :refer [db]])
-  (require '[firestore-clj.core :as f])
 
   (def product (get-product {:cid "ssis00337" :env (env)}))
   (def products (get-product-bulk {:cids ["ssis00337" "hnd00967"]
@@ -208,12 +221,13 @@
   (def product (crawl-product! {:db (db) :env (env) :cid "hnd00967"}))
   (def products (crawl-products! {:db (db) :env (env) :hits 10}))
 
+  ;; 1秒以内に終わる
+  (def page (get-page {:cid "hnd00967"}))
+  (def resp (scrap-page! {:cid "ebod00874" :db (db)}))
+
   (def products (crawl-campaign-products!
                  {:db    (db) :env (env)
                   :title "新生活応援30％OFF第6弾"}))
-
-  (fs/set! (db) dmm-doc-path {:products-crawled-time
-                              (time/fs-now)})
   )
 
 (comment

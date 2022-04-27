@@ -58,12 +58,19 @@
 (defn no-actress? [product]
   (zero? (:actress-count product)))
 
+(defn ->genre-ids [product]
+  (->> product
+       :genres
+       (map #(get % "id"))
+       (into [])))
+
+(defn contains-genre? [genre-id-set product]
+  (some true?
+        (map #(contains? genre-id-set %) (->genre-ids product))))
+
 (def st-exclude-amateur
   (remove #(or (no-actress? %)
-               (contains? amateur-genre-ids %))))
-
-#_(def st-exclude-amateur
-    (remove #((no-actress? %))))
+               (contains-genre? amateur-genre-ids %))))
 
 (def st-exclude-omnibus
   (remove #(> (:actress-count %) 4)))
@@ -228,7 +235,7 @@
   (require '[firebase :refer [db db-prod]]
            '[devtools :refer [->screen-name]])
 
-  (def screen-name (->screen-name "0003"))
+  (def screen-name (->screen-name "0001"))
 
   ;; cf. https://www.dmm.co.jp/digital/videoa/-/list/=/sort=ranking/
   (def products
@@ -239,6 +246,17 @@
 
   (count products)
   (map ->next products)
+
+  (def product (first products))
+  (def genre-ids (->genre-ids product))
+  (some true? (map #(contains? amateur-genre-ids %) genre-ids))
+
+  (contains-ng-genre? amateur-genre-ids product)
+
+  (defn ng-product? [product]
+    (some true? (map
+                 (comp ng-genre? #(get % "id"))
+                 (:genres product))))
 
   (def xst (comp
             st-exclude-ng-genres

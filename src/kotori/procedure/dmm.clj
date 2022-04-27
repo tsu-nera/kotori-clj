@@ -156,7 +156,7 @@
         cids       (map :content_id products)
         count      (count products)
         ts         (time/fs-now)
-        xf         (comp (map product/->data)
+        xf         (comp (map product/api->data)
                          (map #(product/set-crawled-timestamp ts %))
                          (map-indexed product/set-rank-popular)
                          (map json/->json))
@@ -165,7 +165,9 @@
                     "cid" product/coll-path docs)]
     (fs/batch-set! db batch-docs)
     (fs/set! db dmm/doc-path {:products-crawled-time ts})
-    (scrap-pages! {:db db :cids cids})
+    ;; TODO とりあえずapiで取得した分を書き込むが
+    ;; すでにスクレイピング済みのものは省略するロジックをいれる
+    (scrape-pages! {:db db :cids cids})
     {:count     count
      :timestamp ts
      :products  docs}))

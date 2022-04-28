@@ -1,6 +1,6 @@
 (ns kotori.domain.config
   (:require
-   [kotori.domain.discord :as discord]))
+   [kotori.domain.config.discord :as discord]))
 
 (defn download-all! [db]
   (doto db

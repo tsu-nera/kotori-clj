@@ -66,16 +66,10 @@
          (println "quoted video url not found.")
          {})))))
 
-(defn get-qvts-without-desc [{:keys [db screen-name limit]}]
-  (let [products (st-dmm/select-tweeted-products
-                  {:db db :screen-name screen-name :limit limit})]
-    (->> products
-         (remove #(contains? % :description))
-         (map qvt/doc->)
-         (into []))))
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (comment
-  (require '[firebase :refer [db db-dev]]
+  (require '[firebase :refer [db db-dev db-prod]]
            '[devtools :refer [env ->screen-name kotori-info]])
 
    ;;;;;;;;;;;;;
@@ -104,9 +98,6 @@
                                    :source-label "qvt_0003"
                                    :message-type "description"} qvt))
 
-  (get-qvts-without-desc {:db          (db-dev)
-                          :screen-name screen-name
-                          :limit       10})
+
 
   )
-

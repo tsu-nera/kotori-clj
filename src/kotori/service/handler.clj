@@ -39,7 +39,8 @@
      ["/ping" {:post ping/ping-pong}]
      ["/dmm"
       ["/crawl-product" {:post dmm/crawl-product!}]
-      ["/crawl-products" {:post dmm/crawl-products!}]]
+      ["/crawl-products" {:post dmm/crawl-products!}]
+      ["/crawl-qvt-descs" {:post dmm/crawl-qvt-descs!}]]
      ["/kotori" {:middleware [#(wrap-kotori config-map %)]}
       ["/dummy" kotori/dummy]
       ["/tweet" kotori/tweet]

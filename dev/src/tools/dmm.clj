@@ -74,7 +74,7 @@
 
 (defn qvt-without-desc->cids->file! [db screen-name limit file-path]
   (let [cids (map
-              :cid (qvt/get-qvts-without-desc
+              :cid (dmm/get-qvts-without-desc
                     {:db db :screen-name screen-name :limit limit}))]
     (io/dump-str! file-path (string/join "\n" cids))))
 
@@ -100,7 +100,7 @@
   (require '[firebase :refer [db-dev db-prod]]
            '[devtools :refer [kotori-info env]])
 
-  (def info (kotori-info "0025"))
+  (def info (kotori-info "0023"))
   (def screen-name (:screen-name info))
 
   (def products (st/select-tweeted-products

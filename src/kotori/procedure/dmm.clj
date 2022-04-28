@@ -3,11 +3,14 @@
    [clojure.string :as str]
    [kotori.domain.dmm.core :as dmm]
    [kotori.domain.dmm.product :as product]
+   [kotori.domain.kotori :refer [guest-user]]
+   [kotori.domain.tweet.qvt :as qvt]
    [kotori.lib.firestore :as fs]
    [kotori.lib.json :as json]
    [kotori.lib.provider.dmm.api :as api]
    [kotori.lib.provider.dmm.public :as public]
-   [kotori.lib.time :as time]))
+   [kotori.lib.time :as time]
+   [kotori.procedure.strategy.dmm :as st]))
 
 (def campaigns-path "providers/dmm/campaigns")
 
@@ -113,7 +116,24 @@
          (map #(json/->json %))
          (fs/make-batch-docs "cid" product/coll-path)
          (fs/batch-set! db))
+    (fs/set! db dmm/doc-path {:products-scraped-time ts})
     ts))
+
+(defn get-qvts-without-desc [{:keys [db screen-name limit]}]
+  (let [products (st/select-tweeted-products
+                  {:db db :screen-name screen-name :limit limit})]
+    (->> products
+         (remove #(contains? % :description))
+         (map qvt/doc->)
+         (into []))))
+
+(defn crawl-qvt-descs! [{:keys [db limit] :or {limit 300}}]
+  (let [params {:db          db
+                :screen-name guest-user
+                :limit       limit}
+        cids   (->> (get-qvts-without-desc params)
+                    (map :cid))]
+    (scrape-pages! {:db db :cids cids})))
 
 (defn crawl-product! "
   1. 指定されたcidのcontent情報を取得.
@@ -270,18 +290,11 @@
   )
 
 (comment
+  (def resp (get-qvts-without-desc {:db          (db-dev)
+                                    :screen-name guest-user
+                                    :limit       50}))
+  (def resp (crawl-qvt-descs! {:db (db-dev) :limit 50}))
 
-  (->> (range 4)
-       (map #(+ (* % 100) 1))
-       (map (fn [offset]
-              {:offset offset :hits 100}))
-       (into []))
-
-  (def xform (comp (map #(+ (* % 100) 1))
-                   (map (fn [offset]
-                          {:offset offset :hits 100}))))
-  (transduce xform conj (range 4))
-  (into [] xform (range 4))
   )
 
 (comment

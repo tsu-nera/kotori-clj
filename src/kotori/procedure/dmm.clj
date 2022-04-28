@@ -147,9 +147,9 @@
 
 (defn- get-target-desc-cids [db]
   (let [last-crawled-time
-        (fs/get-in db "providers/dmm" "products_crawled_time")
+        (fs/get-in db dmm/doc-path "products_crawled_time")
         query (fs/query-filter "last_crawled_time" last-crawled-time)]
-    (->> (fs/get-docs db "providers/dmm/products" query)
+    (->> (fs/get-docs db product/coll-path query)
          (remove #(:description %))
          (map :cid)
          (into []))))
@@ -261,6 +261,8 @@
   (def resp (get-page-bulk {:cids cids :db (db)}))
   (def resp (scrape-pages! {:cids cids :db (db)}))
 
+
+  (def resp (get-target-desc-cids (db)))
 
   (def products (crawl-campaign-products!
                  {:db    (db) :env (env)

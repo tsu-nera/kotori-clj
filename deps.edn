@@ -7,13 +7,16 @@
   ;; 状態管理
   integrant/integrant {:mvn/version "0.8.0"}
 
+  ;; Web
+  clj-http/clj-http {:mvn/version "3.12.3"}
+  enlive/enlive     {:mvn/version "1.1.6"}
+
   ;; utilites
   cheshire/cheshire                   {:mvn/version "5.10.2"}
-  clj-http/clj-http                   {:mvn/version "3.12.3"}
   jarohen/chime                       {:mvn/version "0.3.3"}
   camel-snake-kebab/camel-snake-kebab {:mvn/version "0.4.2"}
   clojure.java-time/clojure.java-time {:mvn/version "0.3.3"}
-  enlive/enlive                       {:mvn/version "1.1.6"}
+  org.clojure/data.csv                {:mvn/version "1.0.1"}
 
   ;; avoid SLF4J warnings
   org.slf4j/slf4j-nop {:mvn/version "RELEASE"}

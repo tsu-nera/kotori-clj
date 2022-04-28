@@ -8,7 +8,6 @@
    [kotori.lib.firestore :as fs]
    [kotori.lib.io :as io]
    [kotori.procedure.dmm :as dmm]
-   [kotori.procedure.kotori.qvt :as qvt]
    [kotori.procedure.strategy.dmm :as st]
    [kotori.procedure.tweet.post :as post]))
 
@@ -72,10 +71,10 @@
        (map (fn [[path tweet]]
               (update-with-recovery! db path tweet)))))
 
-(defn qvt-without-desc->cids->file! [db screen-name limit file-path]
+(defn qvt-without-summary->cids->file! [db limit file-path]
   (let [cids (map
-              :cid (dmm/get-qvts-without-desc
-                    {:db db :screen-name screen-name :limit limit}))]
+              :cid (dmm/get-qvts-without-summary
+                    {:db db :limit limit}))]
     (io/dump-str! file-path (string/join "\n" cids))))
 
 (defn ->dmm-url [cid]
@@ -95,24 +94,42 @@
   ([cid db]
    (dmm/crawl-product! {:db db :cid cid :env (env)})))
 
+(defn metadata->csv-from-fs! [db limit csv-path]
+  (dmm/crawl-qvt-descs! {:db db :limit limit})
+  (let [qvts (dmm/get-qvts-without-summary {:db db :limit limit})
+        maps (->> qvts
+                  (map #(select-keys % [:cid :title :description]))
+                  (filter #(:description %)))]
+    (io/dump-csv-from-maps! csv-path maps)))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (comment
   (require '[firebase :refer [db-dev db-prod]]
            '[devtools :refer [kotori-info env]])
+  )
 
+(comment
+  (metadata->csv-from-fs! (db-prod) 300 "tmp/metas.csv")
+  )
+
+(comment
   (def info (kotori-info "0023"))
   (def screen-name (:screen-name info))
 
   (def products (st/select-tweeted-products
                  {:db (db-prod) :screen-name screen-name :limit 10}))
 
-  (qvt-without-desc->cids->file!
-   (db-prod) screen-name 300 "tmp/inputs.txt")
+
+
+  (def qvts (dmm/get-qvts-without-summary {:db (db-prod) :limit 100}))
+  (def targets (->> qvts
+                    (map #(select-keys % [:cid :title :description]))
+                    (filter #(:description %))))
+  (io/dump-csv-from-maps! "tmp/metas.csv" targets)
 
   (def cids (dmm/get-products-by-cids {:cids cids :env (env)}))
   (def result (dmm/crawl-products-by-cids! {:cids cids
                                             :db   (db-prod) :env (env)}))
-
   )
 
 (comment  ;;;

@@ -119,22 +119,27 @@
     (fs/set! db dmm/doc-path {:products-scraped-time ts})
     ts))
 
-(defn get-qvts-without-desc [{:keys [db screen-name limit]}]
+(defn get-qvts-without-keyword [{:keys [db screen-name limit]
+                                 :or   {screen-name guest-user}}
+                                keyword]
   (let [products (st/select-tweeted-products
                   {:db db :screen-name screen-name :limit limit})]
     (->> products
-         (remove #(contains? % :description))
+         (remove #(contains? % keyword))
          (map qvt/doc->)
          (into []))))
 
+(defn get-qvts-without-summary [{:as m}]
+  (get-qvts-without-keyword m :summary))
+
+(defn get-qvts-without-desc [{:as m}]
+  (get-qvts-without-keyword m :description))
+
 (defn crawl-qvt-descs! [{:keys [db limit] :or {limit 300}}]
-  (let [params {:db          db
-                :screen-name guest-user
-                :limit       limit}
-        cids   (->> (get-qvts-without-desc params)
-                    (map :cid))
-        count  (count cids)
-        resp   {:count count}]
+  (let [cids  (->> (get-qvts-without-desc {:db db :limit limit})
+                   (map :cid))
+        count (count cids)
+        resp  {:count count}]
     (when (> count 0)
       (let [ts (scrape-pages! {:db db :cids cids})]
         (assoc resp :timestamp ts)))

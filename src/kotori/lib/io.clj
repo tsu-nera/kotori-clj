@@ -1,5 +1,6 @@
 (ns kotori.lib.io
   (:require
+   [clojure.data.csv :as csv]
    [clojure.edn :as edn]
    [clojure.java.io :as io]
    [clojure.pprint :refer [pprint]]))
@@ -28,3 +29,30 @@
 
 (defn dump-str! [file-path data]
   (spit file-path data))
+
+(defn csv-data->maps [csv-data]
+  (map zipmap
+       (->> (first csv-data) ;; First row is the header
+            (map keyword) ;; Drop if you want string keys instead
+            repeat)
+       (rest csv-data)))
+
+(defn maps->csv-data
+  "Takes a collection of maps and returns csv-data
+   (vector of vectors with all values)."
+  [maps]
+  (let [columns (-> maps first keys)
+        headers (mapv name columns)
+        rows    (mapv #(mapv % columns) maps)]
+    (into [headers] rows)))
+
+(defn dump-csv! [file-path vec-of-vecs]
+  (with-open [writer (io/writer file-path)]
+    (csv/write-csv writer vec-of-vecs)))
+
+(defn dump-csv-from-maps!
+  "Takes a file (path, name and extension) and a collection of maps
+   transforms data (vector of vectors with all values)
+   writes csv file."
+  [file-path maps]
+  (->> maps maps->csv-data (dump-csv! file-path)))

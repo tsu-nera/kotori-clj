@@ -45,6 +45,7 @@
       (str/replace #"<span" "")
       (str/replace #"style=" "")
       (str/replace #"\"color:red\">" "")
+      (str/replace #"\"color:blue\">" "")
       (str/replace #"【FANZA\(ファンザ\)】" "")
       (str/replace #" " "")
       (str/split #"※")
@@ -57,7 +58,7 @@
     {:cid cid :title title :description desc}))
 
 (comment
-  (def cid "ssis00253")
+  (def cid "h_1558csdx00007")
   (def url (domain/->url cid))
   (def data (get-page-data cid))
 

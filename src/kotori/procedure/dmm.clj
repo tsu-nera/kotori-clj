@@ -132,8 +132,13 @@
                 :screen-name guest-user
                 :limit       limit}
         cids   (->> (get-qvts-without-desc params)
-                    (map :cid))]
-    (scrape-pages! {:db db :cids cids})))
+                    (map :cid))
+        count  (count cids)
+        resp   {:count count}]
+    (when (> count 0)
+      (let [ts (scrape-pages! {:db db :cids cids})]
+        (assoc resp :timestamp ts)))
+    resp))
 
 (defn crawl-product! "
   1. 指定されたcidのcontent情報を取得.

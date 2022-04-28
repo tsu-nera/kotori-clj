@@ -122,7 +122,7 @@
   (count actresses)
   (map #(:name %) actresses)
 
-  (def data (->data raw))
+  (def data (api->data raw))
 
   (->released-time raw)
   )
@@ -130,6 +130,6 @@
 (comment
   (require '[portal.api :as p])
   (def d (p/open))
-  (reset! d (->data (dmm/get-product {:cid "ssis00335" :env (env)})))
+  (reset! d (api->data (dmm/get-product {:cid "ssis00335" :env (env)})))
   @d
   )

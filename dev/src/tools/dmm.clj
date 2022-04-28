@@ -107,7 +107,7 @@
                  {:db (db-prod) :screen-name screen-name :limit 10}))
 
   (qvt-without-desc->cids->file!
-   (db-prod) screen-name 200 "tmp/inputs.txt")
+   (db-prod) screen-name 300 "tmp/inputs.txt")
 
   (def cids (dmm/get-products-by-cids {:cids cids :env (env)}))
   (def result (dmm/crawl-products-by-cids! {:cids cids

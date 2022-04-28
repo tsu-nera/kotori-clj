@@ -156,7 +156,7 @@
         ;; 一応個数制限
         ;; 200だと7s,300だと10sなので150程度に調整.
         ;; その分query-betweenの期間を拡張して様子見.
-        q-limit                     (fs/query-limit 200)
+        q-limit                     (fs/query-limit 300)
         xquery                      (fs/make-xquery [q-already-tweeted
                                                      q-limit])
         products                    (fs/get-id-doc-map
@@ -216,10 +216,12 @@
      :last-tweet-time (:last-tweet-time raw)}))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
 (comment
   (require '[firebase :refer [db-prod db-dev db]]
-           '[devtools :refer [->screen-name]])
+           '[devtools :refer [->screen-name env]])
+  )
+
+(comment
 
   (def products
     (into [] (select-tweeted-products
@@ -232,9 +234,6 @@
 
 (comment
   ;;;;;;;;;;;
-  (require '[firebase :refer [db db-prod]]
-           '[devtools :refer [->screen-name]])
-
   (def screen-name (->screen-name "0001"))
 
   ;; cf. https://www.dmm.co.jp/digital/videoa/-/list/=/sort=ranking/
@@ -270,10 +269,3 @@
  ;;;;;;;;;;;
   )
 
-(comment
-  (require '[devtools :refer [env db]])
-
-  (def query (fs/query-limit 5))
-
-  (fs/get-docs (db) "providers/dmm/products" query)
-  )

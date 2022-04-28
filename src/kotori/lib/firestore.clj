@@ -317,9 +317,6 @@
   (reduce-kv (fn [m k v]
                (clojure.core/assoc m k (json/->clj v))) {} id-doc-map)
 
-  (def crawled-time
-    (get-in (db) "providers/dmm" "products_crawled_time"))
-
   (doc-field-exists? (db) "providers/dmmmm" "foo")
  ;;;
   )

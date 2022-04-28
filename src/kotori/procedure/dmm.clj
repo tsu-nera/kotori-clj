@@ -105,7 +105,6 @@
        (into [])))
 
 (defn scrape-pages!
-  "パラレルでスクレイピングをかけるため一瞬で終わる, すごい."
   [{:keys [cids db]}]
   (let [pages (get-page-bulk {:cids cids})
         ts    (time/fs-now)]
@@ -146,6 +145,15 @@
      :timestamp ts
      :products  docs}))
 
+(defn- get-target-desc-cids [db]
+  (let [last-crawled-time
+        (fs/get-in db "providers/dmm" "products_crawled_time")
+        query (fs/query-filter "last_crawled_time" last-crawled-time)]
+    (->> (fs/get-docs db "providers/dmm/products" query)
+         (remove #(:description %))
+         (map :cid)
+         (into []))))
+
 ;; TODO 500以上の書き込み対応.
 ;; firestroreのbatch writeの仕様で一回の書き込みは500まで.
 ;; そのため500単位でchunkごとに書き込む.
@@ -153,7 +161,6 @@
 (defn crawl-products!
   [{:keys [db] :as params}]
   (let [products   (get-products-bulk params)
-        cids       (map :content_id products)
         count      (count products)
         ts         (time/fs-now)
         xf         (comp (map product/api->data)
@@ -165,17 +172,14 @@
                     "cid" product/coll-path docs)]
     (fs/batch-set! db batch-docs)
     (fs/set! db dmm/doc-path {:products-crawled-time ts})
-    ;; TODO とりあえずapiで取得した分を書き込むが
-    ;; すでにスクレイピング済みのものは省略するロジックをいれる
-    (scrape-pages! {:db db :cids cids})
+    ;; descritionの追加スクレイピング. 取得済みのものはスキップ.
+    ;; この関数は定期実行を想定しているので
+    ;; 強制的に更新したいときは手動で関数をたたいて更新する.
+    (when-let [cids (get-target-desc-cids db)]
+      (scrape-pages! {:db db :cids cids}))
     {:count     count
      :timestamp ts
      :products  docs}))
-
-;; TODO
-;; (defn assoc-tweet->product!
-;;   [{:keys [db] :as params}]
-;;   nil)
 
 ;; 引数はDMM APIで取得できた :campaignのkeyに紐づくMapをそのまま利用.
 ;; {:date_begin \"2022-03-28 10:00:00\",
@@ -230,20 +234,21 @@
     campaign))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(comment
-  (require '[devtools :refer [env]])
-  (require '[firebase :refer [db]])
 
+(comment
+  (require '[firebase :refer [db-prod db-dev db]]
+           '[devtools :refer [->screen-name env]])
+  )
+
+(comment
   (def product (get-product {:cid "ssis00337" :env (env)}))
-  (def products (get-product-bulk {:cids ["ssis00337" "hnd00967"]
-                                   :env  (env)}))
 
   (def products (get-products {:env (env) :hits 10}))
   (def products (get-products-bulk {:env (env) :hits 450}))
   (count products)
 
   (def product (crawl-product! {:db (db) :env (env) :cid "hnd00967"}))
-  (def products (crawl-products! {:db (db) :env (env) :hits 300}))
+  (def products (crawl-products! {:db (db) :env (env) :hits 150}))
 
   ;; 1秒以内に終わる
   (def page (get-page {:cid "pred00294"}))

@@ -120,6 +120,17 @@
   ([db coll-path doc-id]
    (get-doc db (doc-path coll-path doc-id))))
 
+(defn get-doc-raw
+  ([db doc-path]
+   (-> db
+       (f/doc doc-path)
+       .get
+       deref
+       .getData
+       (as-> x (into {} x))))
+  ([db coll-path doc-id]
+   (get-doc db (doc-path coll-path doc-id))))
+
 ;; 基本的な方針として複雑な条件処理は全てクライアントで実施する.
 ;; Firestoreの複数フィールドに対するクエリの制限が面倒.
 ;; せいぜい1000以下にクエリ結果がなるようにxqueryを構築.

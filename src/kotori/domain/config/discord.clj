@@ -13,10 +13,14 @@
   (channel-name source))
 
 (defn download! [db]
-  (io/dump-edn! file-path (fs/get-doc db doc-path)))
+  (->> doc-path
+       (fs/get-doc db)
+       (io/dump-edn! file-path)))
 
 (defn upload! [db]
-  (fs/set-raw! db doc-path (stringify-keys source)))
+  (->> source
+       stringify-keys
+       (fs/set-raw! db doc-path)))
 
 (comment
   (require '[firebase :refer [db-dev db-prod]])

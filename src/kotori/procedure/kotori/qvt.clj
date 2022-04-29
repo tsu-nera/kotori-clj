@@ -101,7 +101,6 @@
 
   (def desc (:description qvt))
   (count desc)
-  (count (qvt/truncate-desc desc))
 
   (def result (tweet-quoted-video {:db           (db-dev)
                                    :env          (env)

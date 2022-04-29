@@ -1,10 +1,7 @@
 (ns kotori.lib.kotori
   (:require
-   [clojure.string :as str]))
-
-(defn- trunc
-  [s n]
-  (subs s 0 (min (count s) n)))
+   [clojure.string :as str]
+   [kotori.domain.config.ngword :refer [source]]))
 
 (defn desc->headline-arrow [text]
   (when-let [raw (-> text
@@ -46,24 +43,36 @@
 ;;       (trunc length)
 ;;       (str "...")))
 
+(defn- trunc
+  [s n]
+  (subs s 0 (min (count s) n)))
+
 (defn desc->trimed
   [text & {:keys [length] :or {length 60}}]
   (-> text
       (trunc length)
       (str "...")))
 
+(defn ng->ok [text]
+  (when text
+    (reduce (fn [x [k v]]
+              (str/replace x k v)) text source)))
+
 (defn ->next
   [product]
   (let [cid     (:cid product)
-        title   (:title product)
-        desc    (:description product)
-        summary (:summary product)]
+        title   (-> (:title product) ng->ok)
+        desc    (-> (:description product)
+                    ng->ok
+                    desc->trimed)
+        summary (-> (:summary product) ng->ok)]
     {:cid         cid
      :title       title
+     :description desc
+     :summary     summary
      ;; :headline    (desc->headline desc)
-     :description (desc->trimed desc)
      ;; :dialogue    (desc->dialogue desc)
-     :summary     summary}))
+     }))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (comment

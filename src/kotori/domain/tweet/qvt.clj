@@ -2,7 +2,8 @@
   (:require
    [kotori.domain.source.core :as core]
    [kotori.domain.tweet.core :as tweet]
-   [kotori.lib.firestore :as fs]))
+   [kotori.lib.firestore :as fs]
+   [kotori.lib.kotori :as lib]))
 
 (def default "qvt_0001")
 
@@ -14,22 +15,17 @@
    (core/->source label)
    (core/->source default)))
 
-(defn truncate-desc [text & {:keys [limit] :or {limit 50}}]
-  (when text
-    (if (< (count text) limit)
-      text
-      (str (subs text 0 limit) "..."))))
-
 (defn build-text [qvt type data]
   (let [url     (:url qvt)
         text    (:text data)
         default (str text "\n" url)
-        message (cond
-                  (= type "title")       (:title qvt)
-                  (= type "description") (truncate-desc
-                                          (:description qvt))
-                  (= type "summary")     (:summary qvt)
-                  :else                  nil)]
+        message (-> (cond
+                      (= type "title")       (:title qvt)
+                      (= type "description") (lib/desc->trimed
+                                              (:description qvt))
+                      (= type "summary")     (:summary qvt)
+                      :else                  nil)
+                    (lib/ng->ok))]
     (if message
       (str message "\n\n" default)
       default)))
@@ -78,10 +74,3 @@
      :description description
      :crawled?    crawled?}))
 
-;;;;;;;;;;;;;;;;;
-
-(comment
-
-  (core/->source default)
-
-  )

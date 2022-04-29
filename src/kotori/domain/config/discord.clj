@@ -1,5 +1,6 @@
 (ns kotori.domain.config.discord
   (:require
+   [clojure.walk :refer [stringify-keys]]
    [kotori.lib.firestore :as fs]
    [kotori.lib.io :as io]))
 
@@ -15,7 +16,7 @@
   (io/dump-edn! file-path (fs/get-doc db doc-path)))
 
 (defn upload! [db]
-  (fs/set! db doc-path source))
+  (fs/set-raw! db doc-path (stringify-keys source)))
 
 (comment
   (require '[firebase :refer [db-dev db-prod]])

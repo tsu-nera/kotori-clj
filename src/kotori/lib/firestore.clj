@@ -232,6 +232,12 @@
         (f/doc doc-path)
         (f/set! data :merge))))
 
+(defn set-raw!
+  [db doc-path map]
+  (-> db
+      (f/doc doc-path)
+      (f/set! map :merge)))
+
 (defn make-batch-docs [id-str path docs]
   (into [] (map (fn [data]
                   (let [id (get data id-str)]

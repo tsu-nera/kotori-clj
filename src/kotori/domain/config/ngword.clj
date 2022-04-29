@@ -14,7 +14,9 @@
        (io/dump-edn! file-path)))
 
 (defn upload! [db]
-  (fs/set-raw! db doc-path source))
+  (->> file-path
+       io/load-edn
+       (fs/set-raw! db doc-path)))
 
 (comment
   (require '[firebase :refer [db-dev db-prod]])

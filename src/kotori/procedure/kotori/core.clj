@@ -5,6 +5,7 @@
    [kotori.domain.source.meigen :as meigen]
    [kotori.domain.tweet.post :as post]
    [kotori.lib.firestore :as fs]
+   [kotori.lib.kotori :as lib]
    [kotori.procedure.strategy.core :as st]
    [kotori.procedure.strategy.dmm :as st-dmm]
    [twitter-clj.private :as private]))
@@ -47,8 +48,8 @@
 
 (defn select-next-product [{:keys [db screen-name]}]
   {:pre [(s/valid? ::d/screen-name screen-name)]}
-  (st-dmm/->next (first (st-dmm/select-scheduled-products
-                         {:db db :screen-name screen-name}))))
+  (lib/->next (first (st-dmm/select-scheduled-products
+                      {:db db :screen-name screen-name}))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (defn dummy [{:keys [^d/Info info db text]}]

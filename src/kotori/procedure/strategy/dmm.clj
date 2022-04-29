@@ -5,6 +5,7 @@
    [kotori.domain.dmm.core :as dmm]
    [kotori.domain.dmm.product :as product]
    [kotori.lib.firestore :as fs]
+   [kotori.lib.kotori :as lib]
    [kotori.lib.time :as time]))
 
 (def amateur-genre-ids
@@ -182,14 +183,6 @@
          (sort-by :last-tweet-time #(compare %2 %1))
          (take limit))))
 
-(defn ->next
-  [product]
-  (let [cid (:cid product)
-
-        title (:title product)]
-    {:cid   cid
-     :title title}))
-
 (defn ->print
   [product]
   (let [raw       (-> product
@@ -240,13 +233,17 @@
   (def products
     (into []
           (select-scheduled-products {:db          (db-prod)
-                                      :limit       10
+                                      :limit       50
                                       :screen-name screen-name})))
 
   (count products)
-  (map ->next products)
 
-  (def product (first products))
+  (def product (nth products 27))
+  (def next (lib/->next product))
+  (def desc (:description product))
+  (lib/desc->trimed desc)
+  (lib/desc->headline desc)
+
   (def genre-ids (->genre-ids product))
   (some true? (map #(contains? amateur-genre-ids %) genre-ids))
 

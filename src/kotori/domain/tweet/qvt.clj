@@ -19,11 +19,13 @@
   (let [url     (:url qvt)
         text    (:text data)
         default (str text "\n" url)
+        title   (:title qvt)
+        desc    (lib/desc->trimed (:description qvt))
+        summary (:summary qvt)
         message (-> (cond
-                      (= type "title")       (:title qvt)
-                      (= type "description") (lib/desc->trimed
-                                              (:description qvt))
-                      (= type "summary")     (:summary qvt)
+                      (= type "title")       title
+                      (= type "description") (or desc title)
+                      (= type "summary")     (or summary desc title)
                       :else                  nil)
                     (lib/ng->ok))]
     (if message

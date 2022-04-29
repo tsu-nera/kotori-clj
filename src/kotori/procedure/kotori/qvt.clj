@@ -11,20 +11,18 @@
    [kotori.procedure.strategy.core :as st]
    [kotori.procedure.strategy.dmm :as st-dmm]))
 
-(defn- scrape-desc-if-not-exists [product]
-  (if-not (:description product)
-    (let [cid  (:cid product)
-          page (dmm/scrape-page {:cid cid})
-          desc (:description page)]
-      (assoc product :description desc))
-    product))
+;; いったん挿入をやめるのでマスク
+#_(defn- scrape-desc-if-not-exists [product]
+    (if-not (:description product)
+      (let [cid  (:cid product)
+            page (dmm/scrape-page {:cid cid})
+            desc (:description page)]
+        (assoc product :description desc))
+      product))
 
 (defn select-next-qvt-product [{:as params}]
   (when-let [product (first (st-dmm/select-tweeted-products params))]
-    (-> product
-        ;; すぐ終わるのでスレイピングはここで処理する.
-        scrape-desc-if-not-exists
-        qvt/doc->)))
+    (qvt/doc-> product)))
 
 (defn get-qvt [{:keys [db cid]}]
   (let [doc-path (product/doc-path cid)

@@ -89,7 +89,7 @@
 (defn get-page [{:keys [cid]}]
   (public/get-page cid))
 
-(defn scrape-page!
+(defn scrape-page
   [{:keys [db cid] :as m}]
   (let [page (get-page m)
         ts   (time/fs-now)
@@ -282,7 +282,7 @@
 
   ;; 1秒以内に終わる
   (def page (get-page {:cid "pred00294"}))
-  (def resp (scrape-page! {:cid "ebod00874" :db (db)}))
+  (def resp (scrape-page {:cid "ebod00874" :db (db)}))
 
   (def cids (->> (get-products {:env (env) :hits 100})
                  (map :content_id)

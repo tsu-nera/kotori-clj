@@ -11,9 +11,20 @@
    [kotori.procedure.strategy.core :as st]
    [kotori.procedure.strategy.dmm :as st-dmm]))
 
+(defn- scrape-desc-if-not-exists [product]
+  (if-not (:description product)
+    (let [cid  (:cid product)
+          page (dmm/scrape-page {:cid cid})
+          desc (:description page)]
+      (assoc product :description desc))
+    product))
+
 (defn select-next-qvt-product [{:as params}]
   (when-let [product (first (st-dmm/select-tweeted-products params))]
-    (qvt/doc-> product)))
+    (-> product
+        ;; すぐ終わるのでスレイピングはここで処理する.
+        scrape-desc-if-not-exists
+        qvt/doc->)))
 
 (defn get-qvt [{:keys [db cid]}]
   (let [doc-path (product/doc-path cid)
@@ -80,9 +91,11 @@
                                    :source-label "qvt_0003"}))
 
  ;;;
-  (def screen-name (->screen-name "0003"))
-  (def qvt (select-next-qvt-product {:db          (db-dev)
+  (def screen-name (->screen-name "0023"))
+  (def qvt (select-next-qvt-product {:db          (db-prod)
                                      :screen-name screen-name}))
+
+
   (def qvt-data (qvt/->doc qvt result))
  ;;;
   (def cid "mide00897")
@@ -97,7 +110,4 @@
                                    :info         info
                                    :source-label "qvt_0003"
                                    :message-type "description"} qvt))
-
-
-
   )

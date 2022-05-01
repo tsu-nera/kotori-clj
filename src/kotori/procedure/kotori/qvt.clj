@@ -11,15 +11,6 @@
    [kotori.procedure.strategy.core :as st]
    [kotori.procedure.strategy.dmm :as st-dmm]))
 
-;; いったん挿入をやめるのでマスク
-#_(defn- scrape-desc-if-not-exists [product]
-    (if-not (:description product)
-      (let [cid  (:cid product)
-            page (dmm/scrape-page {:cid cid})
-            desc (:description page)]
-        (assoc product :description desc))
-      product))
-
 (defn select-next-qvt-product [{:as params}]
   (when-let [product (first (st-dmm/select-tweeted-products params))]
     (qvt/doc-> product)))
@@ -42,7 +33,10 @@
                                 quoted-link "\n")]
     (discord/notify! :kotori-qvt message)))
 
-(defn- assoc-desc-unless [qvt]
+(defn- assoc-desc-unless
+  "descriptionが存在しない場合はここで取得
+  一つのページへのアクセスは高速なのでこのタイミングで問題ない."
+  [qvt]
   (if (not (:description qvt))
     (let [cid  (:cid qvt)
           page (dmm/get-page {:cid cid})
@@ -50,38 +44,52 @@
       (assoc qvt :description desc))
     qvt))
 
+(defn- qvt-url? [qvt]
+  (and qvt (:url qvt)))
+
+(defn- update-product-with-qvt! [db result qvt cid]
+  (let [doc-path (product/doc-path cid)]
+    (->> result
+         (product/qvt->doc qvt)
+         ;; dmm/products/{cid} の情報を更新
+         (fs/update! db doc-path))))
+
+(defn- update-post-with-qvt! [db result qvt user-id]
+  (let [tweet-id (:id_str result)
+        doc-path (tweet/->post-doc-path user-id tweet-id)]
+    (->> qvt qvt/->doc (fs/update! db doc-path))))
+
 (defn tweet-quoted-video
   ([{:keys [^d/Info info db] :as params}]
    (let [screen-name (:screen-name info)
          qvt         (select-next-qvt-product
                       {:db db :screen-name screen-name})]
      (tweet-quoted-video params (assoc-desc-unless qvt))))
-  ([{:keys [db env source-label message-type] :as params} qvt]
+  ([{:keys [^d/Info info db env source-label message-type]
+     :as   params} qvt]
    (let [cid          (:cid qvt)
+         user-id      (:user-id info)
          source       (qvt/get-source source-label)
          strategy     st/pick-random
          text-builder (fn [data] (qvt/build-text qvt message-type data))
          text         (kotori/make-text source strategy text-builder)
-         doc-path     (product/doc-path cid)
-         crawled?     (:craweled? qvt)
          tweet-params (assoc params :text text :type :qvt)]
-     (if (and qvt (:url qvt))
+     (if (qvt-url? qvt)
        (when-let [result (kotori/tweet tweet-params)]
          ;; DMM商品情報 collectionを更新.
-         (->> result
-              (qvt/->doc qvt)
-              ;; dmm/products/{cid} の情報を更新
-              (fs/update! db doc-path))
+         (update-product-with-qvt! db result qvt cid)
+         ;; tweets collectionも追加情報でupdate
+         (update-post-with-qvt! db result qvt user-id)
          ;; crawledされてない場合はここで追加で処理をする.
          ;; 通常はcrawledされているのでtoolで追加した場合がこうなる.
          ;; そんなに時間かからないと思うので同期処理
-         (when-not crawled?
+         (when-not (:craweled? qvt)
            (dmm/crawl-product! {:db db :env env :cid cid}))
+         ;; discord通知
          (qvt->discord! qvt result)
          result)
-       (do
-         (println "quoted video url not found.")
-         {})))))
+       ((println "quoted video url not found.")
+        {})))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -100,13 +108,10 @@
                                    :env          (env)
                                    :info         info
                                    :source-label "qvt_0003"
-                                   :message-type "title"}))
+                                   :message-type "description"}))
 
  ;;;
-
-
-
-  (def qvt-data (qvt/->doc qvt result))
+  (def qvt-data (product/qvt->doc qvt result))
  ;;;
   (def cid "mide00897")
   (def qvt (get-qvt {:db (db-dev) :cid cid}))

@@ -32,30 +32,6 @@
       (str message "\n\n" default)
       default)))
 
-;; TODO とりあえずuser-idは必要なユースケースが現れたら対応.
-;; それまえはコメントアウトしておく.
-(defn ->doc [qvt tweet]
-  (let [screen-name      (tweet/->screen-name tweet)
-        tweet-id         (tweet/->id tweet)
-        tweet-time       (tweet/->created-time tweet)
-        tweet-link       (tweet/->url screen-name tweet-id)
-        quoted-tweet-key (fs/make-nested-key ["quoted_tweets"
-                                              screen-name tweet-id])
-        quoted-tweet-val {"screen_name"        screen-name
-                          ;; "user_id"            user-id
-                          "tweet_id"           tweet-id
-                          "tweet_time"         tweet-time
-                          "tweet_link"         tweet-link
-                          "text"               (:text tweet)
-                          "cid"                (:cid qvt)
-                          "quoted_tweet_id"    (:tweet-id qvt)
-                          ;; "quoted_user_id"     (:user-id qvt)
-                          "quoted_screen_name" (:screen-name qvt)}]
-    {"last_quoted_time"     tweet-time
-     "last_quoted_name"     screen-name
-     "last_quoted_tweet_id" tweet-id
-     quoted-tweet-key       quoted-tweet-val}))
-
 (defn doc-> [data]
   (let [cid         (:cid data)
         title       (:title data)
@@ -76,3 +52,10 @@
      :description description
      :crawled?    crawled?}))
 
+(defn ->doc [qvt]
+  (let [cid         (:cid qvt)
+        screen-name (:screen-name qvt)
+        tweet-id    (:tweet-id qvt)]
+    {"cid"                  cid
+     "last_quoted_name"     screen-name
+     "last_quoted_tweet_id" tweet-id}))

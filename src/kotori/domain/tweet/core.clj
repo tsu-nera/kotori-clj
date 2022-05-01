@@ -2,6 +2,18 @@
   (:require
    [kotori.lib.time :as t]))
 
+(defn ->post-coll-path [user-id]
+  (str "tweets/" user-id "/posts"))
+
+(defn ->archive-coll-path [user-id]
+  (str "tweets/" user-id "/archives"))
+
+(defn ->post-doc-path [user-id tweet-id]
+  (str (->post-coll-path user-id) "/" tweet-id))
+
+(defn ->archive-doc-path [user-id tweet-id]
+  (str (->archive-coll-path user-id) "/" tweet-id))
+
 (defn ->user-home-url
   "ユーザホーム"
   [screen-name]

@@ -9,23 +9,11 @@
    :photo "photo"
    :qvt   "quoted_video"})
 
-(defn ->coll-path [user-id]
-  (str "tweets/" user-id "/posts"))
-
-(defn ->archive-coll-path [user-id]
-  (str "tweets/" user-id "/archives"))
-
-(defn ->doc-path [user-id tweet-id]
-  (str (->coll-path user-id) "/" tweet-id))
-
-(defn ->archive-doc-path [user-id tweet-id]
-  (str (->archive-coll-path user-id) "/" tweet-id))
-
 (defn ->archive-data [data]
   (let [ts (time/fs-now)]
     (assoc data "deleted_at" ts)))
 
-(defn ->data
+(defn ->doc
   ([tweet]
    (let [created-time (tweet/->created-time tweet)
          screen-name  (tweet/->screen-name tweet)
@@ -45,9 +33,9 @@
       :self_retweet_count  0
       :other_retweet       false
       :other_retweet_count 0}))
-  ([tweet type]
+  ([type tweet]
    (-> tweet
-       ->data
+       ->doc
        (cond-> type
          (assoc :type (type data-type))))))
 

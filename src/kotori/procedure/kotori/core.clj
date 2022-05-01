@@ -4,6 +4,7 @@
    [firestore-clj.core :as f]
    [kotori.domain.kotori :as d]
    [kotori.domain.source.meigen :as meigen]
+   [kotori.domain.tweet.core :as tweet]
    [kotori.domain.tweet.post :as post]
    [kotori.lib.firestore :as fs]
    [kotori.lib.kotori :as lib]
@@ -19,16 +20,16 @@
   (builder (strategy source)))
 
 (defn tweet [{:keys [^d/Info info db text type]}]
-  (let [{:keys [user-id cred proxy]}
-        info
-        result   (private/create-tweet cred proxy text)
-        tweet-id (:id_str result)
-        doc-path (post/->doc-path user-id tweet-id)
-        data     (post/->data result type)]
+  (let [{:keys [user-id cred proxy]} info]
     (try
-      (println (str "post tweet completed. id=" tweet-id))
-      (fs/set! db doc-path data)
-      result
+      (when-let [resp (private/create-tweet cred proxy text)]
+        (let [tweet-id (:id_str resp)
+              doc-path (tweet/->post-doc-path user-id tweet-id)]
+          (println (str "post tweet completed. id=" tweet-id))
+          (->> resp
+               (post/->doc type)
+               (fs/set! db doc-path))
+          resp))
       (catch Exception e
         (println "post tweet Failed." (.getMessage e))))))
 
@@ -56,9 +57,9 @@
   (f/transact!
    db
    (fn [tx]
-     (let [post-doc (f/doc db (post/->doc-path user-id tweet-id))
+     (let [post-doc (f/doc db (tweet/->post-doc-path user-id tweet-id))
            archive-doc
-           (f/doc db (post/->archive-doc-path user-id tweet-id))
+           (f/doc db (tweet/->archive-doc-path user-id tweet-id))
            data     (-> (f/pull-doc post-doc tx) post/->archive-data)]
        (f/delete tx post-doc)
        (f/set tx archive-doc data)
@@ -101,7 +102,8 @@
   )
 
 (comment
-  (def tweet-id "sssssssssss")
+  (def tweet-id "xxx")
+  (def params {:db (db-prod) :info (kotori-info "0001")})
   (delete-tweet! (-> params
                      (assoc :tweet-id tweet-id)))
   )

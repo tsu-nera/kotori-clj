@@ -42,12 +42,20 @@
                                 quoted-link "\n")]
     (discord/notify! :kotori-qvt message)))
 
+(defn- assoc-desc-unless [qvt]
+  (if (not (:description qvt))
+    (let [cid  (:cid qvt)
+          page (dmm/get-page {:cid cid})
+          desc (:description page)]
+      (assoc qvt :description desc))
+    qvt))
+
 (defn tweet-quoted-video
   ([{:keys [^d/Info info db] :as params}]
    (let [screen-name (:screen-name info)
          qvt         (select-next-qvt-product
                       {:db db :screen-name screen-name})]
-     (tweet-quoted-video params qvt)))
+     (tweet-quoted-video params (assoc-desc-unless qvt))))
   ([{:keys [db env source-label message-type] :as params} qvt]
    (let [cid          (:cid qvt)
          source       (qvt/get-source source-label)
@@ -83,15 +91,19 @@
 
    ;;;;;;;;;;;;;
   (def info (kotori-info "0003"))
-  (def result (tweet-quoted-video {:db           (db)
+  (def screen-name (->screen-name "0003"))
+
+  (def qvt (select-next-qvt-product {:db          (db-dev)
+                                     :screen-name screen-name}))
+
+  (def result (tweet-quoted-video {:db           (db-dev)
                                    :env          (env)
                                    :info         info
-                                   :source-label "qvt_0003"}))
+                                   :source-label "qvt_0003"
+                                   :message-type "title"}))
 
  ;;;
-  (def screen-name (->screen-name "0023"))
-  (def qvt (select-next-qvt-product {:db          (db-prod)
-                                     :screen-name screen-name}))
+
 
 
   (def qvt-data (qvt/->doc qvt result))

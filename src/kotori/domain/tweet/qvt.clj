@@ -20,7 +20,7 @@
         text    (:text data)
         default (str text "\n" url)
         title   (:title qvt)
-        desc    (lib/desc->trimed (:description qvt))
+        desc    (some-> (:description qvt) lib/desc->trimed)
         summary (:summary qvt)
         message (-> (cond
                       (= type "title")       title

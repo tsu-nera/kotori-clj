@@ -1,6 +1,7 @@
 (ns kotori.domain.tweet.post
   (:require
-   [kotori.domain.tweet.core :as tweet]))
+   [kotori.domain.tweet.core :as tweet]
+   [kotori.lib.time :as time]))
 
 (def data-type
   {:text  "text"
@@ -11,8 +12,18 @@
 (defn ->coll-path [user-id]
   (str "tweets/" user-id "/posts"))
 
+(defn ->archive-coll-path [user-id]
+  (str "tweets/" user-id "/archives"))
+
 (defn ->doc-path [user-id tweet-id]
   (str (->coll-path user-id) "/" tweet-id))
+
+(defn ->archive-doc-path [user-id tweet-id]
+  (str (->archive-coll-path user-id) "/" tweet-id))
+
+(defn ->archive-data [data]
+  (let [ts (time/fs-now)]
+    (assoc data "deleted_at" ts)))
 
 (defn ->data
   ([tweet]

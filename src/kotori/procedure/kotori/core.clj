@@ -1,6 +1,7 @@
 (ns kotori.procedure.kotori.core
   (:require
    [clojure.spec.alpha :as s]
+   [firestore-clj.core :as f]
    [kotori.domain.kotori :as d]
    [kotori.domain.source.meigen :as meigen]
    [kotori.domain.tweet.post :as post]
@@ -51,6 +52,33 @@
   (lib/->next (first (st-dmm/select-scheduled-products
                       {:db db :screen-name screen-name}))))
 
+(defn archive-fs-tweet-data [db user-id tweet-id]
+  (f/transact!
+   db
+   (fn [tx]
+     (let [post-doc (f/doc db (post/->doc-path user-id tweet-id))
+           archive-doc
+           (f/doc db (post/->archive-doc-path user-id tweet-id))
+           data     (-> (f/pull-doc post-doc tx) post/->archive-data)]
+       (f/delete tx post-doc)
+       (f/set tx archive-doc data)
+       data))))
+
+(defn delete-tweet! "
+  1. tweets/:user_id/posts/:status_id を tweets/:user_id/archivesへ移動.
+  2. Twitterからツイートを削除.
+  "
+  [{:keys [^d/Info info db tweet-id]}]
+  (let
+   [{:keys [user-id cred proxy]} info]
+    (try
+      (archive-fs-tweet-data db user-id tweet-id)
+      (when-let [resp (private/delete-tweet cred proxy tweet-id)]
+        (println (str "delete tweet completed. id=" tweet-id))
+        resp)
+      (catch Exception e
+        (println "delete tweet Failed." (.getMessage e))))))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (defn dummy [{:keys [^d/Info info db text]}]
   (assoc info :text text))
@@ -59,9 +87,10 @@
 (comment
   ;;;
   (require '[firebase :refer [db db-prod db-dev]]
-           '[devtools :refer [env kotori-info ->screen-name info-dev]])
+           '[devtools :refer [env kotori-info ->screen-name ->user-id
+                              info-dev]])
 
-  (def params {:db (db) :info @info-dev})
+  (def params {:db (db-dev) :info @info-dev})
 
   ;;;;;;;;;;;;;
   (tweet-morning params)
@@ -72,11 +101,17 @@
   )
 
 (comment
+  (def tweet-id "1439509724492406791")
+  (delete-tweet! (-> params
+                     (assoc :tweet-id tweet-id)))
+  )
+
+(comment
   ;;;
   (require '[devtools :refer [twitter-auth]])
   (def auth (twitter-auth))
 
-  (def tweet (private/get-tweet (twitter-auth) "1500694005259980800"))
+  (def tweet (private/get-tweet (twitter-auth) "xxxxxxxx"))
   (def user (private/get-user (twitter-auth) "46130870"))
   (def resp (private/create-tweet (twitter-auth) "test"))
 

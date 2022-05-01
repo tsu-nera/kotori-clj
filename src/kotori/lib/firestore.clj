@@ -174,6 +174,14 @@
                             (clojure.core/assoc
                              m k (json/->clj v))) {} x)))))
 
+(defn get-filter-docs
+  ([db coll-path filter-map]
+   (-> db
+       (f/coll coll-path)
+       (f/filter= filter-map)
+       f/pullv
+       json/->clj)))
+
 (defn get-docs-with-assoc-id
   [db coll-path]
   (let [doc-map (get-id-doc-map db coll-path)]
@@ -314,6 +322,12 @@
       (fn [acc doc]
         (clojure.core/assoc
          acc (keyword (get doc id-key)) doc)) {} docs))))
+
+(defn delete!
+  [db doc-path]
+  (-> db
+      (f/doc doc-path)
+      (f/delete!)))
 
 #_ (defn fs->edn [db coll-path file-path])
 

@@ -101,7 +101,7 @@
   )
 
 (comment
-  (def tweet-id "1439509724492406791")
+  (def tweet-id "sssssssssss")
   (delete-tweet! (-> params
                      (assoc :tweet-id tweet-id)))
   )

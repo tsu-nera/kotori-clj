@@ -75,6 +75,10 @@
 (defn kotori-info [code]
   (make-info (kotori-by-code code)))
 
+(defn kotori-params [db code]
+  (let [info (make-info (kotori-by-code code))]
+    {:db db :info info}))
+
 (def info-dev (delay (kotori-info "0003")))
 
 (defn ->screen-name [code]

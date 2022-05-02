@@ -3,55 +3,48 @@
    [clojure.string :as str]
    [kotori.domain.config.ngword :refer [source]]))
 
-(defn desc->headline-arrow [text]
-  (when-let [raw (-> text
-                     (str/split #"＞")
-                     first
-                     (str/split #"＜")
-                     second)]
-    (str "＜" raw "＞")))
+(defn desc->headline [text]
+  (let [re (re-pattern "^＜(.+?)＞|^【(.+?)】")]
+    (first (re-find re text))))
 
-(defn desc->headline-paren [text]
-  (when-let [raw (-> text
-                     (str/split #"】")
-                     first
-                     (str/split #"【")
-                     second)]
-    (str "【" raw "】")))
+(defn desc->dialogue [text]
+  (let [re (re-pattern "「(.+?)」")]
+    (when-let [dialogue (first (re-find re text))]
+      (if (< 6 (count dialogue))
+        dialogue))))
 
-(defn desc->headline
+(defn trim-headline [text]
+  (if-let [headline (desc->headline text)]
+    (-> text
+        (str/replace headline ""))
+    text))
+
+(defn desc->sentences [text]
+  (-> text
+      (str/replace #"。。。" "。")
+      (str/replace #"。" "。\n")
+      (str/replace #"！！" "！！\n")
+      (str/replace #"！？" "！？\n")
+      (str/replace #"…！" "…！\n")
+      str/split-lines))
+
+(defn join-sentences [sentences & {:keys [length] :or {length 100}}]
+  (str/trim (reduce (fn [desc sentence]
+                      (if (< length (count desc))
+                        desc
+                        (str desc "\n\n" sentence)))
+                    "" sentences)))
+
+(defn desc->trimed
   [text]
-  (if-let [arrow (desc->headline-arrow text)]
-    arrow
-    (when-let [paren (desc->headline-paren text)]
-      paren)))
-
-;; (defn desc->dialogue
-;;   [text]
-;;   (when-let [raw (-> text
-;;                      (str/split #"^$「")
-;;                      second
-;;                      (str/split #"」")
-;;                      first)]
-;;     (str "「" raw "」")))
-
-;; (defn desc->trimed
-;;   [text & {:keys [length] :or {length 60}}]
-;;   (-> (if-let [headline (desc->headline text)]
-;;         (str/replace text headline "")
-;;         text)
-;;       (trunc length)
-;;       (str "...")))
+  (-> text
+      trim-headline
+      desc->sentences
+      join-sentences))
 
 (defn- trunc
   [s n]
   (subs s 0 (min (count s) n)))
-
-(defn desc->trimed
-  [text & {:keys [length] :or {length 60}}]
-  (-> text
-      (trunc length)
-      (str "...")))
 
 (defn ng->ok [text]
   (when text
@@ -75,11 +68,24 @@
      }))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(comment
-  ;;;
-  (def desc
-    "＜8年の時を経て同じ男にレ●プされる不条理トラウマ作品、第2弾！＞学生時代に犯●れ、男の人に恐怖を抱くようになったはなはトラウマを抱えたまま大人に。家族で田舎に逃げ平穏を取り戻したはずだったが、釈放されたレ●プ魔に見つかり再び惨劇が始まる。8年間女を抱けずに溜まった精子と性欲をぶちまけに来た男に押し潰され、重量差に骨は軋み、呼吸器官を圧迫され、苦しみながら何度も中出しされる地獄の3日間。")
 
-  (def headline (desc->headline desc))
-  (def trimed (desc->trimed desc))
+(comment
+  (require '[firebase :refer [db-prod db-dev db]]
+           '[devtools :refer [->screen-name env]]
+           '[kotori.procedure.strategy.dmm
+             :refer [select-scheduled-products]])
+
+  (def screen-name (->screen-name "0001"))
+  (def products
+    (into []
+          (select-scheduled-products {:db          (db-prod)
+                                      :limit       20
+                                      :screen-name screen-name})))
+  (def descs (map :description products))
+
+  (map desc->dialogue descs)
+  (map desc->headline descs)
+  (println (nth (map desc->trimed descs) 2))
+
+  (def trimed (map desc->trimed descs))
   )

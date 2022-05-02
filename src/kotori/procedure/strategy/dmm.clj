@@ -9,14 +9,21 @@
    [kotori.lib.time :as time]))
 
 (def amateur-genre-ids
-  #{4024})
+  #{;
+    4024 ; 素人
+    4006 ; ナンパ
+    6002 ; ハメ撮り
+    })
 
 (def vr-genre-ids
   #{6793 6925})
 
 (def antisocial-genre-ids
-  "Twitter的にダメなジャンル."
-  #{4021 5015})
+  "Twitter的にダメそうなジャンル."
+  #{;
+    4021 ; 盗撮・のぞき
+    5015 ; ドラッグ
+    })
 
 (def violent-genre-ids
   #{21 567 5059 6094 6953})
@@ -73,6 +80,10 @@
   (remove #(or (no-actress? %)
                (contains-genre? amateur-genre-ids %))))
 
+(def st-include-amateur
+  (filter #(or (no-actress? %)
+               (contains-genre? amateur-genre-ids %))))
+
 (def st-exclude-omnibus
   (remove #(> (:actress-count %) 4)))
 
@@ -121,8 +132,8 @@
 (def st-skip-debug
   (remove #(get % :debug)))
 
-(defn select-scheduled-products [{:keys [db limit screen-name]
-                                  :or   {limit 5}}]
+(defn select-scheduled-products-with-xst [{:keys [db limit screen-name]
+                                           :or   {limit 5}} xst]
   (let [last-crawled-time (fs/get-in db dmm/doc-path
                                      "products_crawled_time")
         st-last-crawled   (fs/query-filter
@@ -134,19 +145,29 @@
         (make-st-exclude-recently-tweeted-others screen-name 14)
         products          (fs/get-docs
                            db product/coll-path st-last-crawled)
-        xstrategy         (comp
-                           st-skip-debug
-                           st-exclude-no-samples
-                           st-exclude-recently-tweeted-self
-                           st-exclude-recently-tweeted-others
-                           st-exclude-ng-genres
-                           st-exclude-amateur
-                           st-exclude-omnibus)]
+        xstrategy         (apply comp
+                                 st-skip-debug
+                                 st-exclude-no-samples
+                                 st-exclude-recently-tweeted-self
+                                 st-exclude-recently-tweeted-others
+                                 xst)]
     (->> products
          (into [] xstrategy)
          ;; sortはtransducerに組み込まないほうが楽.
          (sort-by :rank-popular)
          (take limit))))
+
+(defn select-scheduled-products [{:as params}]
+  (let [xst [st-exclude-ng-genres
+             st-exclude-amateur
+             st-exclude-omnibus]]
+    (select-scheduled-products-with-xst params xst)))
+
+(defn select-scheduled-amateurs [{:as params}]
+  (let [xst [st-exclude-ng-genres
+             st-exclude-omnibus
+             st-include-amateur]]
+    (select-scheduled-products-with-xst params xst)))
 
 (defn select-tweeted-products [{:keys [db limit screen-name]
                                 :or   {limit 5}}]
@@ -237,6 +258,14 @@
                                       :screen-name screen-name})))
 
   (count products)
+
+  (def screen-name (->screen-name "0027"))
+  (def amateurs
+    (into []
+          (select-scheduled-amateurs {:db          (db-prod)
+                                      :limit       5
+                                      :screen-name screen-name})))
+  (count amateurs)
 
   (def product (nth products 27))
   (def next (lib/->next product))

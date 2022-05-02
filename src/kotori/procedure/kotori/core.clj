@@ -53,6 +53,11 @@
   (lib/->next (first (st-dmm/select-scheduled-products
                       {:db db :screen-name screen-name}))))
 
+(defn select-next-amateur [{:keys [db screen-name]}]
+  {:pre [(s/valid? ::d/screen-name screen-name)]}
+  (lib/->next (first (st-dmm/select-scheduled-amateurs
+                      {:db db :screen-name screen-name}))))
+
 (defn archive-fs-tweet-data [db user-id tweet-id]
   (f/transact!
    db

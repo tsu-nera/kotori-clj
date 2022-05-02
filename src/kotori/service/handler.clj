@@ -50,7 +50,9 @@
       ["/tweet-evening" kotori/tweet-evening]
       ["/tweet-random" kotori/tweet-random]
       ["/select-next-product"
-       {:get kotori/select-next-product}]]])))
+       {:get kotori/select-next-product}]
+      ["/select-next-amateur"
+       {:get kotori/select-next-amateur}]]])))
 
 (defmethod ig/init-key ::app [_ {:keys [config-map]}]
   (make-app config-map))

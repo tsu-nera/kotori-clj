@@ -18,7 +18,12 @@
 
 (def base-headers {:headers {:user-agent user-agent}})
 
-(defrecord Credentials [^String api_id ^String affiliate_id])
+(defrecord Credentials [^String api-id ^String affiliate-id])
+
+(defn- ->items [resp]
+  (-> resp
+      :result
+      :items))
 
 (defn- -get [url creds q & {:keys [debug] :or {debug false}}]
   (let [creds-json (json/->json creds)
@@ -30,6 +35,7 @@
                                 :query-params params})]
     (-> resp
         :body
+        ->items
         (or (throw (ex-info "Exception occured at dmm http get"
                             {:response resp}))))))
 
@@ -78,12 +84,13 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (comment
-  (require '[local :refer [dmm-creds]])
+  (require '[tools.dmm :refer [dmm-creds]])
   (def creds (map->Credentials (dmm-creds)))
 
   (search-product creds {:hits    10
                          :sort    "date"
                          :keyword "上原亜衣"})
+
   (search-product creds {:cid "ssis00312"})
 
   (search-actress creds {:actress_id "1008785"})

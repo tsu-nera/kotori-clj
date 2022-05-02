@@ -32,11 +32,6 @@
   ([id]
    (private/get-tweet (twitter-auth) id)))
 
-(defn dmm-creds []
-  (-> system
-      (get :kotori.service.env/env)
-      (select-keys [:api-id :affiliate-id])))
-
 (defn proxies []
   (-> system
       :kotori.service.env/proxies))

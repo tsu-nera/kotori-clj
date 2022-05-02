@@ -1,7 +1,7 @@
 (ns kotori.procedure.tweet.post
   (:require
    [firestore-clj.core :as f]
-   [kotori.domain.tweet.post :as m]
+   [kotori.domain.tweet.core :as tweet]
    [kotori.lib.firestore :as fs]
    [kotori.lib.time :as t]))
 
@@ -15,7 +15,7 @@
                          (fs/query-start-at from-time)
                          (fs/query-end-before to-time)])]
     (fs/get-docs db
-                 (m/->coll-path user-id)
+                 (tweet/->post-coll-path user-id)
                  xquery)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

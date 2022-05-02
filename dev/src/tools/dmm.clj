@@ -3,13 +3,20 @@
    [clojure.string :as string]
    [devtools :refer [env]]
    [firebase :refer [db-dev db-prod]]
+   [integrant.repl.state :refer [config system]]
    [kotori.domain.dmm.core :as model]
    [kotori.domain.dmm.product :as product]
    [kotori.lib.firestore :as fs]
    [kotori.lib.io :as io]
-   [kotori.procedure.dmm :as dmm]
+   [kotori.lib.provider.dmm.api :as api]
+   [kotori.procedure.dmm.product :as dmm]
    [kotori.procedure.strategy.dmm :as st]
    [kotori.procedure.tweet.post :as post]))
+
+(defn dmm-creds []
+  (-> system
+      (get :kotori.service.env/env)
+      (select-keys [:api-id :affiliate-id])))
 
 (defn make-dmm-tweet [screen-name post]
   {:cid         (:cid post)

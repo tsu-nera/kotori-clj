@@ -1,4 +1,4 @@
-(ns kotori.procedure.dmm
+(ns kotori.procedure.dmm.product
   (:require
    [clojure.string :as str]
    [kotori.domain.dmm.core :as dmm]
@@ -17,18 +17,12 @@
 (defn make-campaign-products-path [id]
   (str campaigns-path "/" id "/" "products"))
 
-(defn- ->items [resp]
-  (-> resp
-      :result
-      :items))
-
 (defn get-product [{:keys [cid env]}]
   (let [{:keys [api-id affiliate-id]}
         env
         creds (api/->Credentials api-id affiliate-id)
         resp  (api/search-product creds {:cid cid})]
     (-> resp
-        (->items)
         (first))))
 
 (defn get-products-by-cids
@@ -54,8 +48,7 @@
                 keyword    (assoc :keyword keyword)
                 article    (assoc :article article)
                 article-id (assoc :article_id article-id))
-        resp  (api/search-product creds req)
-        items (->items resp)]
+        items (api/search-product creds req)]
     items))
 
 (defn get-products-bulk

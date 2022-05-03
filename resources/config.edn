@@ -1,5 +1,6 @@
 ;; configuration maps for integrant
-{:kotori.service.env/env         {:path "private/prod/env.edn"}
+{:kotori.service.logger/logger   {}
+ :kotori.service.env/env         {:path "private/prod/env.edn"}
  :kotori.service.env/proxies     {:path "private/proxies.edn"}
  :kotori.service.kotori/by-ids   {:path    "private/kotori.edn"
                                   :proxies #ig/ref :kotori.service.env/proxies}

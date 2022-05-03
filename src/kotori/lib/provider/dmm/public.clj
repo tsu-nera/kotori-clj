@@ -93,6 +93,6 @@
   (def data (get-page-data cid))
   (def description (->description data))
 
-  (def ret (-> description desc->a-seq))
+  (def ret (-> description desc->aseq))
   (def ret (-> description remove-aseq))
   )

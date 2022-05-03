@@ -16,7 +16,10 @@
     })
 
 (def vr-genre-ids
-  #{6793 6925})
+  #{;
+    6793 ; VR専用
+    6925 ; ハイクオリティVR
+    })
 
 (def antisocial-genre-ids
   "Twitter的にダメそうなジャンル."
@@ -86,6 +89,9 @@
 
 (def st-exclude-omnibus
   (remove #(> (:actress-count %) 4)))
+
+(def st-include-vr
+  (filter #(contains-genre? vr-genre-ids %)))
 
 (defn- make-st-exclude-recently-tweeted
   "最終投稿からXdays以上経過"
@@ -168,6 +174,38 @@
              st-exclude-omnibus
              st-include-amateur]]
     (select-scheduled-products-with-xst params xst)))
+
+(defn select-scheduled-vrs [{:keys [db limit screen-name]
+                             :or   {limit 5}}]
+  (let [last-crawled-time (fs/get-in db dmm/doc-path
+                                     "products_crawled_time")
+        st-last-crawled   (fs/query-filter
+                           "last_crawled_time"
+                           last-crawled-time)
+        st-exclude-recently-tweeted-self
+        (make-st-exclude-recently-tweeted-self screen-name 28)
+        st-exclude-recently-tweeted-others
+        (make-st-exclude-recently-tweeted-others screen-name 14)
+        products          (fs/get-docs
+                           db product/coll-path st-last-crawled)
+        xst               [st-exclude-ng-genres
+                           st-exclude-omnibus
+                           st-include-vr]
+        xstrategy         (apply comp
+                                 st-skip-debug
+                                 st-exclude-no-samples
+                                 st-exclude-recently-tweeted-self
+                                 st-exclude-recently-tweeted-others
+                                 xst)]
+    (->> products
+         (into [] xstrategy)
+         ;; sortはtransducerに組み込まないほうが楽.
+         (sort-by :rank-popular)
+         (take limit))))
+
+#_(defn select-scheduled-vrs [{:as params}]
+    (let []
+      (select-scheduled-products-with-xst params xst)))
 
 (defn select-tweeted-products [{:keys [db limit screen-name]
                                 :or   {limit 5}}]
@@ -267,6 +305,15 @@
                                       :limit       5
                                       :screen-name screen-name})))
   (count amateurs)
+
+  (def screen-name (->screen-name "0028"))
+  (def vrs
+    (into []
+          (select-scheduled-vrs {:db          (db-prod)
+                                 :limit       100
+                                 :screen-name screen-name})))
+  (count vrs)
+
 
   (def product (nth products 27))
   (def next (lib/->next product))

@@ -9,6 +9,9 @@
 (def coll-path (str dmm/doc-path "/products"))
 (defn doc-path [cid] (str coll-path "/" cid))
 
+(def vr-coll-path (str dmm/doc-path "/vrs"))
+(defn vr-doc-path [cid] (str vr-coll-path "/" cid))
+
 (defn- ->cid [raw]
   (:content_id raw))
 

@@ -52,7 +52,9 @@
       ["/select-next-product"
        {:get kotori/select-next-product}]
       ["/select-next-amateur"
-       {:get kotori/select-next-amateur}]]])))
+       {:get kotori/select-next-amateur}]
+      ["/select-next-vr"
+       {:get kotori/select-next-vr}]]])))
 
 (defmethod ig/init-key ::app [_ {:keys [config-map]}]
   (make-app config-map))

@@ -28,6 +28,19 @@
       first
       str/trim))
 
+(defn- desc->aseq [text]
+  (let [re (re-pattern "<a(.+?)a>")]
+    (->> text
+         (re-seq re)
+         (map first))))
+
+(defn- remove-aseq [text]
+  (let [aseq (desc->aseq text)]
+    (reduce (fn [text a]
+              (-> text
+                  (str/replace a "")
+                  (str/replace #"「」" ""))) text aseq)))
+
 (defn ->description [m]
   (-> m
       (html/select [(html/attr= :name "description")])
@@ -39,6 +52,7 @@
       (str/split #"-------------------------------------")
       first
       (str/replace #"<br>" "")
+      (str/replace #"<br />" "")
       (str/replace #"<b>" "")
       (str/replace #"</b>" "")
       (str/replace #"</span>" "")
@@ -48,6 +62,7 @@
       (str/replace #"\"color:blue\">" "")
       (str/replace #"【FANZA\(ファンザ\)】" "")
       (str/replace #" " "")
+      remove-aseq
       (str/split #"※")
       first))
 
@@ -73,4 +88,11 @@
         :content
         ))
   content
+
+  (def cid "mgdv00064")
+  (def data (get-page-data cid))
+  (def description (->description data))
+
+  (def ret (-> description desc->a-seq))
+  (def ret (-> description remove-aseq))
   )

@@ -1,2 +1,0 @@
-(ns kotori.procedure.dmm)
-

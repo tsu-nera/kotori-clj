@@ -4,11 +4,8 @@
     :refer [vr-coll-path vr-doc-path]
     :rename {vr-coll-path coll-path vr-doc-path doc-path}]
    [kotori.lib.provider.dmm.api :as api]
-   [kotori.lib.provider.dmm.product :as lib]))
+   [kotori.lib.provider.dmm.product :as product]))
 
-#_(defn get-products [{:keys [cid env]}]
-    (let [{:keys [api-id affiliate-id]}
-          env
-          creds (api/->Credentials api-id affiliate-id)
-          resp  (lib/get-vr-products creds)]
-      resp))
+(defn get-vr-products [{:keys [creds]}]
+  (product/get-by-genres creds))
+

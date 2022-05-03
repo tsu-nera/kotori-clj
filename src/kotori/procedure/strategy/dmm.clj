@@ -3,50 +3,14 @@
   (:require
    [clojure.string :as str]
    [kotori.domain.dmm.core :as dmm]
+   [kotori.domain.dmm.genre :as genre]
    [kotori.domain.dmm.product :as product]
    [kotori.lib.firestore :as fs]
    [kotori.lib.kotori :as lib]
    [kotori.lib.time :as time]))
 
-(def amateur-genre-ids
-  #{;
-    4024 ; 素人
-    4006 ; ナンパ
-    6002 ; ハメ撮り
-    })
-
-(def vr-genre-ids
-  #{;
-    6793 ; VR専用
-    6925 ; ハイクオリティVR
-    })
-
-(def antisocial-genre-ids
-  "Twitter的にダメそうなジャンル."
-  #{;
-    4021 ; 盗撮・のぞき
-    5015 ; ドラッグ
-    })
-
-(def violent-genre-ids
-  #{21 567 5059 6094 6953})
-
-(def dirty-genre-ids
-  #{4018 5007 5011 5012 5013 5014 5024 6151})
-
-(def trans-genre-ids
-  #{3036 4015})
-
-(def ng-genres
-  (into #{} (concat
-             vr-genre-ids
-             antisocial-genre-ids
-             violent-genre-ids
-             dirty-genre-ids
-             trans-genre-ids)))
-
 (defn ng-genre? [id]
-  (contains? ng-genres id))
+  (contains? genre/ng-genres id))
 
 (defn no-sample-movie? [product]
   (:no-sample-movie product))
@@ -81,17 +45,17 @@
 
 (def st-exclude-amateur
   (remove #(or (no-actress? %)
-               (contains-genre? amateur-genre-ids %))))
+               (contains-genre? genre/amateur-ids %))))
 
 (def st-include-amateur
   (filter #(or (no-actress? %)
-               (contains-genre? amateur-genre-ids %))))
+               (contains-genre? genre/amateur-ids %))))
 
 (def st-exclude-omnibus
   (remove #(> (:actress-count %) 4)))
 
 (def st-include-vr
-  (filter #(contains-genre? vr-genre-ids %)))
+  (filter #(contains-genre? genre/vr-ids %)))
 
 (defn- make-st-exclude-recently-tweeted
   "最終投稿からXdays以上経過"

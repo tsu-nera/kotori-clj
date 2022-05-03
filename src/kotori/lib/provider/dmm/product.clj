@@ -45,9 +45,6 @@
        (into #{})
        (into [])))
 
-(defn get-vr-products [{:keys [creds]}]
-  (api/search-product creds))
-
 (comment
   (require '[tools.dmm :refer [dmm-creds]])
   (def creds (api/map->Credentials (dmm-creds)))

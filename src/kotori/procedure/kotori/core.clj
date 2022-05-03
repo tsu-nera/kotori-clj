@@ -8,6 +8,7 @@
    [kotori.domain.tweet.post :as post]
    [kotori.lib.firestore :as fs]
    [kotori.lib.kotori :as lib]
+   [kotori.lib.log :as log]
    [kotori.procedure.strategy.core :as st]
    [kotori.procedure.strategy.dmm :as st-dmm]
    [twitter-clj.private :as private]))
@@ -25,13 +26,13 @@
       (when-let [resp (private/create-tweet cred proxy text)]
         (let [tweet-id (:id_str resp)
               doc-path (tweet/->post-doc-path user-id tweet-id)]
-          (println (str "post tweet completed. id=" tweet-id))
+          (log/info (str "post tweet completed. id=" tweet-id))
           (->> resp
                (post/->doc type)
                (fs/set! db doc-path))
           resp))
       (catch Exception e
-        (println "post tweet Failed." (.getMessage e))))))
+        (log/error e "post tweet Failed.")))))
 
 (defn tweet-morning
   [{:as params}]
@@ -80,10 +81,10 @@
     (try
       (archive-fs-tweet-data db user-id tweet-id)
       (when-let [resp (private/delete-tweet cred proxy tweet-id)]
-        (println (str "delete tweet completed. id=" tweet-id))
+        (log/info (str "delete tweet completed. id=" tweet-id))
         resp)
       (catch Exception e
-        (println "delete tweet Failed." (.getMessage e))))))
+        (log/error "delete tweet Failed." (.getMessage e))))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (defn dummy [{:keys [^d/Info info db text]}]

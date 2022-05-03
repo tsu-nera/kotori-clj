@@ -16,13 +16,3 @@
 (defmethod ig/init-key ::logger [_ _]
   (reset-config)
   (timbre/merge-config! timbre-config))
-
-(comment
-  (timbre/refer-timbre)
-  ;; (timbre/merge-config! timbre-config)
-
-  (timbre/info "test")
-  (timbre/debug "test")
-  (timbre/error "test")
-  timbre/*config*
-  )

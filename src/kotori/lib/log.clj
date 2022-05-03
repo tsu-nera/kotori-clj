@@ -3,14 +3,18 @@
    [taoensso.timbre :as timbre]))
 
 (defn info
-  [args]
+  [& args]
   (timbre/info args))
+
+(defn warn
+  [& args]
+  (timbre/warn args))
 
 ;; FIXME
 ;; cider-nreplのせいなのかstderrがREPLに表示されないので
 ;; ラッパー関数で覆ってinfoつかっとく.
 (defn error
-  [args]
+  [& args]
   (timbre/info args))
 
 (comment
@@ -23,4 +27,11 @@
   (timbre/debug "test")
   (timbre/error (Exception. "Doh!") "test")
   timbre/*config*
+  )
+
+(comment
+  (require '[clojure.tools.logging :as log])
+
+  (log/log-capture! (ns 'local))
+  (log/with-logs 'local (log/info "test"))
   )

@@ -7,10 +7,12 @@
    [kotori.domain.tweet.core :as tweet]
    [kotori.domain.tweet.post :as post]
    [kotori.lib.firestore :as fs]
+   [kotori.lib.json :as json]
    [kotori.lib.kotori :as lib]
    [kotori.lib.log :as log]
    [kotori.procedure.strategy.core :as st]
    [kotori.procedure.strategy.dmm :as st-dmm]
+   [slingshot.slingshot :refer [try+ throw+]]
    [twitter-clj.private :as private]))
 
 (defn make-info [{:keys [screen-name user-id auth-token ct0 proxy-map]}]
@@ -20,19 +22,32 @@
 (defn make-text [source strategy builder]
   (builder (strategy source)))
 
+(defn handle-response
+  [req-fn & req]
+  (try+
+   (apply req-fn req)
+   (catch [:status 403] {:keys [body]}
+     (let [error   (first (:errors (-> body json/parse-string json/->clj)))
+           code    (:code error)
+           message (:message error)]
+       (log/warn (str "403 Forbidden, " message " code=" code)))
+     nil)
+   (catch Object _
+     (log/error (:throwable &throw-context) "unexpected error")
+     (throw+))))
+
 (defn tweet [{:keys [^d/Info info db text type]}]
   (let [{:keys [user-id cred proxy]} info]
-    (try
-      (when-let [resp (private/create-tweet cred proxy text)]
-        (let [tweet-id (:id_str resp)
-              doc-path (tweet/->post-doc-path user-id tweet-id)]
-          (log/info (str "post tweet completed. id=" tweet-id))
-          (->> resp
-               (post/->doc type)
-               (fs/set! db doc-path))
-          resp))
-      (catch Exception e
-        (log/error e "post tweet Failed.")))))
+    (if-let [resp (handle-response
+                   private/create-tweet cred proxy text)]
+      (let [tweet-id (:id_str resp)
+            doc-path (tweet/->post-doc-path user-id tweet-id)]
+        (log/info (str "post tweet completed. id=" tweet-id))
+        (->> resp
+             (post/->doc type)
+             (fs/set! db doc-path))
+        resp)
+      (log/error "post tweet failed."))))
 
 (defn tweet-morning
   [{:as params}]

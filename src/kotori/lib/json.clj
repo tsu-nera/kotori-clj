@@ -2,7 +2,11 @@
   "Clojure Map <-> Json Proxy Library"
   (:require
    [camel-snake-kebab.core :as csk]
-   [camel-snake-kebab.extras :as cske]))
+   [camel-snake-kebab.extras :as cske]
+   [cheshire.core :as cheshire]))
+
+(defn parse-string [s]
+  (cheshire/parse-string s))
 
 (defn ->json-keyword
   "Clojure Map into JSON i.e. kebab-case->snake_case."

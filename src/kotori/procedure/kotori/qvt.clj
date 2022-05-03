@@ -6,6 +6,7 @@
    [kotori.domain.tweet.qvt :as qvt]
    [kotori.lib.discord :as discord]
    [kotori.lib.firestore :as fs]
+   [kotori.lib.log :as log]
    [kotori.procedure.dmm.product :as dmm]
    [kotori.procedure.kotori.core :as kotori]
    [kotori.procedure.strategy.core :as st]
@@ -49,10 +50,7 @@
 
 (defn- update-product-with-qvt! [db result qvt cid]
   (let [doc-path (product/doc-path cid)]
-    (->> result
-         (product/qvt->doc qvt)
-         ;; dmm/products/{cid} の情報を更新
-         (fs/update! db doc-path))))
+    (fs/update! db doc-path (product/qvt->doc qvt result))))
 
 (defn- update-post-with-qvt! [db result qvt user-id]
   (let [tweet-id (:id_str result)
@@ -75,21 +73,24 @@
          text         (kotori/make-text source strategy text-builder)
          tweet-params (assoc params :text text :type :qvt)]
      (if (qvt-url? qvt)
-       (when-let [result (kotori/tweet tweet-params)]
-         ;; DMM商品情報 collectionを更新.
-         (update-product-with-qvt! db result qvt cid)
-         ;; tweets collectionも追加情報でupdate
-         (update-post-with-qvt! db result qvt user-id)
-         ;; crawledされてない場合はここで追加で処理をする.
-         ;; 通常はcrawledされているのでtoolで追加した場合がこうなる.
-         ;; そんなに時間かからないと思うので同期処理
-         (when-not (:craweled? qvt)
-           (dmm/crawl-product! {:db db :env env :cid cid}))
-         ;; discord通知
-         (qvt->discord! qvt result)
-         result)
-       ((println "quoted video url not found.")
-        {})))))
+       (if-let [result (kotori/tweet tweet-params)]
+         (do
+           ;; DMM商品情報 collectionを更新.
+           (update-product-with-qvt! db result qvt cid)
+           ;; tweets collectionも追加情報でupdate
+           (update-post-with-qvt! db result qvt user-id)
+           ;; crawledされてない場合はここで追加で処理をする.
+           ;; 通常はcrawledされているのでtoolで追加した場合がこうなる.
+           ;; そんなに時間かからないと思うので同期処理
+           (when-not (:craweled? qvt)
+             (dmm/crawl-product! {:db db :env env :cid cid}))
+           ;; discord通知
+           (qvt->discord! qvt result)
+           result)
+         {:result :failed})
+       (do
+         (log/error "quoted video url not found.")
+         {:result :failed})))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 

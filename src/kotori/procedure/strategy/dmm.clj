@@ -254,8 +254,9 @@
   (def products
     (into []
           (select-scheduled-products {:db          (db-prod)
-                                      :limit       50
+                                      :limit       20
                                       :screen-name screen-name})))
+  (def descs (map :description products))
 
   (count products)
 
@@ -276,8 +277,6 @@
   (def genre-ids (->genre-ids product))
   (some true? (map #(contains? amateur-genre-ids %) genre-ids))
 
-  (contains-ng-genre? amateur-genre-ids product)
-
   (defn ng-product? [product]
     (some true? (map
                  (comp ng-genre? #(get % "id"))
@@ -292,6 +291,7 @@
   (def result (into [] xst products))
 
   (map ->print (select-scheduled-products {:db (db-prod) :limit 20}))
+
  ;;;;;;;;;;;
   )
 

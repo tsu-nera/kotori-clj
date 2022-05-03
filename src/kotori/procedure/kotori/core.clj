@@ -22,7 +22,7 @@
 (defn make-text [source strategy builder]
   (builder (strategy source)))
 
-(defn handle-response
+(defn handle-tweet-response
   [req-fn & req]
   (try+
    (apply req-fn req)
@@ -37,17 +37,21 @@
      (throw+))))
 
 (defn tweet [{:keys [^d/Info info db text type]}]
-  (let [{:keys [user-id cred proxy]} info]
-    (if-let [resp (handle-response
+  (let [{:keys [user-id cred proxy]} info
+        text-length                  (count text)]
+    (if-let [resp (handle-tweet-response
                    private/create-tweet cred proxy text)]
       (let [tweet-id (:id_str resp)
             doc-path (tweet/->post-doc-path user-id tweet-id)]
-        (log/info (str "post tweet completed. id=" tweet-id))
+        (log/info (str "post tweet completed. id=" tweet-id
+                       ", length=" text-length))
         (->> resp
              (post/->doc type)
              (fs/set! db doc-path))
         resp)
-      (log/error "post tweet failed."))))
+      (do
+        (log/error (str "post tweet failed," " length=" text-length))
+        nil))))
 
 (defn tweet-morning
   [{:as params}]

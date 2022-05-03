@@ -28,12 +28,19 @@
       (str/replace #"…！" "…！\n")
       str/split-lines))
 
-(defn join-sentences [sentences & {:keys [length] :or {length 100}}]
-  (str/trim (reduce (fn [desc sentence]
-                      (if (< length (count desc))
-                        desc
-                        (str desc "\n\n" sentence)))
-                    "" sentences)))
+(defn- trunc
+  [s n]
+  (subs s 0 (min (count s) n)))
+
+(defn join-sentences [sentences & {:keys [length] :or {length 80}}]
+  (-> (if (= 1 (count sentences))
+        (trunc (first sentences) length)
+        (reduce (fn [desc sentence]
+                  (if (< length (+ (count desc) (count sentence)))
+                    desc
+                    (str desc "\n\n" sentence)))
+                "" sentences))
+      str/trim))
 
 (defn desc->trimed
   [text]
@@ -41,10 +48,6 @@
       trim-headline
       desc->sentences
       join-sentences))
-
-(defn- trunc
-  [s n]
-  (subs s 0 (min (count s) n)))
 
 (defn ng->ok [text]
   (when text
@@ -88,4 +91,7 @@
   (println (nth (map desc->trimed descs) 2))
 
   (def trimed (map desc->trimed descs))
+  (def sample "女神の美体から汗、涎、愛液、潮…全エキスが大・放・出！体液まみれでより一層エロさを増した美乃すずめが快楽のまま本能全開で汁だくSEX！絶頂に次ぐ絶頂、意識朦朧となるほどの本気の交わりで大量失禁＆大量イキ潮スプラッシュ！全身ぐっちょり、体液滴るイイ女が性欲尽きるまでイッてイッてイキまくる！！")
+  (def ret (desc->trimed sample))
+
   )

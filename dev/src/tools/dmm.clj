@@ -92,7 +92,7 @@
 #_(get-dmm-product "ssis00337")
 
 (defn get-dmm-campaign [title]
-  (dmm/get-products {:env (env) :hits 10 :keyword title}))
+  (dmm/get-products {:env (env) :limit 10 :keyword title}))
 #_(get-dmm-campaign "新生活応援30％OFF第6弾")
 
 (defn crawl-product!
@@ -120,13 +120,11 @@
   )
 
 (comment
-  (def info (kotori-info "0023"))
+  (def info (kotori-info "0001"))
   (def screen-name (:screen-name info))
 
   (def products (st/select-tweeted-products
-                 {:db (db-prod) :screen-name screen-name :limit 10}))
-
-
+                 {:db (db-prod) :screen-name screen-name :limit 100}))
 
   (def qvts (dmm/get-qvts-without-summary {:db (db-prod) :limit 100}))
   (def targets (->> qvts
@@ -165,6 +163,6 @@
   (def result (crawl-product! "mide00897"))
 
   (def products (dmm/crawl-products!
-                 {:db (db-dev) :env (env) :hits 100}))
+                 {:db (db-prod) :env (env) :limit 100}))
  ;;;
   )

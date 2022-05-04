@@ -5,6 +5,7 @@
    [kotori.domain.dmm.core :as dmm]
    [kotori.domain.dmm.genre :as genre]
    [kotori.domain.dmm.product :as product]
+   [kotori.domain.kotori :refer [guest-user]]
    [kotori.lib.firestore :as fs]
    [kotori.lib.kotori :as lib]
    [kotori.lib.time :as time]))
@@ -172,7 +173,8 @@
       (select-scheduled-products-with-xst params xst)))
 
 (defn select-tweeted-products [{:keys [db limit screen-name]
-                                :or   {limit 5}}]
+                                :or   {limit       5
+                                       screen-name guest-user}}]
   {:pre [(string? screen-name)]}
   (let [q-already-tweeted
         ;; 42日前から21日分を候補にする.

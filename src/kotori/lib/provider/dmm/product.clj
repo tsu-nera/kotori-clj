@@ -12,21 +12,6 @@
                    creds {:floor "videoa" :cid cid})]
     (first resp)))
 
-#_(defn get-videocs
-    [{:keys [env offset hits keyword article article-id]
-      :or   {offset 1 hits 100}}]
-    {:pre [(<= hits 100)]}
-    (let [{:keys [api-id affiliate-id]}
-          env
-          creds (api/->Credentials api-id affiliate-id)
-          req   (cond->
-                    {:offset offset :sort "rank" :hits hits}
-                  keyword    (assoc :keyword keyword)
-                  article    (assoc :article article)
-                  article-id (assoc :article_id article-id))
-          items (api/search-product creds req)]
-      items))
-
 (defn- ->genre-req [genre-id]
   {:article "genre" :article_id genre-id})
 

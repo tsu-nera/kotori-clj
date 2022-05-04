@@ -2,6 +2,7 @@
   (:require
    [integrant.core :as ig]
    [kotori.procedure.dmm.product :as dmm]
+   [kotori.procedure.dmm.vr :as dmm-vr]
    [kotori.procedure.kotori.core :as kotori]
    [kotori.procedure.kotori.qvt :as qvt]
    [kotori.procedure.ping :as ping]
@@ -40,6 +41,7 @@
      ["/dmm"
       ["/crawl-product" {:post dmm/crawl-product!}]
       ["/crawl-products" {:post dmm/crawl-products!}]
+      ["/crawl-vr-products" {:post dmm-vr/crawl-products!}]
       ["/crawl-qvt-descs" {:post dmm/crawl-qvt-descs!}]]
      ["/kotori" {:middleware [#(wrap-kotori config-map %)]}
       ["/dummy" kotori/dummy]

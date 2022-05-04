@@ -2,9 +2,7 @@
   (:require
    [clojure.string :as str]
    [kotori.domain.dmm.core :as dmm]
-   [kotori.domain.dmm.genre :as genre]
    [kotori.domain.dmm.product :as product]
-   [kotori.domain.kotori :refer [guest-user]]
    [kotori.domain.tweet.qvt :as qvt]
    [kotori.lib.firestore :as fs]
    [kotori.lib.json :as json]
@@ -25,11 +23,10 @@
        (doall) ; doallでマルチスレッド全発火.
        ))
 
-(defn get-product [{:keys [cid env]}]
+(defn get-product [{:keys [env] :as m}]
   (let [creds (api/env->creds env)
-        resp  (api/search-product creds {:cid cid})]
-    (-> resp
-        (first))))
+        q     (dissoc m :env)]
+    (-> (api/search-product creds q) first)))
 
 (defn get-products-by-cids
   "APIの並列実行をする.呼び出し回数制限もあるためリストのサイズに注意"
@@ -40,9 +37,9 @@
                       (doall))]
     (into [] products)))
 
-(defn get-products "
-  この関数では100個のまでの商品取得に対応.hits < 100まで.
-  100件以上の取得はget-products-bulkで対応."
+(defn- get-products-chunk "
+  この関数では100個のまでの商品取得に対応. hits ~< 100まで.
+  100件以上の取得はget-productsで対応."
   [{:keys [env hits] :or {hits 100} :as params}]
   {:pre [(<= hits 100)]}
   (let [creds (api/env->creds env)
@@ -54,43 +51,38 @@
   {:offset offset
    :hits   size})
 
-(defn- make-req-params [hits]
+(defn- make-req-params [limit]
   (let [size         100
-        page         (quot hits size)
+        page         (quot limit size)
         ->offset-map (partial make-offset-map size)
         xf           (comp          (map #(+ (* % size) 1))
                                     (map ->offset-map))
-        mod-hits     (mod hits size)]
+        mod-hits     (mod limit size)]
     (cond-> (into [] xf (range page))
       (not (= 0 mod-hits))
       (conj (make-offset-map mod-hits (+ 1 (* page size)))))))
 
-(defn get-products-bulk "
+(defn get-products "
   get-productsを呼ぶと1回のget requestで最大100つの情報が取得できる.
   それ以上取得する場合はoffsetによる制御が必要なためこの関数で対応する.
-  hitsを100のchunkに分割してパラレル呼び出しとマージ."
-  [{:keys [hits] :as base-params}]
+  limitを100のchunkに分割してパラレル呼び出しとマージ."
+  [{:keys [limit] :as base-params :or {limit 10}}]
   (let [req-params (map (fn [m] (merge base-params m))
-                        (make-req-params hits))]
+                        (make-req-params limit))]
 
     (->> req-params
-         (request-bulk get-products)
+         (request-bulk get-products-chunk)
          (reduce concat)
          (into []))))
-
-(defn get-vr-products [{:as params}]
-  (let [vr-option {:article    "genre"
-                   :article_id genre/vr-only-id}]
-    (get-products-bulk (merge params vr-option))))
 
 (defn get-campaign-products
   "キャンペーンの動画一覧の取得は
   keywordにキャンペーン名を指定することで取得可能.
   キャンペーン対象商品は500に届かないことが多いようなので
-  とりあえずhitsのdefaultを500に設定しておく."
-  [{:keys [env title hits] :or {hits 500}}]
-  {:pre [(<= hits 500)]}
-  (get-products-bulk {:env env :keyword title :hits hits}))
+  とりあえず limitのdefaultを500に設定しておく."
+  [{:keys [limit] :or {limit 500} :as m}]
+  {:pre [(<= limit 500)]}
+  (get-products m))
 
 (defn scrape-page
   [{:keys [db cid]}]
@@ -109,22 +101,20 @@
        (into [])))
 
 (defn scrape-pages!
-  [{:keys [cids db]}]
-  (let [pages (get-page-bulk {:cids cids})
-        ts    (time/fs-now)]
+  [{:keys [cids db coll-path ts] :or {ts        (time/fs-now)
+                                      coll-path product/coll-path}}]
+  (when-let [pages (get-page-bulk {:cids cids})]
     (->> pages
          (map #(product/set-scraped-timestamp ts %))
          (map #(json/->json %))
-         (fs/make-batch-docs "cid" product/coll-path)
+         (fs/make-batch-docs "cid" coll-path)
          (fs/batch-set! db))
-    (fs/set! db dmm/doc-path {:products-scraped-time ts})
-    ts))
+    {:timestamp ts
+     :count     (count pages)
+     :pages     pages}))
 
-(defn get-qvts-without-keyword [{:keys [db screen-name limit]
-                                 :or   {screen-name guest-user}}
-                                keyword]
-  (let [products (st/select-tweeted-products
-                  {:db db :screen-name screen-name :limit limit})]
+(defn get-qvts-without-keyword [{:as m} keyword]
+  (let [products (st/select-tweeted-products m)]
     (->> products
          (remove #(contains? % keyword))
          (map qvt/doc->)
@@ -136,28 +126,26 @@
 (defn get-qvts-without-desc [{:as m}]
   (get-qvts-without-keyword m :description))
 
-(defn crawl-qvt-descs! [{:keys [db limit] :or {limit 300}}]
-  (let [cids  (->> (get-qvts-without-desc {:db db :limit limit})
-                   (map :cid))
-        count (count cids)
-        resp  {:count count}]
-    (when (> count 0)
-      (let [ts (scrape-pages! {:db db :cids cids})]
-        (assoc resp :timestamp ts)))
-    resp))
+(defn crawl-qvt-descs! [{:as m :or {limit 300} :keys [db]}]
+  (let [cids (->> (get-qvts-without-desc m)
+                  (map :cid))]
+    (when (> (count cids) 0)
+      (scrape-pages! {:db db :cids cids}))))
 
 (defn crawl-product! "
   1. 指定されたcidのcontent情報を取得.
   2. Firestoreへ 情報を保存."
-  [{:keys [db cid] :as m}]
-  (let [product (get-product m)
-        ts      (time/fs-now)
-        data    (-> product
-                    product/api->data)
-        path    (fs/doc-path product/coll-path cid)]
-    (fs/set! db path data)
-    (fs/set! db path {:last-crawled-time ts})
-    data))
+  ([m]
+   (crawl-product! m product/coll-path))
+  ([{:keys [db cid] :as m} coll-path]
+   (let [ts      (time/fs-now)
+         product (get-product m)
+         data    (-> product product/api->data)
+         path    (fs/doc-path coll-path cid)]
+     (doto db
+       (fs/set! path data)
+       (fs/set! path {:last-crawled-time ts}))
+     data)))
 
 ;; ランキングとdmm collへのtimestamp書き込みはしない.
 (defn crawl-products-by-cids!
@@ -176,41 +164,56 @@
      :timestamp ts
      :products  docs}))
 
-(defn- get-target-desc-cids [db]
+(defn- get-target-desc-cids [db coll-path timestamp-key]
   (let [last-crawled-time
-        (fs/get-in db dmm/doc-path "products_crawled_time")
+        (fs/get-in db dmm/doc-path timestamp-key)
         query (fs/query-filter "last_crawled_time" last-crawled-time)]
-    (->> (fs/get-docs db product/coll-path query)
+    (->> (fs/get-docs db coll-path query)
          (remove #(:description %))
          (map :cid)
          (into []))))
 
-;; TODO 500以上の書き込み対応.
-;; firestroreのbatch writeの仕様で一回の書き込みは500まで.
-;; そのため500単位でchunkごとに書き込む.
-;; また Fieldに対するincや配列への追加も1つの書き込みとなる.
-(defn crawl-products!
-  [{:keys [db] :as params}]
-  (let [products   (get-products-bulk params)
-        count      (count products)
-        ts         (time/fs-now)
-        xf         (comp (map product/api->data)
+(defn save-products! [db coll-path products ts]
+  (let [xf         (comp (map product/api->data)
                          (map #(product/set-crawled-timestamp ts %))
                          (map-indexed product/set-rank-popular)
                          (map json/->json))
         docs       (transduce xf conj products)
-        batch-docs (fs/make-batch-docs
-                    "cid" product/coll-path docs)]
+        batch-docs (fs/make-batch-docs "cid" coll-path docs)]
     (fs/batch-set! db batch-docs)
-    (fs/set! db dmm/doc-path {:products-crawled-time ts})
-    ;; descritionの追加スクレイピング. 取得済みのものはスキップ.
-    ;; この関数は定期実行を想定しているので
-    ;; 強制的に更新したいときは手動で関数をたたいて更新する.
-    (when-let [cids (get-target-desc-cids db)]
-      (scrape-pages! {:db db :cids cids}))
-    {:count     count
-     :timestamp ts
-     :products  docs}))
+    docs))
+
+(defn update-crawled-time! [db timestamp-key ts]
+  (fs/assoc! db dmm/doc-path timestamp-key ts))
+
+;; descritionの追加スクレイピング. 取得済みのものはスキップ.
+;; この関数は定期実行を想定しているので
+;; 強制的に更新したいときは手動で関数をたたいて更新する.
+(defn scrape-desc-if! [db coll-path timestamp-key]
+  (let [cids (get-target-desc-cids db coll-path timestamp-key)]
+    (when (and cids (< 0 (count cids)))
+      (scrape-pages! {:db        db
+                      :cids      cids
+                      :coll-path coll-path}))))
+
+;; FIXME 500以上の書き込み対応.
+;; firestroreのbatch writeの仕様で一回の書き込みは500まで.
+;; そのため500単位でchunkごとに書き込む.
+(defn crawl-products!
+  [{:keys [db] :as params}]
+  (let [timestamp-key "products_crawled_time"
+        ts            (time/fs-now)
+        coll-path     product/coll-path]
+    (when-let [products (get-products params)]
+      (doto db
+        (save-products! coll-path products ts)
+        (update-crawled-time! timestamp-key ts)
+        (scrape-desc-if! coll-path timestamp-key))
+      ;; ここでproductsオブジェクトを戻すとGCRでエラーした.
+      ;; 詳細は未調査だけどMapを返せば正常終了.
+      {:timestamp ts
+       :count     (count products)
+       :products  products})))
 
 ;; 引数はDMM APIで取得できた :campaignのkeyに紐づくMapをそのまま利用.
 ;; {:date_begin \"2022-03-28 10:00:00\",
@@ -253,7 +256,7 @@
 (defn prepare-campaign!
   [{:keys [db env title]}]
   (let [product   (first (get-campaign-products
-                          {:hits 1 :title title :env env}))
+                          {:limit 1 :title title :env env}))
         campaign  (product->campaign product)
         id        (campaign->id campaign)
         coll-path (make-campaign-products-path id)
@@ -267,25 +270,26 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (comment
-  (require '[firebase :refer [db-prod db-dev db]]
-           '[devtools :refer [->screen-name env]])
-  )
+(require '[firebase :refer [db-prod db-dev db]]
+         '[devtools :refer [->screen-name env]])
+)
 
 (comment
   (def product (get-product {:cid "ssis00337" :env (env)}))
 
-  (def products (get-products {:env (env) :hits 10}))
-  (def products (get-products-bulk {:env (env) :hits 320}))
+  (def products (get-products {:env (env) :limit 10}))
+  (def products (get-products {:env (env) :limit 110}))
   (count products)
 
   (def product (crawl-product! {:db (db) :env (env) :cid "hnd00967"}))
-  (def products (crawl-products! {:db (db) :env (env) :hits 30}))
+  (def products (crawl-products! {:db  (db-prod)
+                                  :env (env) :limit 300}))
 
   ;; 1秒以内に終わる
   (def page (public/get-page  "pred00294"))
   (def resp (scrape-page {:cid "ebod00874" :db (db)}))
 
-  (def cids (->> (get-products {:env (env) :hits 10})
+  (def cids (->> (get-products {:env (env) :limit 10})
                  (map :content_id)
                  (into [])))
 
@@ -293,19 +297,17 @@
   (def resp (get-page-bulk {:cids cids :db (db)}))
   (def resp (scrape-pages! {:cids cids :db (db)}))
 
-
-  (def resp (get-target-desc-cids (db)))
-
   (def products (crawl-campaign-products!
                  {:db    (db) :env (env)
                   :title "新生活応援30％OFF第6弾"}))
   )
 
 (comment
-  (def resp (get-qvts-without-desc {:db          (db-dev)
-                                    :screen-name guest-user
-                                    }))
-  (def resp (crawl-qvt-descs! {:db (db-dev) :limit 50}))
+  (def resp (get-qvts-without-desc {:db    (db-prod)
+                                    :limit 300}))
+
+  (def resp (crawl-qvt-descs! {:db    (db-prod)
+                               :limit 100}))
 
   )
 
@@ -317,8 +319,4 @@
   (def campaign (prepare-campaign!
                  {:db    (db) :env (env)
                   :title "新生活応援30％OFF第6弾"}))
-  )
-
-(comment
-  (def vr-products (get-vr-products {:env (env) :hits 10}))
   )

@@ -16,6 +16,9 @@
 (defn no-sample-movie? [product]
   (:no-sample-movie product))
 
+(defn sample-movie? [product]
+  (not (:no-sample-movie product)))
+
 (defn no-sample-image? [product]
   (:no-sample-image product))
 
@@ -23,6 +26,12 @@
   (some true? (map
                (comp ng-genre? #(get % "id"))
                (:genres product))))
+
+(def st-exclude-no-image
+  (remove #(no-sample-image? %)))
+
+(def st-exclude-movie
+  (remove #(sample-movie? %)))
 
 (def st-exclude-no-samples
   (remove #(or (no-sample-movie? %)
@@ -57,6 +66,9 @@
 
 (def st-include-vr
   (filter #(contains-genre? genre/vr-ids %)))
+
+(def st-exclude-vr
+  (remove #(contains-genre? genre/vr-ids %)))
 
 (defn- make-st-exclude-recently-tweeted
   "最終投稿からXdays以上経過"
@@ -103,74 +115,55 @@
 (def st-skip-debug
   (remove #(get % :debug)))
 
-(defn select-scheduled-products-with-xst [{:keys [db limit screen-name]
-                                           :or   {limit 5}} xst]
-  (let [last-crawled-time (fs/get-in db dmm/doc-path
-                                     "products_crawled_time")
-        st-last-crawled   (fs/query-filter
-                           "last_crawled_time"
-                           last-crawled-time)
+(defn select-scheduled-products-with-xst
+  [{:keys [db screen-name last-crawled-time]} xst coll-path]
+  (let [st-last-crawled (fs/query-filter
+                         "last_crawled_time"
+                         last-crawled-time)
         st-exclude-recently-tweeted-self
         (make-st-exclude-recently-tweeted-self screen-name 28)
         st-exclude-recently-tweeted-others
         (make-st-exclude-recently-tweeted-others screen-name 14)
-        products          (fs/get-docs
-                           db product/coll-path st-last-crawled)
-        xstrategy         (apply comp
-                                 st-skip-debug
-                                 st-exclude-no-samples
-                                 st-exclude-recently-tweeted-self
-                                 st-exclude-recently-tweeted-others
-                                 xst)]
+        products        (fs/get-docs
+                         db coll-path st-last-crawled)
+        xstrategy       (apply comp
+                               st-skip-debug
+                               st-exclude-recently-tweeted-self
+                               st-exclude-recently-tweeted-others
+                               xst)]
     (->> products
-         (into [] xstrategy)
+         (into [] xstrategy))))
+
+(defn assoc-last-crawled-time [m db key]
+  (let [last-crawled-time (fs/get-in db dmm/doc-path key)]
+    (assoc m :last-crawled-time last-crawled-time)))
+
+(defn select-scheduled-products [{:keys [db limit] :as m :or {limit 5}}]
+  (let [xst    [st-exclude-ng-genres
+                st-exclude-no-samples
+                st-exclude-vr
+                st-exclude-amateur
+                st-exclude-omnibus]
+        params (assoc-last-crawled-time
+                m db dmm/products-crawled-time)]
+    (->> (select-scheduled-products-with-xst params xst
+                                             product/coll-path)
          ;; sortはtransducerに組み込まないほうが楽.
          (sort-by :rank-popular)
          (take limit))))
 
-(defn select-scheduled-products [{:as params}]
-  (let [xst [st-exclude-ng-genres
-             st-exclude-amateur
-             st-exclude-omnibus]]
-    (select-scheduled-products-with-xst params xst)))
-
-(defn select-scheduled-amateurs [{:as params}]
-  (let [xst [st-exclude-ng-genres
-             st-exclude-omnibus
-             st-include-amateur]]
-    (select-scheduled-products-with-xst params xst)))
-
-(defn select-scheduled-vrs [{:keys [db limit screen-name]
-                             :or   {limit 5}}]
-  (let [last-crawled-time (fs/get-in db dmm/doc-path
-                                     "products_crawled_time")
-        st-last-crawled   (fs/query-filter
-                           "last_crawled_time"
-                           last-crawled-time)
-        st-exclude-recently-tweeted-self
-        (make-st-exclude-recently-tweeted-self screen-name 28)
-        st-exclude-recently-tweeted-others
-        (make-st-exclude-recently-tweeted-others screen-name 14)
-        products          (fs/get-docs
-                           db product/coll-path st-last-crawled)
-        xst               [st-exclude-ng-genres
-                           st-exclude-omnibus
-                           st-include-vr]
-        xstrategy         (apply comp
-                                 st-skip-debug
-                                 st-exclude-no-samples
-                                 st-exclude-recently-tweeted-self
-                                 st-exclude-recently-tweeted-others
-                                 xst)]
-    (->> products
-         (into [] xstrategy)
-         ;; sortはtransducerに組み込まないほうが楽.
+(defn select-scheduled-amateurs [{:keys [db limit] :as m :or {limit 5}}]
+  (let [xst    [st-exclude-ng-genres
+                st-exclude-no-samples
+                st-exclude-vr
+                st-exclude-omnibus
+                st-include-amateur]
+        params (assoc-last-crawled-time
+                m db dmm/products-crawled-time)]
+    (->> (select-scheduled-products-with-xst params xst
+                                             product/coll-path)
          (sort-by :rank-popular)
          (take limit))))
-
-#_(defn select-scheduled-vrs [{:as params}]
-    (let []
-      (select-scheduled-products-with-xst params xst)))
 
 (defn select-tweeted-products [{:keys [db limit screen-name]
                                 :or   {limit       5
@@ -272,15 +265,6 @@
                                       :screen-name screen-name})))
   (count amateurs)
 
-  (def screen-name (->screen-name "0028"))
-  (def vrs
-    (into []
-          (select-scheduled-vrs {:db          (db-prod)
-                                 :limit       100
-                                 :screen-name screen-name})))
-  (count vrs)
-
-
   (def product (nth products 27))
   (def next (lib/->next product))
   (def desc (:description product))
@@ -288,23 +272,12 @@
   (lib/desc->headline desc)
 
   (def genre-ids (->genre-ids product))
-  (some true? (map #(contains? amateur-genre-ids %) genre-ids))
-
   (defn ng-product? [product]
     (some true? (map
                  (comp ng-genre? #(get % "id"))
                  (:genres product))))
 
-  (def xst (comp
-            st-exclude-ng-genres
-            st-exclude-amateur
-            st-exclude-omnibus
-            (take 3)))
-
-  (def result (into [] xst products))
-
   (map ->print (select-scheduled-products {:db (db-prod) :limit 20}))
-
  ;;;;;;;;;;;
   )
 

@@ -37,7 +37,6 @@
 
 (def ng-genres
   (into #{} (concat
-             vr-ids
              antisocial-ids
              violent-ids
              dirty-ids

@@ -10,6 +10,7 @@
    [kotori.lib.json :as json]
    [kotori.lib.kotori :as lib]
    [kotori.lib.log :as log]
+   [kotori.procedure.dmm.vr :as vr]
    [kotori.procedure.strategy.core :as st]
    [kotori.procedure.strategy.dmm :as st-dmm]
    [slingshot.slingshot :refer [try+ throw+]]
@@ -80,7 +81,7 @@
 
 (defn select-next-vr [{:keys [db screen-name]}]
   {:pre [(s/valid? ::d/screen-name screen-name)]}
-  (lib/->next (first (st-dmm/select-scheduled-vrs
+  (lib/->next (first (vr/select-scheduled-products
                       {:db db :screen-name screen-name}))))
 
 (defn archive-fs-tweet-data [db user-id tweet-id]

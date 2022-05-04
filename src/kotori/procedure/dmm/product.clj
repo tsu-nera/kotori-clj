@@ -275,7 +275,7 @@
 )
 
 (comment
-  (def product (get-product {:cid "ssis00337" :env (env)}))
+  (def product (get-product {:cid "urvrsp00139" :env (env)}))
 
   (def products (get-products {:env (env) :limit 10}))
   (def products (get-products {:env (env) :limit 110}))

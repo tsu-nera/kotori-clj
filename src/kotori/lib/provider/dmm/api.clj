@@ -20,6 +20,10 @@
 
 (defrecord Credentials [^String api-id ^String affiliate-id])
 
+(defn env->creds [env]
+  (map->Credentials
+   (select-keys env [:affiliate-id :api-id])))
+
 (defn- ->items [resp]
   (-> resp
       :result

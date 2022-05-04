@@ -2,6 +2,7 @@
   (:require
    [clojure.string :as str]
    [kotori.domain.dmm.core :as dmm]
+   [kotori.domain.dmm.genre :as genre]
    [kotori.domain.dmm.product :as product]
    [kotori.domain.kotori :refer [guest-user]]
    [kotori.domain.tweet.qvt :as qvt]
@@ -20,13 +21,12 @@
 (defn- request-bulk
   [req-fn req-params]
   (->> req-params
-       (pmap #(req-fn %))
-       (doall)))
+       (pmap #(req-fn %)) ; まだ実行してない(lazy-seq)
+       (doall) ; doallでマルチスレッド全発火.
+       ))
 
 (defn get-product [{:keys [cid env]}]
-  (let [{:keys [api-id affiliate-id]}
-        env
-        creds (api/->Credentials api-id affiliate-id)
+  (let [creds (api/env->creds env)
         resp  (api/search-product creds {:cid cid})]
     (-> resp
         (first))))
@@ -43,17 +43,10 @@
 (defn get-products "
   この関数では100個のまでの商品取得に対応.hits < 100まで.
   100件以上の取得はget-products-bulkで対応."
-  [{:keys [env offset hits keyword article article-id]
-    :or   {offset 1 hits 100}}]
+  [{:keys [env hits] :or {hits 100} :as params}]
   {:pre [(<= hits 100)]}
-  (let [{:keys [api-id affiliate-id]}
-        env
-        creds (api/->Credentials api-id affiliate-id)
-        req   (cond->
-               {:offset offset :sort "rank" :hits hits}
-                keyword    (assoc :keyword keyword)
-                article    (assoc :article article)
-                article-id (assoc :article_id article-id))
+  (let [creds (api/env->creds env)
+        req   (assoc params :sort "rank")
         items (api/search-product creds req)]
     items))
 
@@ -70,21 +63,25 @@
         mod-hits     (mod hits size)]
     (cond-> (into [] xf (range page))
       (not (= 0 mod-hits))
-      (let [last-params (make-offset-map mod-hits (+ 1 (* page size)))]
-        (conj last-params)))))
+      (conj (make-offset-map mod-hits (+ 1 (* page size)))))))
 
 (defn get-products-bulk "
   get-productsを呼ぶと1回のget requestで最大100つの情報が取得できる.
   それ以上取得する場合はoffsetによる制御が必要なためこの関数で対応する.
   hitsを100のchunkに分割してパラレル呼び出しとマージ."
-  [{:keys [env hits]}]
-  (let [req-params (map #(assoc % :env env)
+  [{:keys [hits] :as base-params}]
+  (let [req-params (map (fn [m] (merge base-params m))
                         (make-req-params hits))]
 
     (->> req-params
          (request-bulk get-products)
          (reduce concat)
          (into []))))
+
+(defn get-vr-products [{:as params}]
+  (let [vr-option {:article    "genre"
+                   :article_id genre/vr-only-id}]
+    (get-products-bulk (merge params vr-option))))
 
 (defn get-campaign-products
   "キャンペーンの動画一覧の取得は
@@ -307,7 +304,7 @@
 (comment
   (def resp (get-qvts-without-desc {:db          (db-dev)
                                     :screen-name guest-user
-                                    :limit       50}))
+                                    }))
   (def resp (crawl-qvt-descs! {:db (db-dev) :limit 50}))
 
   )
@@ -322,3 +319,6 @@
                   :title "新生活応援30％OFF第6弾"}))
   )
 
+(comment
+  (def vr-products (get-vr-products {:env (env) :hits 10}))
+  )

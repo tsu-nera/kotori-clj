@@ -5,8 +5,6 @@
 (comment
   (require '[tools.dmm :refer [dmm-creds]])
 
-  (def creds (api/map->Credentials (dmm-creds)))
-
-  (def resp (api/search-product creds {:cid   "smuc029"
-                                       :floor "videoc"}))
+  (def resp (api/search-product (dmm-creds) {:cid   "smuc029"
+                                             :floor "videoc"}))
   )

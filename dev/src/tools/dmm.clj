@@ -16,7 +16,8 @@
 (defn dmm-creds []
   (-> system
       (get :kotori.service.env/env)
-      (select-keys [:api-id :affiliate-id])))
+      (select-keys [:api-id :affiliate-id])
+      (api/map->Credentials)))
 
 (defn make-dmm-tweet [screen-name post]
   {:cid         (:cid post)

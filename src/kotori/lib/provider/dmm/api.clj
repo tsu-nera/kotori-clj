@@ -85,7 +85,7 @@
 
 (comment
   (require '[tools.dmm :refer [dmm-creds]])
-  (def creds (map->Credentials (dmm-creds)))
+  (def creds (dmm-creds))
 
   (search-product creds {:hits    10
                          :sort    "date"

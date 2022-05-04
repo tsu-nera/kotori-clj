@@ -47,7 +47,7 @@
 
 (comment
   (require '[tools.dmm :refer [dmm-creds]])
-  (def creds (api/map->Credentials (dmm-creds)))
+  (def creds (dmm-creds))
 
   (def ret (get-videoc {:creds creds :cid "smuc029"}))
   (def ret (get-videoa {:creds creds :cid "mism00237"}))

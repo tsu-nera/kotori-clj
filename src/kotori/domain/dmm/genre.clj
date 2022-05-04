@@ -1,4 +1,8 @@
-(ns kotori.domain.dmm.genre)
+(ns kotori.domain.dmm.genre
+  "
+  refs.
+  - https://www.dmm.co.jp/digital/videoa/-/genre/
+  - https://affiliate.dmm.com/api/v3/genresearch.html")
 
 (def amateur-ids
   #{;
@@ -7,10 +11,12 @@
     6002 ; ハメ撮り
     })
 
+;; 2022.05現在, VR専用はハイクオリティVRを内包する
+(def vr-only-id 6793)
 (def vr-ids
   #{;
-    6793 ; VR専用
-    6925 ; ハイクオリティVR
+    6793 ;; VR専用
+    6925 ;: ハイクオリティVR
     })
 
 (def antisocial-ids

@@ -7,6 +7,7 @@
    [kotori.lib.discord :as discord]
    [kotori.lib.firestore :as fs]
    [kotori.lib.log :as log]
+   [kotori.lib.provider.dmm.public :as public]
    [kotori.procedure.dmm.product :as dmm]
    [kotori.procedure.kotori.core :as kotori]
    [kotori.procedure.strategy.core :as st]
@@ -40,7 +41,7 @@
   [qvt]
   (if (not (:description qvt))
     (let [cid  (:cid qvt)
-          page (dmm/get-page {:cid cid})
+          page (public/get-page cid)
           desc (:description page)]
       (assoc qvt :description desc))
     qvt))

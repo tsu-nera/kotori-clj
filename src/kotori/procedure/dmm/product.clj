@@ -17,6 +17,12 @@
 (defn make-campaign-products-path [id]
   (str campaigns-path "/" id "/" "products"))
 
+(defn- request-bulk
+  [req-fn req-params]
+  (->> req-params
+       (pmap #(req-fn %))
+       (doall)))
+
 (defn get-product [{:keys [cid env]}]
   (let [{:keys [api-id affiliate-id]}
         env
@@ -34,9 +40,9 @@
                       (doall))]
     (into [] products)))
 
-(defn get-products
-  "1回のget requestで最大100つの情報が取得できる.
-  それ以上取得する場合はoffsetによる制御が必要."
+(defn get-products "
+  この関数では100個のまでの商品取得に対応.hits < 100まで.
+  100件以上の取得はget-products-bulkで対応."
   [{:keys [env offset hits keyword article article-id]
     :or   {offset 1 hits 100}}]
   {:pre [(<= hits 100)]}
@@ -51,24 +57,34 @@
         items (api/search-product creds req)]
     items))
 
-(defn get-products-bulk
+(defn- make-offset-map [size offset]
+  {:offset offset
+   :hits   size})
+
+(defn- make-req-params [hits]
+  (let [size         100
+        page         (quot hits size)
+        ->offset-map (partial make-offset-map size)
+        xf           (comp          (map #(+ (* % size) 1))
+                                    (map ->offset-map))
+        mod-hits     (mod hits size)
+        ret          (into [] xf (range page))]
+    (if-not (= 0 mod-hits)
+      (conj ret (make-offset-map mod-hits (+ 1 (* page size))))
+      ret)))
+
+(defn get-products-bulk "
+  get-productsを呼ぶと1回のget requestで最大100つの情報が取得できる.
+  それ以上取得する場合はoffsetによる制御が必要なためこの関数で対応する.
+  hitsを100のchunkに分割してパラレル呼び出しとマージ."
   [{:keys [env hits]}]
-  (let [page            (quot hits 100)
-        mod-hits        (mod hits 100)
-        xf              (comp (map #(* % 100))
-                              (map #(+ % 1))
-                              (map (fn [offset]
-                                     {:env env :offset offset :hits 100})))
-        req-params-base (into [] xf (range page)) ;; transducer
-        last-offset     (+ (* page 100) 1)
-        req-params      (if (zero? mod-hits)
-                          req-params-base
-                          (conj req-params-base
-                                {:env env :offset last-offset :hits mod-hits}))
-        products        (->> req-params
-                             (pmap get-products)
-                             (doall))]
-    (reduce concat products)))
+  (let [req-params (map #(assoc % :env env)
+                        (make-req-params hits))]
+
+    (->> req-params
+         (request-bulk get-products)
+         (reduce concat)
+         (into []))))
 
 (defn get-campaign-products
   "キャンペーンの動画一覧の取得は
@@ -79,12 +95,9 @@
   {:pre [(<= hits 500)]}
   (get-products-bulk {:env env :keyword title :hits hits}))
 
-(defn get-page [{:keys [cid]}]
-  (public/get-page cid))
-
 (defn scrape-page
-  [{:keys [db cid] :as m}]
-  (let [page (get-page m)
+  [{:keys [db cid]}]
+  (let [page (public/get-page cid)
         ts   (time/fs-now)
         data (product/page->data page)
         path (fs/doc-path product/coll-path cid)]
@@ -93,11 +106,9 @@
     data))
 
 (defn get-page-bulk
-  "パラレルでスクレイピングをかけるため一瞬で終わる, すごい."
   [{:keys [cids]}]
   (->> cids
-       (map (fn [cid] {:cid cid}))
-       (pmap get-page)
+       (request-bulk public/get-page)
        (into [])))
 
 (defn scrape-pages!
@@ -267,20 +278,21 @@
   (def product (get-product {:cid "ssis00337" :env (env)}))
 
   (def products (get-products {:env (env) :hits 10}))
-  (def products (get-products-bulk {:env (env) :hits 450}))
+  (def products (get-products-bulk {:env (env) :hits 320}))
   (count products)
 
   (def product (crawl-product! {:db (db) :env (env) :cid "hnd00967"}))
-  (def products (crawl-products! {:db (db) :env (env) :hits 150}))
+  (def products (crawl-products! {:db (db) :env (env) :hits 30}))
 
   ;; 1秒以内に終わる
-  (def page (get-page {:cid "pred00294"}))
+  (def page (public/get-page  "pred00294"))
   (def resp (scrape-page {:cid "ebod00874" :db (db)}))
 
-  (def cids (->> (get-products {:env (env) :hits 100})
+  (def cids (->> (get-products {:env (env) :hits 10})
                  (map :content_id)
                  (into [])))
-  ;; 並列実行で1秒で完了.
+
+  ;; 並列実行
   (def resp (get-page-bulk {:cids cids :db (db)}))
   (def resp (scrape-pages! {:cids cids :db (db)}))
 
@@ -309,3 +321,4 @@
                  {:db    (db) :env (env)
                   :title "新生活応援30％OFF第6弾"}))
   )
+

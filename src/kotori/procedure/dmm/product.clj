@@ -67,11 +67,11 @@
         ->offset-map (partial make-offset-map size)
         xf           (comp          (map #(+ (* % size) 1))
                                     (map ->offset-map))
-        mod-hits     (mod hits size)
-        ret          (into [] xf (range page))]
-    (if-not (= 0 mod-hits)
-      (conj ret (make-offset-map mod-hits (+ 1 (* page size))))
-      ret)))
+        mod-hits     (mod hits size)]
+    (cond-> (into [] xf (range page))
+      (not (= 0 mod-hits))
+      (let [last-params (make-offset-map mod-hits (+ 1 (* page size)))]
+        (conj last-params)))))
 
 (defn get-products-bulk "
   get-productsを呼ぶと1回のget requestで最大100つの情報が取得できる.

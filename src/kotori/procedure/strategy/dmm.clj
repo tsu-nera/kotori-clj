@@ -3,15 +3,15 @@
   (:require
    [clojure.string :as str]
    [kotori.domain.dmm.core :as dmm]
-   [kotori.domain.dmm.genre :as genre]
    [kotori.domain.dmm.product :as product]
+   [kotori.domain.dmm.videoa :as videoa]
    [kotori.domain.kotori :refer [guest-user]]
    [kotori.lib.firestore :as fs]
    [kotori.lib.kotori :as lib]
    [kotori.lib.time :as time]))
 
 (defn ng-genre? [id]
-  (contains? genre/ng-genres id))
+  (contains? videoa/ng-genres id))
 
 (defn no-sample-movie? [product]
   (:no-sample-movie product))
@@ -55,20 +55,20 @@
 
 (def st-exclude-amateur
   (remove #(or (no-actress? %)
-               (contains-genre? genre/amateur-ids %))))
+               (contains-genre? videoa/amateur-ids %))))
 
 (def st-include-amateur
   (filter #(or (no-actress? %)
-               (contains-genre? genre/amateur-ids %))))
+               (contains-genre? videoa/amateur-ids %))))
 
 (def st-exclude-omnibus
   (remove #(> (:actress-count %) 4)))
 
 (def st-include-vr
-  (filter #(contains-genre? genre/vr-ids %)))
+  (filter #(contains-genre? videoa/vr-ids %)))
 
 (def st-exclude-vr
-  (remove #(contains-genre? genre/vr-ids %)))
+  (remove #(contains-genre? videoa/vr-ids %)))
 
 (defn- make-st-exclude-recently-tweeted
   "最終投稿からXdays以上経過"

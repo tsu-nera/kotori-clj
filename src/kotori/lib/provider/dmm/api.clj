@@ -38,10 +38,9 @@
   (map->Credentials
    (select-keys env [:affiliate-id :api-id])))
 
-(defn- ->items [resp]
+(defn- ->result [resp]
   (-> resp
-      :result
-      :items))
+      :result))
 
 (defn- -get [url creds q & {:keys [debug] :or {debug false}}]
   (let [creds-json (json/->json creds)
@@ -53,7 +52,7 @@
                                 :query-params params})]
     (-> resp
         :body
-        ->items
+        ->result
         (or (throw (ex-info "Exception occured at dmm http get"
                             {:response resp}))))))
 
@@ -61,13 +60,14 @@
   "商品検索API: https://affiliate.dmm.com/api/v3/itemlist.html"
   [^Credentials creds q]
   (let [url (->endpoint "ItemList")]
-    (-get url creds q)))
+    (-> (-get url creds q) :items)))
 
 (defn get-floors
   "フロアAPI: https://affiliate.dmm.com/api/v3/floorlist.html"
-  [^Credentials creds q]
-  (let [url (->endpoint "FloorList")]
-    nil))
+  [^Credentials creds]
+  (let [url (->endpoint "FloorList")
+        q   {:output "json"}]
+    (-get url creds q)))
 
 (defn search-actress
   "女優検索API: https://affiliate.dmm.com/api/v3/actresssearch.html"
@@ -79,7 +79,7 @@
   "ジャンル 検索API: https://affiliate.dmm.com/api/v3/genresearch.html"
   [^Credentials creds q]
   (let [url (->endpoint "GenreSearch")]
-    nil))
+    (-get url creds q)))
 
 (defn search-maker
   "メーカー検索API: https://affiliate.dmm.com/api/v3/makersearch.html"

@@ -1,0 +1,1700 @@
+({:genre_id "3",
+  :name "コミック雑誌",
+  :ruby "こみっくざっし",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D3%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "5",
+  :name "ギャグ・コメディ",
+  :ruby "ぎゃぐこめでぃ",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D5%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "17",
+  :name "ファンタジー",
+  :ruby "ふぁんたじー",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D17%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "18",
+  :name "ホラー",
+  :ruby "ほらー",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D18%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "21",
+  :name "残虐表現",
+  :ruby "ざんぎゃくひょうげん",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D21%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "25",
+  :name "拘束",
+  :ruby "こうそく",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D25%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "27",
+  :name "辱め",
+  :ruby "はずかしめ",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D27%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "28",
+  :name "羞恥",
+  :ruby "しゅうち",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D28%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "35",
+  :name "女性向け",
+  :ruby "じょせいむけ",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D35%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "38",
+  :name "クンニ",
+  :ruby "くんに",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D38%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "42",
+  :name "ドール",
+  :ruby "どーる",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D42%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "48",
+  :name "制服",
+  :ruby "せいふく",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D48%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "55",
+  :name "処女",
+  :ruby "しょじょ",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D55%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "59",
+  :name "ふたなり",
+  :ruby "ふたなり",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D59%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "62",
+  :name "触手",
+  :ruby "しょくしゅ",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D62%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "63",
+  :name "巫女",
+  :ruby "みこ",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D63%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "64",
+  :name "ネコミミ・獣系",
+  :ruby "ねこみみけものけい",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D64%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "72",
+  :name "異物挿入",
+  :ruby "いぶつそうにゅう",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D72%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "81",
+  :name "複数話",
+  :ruby "ふくすうわ",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D81%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "88",
+  :name "フィスト",
+  :ruby "ふぃすと",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D88%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "93",
+  :name "裸エプロン",
+  :ruby "はだかえぷろん",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D93%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "94",
+  :name "ニーソックス",
+  :ruby "にーそっくす",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D94%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "95",
+  :name "性転換・女体化",
+  :ruby "せいてんかんにょたいか",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D95%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "96",
+  :name "孕ませ",
+  :ruby "はらませ",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D96%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "97",
+  :name "筋肉",
+  :ruby "きんにく",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D97%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "102",
+  :name "美乳",
+  :ruby "びにゅう",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D102%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "514",
+  :name "アクション・格闘",
+  :ruby "あくしょんかくとう",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D514%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "524",
+  :name "義母",
+  :ruby "ぎぼ",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D524%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "527",
+  :name "お嬢様・令嬢",
+  :ruby "おじょうさまれいじょう",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D527%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "528",
+  :name "お姫様",
+  :ruby "おひめさま",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D528%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "553",
+  :name "学園もの",
+  :ruby "がくえんもの",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D553%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "555",
+  :name "恋愛",
+  :ruby "れんあい",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D555%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "558",
+  :name "ボーイズラブ",
+  :ruby "ぼーいずらぶ",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D558%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "567",
+  :name "鬼畜",
+  :ruby "きちく",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D567%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "568",
+  :name "ダーク系",
+  :ruby "だーくけい",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D568%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "569",
+  :name "ラブコメ",
+  :ruby "らぶこめ",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D569%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "617",
+  :name "3D",
+  :ruby "すりーでぃー",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D617%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "1001",
+  :name "OL",
+  :ruby "おーえる",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D1001%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "1003",
+  :name "女将・女主人",
+  :ruby "おかみおんなしゅじん",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D1003%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "1004",
+  :name "インストラクター",
+  :ruby "いんすとらくたー",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D1004%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "1005",
+  :name "キャンギャル",
+  :ruby "きゃんぎゃる",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D1005%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "1007",
+  :name "スチュワーデス",
+  :ruby "すちゅわーです",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D1007%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "1008",
+  :name "メイド",
+  :ruby "めいど",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D1008%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "1009",
+  :name "モデル",
+  :ruby "もでる",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D1009%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "1011",
+  :name "レースクィーン",
+  :ruby "れーすくぃーん",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D1011%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "1012",
+  :name "バスガイド",
+  :ruby "ばすがいど",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D1012%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "1013",
+  :name "看護婦・ナース",
+  :ruby "かんごふなーす",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D1013%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "1014",
+  :name "熟女",
+  :ruby "じゅくじょ",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D1014%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "1015",
+  :name "女医",
+  :ruby "じょい",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D1015%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "1016",
+  :name "女教師",
+  :ruby "おんなきょうし",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D1016%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "1017",
+  :name "女子アナ",
+  :ruby "じょしあな",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D1017%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "1018",
+  :name "女子校生",
+  :ruby "じょしこうせい",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D1018%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "1019",
+  :name "女子大生",
+  :ruby "じょしこうせい",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D1019%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "1020",
+  :name "若妻・幼妻",
+  :ruby "わかづまおさなづま",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D1020%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "1021",
+  :name "格闘家",
+  :ruby "かくとうか",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D1021%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "1022",
+  :name "家庭教師",
+  :ruby "かていきょうし",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D1022%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "1023",
+  :name "秘書",
+  :ruby "ひしょ",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D1023%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "1025",
+  :name "未亡人",
+  :ruby "みぼうじん",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D1025%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "1026",
+  :name "職業色々",
+  :ruby "しょくぎょういろいろ",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D1026%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "1027",
+  :name "美少女",
+  :ruby "びしょうじょ",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D1027%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "1028",
+  :name "黒人男優",
+  :ruby "こくじんだんゆう",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D1028%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "1029",
+  :name "妊婦",
+  :ruby "にんぷ",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D1029%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "1030",
+  :name "そっくりさん",
+  :ruby "そっくりさん",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D1030%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "1031",
+  :name "痴女",
+  :ruby "ちじょ",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D1031%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "1032",
+  :name "お母さん",
+  :ruby "おかあさん",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D1032%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "1033",
+  :name "お姉さん",
+  :ruby "おねえさん",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D1033%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "1034",
+  :name "ギャル",
+  :ruby "ぎゃる",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D1034%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "1036",
+  :name "キャバ嬢・風俗嬢",
+  :ruby "きゃばじょうふうぞくじょう",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D1036%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "1039",
+  :name "人妻・主婦",
+  :ruby "ひとづましゅふ",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D1039%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "1040",
+  :name "ウェイトレス",
+  :ruby "うぇいとれす",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D1040%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "1041",
+  :name "コンパニオン",
+  :ruby "こんぱにおん",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D1041%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "1069",
+  :name "不倫",
+  :ruby "ふりん",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D1069%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "1071",
+  :name "極道・任侠",
+  :ruby "ごくどうにんきょう",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D1071%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "1075",
+  :name "くノ一",
+  :ruby "くのいち",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D1075%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "1082",
+  :name "女戦士",
+  :ruby "おんなせんし",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D1082%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "1083",
+  :name "幼なじみ",
+  :ruby "おさななじみ",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D1083%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "1085",
+  :name "変身ヒロイン",
+  :ruby "へんしんひろいん",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D1085%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "1086",
+  :name "魔法少女",
+  :ruby "まほうしょうじょ",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D1086%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "2001",
+  :name "巨乳",
+  :ruby "きょにゅう",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D2001%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "2002",
+  :name "長身",
+  :ruby "ちょうしん",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D2002%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "2003",
+  :name "小柄",
+  :ruby "こがら",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D2003%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "2004",
+  :name "めがね",
+  :ruby "めがね",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D2004%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "2005",
+  :name "貧乳・微乳",
+  :ruby "ひんにゅうびにゅう",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D2005%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "2006",
+  :name "スレンダー",
+  :ruby "すれんだー",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D2006%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "2007",
+  :name "ぽっちゃり",
+  :ruby "ぽっちゃり",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D2007%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "2008",
+  :name "ミニ系",
+  :ruby "みにけい",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D2008%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "2011",
+  :name "アジア女優",
+  :ruby "あじあじょゆう",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D2011%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "2012",
+  :name "白人女優",
+  :ruby "はくじんじょゆう",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D2012%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "2019",
+  :name "ツンデレ",
+  :ruby "つんでれ",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D2019%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "2022",
+  :name "女捜査官",
+  :ruby "おんなそうさかん",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D2022%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "2023",
+  :name "日焼け",
+  :ruby "ひやけ",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D2023%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "2024",
+  :name "巨尻",
+  :ruby "きょしり",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D2024%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "3001",
+  :name "体操着・ブルマ",
+  :ruby "たいそうぎぶるま",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D3001%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "3002",
+  :name "和服・浴衣",
+  :ruby "わふくゆかた",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D3002%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "3003",
+  :name "セーラー服",
+  :ruby "せーらーふく",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D3003%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "3005",
+  :name "チャイナドレス",
+  :ruby "ちゃいなどれす",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D3005%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "3006",
+  :name "パンスト・タイツ",
+  :ruby "ぱんすとたいつ",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D3006%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "3007",
+  :name "ミニスカ",
+  :ruby "みにすか",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D3007%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "3008",
+  :name "水着",
+  :ruby "みずぎ",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D3008%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "3009",
+  :name "競泳・スクール水着",
+  :ruby "きょうえいすくーるみずぎ",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D3009%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "3011",
+  :name "学生服",
+  :ruby "がくせいふく",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D3011%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "3012",
+  :name "ミニスカポリス",
+  :ruby "みにすかぽりす",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D3012%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "3013",
+  :name "ボディコン",
+  :ruby "ぼでぃこん",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D3013%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "3014",
+  :name "ランジェリー",
+  :ruby "らんじぇりー",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D3014%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "3015",
+  :name "ボンテージ",
+  :ruby "ぼんてーじ",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D3015%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "3021",
+  :name "和服・浴衣",
+  :ruby "わふくゆかた",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D3021%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "3029",
+  :name "即ハメ",
+  :ruby "そくはめ",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D3029%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "3032",
+  :name "ルーズソックス",
+  :ruby "るーずそっくす",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D3032%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "3033",
+  :name "バニーガール",
+  :ruby "ばにーがーる",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D3033%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "3035",
+  :name "レオタード",
+  :ruby "れおたーど",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D3035%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "3036",
+  :name "女装・男の娘",
+  :ruby "じょそうおとこのこ",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D3036%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "4001",
+  :name "SM",
+  :ruby "えすえむ",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D4001%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "4002",
+  :name "近親相姦",
+  :ruby "きんしんそうかん",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D4002%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "4005",
+  :name "乱交",
+  :ruby "らんこう",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D4005%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "4006",
+  :name "ナンパ",
+  :ruby "なんぱ",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D4006%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "4007",
+  :name "企画",
+  :ruby "きかく",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D4007%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "4008",
+  :name "脚フェチ",
+  :ruby "あしふぇち",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D4008%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "4009",
+  :name "巨乳フェチ",
+  :ruby "きょにゅうふぇち",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D4009%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "4010",
+  :name "その他フェチ",
+  :ruby "そのたふぇち",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D4010%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "4011",
+  :name "尻フェチ",
+  :ruby "しりふぇち",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D4011%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "4013",
+  :name "レズ",
+  :ruby "れず",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D4013%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "4014",
+  :name "童貞",
+  :ruby "どうてい",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D4014%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "4015",
+  :name "ニューハーフ",
+  :ruby "にゅーはーふ",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D4015%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "4016",
+  :name "パンチラ",
+  :ruby "ぱんちら",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D4016%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "4017",
+  :name "局部アップ",
+  :ruby "きょくぶあっぷ",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D4017%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "4018",
+  :name "スカトロ",
+  :ruby "すかとろ",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D4018%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "4019",
+  :name "パイパン",
+  :ruby "ぱいぱん",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D4019%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "4020",
+  :name "野外・露出",
+  :ruby "やがいろしゅつ",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D4020%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "4021",
+  :name "盗撮・のぞき",
+  :ruby "とうさつのぞき",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D4021%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "4022",
+  :name "洋ピン・海外輸入",
+  :ruby "ようぴんかいがいゆにゅう",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D4022%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "4023",
+  :name "ドキュメンタリー",
+  :ruby "どきゅめんたりー",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D4023%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "4024",
+  :name "素人",
+  :ruby "しろうと",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D4024%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "4025",
+  :name "単体作品",
+  :ruby "たんたいさくひん",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D4025%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "4026",
+  :name "カーセックス",
+  :ruby "かーせっくす",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D4026%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "4028",
+  :name "妄想",
+  :ruby "もうそう",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D4028%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "4030",
+  :name "淫乱・ハード系",
+  :ruby "いんらんはーどけい",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D4030%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "4031",
+  :name "コスプレ",
+  :ruby "こすぷれ",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D4031%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "4033",
+  :name "クラシック",
+  :ruby "くらしっく",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D4033%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "4034",
+  :name "特撮",
+  :ruby "とくさつ",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D4034%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "4040",
+  :name "レズ",
+  :ruby "れず",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D4040%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "4057",
+  :name "姉・妹",
+  :ruby "あねいもうと",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D4057%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "4058",
+  :name "ショタ",
+  :ruby "しょた",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D4058%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "4059",
+  :name "キス・接吻",
+  :ruby "きすせっぷん",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D4059%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "4060",
+  :name "ゲイ",
+  :ruby "げい",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D4060%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "4073",
+  :name "アニメ",
+  :ruby "あにめ",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D4073%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "4075",
+  :name "SF",
+  :ruby "えすえふ",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D4075%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "4076",
+  :name "アクション",
+  :ruby "あくしょん",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D4076%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "4096",
+  :name "スポーツ",
+  :ruby "すぽーつ",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D4096%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "4098",
+  :name "セクシー",
+  :ruby "せくしー",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D4098%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "4105",
+  :name "ダンス",
+  :ruby "だんす",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D4105%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "4106",
+  :name "騎乗位",
+  :ruby "きじょうい",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D4106%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "4110",
+  :name "Vシネマ",
+  :ruby "ぶいしねま",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D4110%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "4111",
+  :name "寝取り・寝取られ・NTR",
+  :ruby "ねとりねとられ",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D4111%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "4114",
+  :name "ドラマ",
+  :ruby "どらま",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D4114%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "4116",
+  :name "着エロ",
+  :ruby "ちゃくえろ",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D4116%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "4118",
+  :name "アイドル・芸能人",
+  :ruby "あいどるげいのうじん",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D4118%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "4119",
+  :name "エステ",
+  :ruby "えすて",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D4119%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "4120",
+  :name "逆ナン",
+  :ruby "ぎゃくなん",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D4120%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "4122",
+  :name "イタズラ",
+  :ruby "いたずら",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D4122%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "4123",
+  :name "カップル",
+  :ruby "かっぷる",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D4123%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "4124",
+  :name "マッサージ・リフレ",
+  :ruby "まっさーじりふれ",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D4124%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "4138",
+  :name "原作コラボ",
+  :ruby "げんさくこらぼ",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D4138%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "4139",
+  :name "ファン感謝・訪問",
+  :ruby "ふぁんかんしゃほうもん",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D4139%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "4140",
+  :name "温泉",
+  :ruby "おんせん",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D4140%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "5001",
+  :name "中出し",
+  :ruby "なかだし",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D5001%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "5002",
+  :name "フェラ",
+  :ruby "ふぇら",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D5002%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "5003",
+  :name "ぶっかけ",
+  :ruby "ぶっかけ",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D5003%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "5004",
+  :name "手コキ",
+  :ruby "てこき",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D5004%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "5005",
+  :name "アナル",
+  :ruby "あなる",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D5005%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "5006",
+  :name "バイブ",
+  :ruby "ばいぶ",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D5006%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "5007",
+  :name "クスコ",
+  :ruby "くすこ",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D5007%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "5008",
+  :name "オナニー",
+  :ruby "おなにー",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D5008%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "5009",
+  :name "ごっくん",
+  :ruby "ごっくん",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D5009%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "5010",
+  :name "監禁",
+  :ruby "かんきん",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D5010%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "5011",
+  :name "放尿・お漏らし",
+  :ruby "ほうにょうおもらし",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D5011%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "5012",
+  :name "飲尿",
+  :ruby "いんにょう",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D5012%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "5013",
+  :name "脱糞",
+  :ruby "だっぷん",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D5013%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "5014",
+  :name "浣腸",
+  :ruby "かんちょう",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D5014%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "5015",
+  :name "ドラッグ",
+  :ruby "どらっぐ",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D5015%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "5016",
+  :name "潮吹き",
+  :ruby "しおふき",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D5016%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "5017",
+  :name "おもちゃ",
+  :ruby "おもちゃ",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D5017%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "5018",
+  :name "ローター",
+  :ruby "ろーたー",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D5018%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "5019",
+  :name "パイズリ",
+  :ruby "ぱいずり",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D5019%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "5020",
+  :name "シックスナイン",
+  :ruby "しっくすないん",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D5020%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "5021",
+  :name "縛り・緊縛",
+  :ruby "しばりきんばく",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D5021%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "5022",
+  :name "3P・4P",
+  :ruby "さんぴーよんぴー",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D5022%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "5023",
+  :name "顔射",
+  :ruby "がんしゃ",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D5023%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "5024",
+  :name "食糞",
+  :ruby "しょくふん",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D5024%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "5025",
+  :name "淫語",
+  :ruby "いんご",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D5025%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "5048",
+  :name "足コキ",
+  :ruby "あしこき",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D5048%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "5053",
+  :name "指マン",
+  :ruby "ゆびまん",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D5053%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "5057",
+  :name "ローション・オイル",
+  :ruby "ろーしょんおいる",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D5057%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "5059",
+  :name "拷問",
+  :ruby "ごうもん",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D5059%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "5060",
+  :name "母乳",
+  :ruby "ぼにゅう",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D5060%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "5062",
+  :name "レズキス",
+  :ruby "れずきす",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D5062%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "5063",
+  :name "主観",
+  :ruby "しゅかん",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D5063%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "5066",
+  :name "電マ",
+  :ruby "でんま",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D5066%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "5067",
+  :name "顔面騎乗",
+  :ruby "がんめんきじょう",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D5067%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "5068",
+  :name "イラマチオ",
+  :ruby "いらまちお",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D5068%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "5069",
+  :name "くすぐり",
+  :ruby "くすぐり",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D5069%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "5070",
+  :name "時間停止",
+  :ruby "じかんていし",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D5070%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "5071",
+  :name "ハーレム",
+  :ruby "はーれむ",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D5071%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "5072",
+  :name "早漏",
+  :ruby "そうろう",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D5072%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "5073",
+  :name "デカチン・巨根",
+  :ruby "でかちんきょこん",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D5073%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "5074",
+  :name "M男",
+  :ruby "えむお",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D5074%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "5075",
+  :name "汗だく",
+  :ruby "あせだく",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D5075%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "5076",
+  :name "アナルセックス",
+  :ruby "あなるせっくす",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D5076%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "6002",
+  :name "ハメ撮り",
+  :ruby "はめどり",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D6002%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "6003",
+  :name "ベスト・総集編",
+  :ruby "べすとそうしゅうへん",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D6003%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "6004",
+  :name "デジモ",
+  :ruby "でじも",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D6004%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "6005",
+  :name "投稿",
+  :ruby "とうこう",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D6005%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "6006",
+  :name "デビュー作品",
+  :ruby "でびゅーさくひん",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D6006%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "6007",
+  :name "その他",
+  :ruby "そのた",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D6007%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "6008",
+  :name "パラダイスTV",
+  :ruby "ぱらだいすてぃーぶい",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D6008%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "6012",
+  :name "4時間以上作品",
+  :ruby "よじかんいじょうさくひん",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D6012%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "6014",
+  :name "イメージビデオ",
+  :ruby "いめーじびでお",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D6014%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "6017",
+  :name "ギリモザ",
+  :ruby "ぎりもざ",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D6017%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "6063",
+  :name "インディーズ",
+  :ruby "いんでぃーず",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D6063%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "6069",
+  :name "サイコ・スリラー",
+  :ruby "さいこすりらー",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D6069%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "6070",
+  :name "How To",
+  :ruby "はうとぅー",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D6070%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "6086",
+  :name "体験告白",
+  :ruby "たいけんこくはく",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D6086%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "6108",
+  :name "ポルチオ",
+  :ruby "ぽるちお",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D6108%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "6149",
+  :name "超乳",
+  :ruby "ちょうにゅう",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D6149%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "6151",
+  :name "ゲロ",
+  :ruby "げろ",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D6151%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "6161",
+  :name "10枚組",
+  :ruby "じゅうまいぐみ",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D6161%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "6164",
+  :name "ビッチ",
+  :ruby "びっち",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D6164%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "6170",
+  :name "イメージビデオ（男性）",
+  :ruby "いめーじびでおだんせい",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D6170%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "6179",
+  :name "4時間以上作品",
+  :ruby "4じかんいじょうさくひん",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D6179%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "6529",
+  :name "DVDトースター",
+  :ruby "でぃーぶいでぃーとーすたー",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D6529%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "6533",
+  :name "ハイビジョン",
+  :ruby "はいびじょん",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D6533%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "6548",
+  :name "独占配信",
+  :ruby "どくせんはいしん",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D6548%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "6555",
+  :name "復刻",
+  :ruby "ふっこく",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D6555%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "6565",
+  :name "期間限定セール",
+  :ruby "きかんげんていせーる",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D6565%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "6566",
+  :name "FANZA配信限定",
+  :ruby "ふぁんざはいしんげんてい",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D6566%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "6574",
+  :name "コラボ作品",
+  :ruby "こらぼさくひん",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D6574%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "6575",
+  :name "動画",
+  :ruby "どうが",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D6575%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "6592",
+  :name "AV OPEN 2014 ミドル級",
+  :ruby "えーぶいおーぷん2014みどるきゅう",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D6592%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "6593",
+  :name "AV OPEN 2014 ヘビー級",
+  :ruby "えーぶいおーぷん2014へびーきゅう",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D6593%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "6594",
+  :name "AV OPEN 2014 スーパーヘビー級",
+  :ruby "えーぶいおーぷん2014すーぱーへびーきゅう",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D6594%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "6597",
+  :name "ゲーム実写版",
+  :ruby "げーむじっしゃばん",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D6597%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "6608",
+  :name "女優ベスト・総集編",
+  :ruby "じょゆうべすとそうしゅうへん",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D6608%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "6609",
+  :name "16時間以上作品",
+  :ruby "じゅうろくじかんいじょうさくひん",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D6609%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "6652",
+  :name "AV OPEN 2015 女優部門",
+  :ruby "えーぶいおーぷん2015じょゆうぶもん",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D6652%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "6653",
+  :name "AV OPEN 2015 熟女部門",
+  :ruby "えーぶいおーぷん2015じゅくじょぶもん",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D6653%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "6654",
+  :name "AV OPEN 2015 企画部門",
+  :ruby "えーぶいおーぷん2015きかくぶもん",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D6654%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "6655",
+  :name "AV OPEN 2015 SM/ハード部門",
+  :ruby "えーぶいおーぷん2015えすえむはーどぶもん",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D6655%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "6656",
+  :name "AV OPEN 2015 素人部門",
+  :ruby "えーぶいおーぷん2015しろうとぶもん",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D6656%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "6657",
+  :name "AV OPEN 2015 マニア/フェチ部門",
+  :ruby "えーぶいおーぷん2015まにあふぇちぶもん",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D6657%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "6658",
+  :name "AV OPEN 2015 乙女部門",
+  :ruby "えーぶいおーぷん2015おとめぶもん",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D6658%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "6671",
+  :name "スマホ推奨縦動画",
+  :ruby "すまほすいしょうたてどうが",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D6671%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "6784",
+  :name "AV OPEN 2016 女優部門",
+  :ruby "えーぶいおーぷん2016じょゆうぶもん",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D6784%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "6785",
+  :name "AV OPEN 2016 ドラマ・ドキュメンタリー部門",
+  :ruby "えーぶいおーぷん2016どらまどきゅめんたりーぶもん",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D6785%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "6786",
+  :name "AV OPEN 2016 企画部門",
+  :ruby "えーぶいおーぷん2016きかくぶもん",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D6786%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "6787",
+  :name "AV OPEN 2016 マニア・フェチ部門",
+  :ruby "えーぶいおーぷん2016まにあふぇちぶもん",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D6787%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "6788",
+  :name "AV OPEN 2016 バラエティ部門",
+  :ruby "えーぶいおーぷん2016ばらえてぃぶもん",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D6788%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "6789",
+  :name "AV OPEN 2016 素人部門",
+  :ruby "えーぶいおーぷん2016しろうとぶもん",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D6789%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "6790",
+  :name "AV OPEN 2016 ハード部門",
+  :ruby "えーぶいおーぷん2016はーどぶもん",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D6790%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "6791",
+  :name "AV OPEN 2016 人妻・熟女部門",
+  :ruby "えーぶいおーぷん2016ひとづまじゅくじょぶもん",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D6791%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "6792",
+  :name "AV OPEN 2016 乙女部門",
+  :ruby "えーぶいおーぷん2016おとめぶもん",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D6792%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "6793",
+  :name "VR専用",
+  :ruby "ぶいあーるせんよう",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D6793%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "6900",
+  :name "特典あり（AVベースボール）",
+  :ruby "とくてんありえーぶいべーすぼーる",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D6900%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "6902",
+  :name "AV OPEN 2017 女優部門",
+  :ruby "えーぶいおーぷん2017じょゆうぶもん",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D6902%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "6903",
+  :name "AV OPEN 2017 企画部門",
+  :ruby "えーぶいおーぷん2017きかくぶもん",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D6903%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "6904",
+  :name "AV OPEN 2017 マニア部門",
+  :ruby "えーぶいおーぷん2017まにあぶもん",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D6904%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "6905",
+  :name "AV OPEN 2017 フェチ部門",
+  :ruby "えーぶいおーぷん2017ふぇちぶもん",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D6905%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "6906",
+  :name "AV OPEN 2017 素人部門",
+  :ruby "えーぶいおーぷん2017しろうとぶもん",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D6906%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "6907",
+  :name "AV OPEN 2017 ドラマ部門",
+  :ruby "えーぶいおーぷん2017どらまぶもん",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D6907%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "6908",
+  :name "AV OPEN 2017 ハード部門",
+  :ruby "えーぶいおーぷん2017はーどぶもん",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D6908%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "6909",
+  :name "AV OPEN 2017 人妻・熟女部門",
+  :ruby "えーぶいおーぷん2017ひとづまじゅくじょぶもん",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D6909%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "6910",
+  :name "AV OPEN 2017 乙女部門",
+  :ruby "えーぶいおーぷん2017おとめぶもん",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D6910%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "6911",
+  :name "AV OPEN 2017 ドキュメンタリー部門",
+  :ruby "えーぶいおーぷん2017どきゅめんたりーぶもん",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D6911%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "6912",
+  :name "セレブの友【特典A】対象作品",
+  :ruby "せれぶのともとくてんえーたいしょうさくひん",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D6912%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "6914",
+  :name "セレブの友【特典C】対象作品",
+  :ruby "せれぶのともとくてんしーたいしょうさくひん",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D6914%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "6925",
+  :name "ハイクオリティVR",
+  :ruby "はいくおりてぃぶいあーる",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D6925%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "6926",
+  :name "AV OPEN 2018 女優部門",
+  :ruby "えーぶいおーぷん2018じょゆうぶもん",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D6926%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "6927",
+  :name "AV OPEN 2018 企画部門",
+  :ruby "えーぶいおーぷん2018きかくぶもん",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D6927%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "6928",
+  :name "AV OPEN 2018 マニア・フェチ部門",
+  :ruby "えーぶいおーぷん2018まにあふぇちぶもん",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D6928%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "6929",
+  :name "AV OPEN 2018 素人部門",
+  :ruby "えーぶいおーぷん2018しろうとぶもん",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D6929%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "6930",
+  :name "AV OPEN 2018 ハード部門",
+  :ruby "えーぶいおーぷん2018はーどぶもん",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D6930%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "6931",
+  :name "AV OPEN 2018 人妻・熟女部門",
+  :ruby "えーぶいおーぷん2018ひとづまじゅくじょぶもん",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D6931%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "6932",
+  :name "AV OPEN 2018 乙女部門",
+  :ruby "えーぶいおーぷん2018おとめぶもん",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D6932%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "6933",
+  :name "ヨガ",
+  :ruby "よが",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D6933%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "6934",
+  :name "お爺ちゃん",
+  :ruby "おじいちゃん",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D6934%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "6935",
+  :name "軟体",
+  :ruby "なんたい",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D6935%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "6936",
+  :name "面接",
+  :ruby "めんせつ",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D6936%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "6937",
+  :name "ヘルス・ソープ",
+  :ruby "へるすそーぷ",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D6937%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "6938",
+  :name "オナサポ",
+  :ruby "おなさぽ",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D6938%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "6939",
+  :name "ビジネススーツ",
+  :ruby "びじねすすーつ",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D6939%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "6940",
+  :name "スパンキング",
+  :ruby "すぱんきんぐ",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D6940%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "6941",
+  :name "ディルド",
+  :ruby "でぃるど",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D6941%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "6942",
+  :name "受付嬢",
+  :ruby "うけつけじょう",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D6942%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "6943",
+  :name "叔母さん",
+  :ruby "おばさん",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D6943%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "6944",
+  :name "女王様",
+  :ruby "じょおうさま",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D6944%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "6945",
+  :name "女上司",
+  :ruby "おんなじょうし",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D6945%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "6946",
+  :name "部下・同僚",
+  :ruby "ぶかどうりょう",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D6946%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "6947",
+  :name "お婆ちゃん",
+  :ruby "おばあちゃん",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D6947%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "6948",
+  :name "男の潮吹き",
+  :ruby "おとこのしおふき",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D6948%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "6949",
+  :name "罵倒",
+  :ruby "ばとう",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D6949%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "6950",
+  :name "鼻フック",
+  :ruby "はなふっく",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D6950%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "6951",
+  :name "覆面・マスク",
+  :ruby "ふくめんますく",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D6951%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "6952",
+  :name "放置",
+  :ruby "ほうち",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D6952%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "6953",
+  :name "蝋燭",
+  :ruby "ろうそく",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D6953%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "6954",
+  :name "オタク",
+  :ruby "おたく",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D6954%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "6955",
+  :name "セレブ",
+  :ruby "せれぶ",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D6955%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "6956",
+  :name "デート",
+  :ruby "でーと",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D6956%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "6957",
+  :name "飲み会・合コン",
+  :ruby "のみかいごうこん",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D6957%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "6958",
+  :name "バック",
+  :ruby "ばっく",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D6958%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "6959",
+  :name "チアガール",
+  :ruby "ちあがーる",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D6959%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "6960",
+  :name "ママ友",
+  :ruby "ままとも",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D6960%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "6961",
+  :name "部活・マネージャー",
+  :ruby "ぶかつまねーじゃー",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D6961%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "6962",
+  :name "ホテル",
+  :ruby "ほてる",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D6962%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "6963",
+  :name "病院・クリニック",
+  :ruby "びょういんくりにっく",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D6963%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "6964",
+  :name "ノーパン",
+  :ruby "のーぱん",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D6964%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "6965",
+  :name "アスリート",
+  :ruby "あすりーと",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D6965%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "6966",
+  :name "白目・失神",
+  :ruby "しろめしっしん",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D6966%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "6967",
+  :name "M女",
+  :ruby "えむおんな",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D6967%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "6968",
+  :name "アクメ・オーガズム",
+  :ruby "あくめおーがずむ",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D6968%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "6969",
+  :name "お風呂",
+  :ruby "おふろ",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D6969%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "6970",
+  :name "スワッピング・夫婦交換",
+  :ruby "すわっぴんぐふうふこうかん",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D6970%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "6971",
+  :name "胸チラ",
+  :ruby "むねちら",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D6971%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "6972",
+  :name "ノーブラ",
+  :ruby "のーぶら",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D6972%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "6973",
+  :name "娘・養女",
+  :ruby "むすめようじょ",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D6973%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "6974",
+  :name "花嫁",
+  :ruby "はなよめ",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D6974%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "6975",
+  :name "旅行",
+  :ruby "りょこう",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D6975%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "6988",
+  :name "新人ちゃん続々デビュー",
+  :ruby "しんじんちゃんぞくぞくでびゅー",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D6988%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "6995",
+  :name "妄想族",
+  :ruby "もうそうぞく",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D6995%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "6996",
+  :name "エマニエル",
+  :ruby "えまにえる",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D6996%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "7267",
+  :name "セット商品",
+  :ruby "せっとしょうひん",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D7267%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "10138",
+  :name "ディルド",
+  :ruby "でぃるど",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D10138%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "66310",
+  :name "セクシー",
+  :ruby "せくしー",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D66310%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "66314",
+  :name "コスプレ",
+  :ruby "こすぷれ",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D66314%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "66317",
+  :name "制服",
+  :ruby "せいふく",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D66317%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "66318",
+  :name "和服・浴衣",
+  :ruby "わふくゆかた",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D66318%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "66329",
+  :name "ドラマ",
+  :ruby "どらま",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D66329%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "66347",
+  :name "R-15",
+  :ruby "あーる15",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D66347%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "79002",
+  :name "セクシー",
+  :ruby "せくしー",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D79002%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "79005",
+  :name "エロス",
+  :ruby "えろす",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D79005%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "79008",
+  :name "R-18",
+  :ruby "あーる18",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D79008%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "79015",
+  :name "4K",
+  :ruby "よんけー",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D79015%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "300129",
+  :name "福袋",
+  :ruby "ふくぶくろ",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D300129%2F&af_id=romanchikubi-992&ch=api"})

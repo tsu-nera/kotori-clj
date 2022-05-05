@@ -1,4 +1,4 @@
-(ns kotori.domain.dmm.genre
+(ns kotori.domain.dmm.videoa
   "
   refs.
   - https://www.dmm.co.jp/digital/videoa/-/genre/
@@ -13,6 +13,7 @@
 
 ;; 2022.05現在, VR専用はハイクオリティVRを内包する
 (def vr-only-id 6793)
+
 (def vr-ids
   #{;
     6793 ;; VR専用

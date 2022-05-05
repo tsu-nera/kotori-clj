@@ -5,7 +5,6 @@
    [firebase :refer [db-dev db-prod]]
    [integrant.repl.state :refer [config system]]
    [kotori.domain.dmm.core :as model]
-   [kotori.domain.dmm.floor :as floor]
    [kotori.domain.dmm.product :as product]
    [kotori.lib.firestore :as fs]
    [kotori.lib.io :as io]
@@ -18,6 +17,8 @@
   (-> system
       (get :kotori.service.env/env)
       (api/env->creds)))
+
+(def creds (dmm-creds))
 
 (defn make-dmm-tweet [screen-name post]
   {:cid         (:cid post)
@@ -110,11 +111,65 @@
                   (filter #(:description %)))]
     (io/dump-csv-from-maps! csv-path maps)))
 
+(defn get-product
+  [{:keys [env] :as m :or {floor (:videoa api/floor)}}]
+  (let [creds (api/env->creds env)
+        q     (dissoc m :env)]
+    (-> (api/search-product creds q) first)))
+
+(defn get-floors []
+  (-> (api/get-floors creds) :site))
+
+(defn download-floors! []
+  (let [file-path "dmm/floor.edn"]
+    (->> (get-floors)
+         (io/dump-edn! file-path))))
+#_(download-floors!)
+
+(defn get-fanza-digital-floors []
+  (-> (get-floors)
+      second
+      :service
+      first
+      :floor))
+
+(defn video-floors->map [floors]
+  (reduce (fn [acc m]
+            (let [code (keyword (:code m))
+                  id   (Integer/parseInt (:id m))]
+              (assoc acc code id))) {} floors))
+
+(def video-floor-map
+  (delay (-> (get-fanza-digital-floors) (video-floors->map))))
+
+(defn get-genres [floor-name]
+  (let [q {:floor_id (floor-name @video-floor-map)
+           :hits     500}]
+    (->> (api/search-genre creds q)
+         :genre
+         (sort-by (fn [x]
+                    (Integer/parseInt (:genre_id x)))))))
+
+(defn download-genres! [floor-name]
+  (let [floor-name-str (name floor-name)
+        file-path      (str "dmm/genre/" floor-name-str ".edn")]
+    (->> (get-genres floor-name)
+         (io/dump-edn! file-path))))
+
+(defn download-all-genres! []
+  (doseq [key (keys @video-floor-map)]
+    (download-genres! key)))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (comment
   (def cid "196glod00227")
   (def resp (get-dmm-product cid "anime"))
+  )
+
+(comment
+  (def resp (get-floors))
+  (get-genres :videoa)
   )
 
 (comment

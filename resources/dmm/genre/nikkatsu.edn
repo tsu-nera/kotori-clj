@@ -1,0 +1,950 @@
+({:genre_id "5",
+  :name "ギャグ・コメディ",
+  :ruby "ぎゃぐこめでぃ",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D5%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "17",
+  :name "ファンタジー",
+  :ruby "ふぁんたじー",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D17%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "18",
+  :name "ホラー",
+  :ruby "ほらー",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D18%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "21",
+  :name "残虐表現",
+  :ruby "ざんぎゃくひょうげん",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D21%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "25",
+  :name "拘束",
+  :ruby "こうそく",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D25%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "27",
+  :name "辱め",
+  :ruby "はずかしめ",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D27%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "28",
+  :name "羞恥",
+  :ruby "しゅうち",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D28%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "38",
+  :name "クンニ",
+  :ruby "くんに",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D38%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "48",
+  :name "制服",
+  :ruby "せいふく",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D48%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "55",
+  :name "処女",
+  :ruby "しょじょ",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D55%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "62",
+  :name "触手",
+  :ruby "しょくしゅ",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D62%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "63",
+  :name "巫女",
+  :ruby "みこ",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D63%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "72",
+  :name "異物挿入",
+  :ruby "いぶつそうにゅう",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D72%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "81",
+  :name "複数話",
+  :ruby "ふくすうわ",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D81%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "93",
+  :name "裸エプロン",
+  :ruby "はだかえぷろん",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D93%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "102",
+  :name "美乳",
+  :ruby "びにゅう",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D102%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "514",
+  :name "アクション・格闘",
+  :ruby "あくしょんかくとう",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D514%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "524",
+  :name "義母",
+  :ruby "ぎぼ",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D524%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "527",
+  :name "お嬢様・令嬢",
+  :ruby "おじょうさまれいじょう",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D527%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "528",
+  :name "お姫様",
+  :ruby "おひめさま",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D528%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "553",
+  :name "学園もの",
+  :ruby "がくえんもの",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D553%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "555",
+  :name "恋愛",
+  :ruby "れんあい",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D555%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "558",
+  :name "ボーイズラブ",
+  :ruby "ぼーいずらぶ",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D558%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "563",
+  :name "時代劇",
+  :ruby "じだいげき",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D563%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "567",
+  :name "鬼畜",
+  :ruby "きちく",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D567%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "569",
+  :name "ラブコメ",
+  :ruby "らぶこめ",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D569%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "583",
+  :name "ラブ＆H",
+  :ruby "らぶあんどえっち",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D583%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "1001",
+  :name "OL",
+  :ruby "おーえる",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D1001%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "1003",
+  :name "女将・女主人",
+  :ruby "おかみおんなしゅじん",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D1003%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "1004",
+  :name "インストラクター",
+  :ruby "いんすとらくたー",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D1004%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "1005",
+  :name "キャンギャル",
+  :ruby "きゃんぎゃる",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D1005%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "1007",
+  :name "スチュワーデス",
+  :ruby "すちゅわーです",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D1007%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "1008",
+  :name "メイド",
+  :ruby "めいど",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D1008%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "1009",
+  :name "モデル",
+  :ruby "もでる",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D1009%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "1011",
+  :name "レースクィーン",
+  :ruby "れーすくぃーん",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D1011%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "1012",
+  :name "バスガイド",
+  :ruby "ばすがいど",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D1012%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "1013",
+  :name "看護婦・ナース",
+  :ruby "かんごふなーす",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D1013%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "1014",
+  :name "熟女",
+  :ruby "じゅくじょ",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D1014%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "1015",
+  :name "女医",
+  :ruby "じょい",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D1015%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "1016",
+  :name "女教師",
+  :ruby "おんなきょうし",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D1016%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "1017",
+  :name "女子アナ",
+  :ruby "じょしあな",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D1017%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "1018",
+  :name "女子校生",
+  :ruby "じょしこうせい",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D1018%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "1019",
+  :name "女子大生",
+  :ruby "じょしこうせい",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D1019%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "1020",
+  :name "若妻・幼妻",
+  :ruby "わかづまおさなづま",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D1020%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "1021",
+  :name "格闘家",
+  :ruby "かくとうか",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D1021%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "1022",
+  :name "家庭教師",
+  :ruby "かていきょうし",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D1022%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "1023",
+  :name "秘書",
+  :ruby "ひしょ",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D1023%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "1025",
+  :name "未亡人",
+  :ruby "みぼうじん",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D1025%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "1026",
+  :name "職業色々",
+  :ruby "しょくぎょういろいろ",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D1026%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "1027",
+  :name "美少女",
+  :ruby "びしょうじょ",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D1027%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "1028",
+  :name "黒人男優",
+  :ruby "こくじんだんゆう",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D1028%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "1029",
+  :name "妊婦",
+  :ruby "にんぷ",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D1029%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "1030",
+  :name "そっくりさん",
+  :ruby "そっくりさん",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D1030%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "1031",
+  :name "痴女",
+  :ruby "ちじょ",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D1031%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "1032",
+  :name "お母さん",
+  :ruby "おかあさん",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D1032%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "1033",
+  :name "お姉さん",
+  :ruby "おねえさん",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D1033%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "1034",
+  :name "ギャル",
+  :ruby "ぎゃる",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D1034%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "1036",
+  :name "キャバ嬢・風俗嬢",
+  :ruby "きゃばじょうふうぞくじょう",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D1036%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "1039",
+  :name "人妻・主婦",
+  :ruby "ひとづましゅふ",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D1039%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "1040",
+  :name "ウェイトレス",
+  :ruby "うぇいとれす",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D1040%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "1041",
+  :name "コンパニオン",
+  :ruby "こんぱにおん",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D1041%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "1042",
+  :name "シスター",
+  :ruby "しすたー",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D1042%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "1069",
+  :name "不倫",
+  :ruby "ふりん",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D1069%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "1071",
+  :name "極道・任侠",
+  :ruby "ごくどうにんきょう",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D1071%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "1075",
+  :name "くノ一",
+  :ruby "くのいち",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D1075%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "1082",
+  :name "女戦士",
+  :ruby "おんなせんし",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D1082%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "1083",
+  :name "幼なじみ",
+  :ruby "おさななじみ",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D1083%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "2001",
+  :name "巨乳",
+  :ruby "きょにゅう",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D2001%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "2002",
+  :name "長身",
+  :ruby "ちょうしん",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D2002%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "2004",
+  :name "めがね",
+  :ruby "めがね",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D2004%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "2005",
+  :name "貧乳・微乳",
+  :ruby "ひんにゅうびにゅう",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D2005%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "2006",
+  :name "スレンダー",
+  :ruby "すれんだー",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D2006%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "2007",
+  :name "ぽっちゃり",
+  :ruby "ぽっちゃり",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D2007%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "2008",
+  :name "ミニ系",
+  :ruby "みにけい",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D2008%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "2011",
+  :name "アジア女優",
+  :ruby "あじあじょゆう",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D2011%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "2012",
+  :name "白人女優",
+  :ruby "はくじんじょゆう",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D2012%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "2019",
+  :name "ツンデレ",
+  :ruby "つんでれ",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D2019%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "2022",
+  :name "女捜査官",
+  :ruby "おんなそうさかん",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D2022%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "2024",
+  :name "巨尻",
+  :ruby "きょしり",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D2024%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "3001",
+  :name "体操着・ブルマ",
+  :ruby "たいそうぎぶるま",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D3001%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "3002",
+  :name "和服・浴衣",
+  :ruby "わふくゆかた",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D3002%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "3003",
+  :name "セーラー服",
+  :ruby "せーらーふく",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D3003%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "3005",
+  :name "チャイナドレス",
+  :ruby "ちゃいなどれす",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D3005%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "3006",
+  :name "パンスト",
+  :ruby "ぱんすと",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D3006%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "3007",
+  :name "ミニスカ",
+  :ruby "みにすか",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D3007%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "3008",
+  :name "水着",
+  :ruby "みずぎ",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D3008%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "3009",
+  :name "競泳・スクール水着",
+  :ruby "きょうえいすくーるみずぎ",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D3009%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "3011",
+  :name "学生服",
+  :ruby "がくせいふく",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D3011%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "3013",
+  :name "ボディコン",
+  :ruby "ぼでぃこん",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D3013%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "3014",
+  :name "ランジェリー",
+  :ruby "らんじぇりー",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D3014%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "3015",
+  :name "ボンテージ",
+  :ruby "ぼんてーじ",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D3015%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "3033",
+  :name "バニーガール",
+  :ruby "ばにーがーる",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D3033%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "3034",
+  :name "ゴスロリ",
+  :ruby "ごすろり",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D3034%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "3035",
+  :name "レオタード",
+  :ruby "れおたーど",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D3035%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "4001",
+  :name "SM",
+  :ruby "えすえむ",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D4001%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "4002",
+  :name "近親相姦",
+  :ruby "きんしんそうかん",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D4002%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "4005",
+  :name "乱交",
+  :ruby "らんこう",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D4005%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "4006",
+  :name "ナンパ",
+  :ruby "なんぱ",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D4006%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "4007",
+  :name "企画",
+  :ruby "きかく",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D4007%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "4008",
+  :name "脚フェチ",
+  :ruby "あしふぇち",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D4008%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "4009",
+  :name "巨乳フェチ",
+  :ruby "きょにゅうふぇち",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D4009%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "4010",
+  :name "その他フェチ",
+  :ruby "そのたふぇち",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D4010%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "4011",
+  :name "尻フェチ",
+  :ruby "しりふぇち",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D4011%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "4013",
+  :name "レズ",
+  :ruby "れず",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D4013%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "4014",
+  :name "童貞",
+  :ruby "どうてい",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D4014%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "4015",
+  :name "ニューハーフ",
+  :ruby "にゅーはーふ",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D4015%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "4016",
+  :name "パンチラ",
+  :ruby "ぱんちら",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D4016%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "4019",
+  :name "パイパン",
+  :ruby "ぱいぱん",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D4019%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "4020",
+  :name "野外・露出",
+  :ruby "やがいろしゅつ",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D4020%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "4021",
+  :name "盗撮・のぞき",
+  :ruby "とうさつのぞき",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D4021%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "4022",
+  :name "洋ピン・海外輸入",
+  :ruby "ようぴんかいがいゆにゅう",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D4022%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "4023",
+  :name "ドキュメンタリー",
+  :ruby "どきゅめんたりー",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D4023%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "4024",
+  :name "素人",
+  :ruby "しろうと",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D4024%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "4025",
+  :name "単体作品",
+  :ruby "たんたいさくひん",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D4025%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "4026",
+  :name "カーセックス",
+  :ruby "かーせっくす",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D4026%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "4028",
+  :name "妄想",
+  :ruby "もうそう",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D4028%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "4030",
+  :name "淫乱・ハード系",
+  :ruby "いんらんはーどけい",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D4030%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "4031",
+  :name "コスプレ",
+  :ruby "こすぷれ",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D4031%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "4034",
+  :name "特撮",
+  :ruby "とくさつ",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D4034%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "4057",
+  :name "姉・妹",
+  :ruby "あねいもうと",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D4057%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "4060",
+  :name "ゲイ・ホモ",
+  :ruby "げいほも",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D4060%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "4075",
+  :name "SF",
+  :ruby "えすえふ",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D4075%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "4076",
+  :name "アクション",
+  :ruby "あくしょん",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D4076%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "4098",
+  :name "セクシー",
+  :ruby "せくしー",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D4098%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "4103",
+  :name "成人映画",
+  :ruby "せいじんえいが",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D4103%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "4105",
+  :name "ダンス",
+  :ruby "だんす",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D4105%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "4106",
+  :name "騎乗位",
+  :ruby "きじょうい",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D4106%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "4110",
+  :name "Vシネマ",
+  :ruby "ぶいしねま",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D4110%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "4111",
+  :name "寝取り・寝取られ・NTR",
+  :ruby "ねとりねとられ",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D4111%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "4114",
+  :name "ドラマ",
+  :ruby "どらま",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D4114%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "4118",
+  :name "アイドル・芸能人",
+  :ruby "あいどるげいのうじん",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D4118%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "4119",
+  :name "エステ",
+  :ruby "えすて",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D4119%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "4120",
+  :name "逆ナン",
+  :ruby "ぎゃくなん",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D4120%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "4122",
+  :name "イタズラ",
+  :ruby "いたずら",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D4122%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "4123",
+  :name "カップル",
+  :ruby "かっぷる",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D4123%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "4124",
+  :name "マッサージ・リフレ",
+  :ruby "まっさーじりふれ",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D4124%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "5001",
+  :name "中出し",
+  :ruby "なかだし",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D5001%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "5002",
+  :name "フェラ",
+  :ruby "ふぇら",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D5002%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "5004",
+  :name "手コキ",
+  :ruby "てこき",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D5004%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "5005",
+  :name "アナル",
+  :ruby "あなる",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D5005%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "5006",
+  :name "バイブ",
+  :ruby "ばいぶ",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D5006%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "5007",
+  :name "クスコ",
+  :ruby "くすこ",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D5007%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "5008",
+  :name "オナニー",
+  :ruby "おなにー",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D5008%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "5009",
+  :name "ごっくん",
+  :ruby "ごっくん",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D5009%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "5010",
+  :name "監禁",
+  :ruby "かんきん",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D5010%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "5011",
+  :name "放尿・お漏らし",
+  :ruby "ほうにょうおもらし",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D5011%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "5012",
+  :name "飲尿",
+  :ruby "いんにょう",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D5012%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "5013",
+  :name "脱糞",
+  :ruby "だっぷん",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D5013%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "5014",
+  :name "浣腸",
+  :ruby "かんちょう",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D5014%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "5015",
+  :name "ドラッグ",
+  :ruby "どらっぐ",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D5015%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "5016",
+  :name "潮吹き",
+  :ruby "しおふき",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D5016%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "5017",
+  :name "おもちゃ",
+  :ruby "おもちゃ",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D5017%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "5018",
+  :name "ローター",
+  :ruby "ろーたー",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D5018%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "5019",
+  :name "パイズリ",
+  :ruby "ぱいずり",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D5019%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "5020",
+  :name "シックスナイン",
+  :ruby "しっくすないん",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D5020%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "5021",
+  :name "縛り・緊縛",
+  :ruby "しばりきんばく",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D5021%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "5022",
+  :name "3P・4P",
+  :ruby "さんぴーよんぴー",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D5022%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "5023",
+  :name "顔射",
+  :ruby "がんしゃ",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D5023%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "5025",
+  :name "淫語",
+  :ruby "いんご",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D5025%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "5048",
+  :name "足コキ",
+  :ruby "あしこき",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D5048%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "5053",
+  :name "指マン",
+  :ruby "ゆびまん",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D5053%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "5057",
+  :name "ローション",
+  :ruby "ろーしょん",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D5057%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "5060",
+  :name "母乳",
+  :ruby "ぼにゅう",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D5060%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "5063",
+  :name "主観",
+  :ruby "しゅかん",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D5063%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "5066",
+  :name "電マ",
+  :ruby "でんま",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D5066%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "5067",
+  :name "顔面騎乗",
+  :ruby "がんめんきじょう",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D5067%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "6002",
+  :name "ハメ撮り",
+  :ruby "はめどり",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D6002%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "6003",
+  :name "ベスト・総集編",
+  :ruby "べすとそうしゅうへん",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D6003%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "6005",
+  :name "投稿",
+  :ruby "とうこう",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D6005%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "6006",
+  :name "デビュー作品",
+  :ruby "でびゅーさくひん",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D6006%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "6007",
+  :name "その他",
+  :ruby "そのた",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D6007%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "6017",
+  :name "ギリモザ",
+  :ruby "ぎりもざ",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D6017%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "6064",
+  :name "デジタル最新作",
+  :ruby "でじたるさいしんさく",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D6064%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "6069",
+  :name "サイコ・スリラー",
+  :ruby "さいこすりらー",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D6069%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "6070",
+  :name "How To",
+  :ruby "はうとぅー",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D6070%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "6102",
+  :name "サンプル動画",
+  :ruby "さんぷるどうが",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D6102%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "6531",
+  :name "フランス書院原作",
+  :ruby "ふらんすしょいんげんさく",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D6531%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "6533",
+  :name "ハイビジョン",
+  :ruby "はいびじょん",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D6533%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "6548",
+  :name "独占配信",
+  :ruby "どくせんはいしん",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D6548%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "6943",
+  :name "叔母さん",
+  :ruby "おばさん",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D6943%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "6944",
+  :name "女王様",
+  :ruby "じょおうさま",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D6944%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "6945",
+  :name "女上司",
+  :ruby "おんなじょうし",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D6945%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "6951",
+  :name "覆面・マスク",
+  :ruby "ふくめんますく",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D6951%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "6967",
+  :name "M女",
+  :ruby "えむおんな",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D6967%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "6970",
+  :name "スワッピング・夫婦交換",
+  :ruby "すわっぴんぐふうふこうかん",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D6970%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "6971",
+  :name "胸チラ",
+  :ruby "むねちら",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D6971%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "6973",
+  :name "娘・養女",
+  :ruby "むすめようじょ",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D6973%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "6974",
+  :name "花嫁",
+  :ruby "はなよめ",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D6974%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "6975",
+  :name "旅行",
+  :ruby "りょこう",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D6975%2F&af_id=romanchikubi-992&ch=api"}
+ {:genre_id "67112",
+  :name "Vシネマ",
+  :ruby "ぶいしねま",
+  :list_url
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fnikkatsu%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D67112%2F&af_id=romanchikubi-992&ch=api"})

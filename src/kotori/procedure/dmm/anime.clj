@@ -6,7 +6,8 @@
     :rename {anime-coll-path coll-path}]
    [kotori.lib.provider.dmm.api :as api]
    [kotori.lib.time :as time]
-   [kotori.procedure.dmm.product :as product]))
+   [kotori.procedure.dmm.product :as product]
+   [kotori.procedure.strategy.dmm :as st]))
 
 (defn get-product [{:as params :keys [cid]}]
   {:pre [(string? cid)]}
@@ -38,6 +39,20 @@
       {:timestamp ts
        :count     (count products)
        :products  products})))
+
+(defn select-scheduled-products [{:as m :keys [db limit] :or {limit 5}}]
+  (let [xst      [st/st-exclude-ng-genres
+                  st/st-exclude-movie
+                  st/st-exclude-no-image
+                  st/st-exclude-omnibus
+                  st/st-include-vr]
+        params   (st/assoc-last-crawled-time
+                  m db (:vrs-crawled-time dmm/field))
+        products (st/select-scheduled-products-with-xst
+                  params xst coll-path)]
+    (->> products
+         (sort-by :rank-popular)
+         (take limit))))
 
 (comment
   (require '[devtools :refer [env ->screen-name]]

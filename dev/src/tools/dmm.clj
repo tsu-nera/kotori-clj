@@ -142,8 +142,6 @@
 (def video-floor-map
   (delay (-> (get-fanza-digital-floors) (video-floors->map))))
 
-(def sample-url "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D3%2F&af_id=romanchikubi-992&ch=api")
-
 (defn- af-url->list-url [url]
   (-> url
       (string/split #"&af_id")

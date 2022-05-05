@@ -142,11 +142,25 @@
 (def video-floor-map
   (delay (-> (get-fanza-digital-floors) (video-floors->map))))
 
+(def sample-url "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdigital%2Fvideoa%2F-%2Flist%2F%3D%2Farticle%3Dkeyword%2Fid%3D3%2F&af_id=romanchikubi-992&ch=api")
+
+(defn- af-url->list-url [url]
+  (-> url
+      (string/split #"&af_id")
+      first
+      (string/split #"lurl?=")
+      second
+      java.net.URLDecoder/decode))
+
 (defn get-genres [floor-name]
   (let [q {:floor_id (floor-name @video-floor-map)
            :hits     500}]
     (->> (api/search-genre creds q)
          :genre
+         (map (fn [m]
+                (if-let [list-url (:list_url m)]
+                  (assoc m :list_url (af-url->list-url list-url))
+                  m)))
          (sort-by (fn [x]
                     (Integer/parseInt (:genre_id x)))))))
 
@@ -155,10 +169,12 @@
         file-path      (str "dmm/genre/" floor-name-str ".edn")]
     (->> (get-genres floor-name)
          (io/dump-edn! file-path))))
+#_(download-genres! :videoa)
 
 (defn download-all-genres! []
   (doseq [key (keys @video-floor-map)]
     (download-genres! key)))
+#_(download-all-genres!)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 

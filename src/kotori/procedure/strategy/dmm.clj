@@ -145,7 +145,7 @@
                 st-exclude-amateur
                 st-exclude-omnibus]
         params (assoc-last-crawled-time
-                m db dmm/products-crawled-time)]
+                m db (:products-crawled-time dmm/field))]
     (->> (select-scheduled-products-with-xst params xst
                                              product/coll-path)
          ;; sortはtransducerに組み込まないほうが楽.
@@ -159,7 +159,7 @@
                 st-exclude-omnibus
                 st-include-amateur]
         params (assoc-last-crawled-time
-                m db dmm/products-crawled-time)]
+                m db (:products-crawled-time dmm/field))]
     (->> (select-scheduled-products-with-xst params xst
                                              product/coll-path)
          (sort-by :rank-popular)

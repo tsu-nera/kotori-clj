@@ -23,7 +23,7 @@
 
 (defn crawl-products!
   [{:keys [db] :as m}]
-  (let [timestamp-key "vrs_crawled_time"
+  (let [timestamp-key (:vrs-crawled-time dmm/field)
         ts            (time/fs-now)]
     (when-let [products (get-products m)]
       (doto db
@@ -50,8 +50,8 @@
                   st/st-exclude-no-image
                   st/st-exclude-omnibus
                   st/st-include-vr]
-        params   (st/assoc-last-crawled-time m
-                                             db dmm/vrs-crawled-time)
+        params   (st/assoc-last-crawled-time
+                  m db (:vrs-crawled-time dmm/field))
         products (st/select-scheduled-products-with-xst
                   params xst coll-path)]
     (->> products

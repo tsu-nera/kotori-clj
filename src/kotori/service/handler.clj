@@ -1,6 +1,7 @@
 (ns kotori.service.handler
   (:require
    [integrant.core :as ig]
+   [kotori.procedure.dmm.anime :as dmm-anime]
    [kotori.procedure.dmm.product :as dmm]
    [kotori.procedure.dmm.vr :as dmm-vr]
    [kotori.procedure.kotori.core :as kotori]
@@ -42,6 +43,7 @@
       ["/crawl-product" {:post dmm/crawl-product!}]
       ["/crawl-products" {:post dmm/crawl-products!}]
       ["/crawl-vr-products" {:post dmm-vr/crawl-products!}]
+      ["/crawl-anime-products" {:post dmm-anime/crawl-products!}]
       ["/crawl-qvt-descs" {:post dmm/crawl-qvt-descs!}]]
      ["/kotori" {:middleware [#(wrap-kotori config-map %)]}
       ["/dummy" kotori/dummy]

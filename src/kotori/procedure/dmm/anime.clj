@@ -1,5 +1,6 @@
 (ns kotori.procedure.dmm.anime
   (:require
+   [kotori.domain.dmm.core :as dmm]
    [kotori.domain.dmm.product
     :refer [anime-coll-path]
     :rename {anime-coll-path coll-path}]
@@ -23,6 +24,21 @@
          product (get-product m)]
      (product/save-product! db coll-path product ts))))
 
+(defn crawl-products!
+  [{:keys [db] :as m}]
+  (let [field-ts (:animes-crawled-time  dmm/field)
+        ts       (time/fs-now)]
+    (when-let [products (get-products m)]
+      (doto db
+        (product/save-products! coll-path products ts)
+        (product/update-crawled-time! field-ts ts)
+        ;; いろいろ書かれてて複雑なので刈り取りは保留.
+        ;; (product/scrape-desc-if! coll-path field-ts)
+        )
+      {:timestamp ts
+       :count     (count products)
+       :products  products})))
+
 (comment
   (require '[devtools :refer [env ->screen-name]]
            '[firebase :refer [db-prod db-dev db]])
@@ -39,7 +55,6 @@
   (def resp (crawl-products! {:db    (db)
                               :env   (env)
                               :limit 10}))
-
 
   (def products
     (into []

@@ -189,8 +189,8 @@
     (fs/batch-set! db batch-docs)
     docs))
 
-(defn update-crawled-time! [db timestamp-key ts]
-  (fs/assoc! db dmm/doc-path timestamp-key ts))
+(defn update-crawled-time! [db field value]
+  (fs/assoc! db dmm/doc-path field value))
 
 ;; descritionの追加スクレイピング. 取得済みのものはスキップ.
 ;; この関数は定期実行を想定しているので

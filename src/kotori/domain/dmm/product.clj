@@ -12,6 +12,9 @@
 (def vr-coll-path (str dmm/doc-path "/vrs"))
 (defn vr-doc-path [cid] (str vr-coll-path "/" cid))
 
+(def anime-coll-path (str dmm/doc-path "/animes"))
+(defn anime-doc-path [cid] (str anime-coll-path "/" cid))
+
 (defn- ->cid [raw]
   (:content_id raw))
 
@@ -21,6 +24,9 @@
 (defn- ->url [raw]
   (:URL raw))
 
+;; 普通の動画だと :affiliateURLspという属性があるがVR動画はない.
+;; sp自体が古い仕様でこれから:affiliateURLに統一されることを予測して
+;; spの属性をみるのはやめる. spはおそらく携帯用.
 (defn- ->affiliate-url [raw]
   (:affiliateURL raw))
 

@@ -11,7 +11,7 @@
   {;
    :videoa "videoa" ; ビデオ
    :videoc "videoc" ; 素人
-   :anime  "anime"  ; アニメ                                  ;
+   :anime  "anime"  ; アニメ動画
    })
 
 (def article

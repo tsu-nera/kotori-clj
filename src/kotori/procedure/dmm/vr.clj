@@ -13,10 +13,10 @@
    [kotori.procedure.strategy.dmm :as st]))
 
 (defn get-products [{:as params}]
-  (let [vr-option {:floor      (:videoa api/floor)
-                   :article    (:genre api/article)
-                   :article_id genre-id}]
-    (product/get-products (merge params vr-option))))
+  (let [opts {:floor      (:videoa api/floor)
+              :article    (:genre api/article)
+              :article_id genre-id}]
+    (product/get-products (merge params opts))))
 
 (defn crawl-product! [{:as m}]
   (product/crawl-product! m coll-path))

@@ -133,20 +133,25 @@
     (when (> (count cids) 0)
       (scrape-pages! {:db db :cids cids}))))
 
+(defn save-product! [db coll-path product ts]
+  (let [data (-> product product/api->data)
+        cid  (:cid data)
+        path (fs/doc-path coll-path cid)]
+    (doto db
+      (fs/set! path data)
+      (fs/set! path {:last-crawled-time ts}))
+    data))
+
 (defn crawl-product! "
   1. 指定されたcidのcontent情報を取得.
   2. Firestoreへ 情報を保存."
   ([m]
    (crawl-product! m product/coll-path))
   ([{:keys [db cid] :as m} coll-path]
+   {:pre [(string? cid)]}
    (let [ts      (time/fs-now)
-         product (get-product m)
-         data    (-> product product/api->data)
-         path    (fs/doc-path coll-path cid)]
-     (doto db
-       (fs/set! path data)
-       (fs/set! path {:last-crawled-time ts}))
-     data)))
+         product (get-product m)]
+     (save-product! db coll-path product ts))))
 
 ;; ランキングとdmm collへのtimestamp書き込みはしない.
 (defn crawl-products-by-cids!

@@ -161,8 +161,9 @@
                 (if-let [list-url (:list_url m)]
                   (assoc m :list_url (af-url->list-url list-url))
                   m)))
-         (sort-by (fn [x]
-                    (Integer/parseInt (:genre_id x)))))))
+         (map (fn [m]
+                (assoc m :genre_id (Integer/parseInt (:genre_id m)))))
+         (sort-by :genre_id))))
 
 (defn download-genres! [floor-name]
   (let [floor-name-str (name floor-name)

@@ -4,16 +4,16 @@
 
 (defn get-videoc [{:keys [cid creds]}]
   (when-let [resp (api/search-product
-                   creds {:floor "videoc" :cid cid})]
+                   creds {:cid cid :floor (:videoc api/floor)})]
     (first resp)))
 
 (defn get-videoa [{:keys [cid creds]}]
   (when-let [resp (api/search-product
-                   creds {:floor "videoa" :cid cid})]
+                   creds {:cid cid :floor (:videoa api/floor)})]
     (first resp)))
 
 (defn- ->genre-req [genre-id]
-  {:article "genre" :article_id genre-id})
+  {:article (:genre api/article) :article_id genre-id})
 
 (defn get-by-genre [{:keys [genre-id creds]}]
   (let [q (->genre-req genre-id)]

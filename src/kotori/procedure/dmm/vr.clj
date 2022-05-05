@@ -7,12 +7,14 @@
    [kotori.domain.dmm.product
     :refer [vr-coll-path]
     :rename {vr-coll-path coll-path}]
+   [kotori.lib.provider.dmm.api :as api]
    [kotori.lib.time :as time]
    [kotori.procedure.dmm.product :as product]
    [kotori.procedure.strategy.dmm :as st]))
 
 (defn get-products [{:as params}]
-  (let [vr-option {:article    "genre"
+  (let [vr-option {:floor      (:videoa api/floor)
+                   :article    (:genre api/article)
                    :article_id genre-id}]
     (product/get-products (merge params vr-option))))
 
@@ -74,7 +76,7 @@
   (def vrs
     (into []
           (select-scheduled-products
-           {:db          (db-dev)
+           {:db          (db-prod)
             :limit       10
             :screen-name (->screen-name "0028")})))
   )

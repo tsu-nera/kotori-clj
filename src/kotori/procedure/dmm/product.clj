@@ -23,7 +23,8 @@
        (doall) ; doallでマルチスレッド全発火.
        ))
 
-(defn get-product [{:keys [env] :as m}]
+(defn get-product
+  [{:keys [env] :as m :or {floor (:videoa api/floor)}}]
   (let [creds (api/env->creds env)
         q     (dissoc m :env)]
     (-> (api/search-product creds q) first)))

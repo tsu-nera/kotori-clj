@@ -6,6 +6,20 @@
 
 (def base-url "https://api.dmm.com/affiliate/v3")
 
+(def floor
+  "ref. https://affiliate.dmm.com/api/v3/floorlist.html"
+  {;
+   :videoa "videoa" ; ビデオ
+   :videoc "videoc" ; 素人
+   :anime  "anime"  ; アニメ                                  ;
+   })
+
+(def article
+  {;
+   :genre   "genre"   ; ジャンル
+   :actress "actress" ; 女優
+   })
+
 (defn ->endpoint
   [target]
   (str base-url "/" target))
@@ -13,7 +27,7 @@
 (def base-req-params
   {:site    "FANZA"
    :service "digital"
-   :floor   "videoa"
+   :floor   (:videoa floor)
    :output  "json"})
 
 (def base-headers {:headers {:user-agent user-agent}})

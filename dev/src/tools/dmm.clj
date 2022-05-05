@@ -1,10 +1,11 @@
 (ns tools.dmm
   (:require
    [clojure.string :as string]
-   [devtools :refer [env]]
+   [devtools :refer [env kotori-info]]
    [firebase :refer [db-dev db-prod]]
    [integrant.repl.state :refer [config system]]
    [kotori.domain.dmm.core :as model]
+   [kotori.domain.dmm.floor :as floor]
    [kotori.domain.dmm.product :as product]
    [kotori.lib.firestore :as fs]
    [kotori.lib.io :as io]
@@ -87,8 +88,8 @@
 (defn ->dmm-url [cid]
   (model/->url cid))
 
-(defn get-dmm-product [cid]
-  (dmm/get-product {:env (env) :cid cid}))
+(defn get-dmm-product [cid & floor]
+  (dmm/get-product {:env (env) :cid cid :floor floor}))
 #_(get-dmm-product "ssis00337")
 
 (defn get-dmm-campaign [title]
@@ -110,9 +111,10 @@
     (io/dump-csv-from-maps! csv-path maps)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 (comment
-  (require '[firebase :refer [db-dev db-prod]]
-           '[devtools :refer [kotori-info env]])
+  (def cid "196glod00227")
+  (def resp (get-dmm-product cid "anime"))
   )
 
 (comment

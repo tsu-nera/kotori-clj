@@ -1,40 +1,44 @@
 (ns kotori.domain.dmm.videoa
-  "
-  refs.
-  - https://www.dmm.co.jp/digital/videoa/-/genre/
-  - https://affiliate.dmm.com/api/v3/genresearch.html")
+  "refs.https://www.dmm.co.jp/digital/videoa/-/genre/"
+  (:require
+   [kotori.domain.dmm.core :as core]
+   [kotori.lib.io :as io]))
+
+(def genre-path "dmm/genre/videoa.edn")
+(defonce genres (->> genre-path io/load-edn))
+
+(def genre-name-id-map (core/genres->name-id-map genres))
+(def genre-id-name-map (core/genres->id-name-map genres))
+(def genre-names->ids (partial core/names->genre-ids genre-name-id-map))
 
 (def amateur-ids
-  #{;
-    4024 ; 素人
-    4006 ; ナンパ
-    6002 ; ハメ撮り
-    })
+  (-> ["素人" "ナンパ" "ハメ撮り"]
+      genre-names->ids))
 
 ;; 2022.05現在, VR専用はハイクオリティVRを内包する
-(def vr-only-id 6793)
+(def vr-only-id (get genre-name-id-map "VR専用"))
 
 (def vr-ids
-  #{;
-    6793 ;; VR専用
-    6925 ;: ハイクオリティVR
-    })
+  (-> ["VR専用" "ハイクオリティVR"]
+      genre-names->ids))
 
 (def antisocial-ids
-  "Twitter的にダメそうなジャンル."
-  #{;
-    4021 ; 盗撮・のぞき
-    5015 ; ドラッグ
-    })
+  (-> ["盗撮・のぞき" "ドラッグ"]
+      genre-names->ids))
 
 (def violent-ids
-  #{21 567 5059 6094 6953})
+  (-> ["残虐表現" "鬼畜" "拷問" "蝋燭" "鼻フック"]
+      genre-names->ids))
 
 (def dirty-ids
-  #{4018 5007 5011 5012 5013 5014 5024 6151})
+  (-> ["スカトロ" "食糞" "放尿・お漏らし"
+       "飲尿" "脱糞" "浣腸" "ゲロ" "異物挿入"]
+      genre-names->ids))
 
 (def trans-ids
-  #{3036 4015})
+  (-> ["女装・男の娘" "ニューハーフ" "ふたなり"
+       "ゲイ" "性転換・女体化"]
+      genre-names->ids))
 
 (def ng-genres
   (into #{} (concat

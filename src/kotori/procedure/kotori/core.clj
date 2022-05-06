@@ -10,10 +10,11 @@
    [kotori.lib.json :as json]
    [kotori.lib.kotori :as lib]
    [kotori.lib.log :as log]
+   [kotori.procedure.dmm.anime :as anime]
    [kotori.procedure.dmm.vr :as vr]
    [kotori.procedure.strategy.core :as st]
    [kotori.procedure.strategy.dmm :as st-dmm]
-   [slingshot.slingshot :refer [try+ throw+]]
+   [slingshot.slingshot :refer [throw+ try+]]
    [twitter-clj.private :as private]))
 
 (defn make-info [{:keys [screen-name user-id auth-token ct0 proxy-map]}]
@@ -82,6 +83,11 @@
 (defn select-next-vr [{:keys [db screen-name]}]
   {:pre [(s/valid? ::d/screen-name screen-name)]}
   (lib/->next (first (vr/select-scheduled-products
+                      {:db db :screen-name screen-name}))))
+
+(defn select-next-anime [{:keys [db screen-name]}]
+  {:pre [(s/valid? ::d/screen-name screen-name)]}
+  (lib/->next (first (anime/select-scheduled-products
                       {:db db :screen-name screen-name}))))
 
 (defn archive-fs-tweet-data [db user-id tweet-id]

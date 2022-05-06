@@ -1,9 +1,11 @@
 (ns kotori.procedure.dmm.anime
   (:require
+   [kotori.domain.dmm.anime :as d]
    [kotori.domain.dmm.core :as dmm]
    [kotori.domain.dmm.product
     :refer [anime-coll-path]
-    :rename {anime-coll-path coll-path}]
+    :rename
+    {anime-coll-path coll-path}]
    [kotori.lib.provider.dmm.api :as api]
    [kotori.lib.time :as time]
    [kotori.procedure.dmm.product :as product]
@@ -41,15 +43,13 @@
        :products  products})))
 
 (defn select-scheduled-products [{:as m :keys [db limit] :or {limit 5}}]
-  (let [xst      [st/st-exclude-ng-genres
-                  st/st-exclude-movie
-                  st/st-exclude-no-image
-                  st/st-exclude-omnibus
-                  st/st-include-vr]
-        params   (st/assoc-last-crawled-time
-                  m db (:vrs-crawled-time dmm/field))
-        products (st/select-scheduled-products-with-xst
-                  params xst coll-path)]
+  (let [st-exclude-ng-genres (st/make-st-exclude-ng-genres d/ng-genres)
+        xst                  [st-exclude-ng-genres
+                              st/st-exclude-no-samples]
+        params               (st/assoc-last-crawled-time
+                              m db (:animes-crawled-time dmm/field))
+        products             (st/select-scheduled-products-with-xst
+                              params xst coll-path)]
     (->> products
          (sort-by :rank-popular)
          (take limit))))
@@ -75,6 +75,6 @@
     (into []
           (select-scheduled-products
            {:db          (db)
-            :limit       10
+            :limit       5
             :screen-name (->screen-name "0024")})))
   )

@@ -6,7 +6,6 @@
    [kotori.procedure.dmm.vr :as dmm-vr]
    [kotori.procedure.kotori.core :as kotori]
    [kotori.procedure.kotori.qvt :as qvt]
-   [kotori.procedure.ping :as ping]
    [reitit.ring :as ring]
    [ring.util.response :as resp]))
 
@@ -38,7 +37,6 @@
   (ring/ring-handler
    (ring/router
     ["/api" {:middleware [#(wrap-http %)]}
-     ["/ping" {:post ping/ping-pong}]
      ["/dmm"
       ["/crawl-product" {:post dmm/crawl-product!}]
       ["/crawl-products" {:post dmm/crawl-products!}]
@@ -53,12 +51,10 @@
       ["/tweet-morning" kotori/tweet-morning]
       ["/tweet-evening" kotori/tweet-evening]
       ["/tweet-random" kotori/tweet-random]
-      ["/select-next-product"
-       {:get kotori/select-next-product}]
-      ["/select-next-amateur"
-       {:get kotori/select-next-amateur}]
-      ["/select-next-vr"
-       {:get kotori/select-next-vr}]]])))
+      ["/select-next-product" {:get kotori/select-next-product}]
+      ["/select-next-amateur" {:get kotori/select-next-amateur}]
+      ["/select-next-vr" {:get kotori/select-next-vr}]
+      ["/select-next-anime" {:get kotori/select-next-anime}]]])))
 
 (defmethod ig/init-key ::app [_ {:keys [config-map]}]
   (make-app config-map))

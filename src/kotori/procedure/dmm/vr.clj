@@ -3,10 +3,12 @@
    [kotori.domain.dmm.core :as dmm]
    [kotori.domain.dmm.product
     :refer [vr-coll-path]
-    :rename {vr-coll-path coll-path}]
+    :rename
+    {vr-coll-path coll-path}]
    [kotori.domain.dmm.videoa
     :refer [vr-only-id]
-    :rename {vr-only-id genre-id}]
+    :rename
+    {vr-only-id genre-id}]
    [kotori.lib.provider.dmm.api :as api]
    [kotori.lib.time :as time]
    [kotori.procedure.dmm.product :as product]

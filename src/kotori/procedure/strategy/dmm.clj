@@ -10,8 +10,16 @@
    [kotori.lib.kotori :as lib]
    [kotori.lib.time :as time]))
 
-(defn ng-genre? [id]
-  (contains? videoa/ng-genres id))
+(def st-exclude-ng-genres
+  (make-st-exclude-ng-genres videoa/ng-genres))
+
+(defn make-st-exclude-ng-genres [ids]
+  (remove
+   #(some true? (map
+                 (fn [genre]
+                   (let [id (get genre "id")]
+                     (contains? ids id)))
+                 (:genres %)))))
 
 (defn no-sample-movie? [product]
   (:no-sample-movie product))
@@ -22,11 +30,6 @@
 (defn no-sample-image? [product]
   (:no-sample-image product))
 
-(defn ng-product? [product]
-  (some true? (map
-               (comp ng-genre? #(get % "id"))
-               (:genres product))))
-
 (def st-exclude-no-image
   (remove #(no-sample-image? %)))
 
@@ -36,9 +39,6 @@
 (def st-exclude-no-samples
   (remove #(or (no-sample-movie? %)
                (no-sample-image? %))))
-
-(def st-exclude-ng-genres
-  (remove ng-product?))
 
 (defn no-actress? [product]
   (zero? (:actress-count product)))
@@ -251,7 +251,7 @@
   (def products
     (into []
           (select-scheduled-products {:db          (db-prod)
-                                      :limit       20
+                                      :limit       10
                                       :screen-name screen-name})))
   (def descs (map :description products))
 
@@ -280,4 +280,3 @@
   (map ->print (select-scheduled-products {:db (db-prod) :limit 20}))
  ;;;;;;;;;;;
   )
-

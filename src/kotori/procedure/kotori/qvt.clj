@@ -1,6 +1,7 @@
 (ns kotori.procedure.kotori.qvt
   "動画引用ツイート処理"
   (:require
+   [kotori.domain.dmm.core :as dmm]
    [kotori.domain.dmm.product :as product]
    [kotori.domain.tweet.core :as tweet]
    [kotori.domain.tweet.qvt :as qvt]
@@ -8,7 +9,6 @@
    [kotori.lib.firestore :as fs]
    [kotori.lib.log :as log]
    [kotori.lib.provider.dmm.public :as public]
-   [kotori.procedure.dmm.product :as dmm]
    [kotori.procedure.kotori.core :as kotori]
    [kotori.procedure.strategy.core :as st]
    [kotori.procedure.strategy.dmm :as st-dmm]))
@@ -40,9 +40,11 @@
   一つのページへのアクセスは高速なのでこのタイミングで問題ない."
   [qvt]
   (if (not (:description qvt))
-    (let [cid  (:cid qvt)
-          page (public/get-page cid)
-          desc (:description page)]
+    (let [cid (:cid qvt)
+          ;; FIXME とりあえずqvtでのvideoa以外の対応はあとで.
+          params {:cid cid :floor (:videoa dmm/floor)}
+          page   (public/get-page params)
+          desc   (:description page)]
       (assoc qvt :description desc))
     qvt))
 
@@ -64,7 +66,7 @@
          qvt         (select-next-qvt-product
                       {:db db :screen-name screen-name})]
      (tweet-quoted-video params (assoc-desc-unless qvt))))
-  ([{:keys [^d/Info info db env source-label message-type]
+  ([{:keys [^d/Info info db source-label message-type]
      :as   params} qvt]
    (let [cid          (:cid qvt)
          user-id      (:user-id info)
@@ -83,8 +85,8 @@
            ;; crawledされてない場合はここで追加で処理をする.
            ;; 通常はcrawledされているのでtoolで追加した場合がこうなる.
            ;; そんなに時間かからないと思うので同期処理
-           (when-not (:craweled? qvt)
-             (dmm/crawl-product! {:db db :env env :cid cid}))
+           #_(when-not (:craweled? qvt)
+               (dmm/crawl-product! {:db db :env env :cid cid}))
            ;; discord通知
            (qvt->discord! qvt result)
            result)

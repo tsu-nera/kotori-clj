@@ -105,7 +105,7 @@
         remove-aseq
         remove-last-asterisk)))
 
-(defn get-page [{:keys [cid floor]}]
+(defn get-page [{:keys [cid floor] :or {floor (:videoa d/floor)}}]
   (let [url   (d/->url cid floor)
         m     (get-page-data url)
         title (->title m)
@@ -137,7 +137,9 @@
         ))
   content
 
-  (def cid "gesb001")
+  (def cid "ipx00850")
+  (def resp (get-page {:cid cid :floor "video"}))
+
   (def data (get-page-data cid "videoc"))
   (def description (->description data))
 

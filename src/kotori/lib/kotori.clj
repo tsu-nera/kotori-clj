@@ -50,12 +50,36 @@
            desc->sentences
            join-sentences)))
 
-(desc->trimed nil)
-
 (defn ng->ok [text]
   (when text
     (reduce (fn [x [k v]]
               (str/replace x k v)) text source)))
+
+(defn- ->add-chan [name]
+  (if (str/includes? name "さん")
+    name
+    (if (not (str/includes? name "ちゃん"))
+      (str name "ちゃん")
+      name)))
+
+(defn- ->remove-annonymous [name]
+  (-> name
+      (str/replace #"（仮名）" "")))
+
+(defn- ->remove-num [name]
+  (-> name
+      (str/replace #" 3| 2" "")))
+
+(defn- ->swap-local-wife [name]
+  (str/replace name #"ローカル妻" "匿名希望の奥さん"))
+
+(defn videoc-title->name [title]
+  (-> title
+      ->remove-num
+      ->remove-annonymous
+      ->swap-local-wife
+      (str/replace #"天才" "")
+      ->add-chan))
 
 (defn ->next
   [product]
@@ -96,5 +120,25 @@
   (def trimed (map desc->trimed descs))
   (def sample "女神の美体から汗、涎、愛液、潮…全エキスが大・放・出！体液まみれでより一層エロさを増した美乃すずめが快楽のまま本能全開で汁だくSEX！絶頂に次ぐ絶頂、意識朦朧となるほどの本気の交わりで大量失禁＆大量イキ潮スプラッシュ！全身ぐっちょり、体液滴るイイ女が性欲尽きるまでイッてイッてイキまくる！！")
   (def ret (desc->trimed sample))
+
+  )
+
+(comment
+  (require
+   '[clojure.string :as str]
+   '[kotori.procedure.dmm.amateur
+     :refer [select-scheduled-products]
+     :rename {select-scheduled-products select-scheduled-videocs}])
+
+  (def screen-name (->screen-name "0009"))
+  (def products
+    (select-scheduled-videocs {:db          (db-prod)
+                               :limit       300
+                               :screen-name screen-name}))
+
+  (def titles (map :title products))
+
+  (def names (into [] (map title->name titles)))
+
 
   )

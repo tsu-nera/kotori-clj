@@ -122,7 +122,7 @@
 
 (comment
   (def cid "h_1558csdx00007")
-  (def url (d/->url cid))
+  (def url (d/->url cid "videoa"))
   (def data (get-page-data cid "videoa"))
 
   (def title (->title data))
@@ -145,6 +145,4 @@
 
   (-> (->raw-description data)
       (remove-bold-tag))
-
-
   )

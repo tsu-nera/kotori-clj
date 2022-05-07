@@ -83,8 +83,10 @@
 
 (defn select-next-amateur-videoc [{:keys [db screen-name]}]
   {:pre [(s/valid? ::d/screen-name screen-name)]}
-  (lib/->next (first (amateur/select-scheduled-products
-                      {:db db :screen-name screen-name}))))
+  (let [next  (lib/->next (first (amateur/select-scheduled-products
+                                  {:db db :screen-name screen-name})))
+        title (:title next)]
+    (assoc next :title (lib/videoc-title->name title))))
 
 (defn select-next-vr [{:keys [db screen-name]}]
   {:pre [(s/valid? ::d/screen-name screen-name)]}

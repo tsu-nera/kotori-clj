@@ -36,9 +36,11 @@
     data))
 
 (defn scrape-pages!
-  [{:keys [cids db coll-path ts] :or {ts        (time/fs-now)
-                                      coll-path product/coll-path}}]
-  (when-let [pages (public/get-page-bulk cids)]
+  [{:keys [cids db coll-path ts floor]
+    :or   {ts        (time/fs-now)
+           coll-path product/coll-path
+           floor     (:videoa dmm/floor)}}]
+  (when-let [pages (public/get-page-bulk cids floor)]
     (->> pages
          (map #(product/set-scraped-timestamp ts %))
          (map #(json/->json %))
@@ -61,6 +63,7 @@
 (defn get-qvts-without-desc [{:as m}]
   (get-qvts-without-keyword m :description))
 
+;; TODO videoa以外に対応できてないが廃止予定の関数なので修正保留
 (defn crawl-qvt-descs! [{:as m :or {limit 300} :keys [db]}]
   (let [cids (->> (get-qvts-without-desc m)
                   (map :cid))]
@@ -129,18 +132,19 @@
 ;; descritionの追加スクレイピング. 取得済みのものはスキップ.
 ;; この関数は定期実行を想定しているので
 ;; 強制的に更新したいときは手動で関数をたたいて更新する.
-(defn scrape-desc-if! [db coll-path timestamp-key]
+(defn scrape-desc-if! [db coll-path timestamp-key floor]
   (let [cids (get-target-desc-cids db coll-path timestamp-key)]
     (when (and cids (< 0 (count cids)))
       (scrape-pages! {:db        db
                       :cids      cids
-                      :coll-path coll-path}))))
+                      :coll-path coll-path
+                      :floor     floor}))))
 
 ;; FIXME 500以上の書き込み対応.
 ;; firestroreのbatch writeの仕様で一回の書き込みは500まで.
 ;; そのため500単位でchunkごとに書き込む.
 (defn crawl-products!
-  [{:keys [db] :as params}]
+  [{:keys [db floor] :as params :or {floor (:videoa dmm/floor)}}]
   (let [timestamp-key "products_crawled_time"
         ts            (time/fs-now)
         coll-path     product/coll-path]
@@ -148,7 +152,7 @@
       (doto db
         (save-products! coll-path products ts)
         (update-crawled-time! timestamp-key ts)
-        (scrape-desc-if! coll-path timestamp-key))
+        (scrape-desc-if! coll-path timestamp-key floor))
       ;; ここでproductsオブジェクトを戻すとGCRでエラーした.
       ;; 詳細は未調査だけどMapを返せば正常終了.
       {:timestamp ts
@@ -228,7 +232,6 @@
   (def resp (scrape-page {:cid "ebod00874" :db (db)}))
 
   ;; 並列実行
-
   (def resp (scrape-pages! {:cids cids :db (db)}))
 
   (def products (crawl-campaign-products!

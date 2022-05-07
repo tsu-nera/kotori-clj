@@ -14,8 +14,10 @@
    [kotori.procedure.dmm.product :as product]
    [kotori.procedure.strategy.dmm :as st]))
 
+(def floor (:videoa dmm/floor))
+
 (defn get-products [{:as params}]
-  (let [opts {:floor      (:videoa dmm/floor)
+  (let [opts {:floor      floor
               :article    (:genre dmm/article)
               :article_id genre-id}]
     (lib/get-products (merge params opts))))
@@ -31,7 +33,7 @@
       (doto db
         (product/save-products! coll-path products ts)
         (product/update-crawled-time! timestamp-key ts)
-        (product/scrape-desc-if! coll-path timestamp-key))
+        (product/scrape-desc-if! coll-path timestamp-key floor))
       {:timestamp ts
        :count     (count products)
        :products  products})))

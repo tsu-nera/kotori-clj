@@ -26,18 +26,18 @@
       (assoc :floor (:videoc dmm/floor))
       (product/crawl-product! coll-path)))
 
-;; TODO 素人動画はタイトルが名前になっているのでそのままでは不十分
-;; descriptionの刈り取りは必須
 (defn crawl-products!
   [{:keys [db] :as m}]
-  (let [field-ts (:amateurs-crawled-time  dmm/field)
+  (let [floor    (:videoc dmm/floor)
+        field-ts (:amateurs-crawled-time  dmm/field)
         ts       (time/fs-now)]
     (when-let [products (-> m
-                            (assoc :floor (:videoc dmm/floor))
+                            (assoc :floor floor)
                             (lib/get-products))]
       (doto db
         (product/save-products! coll-path products ts)
-        (product/update-crawled-time! field-ts ts))
+        (product/update-crawled-time! field-ts ts)
+        (product/scrape-desc-if! coll-path field-ts floor))
       {:timestamp ts
        :count     (count products)
        :products  products})))

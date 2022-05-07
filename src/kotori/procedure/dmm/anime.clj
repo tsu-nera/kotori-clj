@@ -6,23 +6,26 @@
     :refer [anime-coll-path]
     :rename
     {anime-coll-path coll-path}]
+   [kotori.lib.provider.dmm.api :as api]
    [kotori.lib.provider.dmm.product :as lib]
    [kotori.lib.time :as time]
    [kotori.procedure.dmm.product :as product]
    [kotori.procedure.strategy.dmm :as st]))
 
-(defn crawl-product!
-  ([{:keys [db cid] :as m}]
-   {:pre [(string? cid)]}
-   (let [ts      (time/fs-now)
-         product (lib/get-anime m)]
-     (product/save-product! db coll-path product ts))))
+(def floor (:anime api/floor))
+
+(defn crawl-product! [{:as m}]
+  (-> m
+      (assoc :floor floor)
+      (product/crawl-product! coll-path)))
 
 (defn crawl-products!
   [{:keys [db] :as m}]
-  (let [field-ts (:animes-crawled-time  dmm/field)
+  (let [field-ts (:animes-crawled-time dmm/field)
         ts       (time/fs-now)]
-    (when-let [products (lib/get-products m)]
+    (when-let [products (-> m
+                            (assoc :floor floor)
+                            (lib/get-products))]
       (doto db
         (product/save-products! coll-path products ts)
         (product/update-crawled-time! field-ts ts)
@@ -44,31 +47,32 @@
     (->> products
          (sort-by :rank-popular)
          (take limit))))
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (comment
-  (require '[devtools :refer [env ->screen-name]]
+  (require '[devtools :refer [->screen-name]]
            '[tools.dmm :refer [creds]]
            '[firebase :refer [db-prod db-dev db]])
 
-  (def product (lib/get-anime {:creds @creds
+  (def product (lib/get-anime {:creds (creds)
                                :cid   "196glod00227"}))
 
   (def products (lib/get-products {:creds @creds
                                    :limit 10
                                    :floor "anime"}))
 
-  (def resp (crawl-product! {:db    @db
-                             :creds @creds
+  (def resp (crawl-product! {:db    (db)
+                             :creds (creds)
                              :cid   "196glod00227"}))
 
-  (def resp (crawl-products! {:db    @db
-                              :creds @creds
+  (def resp (crawl-products! {:db    (db)
+                              :creds (creds)
                               :limit 10}))
 
   (def products
     (into []
           (select-scheduled-products
-           {:db          @db-prod
+           {:db          (db-prod)
             :limit       5
             :screen-name (->screen-name "0024")})))
   )

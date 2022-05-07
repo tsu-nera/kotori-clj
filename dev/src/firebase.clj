@@ -8,9 +8,9 @@
 (def creds-prod "private/prod/credentials.json")
 
 ;; i.e. name=[DEFAULT]
-(def db (delay (get-db)))
-(def db-dev (delay (get-db "dev")))
-(def db-prod (delay (get-db "prod")))
+(defn db [] (get-db))
+(defn db-dev [] (get-db "dev"))
+(defn db-prod [] (get-db "prod"))
 
 (defmethod ig/init-key ::app [_ _]
   (let [dev  (create-app! (io/resource creds-dev)  "dev")

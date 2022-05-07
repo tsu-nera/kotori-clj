@@ -66,7 +66,7 @@
            '[tools.dmm :refer [creds]]
            '[firebase :refer [db-prod db-dev db]])
 
-  (def products (get-products {:creds @creds
+  (def products (get-products {:creds (creds)
                                :limit 10}))
 
   (def resp (crawl-product! {:db  (db)

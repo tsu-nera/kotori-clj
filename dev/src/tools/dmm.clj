@@ -19,7 +19,7 @@
       (get :kotori.service.env/env)
       (api/env->creds)))
 
-(def creds (delay (dmm-creds)))
+(defn creds [] (dmm-creds))
 
 (defn make-dmm-tweet [screen-name post]
   {:cid         (:cid post)

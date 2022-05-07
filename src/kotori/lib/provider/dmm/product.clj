@@ -65,7 +65,7 @@
   limitを100のchunkに分割してパラレル呼び出しとマージ."
   [{:keys [creds limit floor]
     :as   base-params
-    :or   {limit 5 floor "videoa"}}]
+    :or   {limit 5 floor (:videoa api/floor)}}]
   (let [req-params (map (fn [m] (merge base-params m))
                         (make-req-params limit floor))]
 

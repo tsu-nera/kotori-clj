@@ -15,6 +15,9 @@
 (def anime-coll-path (str dmm/doc-path "/animes"))
 (defn anime-doc-path [cid] (str anime-coll-path "/" cid))
 
+(def amateur-coll-path (str dmm/doc-path "/amateurs"))
+(defn amateur-doc-path [cid] (str amateur-coll-path "/" cid))
+
 (defn- ->cid [raw]
   (:content_id raw))
 

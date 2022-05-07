@@ -95,7 +95,7 @@
 #_(get-dmm-product "ssis00337")
 
 (defn get-dmm-campaign [title]
-  (dmm/get-products {:limit 10 :keyword title :creds @creds}))
+  (lib/get-products {:limit 10 :keyword title :creds @creds}))
 #_(get-dmm-campaign "新生活応援30％OFF第6弾")
 
 (defn crawl-product!

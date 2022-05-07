@@ -2,21 +2,77 @@
   (:require
    [kotori.lib.provider.dmm.api :as api]))
 
-(defn get-videoa [{:keys [cid creds]}]
+(defn get-video [{:keys [cid creds floor]
+                  :or   {floor (:videoa api/floor)}}]
   (when-let [resp (api/search-product
-                   creds {:cid cid :floor (:videoa api/floor)})]
+                   creds {:cid cid :floor floor})]
     (first resp)))
 
-(defn get-videoc [{:keys [cid creds]}]
-  (when-let [resp (api/search-product
-                   creds {:cid cid :floor (:videoc api/floor)})]
-    (first resp)))
+(defn get-videoa [{:as m}]
+  (get-video (assoc m :floor (:videoa api/floor))))
 
-(defn get-anime [{:keys [cid creds]}]
-  (when-let [resp (api/search-product
-                   creds {:cid   cid
-                          :floor (:anime api/floor)})]
-    (first resp)))
+(defn get-videoc [{:as m}]
+  (get-video (assoc m :floor (:videoc api/floor))))
+
+(defn get-anime [{:as m}]
+  (get-video (assoc m :floor (:anime api/floor))))
+
+(defn request-bulk
+  [req-fn req-params]
+  (->> req-params
+       (pmap #(req-fn %)) ; まだ実行してない(lazy-seq)
+       (doall) ; doallでマルチスレッド全発火.
+       ))
+
+(defn get-products-by-cids
+  "APIの並列実行をする.呼び出し回数制限もあるためリストのサイズに注意"
+  [{:keys [creds cids floor]}]
+  (let [products (->> cids
+                      (map (fn [cid] {:creds creds :cid cid}))
+                      (pmap (fn [m] (get-video m floor)))
+                      (doall))]
+    (into [] products)))
+
+(defn- get-products-chunk "
+  この関数では100個のまでの商品取得に対応. hits ~< 100まで.
+  100件以上の取得はget-productsで対応."
+  [{:keys [creds hits] :or {hits 100} :as params}]
+  {:pre [(<= hits 100)]}
+  (let [req   (assoc params :sort "rank")
+        items (api/search-product creds req)]
+    items))
+
+(defn- make-offset-map [size offset]
+  {:offset offset
+   :hits   size})
+
+(defn- make-req-params [limit floor]
+  (let [size         100
+        page         (quot limit size)
+        ->offset-map (partial make-offset-map size)
+        xf           (comp          (map #(+ (* % size) 1))
+                                    (map ->offset-map)
+                                    (map #(assoc % :floor floor)))
+        mod-hits     (mod limit size)]
+    (cond-> (into [] xf (range page))
+      (not (= 0 mod-hits))
+      (conj (-> (make-offset-map mod-hits (+ 1 (* page size)))
+                (assoc :floor floor))))))
+
+(defn get-products "
+  get-productsを呼ぶと1回のget requestで最大100つの情報が取得できる.
+  それ以上取得する場合はoffsetによる制御が必要なためこの関数で対応する.
+  limitを100のchunkに分割してパラレル呼び出しとマージ."
+  [{:keys [creds limit floor]
+    :as   base-params
+    :or   {limit 5 floor "videoa"}}]
+  (let [req-params (map (fn [m] (merge base-params m))
+                        (make-req-params limit floor))]
+
+    (->> req-params
+         (request-bulk get-products-chunk)
+         (reduce concat)
+         (into []))))
 
 (defn- ->genre-req [genre-id]
   {:article (:genre api/article) :article_id genre-id})
@@ -37,30 +93,8 @@
        (into [])))
 
 (comment
+  (require '[tools.dmm :refer [creds]])
 
-  (defn get-product
-    [{:keys [env] :as m :or {floor (:videoa api/floor)}}]
-    (let [creds (api/env->creds env)
-          q     (dissoc m :env)]
-      (-> (api/search-product creds q) first)))
-  )
-
-(comment
-  (require '[tools.dmm :refer [dmm-creds]])
-  (def creds (dmm-creds))
-
-  (def ret (get-videoc {:creds creds :cid "smuc029"}))
-  (def ret (get-videoa {:creds creds :cid "mism00237"}))
-
-  (def resp (api/search-product
-             creds {:article "genre" :article-id 6793}))
-
-  (def resp (->> [6793 6925]
-                 (map #(->genre-req %))
-                 (pmap #(api/search-product creds %))
-                 flatten
-                 (into #{})
-                 (into [])
-                 ))
-
+  (def products (get-products {:creds @creds :limit 10}))
+  (def products (get-products {:creds @creds :limit 110}))
   )

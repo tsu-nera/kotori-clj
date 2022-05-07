@@ -6,15 +6,10 @@
     :refer [anime-coll-path]
     :rename
     {anime-coll-path coll-path}]
-   [kotori.lib.provider.dmm.api :as api]
    [kotori.lib.provider.dmm.product :as lib]
    [kotori.lib.time :as time]
    [kotori.procedure.dmm.product :as product]
    [kotori.procedure.strategy.dmm :as st]))
-
-(defn get-products [{:as params}]
-  (let [opts {:floor (:anime api/floor)}]
-    (product/get-products (merge params opts))))
 
 (defn crawl-product!
   ([{:keys [db cid] :as m}]
@@ -27,7 +22,7 @@
   [{:keys [db] :as m}]
   (let [field-ts (:animes-crawled-time  dmm/field)
         ts       (time/fs-now)]
-    (when-let [products (get-products m)]
+    (when-let [products (lib/get-products m)]
       (doto db
         (product/save-products! coll-path products ts)
         (product/update-crawled-time! field-ts ts)
@@ -58,20 +53,22 @@
   (def product (lib/get-anime {:creds @creds
                                :cid   "196glod00227"}))
 
-  (def products (get-products {:env (env) :limit 10}))
+  (def products (lib/get-products {:creds @creds
+                                   :limit 10
+                                   :floor "anime"}))
 
-  (def resp (crawl-product! {:db  (db)
-                             :env (env)
-                             :cid "196glod00227"}))
+  (def resp (crawl-product! {:db    @db
+                             :creds @creds
+                             :cid   "196glod00227"}))
 
-  (def resp (crawl-products! {:db    (db)
-                              :env   (env)
+  (def resp (crawl-products! {:db    @db
+                              :creds @creds
                               :limit 10}))
 
   (def products
     (into []
           (select-scheduled-products
-           {:db          (db-prod)
+           {:db          @db-prod
             :limit       5
             :screen-name (->screen-name "0024")})))
   )

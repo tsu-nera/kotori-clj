@@ -1,7 +1,8 @@
 (ns kotori.service.handler
   (:require
    [integrant.core :as ig]
-   ;;   [kotori.procedure.dmm.amateur :as dmm-amateur]
+   [kotori.lib.provider.dmm.api :as api]
+   [kotori.procedure.dmm.amateur :as dmm-amateur]
    [kotori.procedure.dmm.anime :as dmm-anime]
    [kotori.procedure.dmm.product :as dmm]
    [kotori.procedure.dmm.vr :as dmm-vr]
@@ -34,16 +35,22 @@
           info        (kotori/make-info config)]
       (handler (assoc req :info info)))))
 
+(defn wrap-dmm [handler]
+  (fn [req]
+    (let [env   (:env req)
+          creds (api/env->creds env)]
+      (handler (assoc req :creds creds)))))
+
 (defn make-app [config-map]
   (ring/ring-handler
    (ring/router
     ["/api" {:middleware [#(wrap-http %)]}
-     ["/dmm"
+     ["/dmm" {:middleware [#(wrap-dmm %)]}
       ["/crawl-product" {:post dmm/crawl-product!}]
       ["/crawl-products" {:post dmm/crawl-products!}]
       ["/crawl-vr-products" {:post dmm-vr/crawl-products!}]
       ["/crawl-anime-products" {:post dmm-anime/crawl-products!}]
-      ;; ["/crawl-amateur-products" {:post dmm-amateur/crawl-products!}]
+      ["/crawl-amateur-products" {:post dmm-amateur/crawl-products!}]
       ["/crawl-qvt-descs" {:post dmm/crawl-qvt-descs!}]]
      ["/kotori" {:middleware [#(wrap-kotori config-map %)]}
       ["/dummy" kotori/dummy]

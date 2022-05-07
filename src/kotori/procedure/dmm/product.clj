@@ -6,7 +6,6 @@
    [kotori.domain.tweet.qvt :as qvt]
    [kotori.lib.firestore :as fs]
    [kotori.lib.json :as json]
-   [kotori.lib.provider.dmm.api :as api]
    [kotori.lib.provider.dmm.product :as lib]
    [kotori.lib.provider.dmm.public :as public]
    [kotori.lib.time :as time]
@@ -17,61 +16,6 @@
 (defn make-campaign-products-path [id]
   (str campaigns-path "/" id "/" "products"))
 
-(defn- request-bulk
-  [req-fn req-params]
-  (->> req-params
-       (pmap #(req-fn %)) ; まだ実行してない(lazy-seq)
-       (doall) ; doallでマルチスレッド全発火.
-       ))
-
-(defn get-products-by-cids
-  "APIの並列実行をする.呼び出し回数制限もあるためリストのサイズに注意"
-  [{:keys [cids env]}]
-  (let [creds    (api/env->creds env)
-        products (->> cids
-                      (map (fn [cid] {:creds creds :cid cid}))
-                      (pmap lib/get-videoa)
-                      (doall))]
-    (into [] products)))
-
-(defn- get-products-chunk "
-  この関数では100個のまでの商品取得に対応. hits ~< 100まで.
-  100件以上の取得はget-productsで対応."
-  [{:keys [env hits] :or {hits 100} :as params}]
-  {:pre [(<= hits 100)]}
-  (let [creds (api/env->creds env)
-        req   (assoc params :sort "rank")
-        items (api/search-product creds req)]
-    items))
-
-(defn- make-offset-map [size offset]
-  {:offset offset
-   :hits   size})
-
-(defn- make-req-params [limit]
-  (let [size         100
-        page         (quot limit size)
-        ->offset-map (partial make-offset-map size)
-        xf           (comp          (map #(+ (* % size) 1))
-                                    (map ->offset-map))
-        mod-hits     (mod limit size)]
-    (cond-> (into [] xf (range page))
-      (not (= 0 mod-hits))
-      (conj (make-offset-map mod-hits (+ 1 (* page size)))))))
-
-(defn get-products "
-  get-productsを呼ぶと1回のget requestで最大100つの情報が取得できる.
-  それ以上取得する場合はoffsetによる制御が必要なためこの関数で対応する.
-  limitを100のchunkに分割してパラレル呼び出しとマージ."
-  [{:keys [limit] :as base-params :or {limit 10}}]
-  (let [req-params (map (fn [m] (merge base-params m))
-                        (make-req-params limit))]
-
-    (->> req-params
-         (request-bulk get-products-chunk)
-         (reduce concat)
-         (into []))))
-
 (defn get-campaign-products
   "キャンペーンの動画一覧の取得は
   keywordにキャンペーン名を指定することで取得可能.
@@ -79,7 +23,7 @@
   とりあえず limitのdefaultを500に設定しておく."
   [{:keys [limit] :or {limit 500} :as m}]
   {:pre [(<= limit 500)]}
-  (get-products m))
+  (lib/get-products m))
 
 (defn scrape-page
   [{:keys [db cid]}]
@@ -94,7 +38,7 @@
 (defn get-page-bulk
   [{:keys [cids]}]
   (->> cids
-       (request-bulk public/get-page)
+       (lib/request-bulk public/get-page)
        (into [])))
 
 (defn scrape-pages!
@@ -143,17 +87,16 @@
   2. Firestoreへ 情報を保存."
   ([m]
    (crawl-product! m product/coll-path))
-  ([{:keys [db env cid] :as m} coll-path]
+  ([{:keys [db cid] :as m} coll-path]
    {:pre [(string? cid)]}
-   (let [creds   (api/env->creds env)
-         ts      (time/fs-now)
-         product (lib/get-videoa (-> m (assoc :creds creds)))]
+   (let [ts      (time/fs-now)
+         product (lib/get-video m)]
      (save-product! db coll-path product ts))))
 
 ;; ランキングとdmm collへのtimestamp書き込みはしない.
 (defn crawl-products-by-cids!
   [{:keys [db] :as params}]
-  (let [products   (get-products-by-cids params)
+  (let [products   (lib/get-products-by-cids params)
         count      (count products)
         ts         (time/fs-now)
         xf         (comp (map product/api->data)
@@ -207,7 +150,7 @@
   (let [timestamp-key "products_crawled_time"
         ts            (time/fs-now)
         coll-path     product/coll-path]
-    (when-let [products (get-products params)]
+    (when-let [products (lib/get-products params)]
       (doto db
         (save-products! coll-path products ts)
         (update-crawled-time! timestamp-key ts)
@@ -273,26 +216,25 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (comment
-(require '[firebase :refer [db-prod db-dev db]]
-         '[devtools :refer [->screen-name env]])
-)
+  (require '[firebase :refer [db-prod db-dev db]]
+           '[tools.dmm :refer [creds]]
+           '[devtools :refer [->screen-name env]])
+  )
 
 (comment
-  (def product (get-product {:cid "urvrsp00139" :env (env)}))
-
-  (def products (get-products {:env (env) :limit 10}))
-  (def products (get-products {:env (env) :limit 110}))
-  (count products)
-
-  (def product (crawl-product! {:db (db) :env (env) :cid "hnd00967"}))
-  (def products (crawl-products! {:db  (db-prod)
-                                  :env (env) :limit 300}))
+  (def product (crawl-product! {:db    @db
+                                :creds @creds
+                                :cid   "hnd00967"}))
+  (def products (crawl-products! {:db    @db-dev
+                                  :creds @creds
+                                  :limit 300}))
 
   ;; 1秒以内に終わる
   (def page (public/get-page  "pred00294"))
   (def resp (scrape-page {:cid "ebod00874" :db (db)}))
 
-  (def cids (->> (get-products {:env (env) :limit 10})
+  (def cids (->> (lib/get-products {:creds @creds
+                                    :limit 10})
                  (map :content_id)
                  (into [])))
 

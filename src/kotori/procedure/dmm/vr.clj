@@ -10,6 +10,7 @@
     :rename
     {vr-only-id genre-id}]
    [kotori.lib.provider.dmm.api :as api]
+   [kotori.lib.provider.dmm.product :as lib]
    [kotori.lib.time :as time]
    [kotori.procedure.dmm.product :as product]
    [kotori.procedure.strategy.dmm :as st]))
@@ -18,7 +19,7 @@
   (let [opts {:floor      (:videoa api/floor)
               :article    (:genre api/article)
               :article_id genre-id}]
-    (product/get-products (merge params opts))))
+    (lib/get-products (merge params opts))))
 
 (defn crawl-product! [{:as m}]
   (product/crawl-product! m coll-path))
@@ -62,9 +63,11 @@
 
 (comment
   (require '[devtools :refer [env ->screen-name]]
+           '[tools.dmm :refer [creds]]
            '[firebase :refer [db-prod db-dev db]])
 
-  (def products (get-products {:env (env) :limit 10}))
+  (def products (get-products {:creds @creds
+                               :limit 10}))
 
   (def resp (crawl-product! {:db  (db)
                              :env (env)

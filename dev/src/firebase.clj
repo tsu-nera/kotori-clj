@@ -7,16 +7,10 @@
 (def creds-dev "private/dev/credentials.json")
 (def creds-prod "private/prod/credentials.json")
 
-(defn db
-  "i.e. name=[DEFAULT]"
-  []
-  (get-db))
-
-(defn db-dev []
-  (get-db "dev"))
-
-(defn db-prod []
-  (get-db "prod"))
+;; i.e. name=[DEFAULT]
+(def db (delay (get-db)))
+(def db-dev (delay (get-db "dev")))
+(def db-prod (delay (get-db "prod")))
 
 (defmethod ig/init-key ::app [_ _]
   (let [dev  (create-app! (io/resource creds-dev)  "dev")
@@ -26,8 +20,3 @@
 (defmethod ig/halt-key! ::app [_ {:keys [dev prod]}]
   (.delete dev)
   (.delete prod))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-#_(db)
-#_(db-dev)
-#_(db-prod)

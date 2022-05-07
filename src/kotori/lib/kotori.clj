@@ -44,10 +44,13 @@
 
 (defn desc->trimed
   [text]
-  (-> text
-      trim-headline
-      desc->sentences
-      join-sentences))
+  (and text
+       (-> text
+           trim-headline
+           desc->sentences
+           join-sentences)))
+
+(desc->trimed nil)
 
 (defn ng->ok [text]
   (when text

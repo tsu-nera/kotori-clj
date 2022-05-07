@@ -7,6 +7,7 @@
    [kotori.lib.firestore :as fs]
    [kotori.lib.json :as json]
    [kotori.lib.provider.dmm.api :as api]
+   [kotori.lib.provider.dmm.product :as lib]
    [kotori.lib.provider.dmm.public :as public]
    [kotori.lib.time :as time]
    [kotori.procedure.strategy.dmm :as st]))
@@ -23,18 +24,13 @@
        (doall) ; doallでマルチスレッド全発火.
        ))
 
-(defn get-product
-  [{:keys [env] :as m :or {floor (:videoa api/floor)}}]
-  (let [creds (api/env->creds env)
-        q     (dissoc m :env)]
-    (-> (api/search-product creds q) first)))
-
 (defn get-products-by-cids
   "APIの並列実行をする.呼び出し回数制限もあるためリストのサイズに注意"
   [{:keys [cids env]}]
-  (let [products (->> cids
-                      (map (fn [cid] {:env env :cid cid}))
-                      (pmap get-product)
+  (let [creds    (api/env->creds env)
+        products (->> cids
+                      (map (fn [cid] {:creds creds :cid cid}))
+                      (pmap lib/get-videoa)
                       (doall))]
     (into [] products)))
 
@@ -147,10 +143,11 @@
   2. Firestoreへ 情報を保存."
   ([m]
    (crawl-product! m product/coll-path))
-  ([{:keys [db cid] :as m} coll-path]
+  ([{:keys [db env cid] :as m} coll-path]
    {:pre [(string? cid)]}
-   (let [ts      (time/fs-now)
-         product (get-product m)]
+   (let [creds   (api/env->creds env)
+         ts      (time/fs-now)
+         product (lib/get-videoa (-> m (assoc :creds creds)))]
      (save-product! db coll-path product ts))))
 
 ;; ランキングとdmm collへのtimestamp書き込みはしない.

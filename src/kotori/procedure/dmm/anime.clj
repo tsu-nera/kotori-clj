@@ -7,14 +7,10 @@
     :rename
     {anime-coll-path coll-path}]
    [kotori.lib.provider.dmm.api :as api]
+   [kotori.lib.provider.dmm.product :as lib]
    [kotori.lib.time :as time]
    [kotori.procedure.dmm.product :as product]
    [kotori.procedure.strategy.dmm :as st]))
-
-(defn get-product [{:as params :keys [cid]}]
-  {:pre [(string? cid)]}
-  (let [opts {:floor (:anime api/floor)}]
-    (product/get-product (merge params opts))))
 
 (defn get-products [{:as params}]
   (let [opts {:floor (:anime api/floor)}]
@@ -24,7 +20,7 @@
   ([{:keys [db cid] :as m}]
    {:pre [(string? cid)]}
    (let [ts      (time/fs-now)
-         product (get-product m)]
+         product (lib/get-anime m)]
      (product/save-product! db coll-path product ts))))
 
 (defn crawl-products!
@@ -56,10 +52,11 @@
 
 (comment
   (require '[devtools :refer [env ->screen-name]]
+           '[tools.dmm :refer [creds]]
            '[firebase :refer [db-prod db-dev db]])
 
-  (def product (get-product {:env (env)
-                             :cid "196glod00227"}))
+  (def product (lib/get-anime {:creds @creds
+                               :cid   "196glod00227"}))
 
   (def products (get-products {:env (env) :limit 10}))
 
@@ -74,7 +71,7 @@
   (def products
     (into []
           (select-scheduled-products
-           {:db          (db)
+           {:db          (db-prod)
             :limit       5
             :screen-name (->screen-name "0024")})))
   )

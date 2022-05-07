@@ -38,6 +38,12 @@
   (map->Credentials
    (select-keys env [:affiliate-id :api-id])))
 
+(defn env->creds-swap [env m]
+  (let [creds (env->creds env)]
+    (-> m
+        (assoc :creds creds)
+        (dissoc :env))))
+
 (defn- ->result [resp]
   (-> resp
       :result))

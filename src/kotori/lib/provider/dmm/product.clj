@@ -2,14 +2,20 @@
   (:require
    [kotori.lib.provider.dmm.api :as api]))
 
+(defn get-videoa [{:keys [cid creds]}]
+  (when-let [resp (api/search-product
+                   creds {:cid cid :floor (:videoa api/floor)})]
+    (first resp)))
+
 (defn get-videoc [{:keys [cid creds]}]
   (when-let [resp (api/search-product
                    creds {:cid cid :floor (:videoc api/floor)})]
     (first resp)))
 
-(defn get-videoa [{:keys [cid creds]}]
+(defn get-anime [{:keys [cid creds]}]
   (when-let [resp (api/search-product
-                   creds {:cid cid :floor (:videoa api/floor)})]
+                   creds {:cid   cid
+                          :floor (:anime api/floor)})]
     (first resp)))
 
 (defn- ->genre-req [genre-id]
@@ -29,6 +35,15 @@
        flatten
        (into #{})
        (into [])))
+
+(comment
+
+  (defn get-product
+    [{:keys [env] :as m :or {floor (:videoa api/floor)}}]
+    (let [creds (api/env->creds env)
+          q     (dissoc m :env)]
+      (-> (api/search-product creds q) first)))
+  )
 
 (comment
   (require '[tools.dmm :refer [dmm-creds]])

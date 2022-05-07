@@ -10,9 +10,6 @@
    [kotori.lib.kotori :as lib]
    [kotori.lib.time :as time]))
 
-(def st-exclude-ng-genres
-  (make-st-exclude-ng-genres videoa/ng-genres))
-
 (defn make-st-exclude-ng-genres [ids]
   (remove
    #(some true? (map
@@ -20,6 +17,9 @@
                    (let [id (get genre "id")]
                      (contains? ids id)))
                  (:genres %)))))
+
+(def st-exclude-ng-genres
+  (make-st-exclude-ng-genres videoa/ng-genres))
 
 (defn no-sample-movie? [product]
   (:no-sample-movie product))

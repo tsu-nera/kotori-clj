@@ -9,6 +9,7 @@
    [kotori.lib.firestore :as fs]
    [kotori.lib.io :as io]
    [kotori.lib.provider.dmm.api :as api]
+   [kotori.lib.provider.dmm.product :as lib]
    [kotori.procedure.dmm.product :as dmm]
    [kotori.procedure.strategy.dmm :as st]
    [kotori.procedure.tweet.post :as post]))
@@ -18,7 +19,7 @@
       (get :kotori.service.env/env)
       (api/env->creds)))
 
-(def creds (dmm-creds))
+(def creds (delay (dmm-creds)))
 
 (defn make-dmm-tweet [screen-name post]
   {:cid         (:cid post)
@@ -90,11 +91,11 @@
   (model/->url cid))
 
 (defn get-dmm-product [cid & floor]
-  (dmm/get-product {:env (env) :cid cid :floor floor}))
+  (lib/get-videoa {:cid cid :floor floor :creds @creds}))
 #_(get-dmm-product "ssis00337")
 
 (defn get-dmm-campaign [title]
-  (dmm/get-products {:env (env) :limit 10 :keyword title}))
+  (dmm/get-products {:limit 10 :keyword title :creds @creds}))
 #_(get-dmm-campaign "新生活応援30％OFF第6弾")
 
 (defn crawl-product!

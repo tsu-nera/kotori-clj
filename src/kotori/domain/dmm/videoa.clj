@@ -11,6 +11,7 @@
 (def genre-id-name-map (core/genres->id-name-map genres))
 (def genre-names->ids (partial core/names->genre-ids genre-name-id-map))
 
+(def amateur-genre-id (get genre-name-id-map "素人"))
 (def amateur-ids
   (-> ["素人" "ナンパ" "ハメ撮り"]
       genre-names->ids))

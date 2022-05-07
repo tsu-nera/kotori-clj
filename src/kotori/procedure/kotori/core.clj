@@ -10,6 +10,7 @@
    [kotori.lib.json :as json]
    [kotori.lib.kotori :as lib]
    [kotori.lib.log :as log]
+   [kotori.procedure.dmm.amateur :as amateur]
    [kotori.procedure.dmm.anime :as anime]
    [kotori.procedure.dmm.vr :as vr]
    [kotori.procedure.strategy.core :as st]
@@ -75,9 +76,14 @@
   (lib/->next (first (st-dmm/select-scheduled-products
                       {:db db :screen-name screen-name}))))
 
-(defn select-next-amateur [{:keys [db screen-name]}]
+(defn select-next-amateur-videoa [{:keys [db screen-name]}]
   {:pre [(s/valid? ::d/screen-name screen-name)]}
   (lib/->next (first (st-dmm/select-scheduled-amateurs
+                      {:db db :screen-name screen-name}))))
+
+(defn select-next-amateur-videoc [{:keys [db screen-name]}]
+  {:pre [(s/valid? ::d/screen-name screen-name)]}
+  (lib/->next (first (amateur/select-scheduled-products
                       {:db db :screen-name screen-name}))))
 
 (defn select-next-vr [{:keys [db screen-name]}]

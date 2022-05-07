@@ -24,7 +24,7 @@
       genre-names->ids))
 
 (def antisocial-ids
-  (-> ["盗撮・のぞき" "ドラッグ"]
+  (-> ["盗撮・のぞき" "ドラッグ" "監禁"]
       genre-names->ids))
 
 (def violent-ids

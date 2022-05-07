@@ -8,13 +8,14 @@
    [kotori.domain.dmm.videoa
     :refer [amateur-genre-id]
     :rename {amateur-genre-id videoa-id}]
+   [kotori.domain.dmm.videoc :as d]
    [kotori.lib.provider.dmm.product :as lib]
    [kotori.lib.time :as time]
-   [kotori.procedure.dmm.product :as product]))
+   [kotori.procedure.dmm.product :as product]
+   [kotori.procedure.strategy.dmm :as st]))
 
 ;; 素人ジャンルはvideocに属するものとvideoaに属するジャンルがある.
 ;; 素人ジャンル作品として女優を利用していればvideoa,
-
 (defn get-videoa-products [{:as params}]
   (let [opts {:floor      (:videoa dmm/floor)
               :article    (:genre dmm/article)
@@ -42,6 +43,19 @@
        :count     (count products)
        :products  products})))
 
+(defn select-scheduled-products [{:as m :keys [db limit] :or {limit 5}}]
+  (let [st-exclude-ng-genres (st/make-st-exclude-ng-genres d/ng-genres)
+        xst                  [st-exclude-ng-genres
+                              st/st-exclude-no-samples]
+        params               (st/assoc-last-crawled-time
+                              m db (:amateurs-crawled-time dmm/field))
+        products             (st/select-scheduled-products-with-xst
+                              params xst coll-path)]
+    (->> products
+         (sort-by :rank-popular)
+         (take limit)
+         (into []))))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (comment
   (require '[devtools :refer [env ->screen-name]]
@@ -63,6 +77,11 @@
 
   (def resp (crawl-products! {:db    (db)
                               :creds (creds)
-                              :limit 10}))
+                              :limit 120}))
 
+  (def products
+    (select-scheduled-products
+     {:db          (db)
+      :limit       5
+      :screen-name (->screen-name "0027")}))
   )

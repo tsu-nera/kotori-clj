@@ -61,7 +61,12 @@
       ["/tweet-evening" kotori/tweet-evening]
       ["/tweet-random" kotori/tweet-random]
       ["/select-next-product" {:get kotori/select-next-product}]
-      ["/select-next-amateur" {:get kotori/select-next-amateur}]
+      ;; TODO 後で削除
+      ["/select-next-amateur" {:get kotori/select-next-amateur-videoa}]
+      ["/select-next-amateur-videoa"
+       {:get kotori/select-next-amateur-videoa}]
+      ["/select-next-amateur-videoc"
+       {:get kotori/select-next-amateur-videoc}]
       ["/select-next-vr" {:get kotori/select-next-vr}]
       ["/select-next-anime" {:get kotori/select-next-anime}]]])))
 

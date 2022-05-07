@@ -9,15 +9,14 @@
     :refer [vr-only-id]
     :rename
     {vr-only-id genre-id}]
-   [kotori.lib.provider.dmm.api :as api]
    [kotori.lib.provider.dmm.product :as lib]
    [kotori.lib.time :as time]
    [kotori.procedure.dmm.product :as product]
    [kotori.procedure.strategy.dmm :as st]))
 
 (defn get-products [{:as params}]
-  (let [opts {:floor      (:videoa api/floor)
-              :article    (:genre api/article)
+  (let [opts {:floor      (:videoa dmm/floor)
+              :article    (:genre dmm/article)
               :article_id genre-id}]
     (lib/get-products (merge params opts))))
 

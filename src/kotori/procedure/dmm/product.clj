@@ -35,16 +35,10 @@
     (fs/set! db path {:last-scraped-time ts})
     data))
 
-(defn get-page-bulk
-  [{:keys [cids]}]
-  (->> cids
-       (lib/request-bulk public/get-page)
-       (into [])))
-
 (defn scrape-pages!
   [{:keys [cids db coll-path ts] :or {ts        (time/fs-now)
                                       coll-path product/coll-path}}]
-  (when-let [pages (get-page-bulk {:cids cids})]
+  (when-let [pages (public/get-page-bulk cids)]
     (->> pages
          (map #(product/set-scraped-timestamp ts %))
          (map #(json/->json %))
@@ -233,13 +227,8 @@
   (def page (public/get-page  "pred00294"))
   (def resp (scrape-page {:cid "ebod00874" :db (db)}))
 
-  (def cids (->> (lib/get-products {:creds @creds
-                                    :limit 10})
-                 (map :content_id)
-                 (into [])))
-
   ;; 並列実行
-  (def resp (get-page-bulk {:cids cids :db (db)}))
+
   (def resp (scrape-pages! {:cids cids :db (db)}))
 
   (def products (crawl-campaign-products!

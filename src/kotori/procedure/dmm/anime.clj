@@ -6,13 +6,12 @@
     :refer [anime-coll-path]
     :rename
     {anime-coll-path coll-path}]
-   [kotori.lib.provider.dmm.api :as api]
    [kotori.lib.provider.dmm.product :as lib]
    [kotori.lib.time :as time]
    [kotori.procedure.dmm.product :as product]
    [kotori.procedure.strategy.dmm :as st]))
 
-(def floor (:anime api/floor))
+(def floor (:anime dmm/floor))
 
 (defn crawl-product! [{:as m}]
   (-> m

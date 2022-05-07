@@ -2,19 +2,23 @@
   (:require
    [clj-http.client :as client]
    [clojure.string :as str]
-   [kotori.domain.dmm.core :as domain]
+   [kotori.domain.dmm.core :as d]
    [kotori.lib.config :refer [user-agent]]
+   [kotori.lib.provider.dmm.core :refer [request-bulk]]
    [net.cgrand.enlive-html :as html]))
 
 (def headers
   {:user-agent user-agent
    :cookie     "age_check_done=1"})
 
-(defn get-page-data [cid]
-  (let [url (domain/->url cid)]
-    (-> (client/get url {:headers headers})
-        :body
-        html/html-snippet)))
+(defn get-page-data
+  ([url]
+   (-> (client/get url {:headers headers})
+       :body
+       html/html-snippet))
+  ([cid floor]
+   (let [url (d/->url cid floor)]
+     (get-page-data url))))
 
 (defn ->title
   "APIで取得できる内容にあわせてサブタイトルはカット, 女優名は残す"
@@ -41,41 +45,85 @@
                   (str/replace a "")
                   (str/replace #"「」" ""))) text aseq)))
 
-(defn ->description [m]
+;; 一応実際の - の数よりも少なくしておく
+(defn- cut-underline [text]
+  (let [re-line #"-------------------------------------"]
+    (cond-> text
+      (not (nil? text)) (str/split re-line)
+      true              first)))
+
+(defn ->raw-description [m]
   (-> m
       (html/select [(html/attr= :name "description")])
       first
       :attrs
-      :content
-      (str/split #"<br> <br>")
-      first
-      (str/split #"-------------------------------------")
-      first
-      (str/replace #"<br>" "")
-      (str/replace #"<br />" "")
+      :content))
+
+(defn- remove-fanza-headline [text]
+  (if text
+    (str/replace text #"【FANZA\(ファンザ\)】" "")
+    text))
+
+(defn- lines-two->one [text]
+  (str/replace text #"<br> <br>" "<br>"))
+
+(defn- remove-bold-tag [text]
+  (-> text
       (str/replace #"<b>" "")
-      (str/replace #"</b>" "")
+      (str/replace #"</b>" "")))
+
+(defn- remove-span-tag [text]
+  (-> text
       (str/replace #"</span>" "")
       (str/replace #"<span" "")
       (str/replace #"style=" "")
       (str/replace #"\"color:red\">" "")
-      (str/replace #"\"color:blue\">" "")
-      (str/replace #"【FANZA\(ファンザ\)】" "")
-      (str/replace #" " "")
-      remove-aseq
+      (str/replace #"\"color:blue\">" "")))
+
+(defn- remove-br-tag [text]
+  (-> text
+      (str/replace #"<br>" "")
+      (str/replace #"<br />" "")
+      (str/replace #" " "")))
+
+;; 文末に注意書きがあることがおおいのでtrimしておく.
+;; 文中をtrimしないように処理の最後に呼ぶ.
+(defn- remove-last-asterisk [text]
+  (-> text
       (str/split #"※")
       first))
 
-(defn get-page [cid]
-  (let [m     (get-page-data cid)
+(defn ->description [m]
+  (let [raw (->raw-description m)]
+    (-> raw
+        remove-fanza-headline
+        cut-underline
+        lines-two->one
+        remove-bold-tag
+        remove-span-tag
+        remove-br-tag
+        remove-aseq
+        remove-last-asterisk)))
+
+(defn get-page [{:keys [cid floor]}]
+  (let [url   (d/->url cid floor)
+        m     (get-page-data url)
         title (->title m)
         desc  (->description m)]
-    {:cid cid :title title :description desc}))
+    {:cid cid :title title :description desc :url url}))
+
+(defn get-page-bulk [cids floor]
+  (->> cids
+       (map (fn [cid] {:cid cid :floor floor}))
+       (request-bulk get-page)
+       (into [])))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (comment
   (def cid "h_1558csdx00007")
-  (def url (domain/->url cid))
-  (def data (get-page-data cid))
+  (def url (d/->url cid))
+  (def data (get-page-data cid "videoa"))
 
   (def title (->title data))
   (def description (->description data))
@@ -89,10 +137,12 @@
         ))
   content
 
-  (def cid "mgdv00064")
-  (def data (get-page-data cid))
+  (def cid "gesb001")
+  (def data (get-page-data cid "videoc"))
   (def description (->description data))
 
-  (def ret (-> description desc->aseq))
-  (def ret (-> description remove-aseq))
+  (-> (->raw-description data)
+      (remove-bold-tag))
+
+
   )

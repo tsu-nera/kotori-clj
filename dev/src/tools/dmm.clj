@@ -10,6 +10,7 @@
    [kotori.lib.io :as io]
    [kotori.lib.provider.dmm.api :as api]
    [kotori.lib.provider.dmm.product :as lib]
+   [kotori.lib.provider.dmm.public :as public]
    [kotori.procedure.dmm.product :as dmm]
    [kotori.procedure.strategy.dmm :as st]
    [kotori.procedure.tweet.post :as post]))
@@ -176,6 +177,16 @@
     (download-genres! key)))
 #_(download-all-genres!)
 
+;; 主に最新のdescを取得してちゃんとdescriptionをパースできているか
+;; 確認するためのツール.
+(defn scrape-descs [floor limit]
+  (let [cids (->> (lib/get-products {:creds (creds)
+                                     :floor floor
+                                     :limit limit})
+                  (map :content_id)
+                  (into []))]
+    (-> (public/get-page-bulk cids floor))))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (comment
@@ -238,4 +249,9 @@
   (def products (dmm/crawl-products!
                  {:db (db-prod) :env (env) :limit 100}))
  ;;;
+  )
+
+(comment
+  (def resp (scrape-descs "videoc" 10))
+  (def descs (map :description resp))
   )

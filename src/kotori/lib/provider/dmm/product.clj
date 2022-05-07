@@ -1,28 +1,23 @@
 (ns kotori.lib.provider.dmm.product
   (:require
-   [kotori.lib.provider.dmm.api :as api]))
+   [kotori.domain.dmm.core :as dmm]
+   [kotori.lib.provider.dmm.api :as api]
+   [kotori.lib.provider.dmm.core :refer [request-bulk]]))
 
 (defn get-video [{:keys [cid creds floor]
-                  :or   {floor (:videoa api/floor)}}]
+                  :or   {floor (:videoa dmm/floor)}}]
   (when-let [resp (api/search-product
                    creds {:cid cid :floor floor})]
     (first resp)))
 
 (defn get-videoa [{:as m}]
-  (get-video (assoc m :floor (:videoa api/floor))))
+  (get-video (assoc m :floor (:videoa dmm/floor))))
 
 (defn get-videoc [{:as m}]
-  (get-video (assoc m :floor (:videoc api/floor))))
+  (get-video (assoc m :floor (:videoc dmm/floor))))
 
 (defn get-anime [{:as m}]
-  (get-video (assoc m :floor (:anime api/floor))))
-
-(defn request-bulk
-  [req-fn req-params]
-  (->> req-params
-       (pmap #(req-fn %)) ; まだ実行してない(lazy-seq)
-       (doall) ; doallでマルチスレッド全発火.
-       ))
+  (get-video (assoc m :floor (:anime dmm/floor))))
 
 (defn get-products-by-cids
   "APIの並列実行をする.呼び出し回数制限もあるためリストのサイズに注意"
@@ -65,7 +60,7 @@
   limitを100のchunkに分割してパラレル呼び出しとマージ."
   [{:keys [creds limit floor]
     :as   base-params
-    :or   {limit 5 floor (:videoa api/floor)}}]
+    :or   {limit 5 floor (:videoa dmm/floor)}}]
   (let [req-params (map (fn [m] (merge base-params m))
                         (make-req-params limit floor))]
 
@@ -75,7 +70,7 @@
          (into []))))
 
 (defn- ->genre-req [genre-id]
-  {:article (:genre api/article) :article_id genre-id})
+  {:article (:genre dmm/article) :article_id genre-id})
 
 (defn get-by-genre [{:keys [genre-id creds]}]
   (let [q (->genre-req genre-id)]

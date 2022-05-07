@@ -8,7 +8,6 @@
    [kotori.domain.dmm.videoa
     :refer [amateur-genre-id]
     :rename {amateur-genre-id videoa-id}]
-   [kotori.lib.provider.dmm.api :as api]
    [kotori.lib.provider.dmm.product :as lib]
    [kotori.lib.time :as time]
    [kotori.procedure.dmm.product :as product]))
@@ -17,14 +16,14 @@
 ;; 素人ジャンル作品として女優を利用していればvideoa,
 
 (defn get-videoa-products [{:as params}]
-  (let [opts {:floor      (:videoa api/floor)
-              :article    (:genre api/article)
+  (let [opts {:floor      (:videoa dmm/floor)
+              :article    (:genre dmm/article)
               :article_id videoa-id}]
     (lib/get-products (merge params opts))))
 
 (defn crawl-videoc-product! [{:as m}]
   (-> m
-      (assoc :floor (:videoc api/floor))
+      (assoc :floor (:videoc dmm/floor))
       (product/crawl-product! coll-path)))
 
 ;; TODO 素人動画はタイトルが名前になっているのでそのままでは不十分
@@ -34,7 +33,7 @@
   (let [field-ts (:amateurs-crawled-time  dmm/field)
         ts       (time/fs-now)]
     (when-let [products (-> m
-                            (assoc :floor (:videoc api/floor))
+                            (assoc :floor (:videoc dmm/floor))
                             (lib/get-products))]
       (doto db
         (product/save-products! coll-path products ts)

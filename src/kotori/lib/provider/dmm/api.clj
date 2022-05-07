@@ -1,25 +1,11 @@
 (ns kotori.lib.provider.dmm.api
   (:require
    [clj-http.client :as client]
+   [kotori.domain.dmm.core :as d]
    [kotori.lib.config :refer [user-agent]]
    [kotori.lib.json :as json]))
 
 (def base-url "https://api.dmm.com/affiliate/v3")
-
-(def floor
-  "ref. https://affiliate.dmm.com/api/v3/floorlist.html"
-  {;
-   :videoa "videoa" ; ビデオ
-   :videoc "videoc" ; 素人
-   :anime  "anime"  ; アニメ動画
-   })
-
-(def article
-  {;
-   :genre   "genre"   ; ジャンル
-   :actress "actress" ; 女優
-   })
-
 (defn ->endpoint
   [target]
   (str base-url "/" target))
@@ -27,7 +13,7 @@
 (def base-req-params
   {:site    "FANZA"
    :service "digital"
-   :floor   (:videoa floor)
+   :floor   (:videoa d/floor)
    :output  "json"})
 
 (def base-headers {:headers {:user-agent user-agent}})

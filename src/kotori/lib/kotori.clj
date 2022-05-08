@@ -24,6 +24,13 @@
         (str/replace headline ""))
     text))
 
+(defn remove-bodysize [text]
+  (let [re (re-pattern "T(.+)cm")]
+    (if-let [target (first (re-find re text))]
+      (-> text
+          (str/replace target ""))
+      text)))
+
 (defn desc->sentences [text]
   (-> text
       (str/replace #"。。。" "。")
@@ -43,7 +50,7 @@
         (reduce (fn [desc sentence]
                   (if (< length (+ (count desc) (count sentence)))
                     (if (zero? (count desc))
-                      sentence
+                      (trunc sentence length)
                       desc)
                     (str desc "\n\n" sentence)))
                 "" sentences))
@@ -54,6 +61,7 @@
   (and text
        (-> text
            trim-headline
+           remove-bodysize
            desc->sentences
            join-sentences)))
 
@@ -167,22 +175,15 @@
 
   (def desc3 "いつもテレビで観ていたあの女子アナがまさかの隣人…！？あざとカワイイ成田つむぎに誘惑されまくる僕！ずっとファンだった！こんなあざとカワイイ誘惑、我慢できるわけもなくて…隣の部屋に妻がいるのにどんどん大胆にエロくなっていくつむぎさんの誘惑にイチコロ。小悪魔淫語とあざとエロいテクで僕は何回も射精させられちゃう…お茶の間騒然の中出し不倫SEX！「あたし…こんなことバレたら番組降板になっちゃう（照）」。")
 
-  (def desc3 "いつもテレビで観ていたあの女子アナがまさかの隣人。あざとカワイイ成田つむぎに誘惑されまくる僕！ずっとファンだった！こんなあざとカワイイ誘惑、我慢できるわけもなくて…隣の部屋に妻がいるのにどんどん大胆にエロくなっていくつむぎさんの誘惑にイチコロ。小悪魔淫語とあざとエロいテクで僕は何回も射精させられちゃう…お茶の間騒然の中出し不倫SEX！「あたし…こんなことバレたら番組降板になっちゃう（照）」。")
+  (def desc4 "いつもテレビで観ていたあの女子アナがまさかの隣人。あざとカワイイ成田つむぎに誘惑されまくる僕！ずっとファンだった！こんなあざとカワイイ誘惑、我慢できるわけもなくて…隣の部屋に妻がいるのにどんどん大胆にエロくなっていくつむぎさんの誘惑にイチコロ。小悪魔淫語とあざとエロいテクで僕は何回も射精させられちゃう…お茶の間騒然の中出し不倫SEX！「あたし…こんなことバレたら番組降板になっちゃう（照）」。")
 
-  (split-with #(not= "。" %) desc3)
+  (def desc5 "T170cmB99cmW58cmH88cm圧倒的カラダを持つ新人グラビアアイドル‘山手梨愛’が遂に本当の絶頂を知る今作品！もともとウブだった彼女が恥じらいも他人の目もどうでもよくなるように禁欲、媚薬オイル、玩具ガン責め、人生で一番の激ピストンと快感の大洪水で理性決壊！！九州ナンバーワンの神ボディが性感帯バグを起こして「イグイグイッヂャウゥ～」。超ド級の美体アクメ姿は必見です！！")
 
-  (->> desc3 ; Thread the string through the last argument of...
-       (split-with #(not= "。" %)) ; Splitting on =
-       (flatten) ; Then flattening
-       (map str))
+  (re-find (re-pattern "T(.+)cm") desc5)
 
-  (def ret (interpose "。" (str/split desc3  #"。")))
+  (remove-bodysize desc5)
 
-  (def ret (->> desc3
-                (re-seq #"。")))
-
-
-  (desc->sentences desc3)
+  (desc->sentences desc5)
   (def ret (desc->trimed desc3))
 
   )

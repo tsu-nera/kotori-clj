@@ -42,7 +42,9 @@
         (trunc (first sentences) length)
         (reduce (fn [desc sentence]
                   (if (< length (+ (count desc) (count sentence)))
-                    desc
+                    (if (zero? (count desc))
+                      sentence
+                      desc)
                     (str desc "\n\n" sentence)))
                 "" sentences))
       str/trim))
@@ -107,7 +109,6 @@
    (let [ret (reduce (fn [s tag]
                        ((partial ->remove-x tag) s)) s hashtags)]
      (-> ret
-         ((partial ->remove-x "＃"))
          (str/trim)))))
 
 (defn- title->trimed [title]
@@ -161,6 +162,10 @@
   (def sample "女神の美体から汗、涎、愛液、潮…全エキスが大・放・出！体液まみれでより一層エロさを増した美乃すずめが快楽のまま本能全開で汁だくSEX！絶頂に次ぐ絶頂、意識朦朧となるほどの本気の交わりで大量失禁＆大量イキ潮スプラッシュ！全身ぐっちょり、体液滴るイイ女が性欲尽きるまでイッてイッてイキまくる！！")
   (def ret (desc->trimed sample))
 
+  (def desc2 "色白でスレンダーな潮美舞の身体を専属4本目でここまでやるのかというくらい徹底的に性感開発！彼女の名前の由来となった潮吹きをベッドが水たまりができるまで何度も何度も出してもらいました。アバラ浮き出るほどの激ピス、焦らしからの急変連続イカセ、立ち拘束で脚ガクガクになるまで玩具責め、追撃3P…全コーナー絶頂痙攣しまくり潮吹きまくりの見どころ満載！細い子が大絶頂する姿は何故こんなに興奮するのでしょう…。")
+  (def ret (desc->trimed desc2))
+
+
   )
 
 (comment
@@ -185,6 +190,7 @@
 
 (comment
   (def title "【配信限定特典映像付き】朝ドラ系現役アイドルT○kT○ker 西元めいさ 初体験で初絶頂 ＃初イキ ＃初巨根 ＃初3P ＃キャパオーバー ＃快感 ＃くびれボディ ＃ビクッビク【圧倒的4K映像でヌク！】")
+
   (->hashtags title)
   (title->trimed title)
 

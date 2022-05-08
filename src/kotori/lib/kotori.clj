@@ -3,6 +3,11 @@
    [clojure.string :as str]
    [kotori.domain.config.ngword :refer [source]]))
 
+(defn- ->remove-x [x s]
+  (let [re (re-pattern x)]
+    (-> s
+        (str/replace re ""))))
+
 (defn desc->headline [text]
   (let [re (re-pattern "^＜(.+?)＞|^【(.+?)】")]
     (first (re-find re text))))
@@ -63,8 +68,7 @@
       name)))
 
 (defn- ->remove-annonymous [name]
-  (-> name
-      (str/replace #"（仮名）" "")))
+  ((partial ->remove-x "（仮名）") name))
 
 (defn- ->remove-num [name]
   (-> name
@@ -81,18 +85,54 @@
       (str/replace #"天才" "")
       ->add-chan))
 
+(defn- ->remove-haishin [s]
+  ((partial ->remove-x "【配信限定特典映像付き】") s))
+
+(defn- ->remove-4k-headline [s]
+  ((partial ->remove-x "【圧倒的4K映像でヌク！】") s))
+
+(defn ->hashtags [s]
+  (let [re (re-pattern "[#|＃](.+?)[ |【]")]
+    (->> s
+         (re-seq re)
+         (map second)
+         (map str/trim)
+         (map #(str "＃" %)))))
+
+(defn- ->remove-hashtags
+  ([s]
+   (let [tags (->hashtags s)]
+     (->remove-hashtags s tags)))
+  ([s hashtags]
+   (let [ret (reduce (fn [s tag]
+                       ((partial ->remove-x tag) s)) s hashtags)]
+     (-> ret
+         ((partial ->remove-x "＃"))
+         (str/trim)))))
+
+(defn- title->trimed [title]
+  (-> title
+      ->remove-hashtags
+      ->remove-haishin
+      ->remove-4k-headline
+      str/trim))
+
 (defn ->next
   [product]
-  (let [cid     (:cid product)
-        title   (-> (:title product) ng->ok)
-        desc    (-> (:description product)
-                    ng->ok
-                    desc->trimed)
-        summary (-> (:summary product) ng->ok)]
-    {:cid         cid
-     :title       title
-     :description desc
-     :summary     summary
+  (let [cid       (:cid product)
+        title-raw (:title product)
+        title     (-> title-raw ng->ok title->trimed)
+        desc-raw  (:description product)
+        hashtags  (->hashtags title-raw)
+        desc      (-> desc-raw ng->ok desc->trimed)
+        summary   (-> (:summary product) ng->ok)]
+    {:cid             cid
+     :title           title
+     :title-raw       title-raw
+     :description     desc
+     :description-raw desc-raw
+     :summary         summary
+     :hashtags        hashtags
      ;; :headline    (desc->headline desc)
      ;; :dialogue    (desc->dialogue desc)
      }))
@@ -140,5 +180,12 @@
 
   (def names (into [] (map title->name titles)))
 
+
+  )
+
+(comment
+  (def title "【配信限定特典映像付き】朝ドラ系現役アイドルT○kT○ker 西元めいさ 初体験で初絶頂 ＃初イキ ＃初巨根 ＃初3P ＃キャパオーバー ＃快感 ＃くびれボディ ＃ビクッビク【圧倒的4K映像でヌク！】")
+  (->hashtags title)
+  (title->trimed title)
 
   )

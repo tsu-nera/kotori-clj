@@ -91,12 +91,14 @@
 (defn ->dmm-url [cid]
   (model/->url cid))
 
-(defn get-dmm-product [cid & floor]
-  (lib/get-videoa {:cid cid :floor floor :creds @creds}))
+(defn get-dmm-product [cid floor]
+  (if (= floor "anime")
+    (lib/get-anime {:cid cid :creds (creds)})
+    (lib/get-videoa {:cid cid :creds (creds)})))
 #_(get-dmm-product "ssis00337")
 
 (defn get-dmm-campaign [title]
-  (lib/get-products {:limit 10 :keyword title :creds @creds}))
+  (lib/get-products {:limit 10 :keyword title :creds (creds)}))
 #_(get-dmm-campaign "新生活応援30％OFF第6弾")
 
 (defn crawl-product!
@@ -190,8 +192,9 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (comment
-  (def cid "196glod00227")
+  (def cid "h_454dhil10279")
   (def resp (get-dmm-product cid "anime"))
+  (prn resp)
   )
 
 (comment

@@ -1,6 +1,10 @@
-(ns kotori.domain.dmm.core)
+(ns kotori.domain.dmm.core
+  (:require
+   [clojure.spec.alpha :as s]))
 
 (def doc-path "providers/dmm")
+
+(s/def ::cid string?)
 
 (def floor
   "ref. https://affiliate.dmm.com/api/v3/floorlist.html"

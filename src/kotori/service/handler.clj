@@ -60,9 +60,8 @@
       ["/tweet-morning" kotori/tweet-morning]
       ["/tweet-evening" kotori/tweet-evening]
       ["/tweet-random" kotori/tweet-random]
+      ["/get-product" {:get kotori/get-product}]
       ["/select-next-product" {:get kotori/select-next-product}]
-      ;; TODO 後で削除
-      ["/select-next-amateur" {:get kotori/select-next-amateur-videoa}]
       ["/select-next-amateur-videoa"
        {:get kotori/select-next-amateur-videoa}]
       ["/select-next-amateur-videoc"

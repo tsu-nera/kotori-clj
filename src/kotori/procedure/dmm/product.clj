@@ -1,5 +1,6 @@
 (ns kotori.procedure.dmm.product
   (:require
+   [clojure.spec.alpha :as s]
    [clojure.string :as str]
    [kotori.domain.dmm.core :as dmm]
    [kotori.domain.dmm.product :as product]
@@ -15,6 +16,13 @@
 
 (defn make-campaign-products-path [id]
   (str campaigns-path "/" id "/" "products"))
+
+(defn get-product
+  "Firestoreから指定したcidの情報を取得. via apiでFANZAからではない"
+  [{:keys [db cid]}]
+  {:pre [(s/valid? ::dmm/cid cid)]}
+  (let [doc-path (product/doc-path cid)]
+    (fs/get-doc db doc-path)))
 
 (defn get-campaign-products
   "キャンペーンの動画一覧の取得は
@@ -220,11 +228,11 @@
   )
 
 (comment
-  (def product (crawl-product! {:db    @db
-                                :creds @creds
+  (def product (crawl-product! {:db    (db)
+                                :creds (creds)
                                 :cid   "hnd00967"}))
-  (def products (crawl-products! {:db    @db-dev
-                                  :creds @creds
+  (def products (crawl-products! {:db    (db-dev)
+                                  :creds (creds)
                                   :limit 300}))
 
   ;; 1秒以内に終わる

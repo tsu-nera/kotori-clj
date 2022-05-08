@@ -12,6 +12,7 @@
    [kotori.lib.log :as log]
    [kotori.procedure.dmm.amateur :as amateur]
    [kotori.procedure.dmm.anime :as anime]
+   [kotori.procedure.dmm.product :as product]
    [kotori.procedure.dmm.vr :as vr]
    [kotori.procedure.strategy.core :as st]
    [kotori.procedure.strategy.dmm :as st-dmm]
@@ -71,6 +72,9 @@
         text         (make-text source strategy text-builder)]
     (tweet (assoc params :text text :type :text))))
 
+(defn get-product [{:as m}]
+  (lib/->next (product/get-product m)))
+
 (defn select-next-product [{:keys [db screen-name]}]
   {:pre [(s/valid? ::d/screen-name screen-name)]}
   (lib/->next (first (st-dmm/select-scheduled-products
@@ -83,10 +87,10 @@
 
 (defn select-next-amateur-videoc [{:keys [db screen-name]}]
   {:pre [(s/valid? ::d/screen-name screen-name)]}
-  (let [next  (lib/->next (first (amateur/select-scheduled-products
-                                  {:db db :screen-name screen-name})))
-        title (:title next)]
-    (assoc next :title (lib/videoc-title->name title))))
+  (let [next (lib/->next (first (amateur/select-scheduled-products
+                                 {:db db :screen-name screen-name})))
+        name (lib/videoc-title->name (:title next))]
+    (assoc next :name name)))
 
 (defn select-next-vr [{:keys [db screen-name]}]
   {:pre [(s/valid? ::d/screen-name screen-name)]}
@@ -138,7 +142,7 @@
 
   (def params {:db (db-dev) :info @info-dev})
 
-  ;;;;;;;;;;;;;
+
   (tweet-morning params)
   (tweet-evening params)
   (tweet-random params)
@@ -165,4 +169,14 @@
   (def status-id (:id_str resp))
   (def resp (private/delete-tweet (twitter-auth) status-id))
   ;;;
+  )
+
+(comment
+  (def screen-name (->screen-name "0009"))
+  (select-next-amateur-videoc {:db (db-prod) :screen-name screen-name})
+
+  )
+
+(comment
+  (def resp (get-product {:db (db-prod) :cid "1stars00477"}))
   )

@@ -257,7 +257,7 @@
 
   (count products)
 
-  (def screen-name (->screen-name "0027"))
+  (def screen-name (->screen-name "0009"))
   (def amateurs
     (into []
           (select-scheduled-amateurs {:db          (db-prod)

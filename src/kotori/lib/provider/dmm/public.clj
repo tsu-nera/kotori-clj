@@ -68,15 +68,27 @@
 (defn- lines-two->one [text]
   (str/replace text #"<br> <br>" "<br>"))
 
+(defn- ->tag-sentences-pair [text tag]
+  (let [re (re-pattern
+            (str "<" tag ">(.+?)</" tag ">"))]
+    (re-seq re text)))
+
+(defn- remove-html-tag [tag text]
+  (let [tags-pair (->tag-sentences-pair text tag)]
+    (reduce (fn [text pair]
+              (-> text
+                  (str/replace
+                   (first pair)
+                   (second pair)))) text tags-pair)))
+
 (defn- remove-bold-tag [text]
-  (-> text
-      (str/replace #"<b>" "")
-      (str/replace #"</b>" "")))
+  ((partial remove-html-tag "b") text))
 
 (defn- remove-big-tag [text]
-  (-> text
-      (str/replace #"<big>" "")
-      (str/replace #"</big>" "")))
+  ((partial remove-html-tag "big") text))
+
+(defn- remove-p-tag [text]
+  ((partial remove-html-tag "p") text))
 
 (defn- remove-span-tag [text]
   (-> text
@@ -86,12 +98,27 @@
       (str/replace #"\"color:red\">" "")
       (str/replace #"\"color:blue\">" "")))
 
+(defn- remove-strong-tag [text]
+  (-> text
+      (str/replace #"</strong>" "")
+      (str/replace #"<strong" "")
+      (str/replace #"style=" "")
+      (str/replace #"\"color:#ff0000\">" "")))
+
 (defn- remove-br-tag [text]
   (-> text
       (str/replace #"<br>" " ")
-      (str/replace #"<br />" " ")
-      ;; (str/replace #" " "")
-      ))
+      (str/replace #"<br />" " ")))
+
+(defn- remove-html-tags [text]
+  (-> text
+      remove-bold-tag
+      remove-big-tag
+      remove-br-tag
+      remove-p-tag
+      remove-span-tag
+      remove-strong-tag
+      remove-aseq))
 
 ;; 文末に注意書きがあることがおおいのでtrimしておく.
 ;; 文中をtrimしないように処理の最後に呼ぶ.
@@ -107,11 +134,7 @@
         remove-fanza-headline
         cut-underline
         lines-two->one
-        remove-big-tag
-        remove-bold-tag
-        remove-span-tag
-        remove-br-tag
-        remove-aseq
+        remove-html-tags
         p/remove-hashtags)))
 
 (defn get-page [{:keys [cid floor] :or {floor (:videoa d/floor)}}]
@@ -146,10 +169,11 @@
         ))
   content
 
-  (def cid "ipx00850")
-  (def resp (get-page {:cid cid :floor "video"}))
+  (def cid "dam0003")
+  (def resp (get-page {:cid cid :floor "videoc"}))
 
-  (def data (get-page-data "apns00067" "videoa"))
+  (def data (get-page-data cid "videoc"))
+  (def raw-desc (->raw-description data))
   (def description (->description data))
 
   (def hastags (p/->hashtags description))
@@ -158,11 +182,7 @@
       remove-fanza-headline
       cut-underline
       lines-two->one
-      remove-bold-tag
-      remove-big-tag
-      remove-span-tag
-      remove-br-tag
-      remove-aseq
-      p/->remove-hashtags
+      remove-html-tags
+      p/remove-hashtags
       )
   )

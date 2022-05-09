@@ -39,6 +39,12 @@
       (= last-char "？") text
       :else              (str text "..."))))
 
+(defn remove-last-x [x s]
+  (let [last-char (->last-char s)]
+    (if (= last-char x)
+      (str/trim (subs s 0 (- (count s) 1)))
+      s)))
+
 (defn desc->sentences [text]
   (-> text
       (str/replace #"。。。" "。")
@@ -72,6 +78,7 @@
            remove-bodysize
            desc->sentences
            join-sentences
+           ((partial remove-last-x "【")) ;; fsデータにゴミがはいったので
            add-tententen)))
 
 (defn ng->ok [text]
@@ -140,6 +147,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (comment
+
   (require '[firebase :refer [db-prod db-dev db]]
            '[devtools :refer [->screen-name env]]
            '[kotori.procedure.strategy.dmm
@@ -170,12 +178,15 @@
 
   (def desc6 "こんな子がAVに出演するとは思えない。清楚で知的な現役女子大生の気象予報士の卵‘白坂みあん’がAVデビュー！")
 
+  (def desc7 "学校のマドンナ的存在だった麻耶は同じ学校の晃司と結婚し、幸せな生活を送っていた。そんな中、同窓会の知らせが届き、二人が参加した。その同窓会は麻耶に憧れていた根暗な同級生たちが仕組んだ罠だった。睡眠薬を盛られて晃司が寝てしまい、残された麻耶は同級生たちに組み敷かれていく。麻耶は媚薬を盛られ、自ら挿入を懇願するスケベ女に成り果てる。その姿を動画に撮られ、強請られた麻耶は同級生たちの性奴●へと化して…。【")
+
   (re-find (re-pattern "T(.+)cm") desc5)
+  (def ret (remove-last-x "【" desc7))
 
   (remove-bodysize desc5)
-
   (desc->sentences desc5)
-  (def ret (desc->trimed desc3))
+
+  (def ret (desc->trimed desc7))
   )
 
 (comment

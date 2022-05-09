@@ -112,7 +112,7 @@
         remove-span-tag
         remove-br-tag
         remove-aseq
-        p/->remove-hashtags)))
+        p/remove-hashtags)))
 
 (defn get-page [{:keys [cid floor] :or {floor (:videoa d/floor)}}]
   (let [url   (d/->url cid floor)

@@ -117,13 +117,13 @@
  ;;;
   (def qvt-data (product/qvt->doc qvt result))
  ;;;
-  (def cid "mide00897")
-  (def qvt (get-qvt {:db (db-dev) :cid cid}))
+  (def cid "apns00067")
+  (def qvt (get-qvt {:db (db-prod) :cid cid}))
 
   (def desc (:description qvt))
   (count desc)
 
-  (def result (tweet-quoted-video {:db           (db-dev)
+  (def result (tweet-quoted-video {:db           (db-prod)
                                    :env          (env)
                                    :info         info
                                    :source-label "qvt_0003"

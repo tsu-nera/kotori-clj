@@ -27,6 +27,11 @@
       (assoc :floor (:videoc dmm/floor))
       (product/crawl-product! coll-path)))
 
+(defn scrape-videoc-page! [{:as m}]
+  (-> m
+      (assoc :floor (:videoc dmm/floor))
+      (product/scrape-page coll-path)))
+
 (defn crawl-products!
   [{:keys [db] :as m}]
   (let [floor    (:videoc dmm/floor)
@@ -71,9 +76,17 @@
   )
 
 (comment
-  (def resp (crawl-videoc-product! {:db    (db)
+  (def resp (crawl-videoc-product! {:db    (db-prod)
                                     :creds (creds)
-                                    :cid   "dots003"}))
+                                    :cid   "erk022"}))
+
+  (def resp (scrape-videoc-page! {:db  (db-prod)
+                                  :cid "erk022"}))
+
+  ;; (require '[kotori.lib.provider.dmm.public :as public])
+  ;; (public/get-page {:db    (db-prod)
+  ;;                   :floor "videoc"
+  ;;                   :cid   "erk022"})
 
   (def resp (crawl-products! {:db    (db)
                               :creds (creds)

@@ -97,8 +97,6 @@
         (assoc :raw raw)
         (assoc :legacy legacy))))
 
-(defn page->data [raw])
-
 ;; 最新人気ランキングを設定
 ;; 他にも価格, レビュー, マッチングのランキングがある.
 ;; ユースケースが明らかになったら改造する.

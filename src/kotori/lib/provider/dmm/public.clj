@@ -149,7 +149,7 @@
   (def cid "ipx00850")
   (def resp (get-page {:cid cid :floor "video"}))
 
-  (def data (get-page-data "erk022" "videoc"))
+  (def data (get-page-data "apns00067" "videoa"))
   (def description (->description data))
 
   (def hastags (p/->hashtags description))

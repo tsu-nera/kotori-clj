@@ -34,11 +34,11 @@
   (lib/get-products m))
 
 (defn scrape-page
-  [{:keys [db cid]}]
-  (let [page (public/get-page cid)
+  [{:keys [db cid] :as m} coll-path]
+  (let [page (public/get-page m)
         ts   (time/fs-now)
-        data (product/page->data page)
-        path (fs/doc-path product/coll-path cid)]
+        data (product/api->data page)
+        path (fs/doc-path coll-path cid)]
     (fs/set! db path data)
     (fs/set! db path {:last-scraped-time ts})
     data))

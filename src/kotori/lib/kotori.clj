@@ -28,8 +28,9 @@
       text)))
 
 (defn- ->last-char [s]
-  (subs s
-        (- (count s) 1)))
+  (let [n (count s)]
+    (cond-> (str s)
+      (not (zero? n)) (subs s (- n 1)))))
 
 (defn- drop-last-char [s]
   (subs s 0 (- (count s) 1)))
@@ -117,7 +118,7 @@
 
 (defn- title->trimed [title]
   (-> title
-      p/->remove-hashtags
+      p/remove-hashtags
       ->remove-haishin
       ->remove-4k-headline
       str/trim))
@@ -207,8 +208,7 @@
 
 (comment
   (def title "【配信限定特典映像付き】朝ドラ系現役アイドルT○kT○ker 西元めいさ 初体験で初絶頂 ＃初イキ ＃初巨根 ＃初3P ＃キャパオーバー ＃快感 ＃くびれボディ ＃ビクッビク【圧倒的4K映像でヌク！】")
+  (def title2 "【VR】シン・時間停止 ―女湯イタズラ大戦争VR―")
 
-  (->hashtags title)
-  (title->trimed title)
-
+  (title->trimed title2)
   )

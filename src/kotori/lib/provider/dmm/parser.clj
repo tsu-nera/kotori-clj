@@ -20,10 +20,10 @@
          (map str/trim)
          (map #(str "＃" %)))))
 
-(defn ->remove-hashtags
+(defn remove-hashtags
   ([s]
    (let [tags (->hashtags s)]
-     (->remove-hashtags s tags)))
+     (remove-hashtags s tags)))
   ([s hashtags]
    (let [ret (reduce (fn [s tag]
                        ((partial ->remove-x tag) s)) s hashtags)]

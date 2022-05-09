@@ -28,7 +28,8 @@
   com.fzakaria/slf4j-timbre {:mvn/version "0.3.21"}
 
   ;; tsu-nera/twitter-clj {:git/url "git@github.com:tsu-nera/twitter-clj.git"}
-  tsu-nera/twitter-clj {:local/root "lib/twitter-clj"}
+  tsu-nera/twitter-clj                 {:local/root "lib/twitter-clj"}
+  com.twitter.twittertext/twitter-text {:mvn/version "3.1.0"}
 
   ;; Google Cloud Platform
   com.google.auth/google-auth-library-oauth2-http {:mvn/version "1.6.0"}
@@ -50,7 +51,7 @@
   ;; PORT=8888 clojure -M:serve
   :serve    {:main-opts ["-m" "kotori.service.server"]}
   ;; clojure -T:build xxx
-  :build    {:deps       {io.github.clojure/tools.build   {:git/tag "v0.8.1" :git/sha "7d40500"}
+  :build    {:deps       {io.github.clojure/tools.build   {:git/tag "v0.8.2" :git/sha "ba1a2bf"}
                           com.google.cloud.tools/jib-core {:mvn/version "0.21.0"}}
              :ns-default build}
   ;; clojure -A:dev
@@ -62,9 +63,9 @@
                            nrepl/nrepl                     {:mvn/version "0.9.0"}
                            refactor-nrepl/refactor-nrepl   {:mvn/version "3.5.2"}
                            cider/cider-nrepl               {:mvn/version "0.28.3"}
-                           io.github.clojure/tools.build   {:git/tag "v0.8.1" :git/sha "7d40500"}
+                           io.github.clojure/tools.build   {:git/tag "v0.8.2" :git/sha "ba1a2bf"}
                            com.google.cloud.tools/jib-core {:mvn/version "0.21.0"}
-                           djblue/portal                   {:mvn/version "0.24.0"}
+                           djblue/portal                   {:mvn/version "0.25.0"}
                            clj-commons/pomegranate         {:mvn/version "1.2.1"}}}
   ;; clojure -M:outdated (--upgrade --download)
   :outdated {:extra-deps {com.github.liquidz/antq {:mvn/version "RELEASE"}}

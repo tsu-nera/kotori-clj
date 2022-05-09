@@ -93,9 +93,10 @@
   (d/->url cid))
 
 (defn get-dmm-product [cid floor]
-  (if (= floor "anime")
-    (product/get-anime {:cid cid :creds (creds)})
-    (product/get-videoa {:cid cid :creds (creds)})))
+  (cond
+    (= floor "anime")  (product/get-anime {:cid cid :creds (creds)})
+    (= floor "videoc") (product/get-videoc {:cid cid :creds (creds)})
+    :else              (product/get-videoa {:cid cid :creds (creds)})))
 #_(get-dmm-product "ssis00337")
 
 (defn get-dmm-campaign [title]
@@ -187,8 +188,8 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (comment
-  (def cid "ssis00210")
-  (def resp (get-dmm-product cid "videoa"))
+  (def cid "erk022")
+  (def resp (get-dmm-product cid "videoc"))
   (pprint resp)
   )
 
@@ -250,7 +251,7 @@
   )
 
 (comment
-  (def resp (scrape-descs "videoa" 10))
+  (def resp (scrape-descs "videoc" 10))
   (def descs (map :description resp))
   (def descs2 (map kotori/desc->trimed  descs))
   )

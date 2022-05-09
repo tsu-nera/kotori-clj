@@ -65,7 +65,7 @@
 
 (comment
   (def product (lib/get-videoc {:creds (creds)
-                                :cid   "smuc029"}))
+                                :cid   "erk022"}))
   (def product (lib/get-videoa {:creds (creds)
                                 :cid   "1kmhrs00044"}))
   )

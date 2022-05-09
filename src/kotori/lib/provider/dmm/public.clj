@@ -5,6 +5,7 @@
    [kotori.domain.dmm.core :as d]
    [kotori.lib.config :refer [user-agent]]
    [kotori.lib.provider.dmm.core :refer [request-bulk]]
+   [kotori.lib.provider.dmm.parser :as p]
    [net.cgrand.enlive-html :as html]))
 
 (def headers
@@ -72,6 +73,11 @@
       (str/replace #"<b>" "")
       (str/replace #"</b>" "")))
 
+(defn- remove-big-tag [text]
+  (-> text
+      (str/replace #"<big>" "")
+      (str/replace #"</big>" "")))
+
 (defn- remove-span-tag [text]
   (-> text
       (str/replace #"</span>" "")
@@ -82,16 +88,18 @@
 
 (defn- remove-br-tag [text]
   (-> text
-      (str/replace #"<br>" "")
-      (str/replace #"<br />" "")
-      (str/replace #" " "")))
+      (str/replace #"<br>" " ")
+      (str/replace #"<br />" " ")
+      ;; (str/replace #" " "")
+      ))
 
 ;; 文末に注意書きがあることがおおいのでtrimしておく.
 ;; 文中をtrimしないように処理の最後に呼ぶ.
-(defn- remove-last-asterisk [text]
-  (-> text
-      (str/split #"※")
-      first))
+;; 文中のアスタリスクがうまく裁けないので廃止.
+#_(defn- remove-last-asterisk [text]
+    (-> text
+        (str/split #"※")
+        first))
 
 (defn ->description [m]
   (let [raw (->raw-description m)]
@@ -99,11 +107,12 @@
         remove-fanza-headline
         cut-underline
         lines-two->one
+        remove-big-tag
         remove-bold-tag
         remove-span-tag
         remove-br-tag
         remove-aseq
-        remove-last-asterisk)))
+        p/->remove-hashtags)))
 
 (defn get-page [{:keys [cid floor] :or {floor (:videoa d/floor)}}]
   (let [url   (d/->url cid floor)
@@ -140,9 +149,20 @@
   (def cid "ipx00850")
   (def resp (get-page {:cid cid :floor "video"}))
 
-  (def data (get-page-data cid "videoc"))
+  (def data (get-page-data "erk022" "videoc"))
   (def description (->description data))
 
+  (def hastags (p/->hashtags description))
+
   (-> (->raw-description data)
-      (remove-bold-tag))
+      remove-fanza-headline
+      cut-underline
+      lines-two->one
+      remove-bold-tag
+      remove-big-tag
+      remove-span-tag
+      remove-br-tag
+      remove-aseq
+      p/->remove-hashtags
+      )
   )

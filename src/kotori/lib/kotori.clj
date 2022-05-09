@@ -1,12 +1,8 @@
 (ns kotori.lib.kotori
   (:require
    [clojure.string :as str]
-   [kotori.domain.config.ngword :refer [source]]))
-
-(defn- ->remove-x [x s]
-  (let [re (re-pattern x)]
-    (-> s
-        (str/replace re ""))))
+   [kotori.domain.config.ngword :refer [source]]
+   [kotori.lib.provider.dmm.parser :as p]))
 
 (defn desc->headline [text]
   (let [re (re-pattern "^＜(.+?)＞|^【(.+?)】")]
@@ -91,7 +87,7 @@
       name)))
 
 (defn- ->remove-annonymous [name]
-  ((partial ->remove-x "（仮名）") name))
+  ((partial p/->remove-x "（仮名）") name))
 
 (defn- ->remove-num [name]
   (-> name
@@ -109,32 +105,14 @@
       ->add-chan))
 
 (defn- ->remove-haishin [s]
-  ((partial ->remove-x "【配信限定特典映像付き】") s))
+  ((partial p/->remove-x "【配信限定特典映像付き】") s))
 
 (defn- ->remove-4k-headline [s]
-  ((partial ->remove-x "【圧倒的4K映像でヌク！】") s))
-
-(defn ->hashtags [s]
-  (let [re (re-pattern "[#|＃](.+?)[ |【]")]
-    (->> s
-         (re-seq re)
-         (map second)
-         (map str/trim)
-         (map #(str "＃" %)))))
-
-(defn- ->remove-hashtags
-  ([s]
-   (let [tags (->hashtags s)]
-     (->remove-hashtags s tags)))
-  ([s hashtags]
-   (let [ret (reduce (fn [s tag]
-                       ((partial ->remove-x tag) s)) s hashtags)]
-     (-> ret
-         (str/trim)))))
+  ((partial p/->remove-x "【圧倒的4K映像でヌク！】") s))
 
 (defn- title->trimed [title]
   (-> title
-      ->remove-hashtags
+      p/->remove-hashtags
       ->remove-haishin
       ->remove-4k-headline
       str/trim))
@@ -145,7 +123,7 @@
         title-raw (:title product)
         title     (-> title-raw ng->ok title->trimed)
         desc-raw  (:description product)
-        hashtags  (->hashtags title-raw)
+        hashtags  (p/->hashtags title-raw)
         desc      (-> desc-raw ng->ok desc->trimed)
         summary   (-> (:summary product) ng->ok)]
     {:cid             cid

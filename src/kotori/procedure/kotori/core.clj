@@ -178,5 +178,5 @@
   )
 
 (comment
-  (def resp (get-product {:db (db-prod) :cid "1stars00477"}))
+  (def resp (get-product {:db (db-prod) :cid "erk022"}))
   )

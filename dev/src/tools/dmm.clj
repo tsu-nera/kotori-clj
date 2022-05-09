@@ -1,15 +1,16 @@
 (ns tools.dmm
   (:require
+   [clojure.pprint :refer [pprint]]
    [clojure.string :as string]
    [devtools :refer [env kotori-info]]
    [firebase :refer [db-dev db-prod]]
    [integrant.repl.state :refer [config system]]
-   [kotori.domain.dmm.core :as model]
-   [kotori.domain.dmm.product :as product]
+   [kotori.domain.dmm.core :as d]
    [kotori.lib.firestore :as fs]
    [kotori.lib.io :as io]
+   [kotori.lib.kotori :as kotori]
    [kotori.lib.provider.dmm.api :as api]
-   [kotori.lib.provider.dmm.product :as lib]
+   [kotori.lib.provider.dmm.product :as product]
    [kotori.lib.provider.dmm.public :as public]
    [kotori.procedure.dmm.product :as dmm]
    [kotori.procedure.strategy.dmm :as st]
@@ -45,9 +46,6 @@
      "last_tweet_id"   tweet-id
      tweets-key        data}))
 
-(defn ->path [data]
-  (str product/coll-path "/" (:cid data)))
-
 (defn- update-with-recovery! [db path post]
   (let [params (select-keys post
                             ["cid"
@@ -65,6 +63,9 @@
       (doto db
         (fs/set! path params)
         (fs/update! path tweet)))))
+
+(defn- ->path [data]
+  (str "providers/dmm/products" (:cid data)))
 
 (defn assoc-post [db screen-name post]
   (->> post
@@ -89,16 +90,16 @@
     (io/dump-str! file-path (string/join "\n" cids))))
 
 (defn ->dmm-url [cid]
-  (model/->url cid))
+  (d/->url cid))
 
 (defn get-dmm-product [cid floor]
   (if (= floor "anime")
-    (lib/get-anime {:cid cid :creds (creds)})
-    (lib/get-videoa {:cid cid :creds (creds)})))
+    (product/get-anime {:cid cid :creds (creds)})
+    (product/get-videoa {:cid cid :creds (creds)})))
 #_(get-dmm-product "ssis00337")
 
 (defn get-dmm-campaign [title]
-  (lib/get-products {:limit 10 :keyword title :creds (creds)}))
+  (product/get-products {:limit 10 :keyword title :creds (creds)}))
 #_(get-dmm-campaign "新生活応援30％OFF第6弾")
 
 (defn crawl-product!
@@ -114,12 +115,6 @@
                   (map #(select-keys % [:cid :title :description]))
                   (filter #(:description %)))]
     (io/dump-csv-from-maps! csv-path maps)))
-
-(defn get-product
-  [{:keys [env] :as m :or {floor (:videoa api/floor)}}]
-  (let [creds (api/env->creds env)
-        q     (dissoc m :env)]
-    (-> (api/search-product creds q) first)))
 
 (defn get-floors []
   (-> (api/get-floors creds) :site))
@@ -182,9 +177,9 @@
 ;; 主に最新のdescを取得してちゃんとdescriptionをパースできているか
 ;; 確認するためのツール.
 (defn scrape-descs [floor limit]
-  (let [cids (->> (lib/get-products {:creds (creds)
-                                     :floor floor
-                                     :limit limit})
+  (let [cids (->> (product/get-products {:creds (creds)
+                                         :floor floor
+                                         :limit limit})
                   (map :content_id)
                   (into []))]
     (-> (public/get-page-bulk cids floor))))
@@ -192,9 +187,9 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (comment
-  (def cid "h_454dhil10279")
-  (def resp (get-dmm-product cid "anime"))
-  (prn resp)
+  (def cid "ssis00210")
+  (def resp (get-dmm-product cid "videoa"))
+  (pprint resp)
   )
 
 (comment
@@ -255,6 +250,7 @@
   )
 
 (comment
-  (def resp (scrape-descs "videoc" 10))
+  (def resp (scrape-descs "videoa" 10))
   (def descs (map :description resp))
+  (def descs2 (map kotori/desc->trimed  descs))
   )

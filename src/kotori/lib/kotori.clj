@@ -31,6 +31,18 @@
           (str/replace target ""))
       text)))
 
+(defn- ->last-char [s]
+  (subs s
+        (- (count s) 1)))
+
+(defn add-tententen [text]
+  (let [last-char (->last-char text)]
+    (cond
+      (= last-char "。") text
+      (= last-char "！") text
+      (= last-char "？") text
+      :else              (str text "..."))))
+
 (defn desc->sentences [text]
   (-> text
       (str/replace #"。。。" "。")
@@ -63,7 +75,8 @@
            trim-headline
            remove-bodysize
            desc->sentences
-           join-sentences)))
+           join-sentences
+           add-tententen)))
 
 (defn ng->ok [text]
   (when text
@@ -175,9 +188,9 @@
 
   (def desc3 "いつもテレビで観ていたあの女子アナがまさかの隣人…！？あざとカワイイ成田つむぎに誘惑されまくる僕！ずっとファンだった！こんなあざとカワイイ誘惑、我慢できるわけもなくて…隣の部屋に妻がいるのにどんどん大胆にエロくなっていくつむぎさんの誘惑にイチコロ。小悪魔淫語とあざとエロいテクで僕は何回も射精させられちゃう…お茶の間騒然の中出し不倫SEX！「あたし…こんなことバレたら番組降板になっちゃう（照）」。")
 
-  (def desc4 "いつもテレビで観ていたあの女子アナがまさかの隣人。あざとカワイイ成田つむぎに誘惑されまくる僕！ずっとファンだった！こんなあざとカワイイ誘惑、我慢できるわけもなくて…隣の部屋に妻がいるのにどんどん大胆にエロくなっていくつむぎさんの誘惑にイチコロ。小悪魔淫語とあざとエロいテクで僕は何回も射精させられちゃう…お茶の間騒然の中出し不倫SEX！「あたし…こんなことバレたら番組降板になっちゃう（照）」。")
-
   (def desc5 "T170cmB99cmW58cmH88cm圧倒的カラダを持つ新人グラビアアイドル‘山手梨愛’が遂に本当の絶頂を知る今作品！もともとウブだった彼女が恥じらいも他人の目もどうでもよくなるように禁欲、媚薬オイル、玩具ガン責め、人生で一番の激ピストンと快感の大洪水で理性決壊！！九州ナンバーワンの神ボディが性感帯バグを起こして「イグイグイッヂャウゥ～」。超ド級の美体アクメ姿は必見です！！")
+
+  (def desc6 "こんな子がAVに出演するとは思えない。清楚で知的な現役女子大生の気象予報士の卵‘白坂みあん’がAVデビュー！")
 
   (re-find (re-pattern "T(.+)cm") desc5)
 
@@ -185,7 +198,6 @@
 
   (desc->sentences desc5)
   (def ret (desc->trimed desc3))
-
   )
 
 (comment

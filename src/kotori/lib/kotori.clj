@@ -54,22 +54,6 @@
       (str/replace #"…！" "…！\n")
       (str/split-lines)))
 
-(defn- trunc
-  [s n]
-  (subs s 0 (min (count s) n)))
-
-(defn join-sentences [sentences & {:keys [length] :or {length 80}}]
-  (-> (if (= 1 (count sentences))
-        (trunc (first sentences) length)
-        (reduce (fn [desc sentence]
-                  (if (< length (+ (count desc) (count sentence)))
-                    (if (zero? (count desc))
-                      (trunc sentence length)
-                      desc)
-                    (str desc "\n\n" sentence)))
-                "" sentences))
-      str/trim))
-
 (defn desc->trimed
   [text]
   (and text
@@ -77,7 +61,7 @@
            trim-headline
            remove-bodysize
            desc->sentences
-           join-sentences
+           p/join-sentences
            ((partial remove-last-x "【")) ;; fsデータにゴミがはいったので
            add-tententen)))
 
@@ -146,6 +130,10 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(defn pp [s]
+  (println)
+  (println s))
+
 (comment
 
   (require '[firebase :refer [db-prod db-dev db]]
@@ -178,7 +166,7 @@
 
   (def desc6 "こんな子がAVに出演するとは思えない。清楚で知的な現役女子大生の気象予報士の卵‘白坂みあん’がAVデビュー！")
 
-  (def desc7 "学校のマドンナ的存在だった麻耶は同じ学校の晃司と結婚し、幸せな生活を送っていた。そんな中、同窓会の知らせが届き、二人が参加した。その同窓会は麻耶に憧れていた根暗な同級生たちが仕組んだ罠だった。睡眠薬を盛られて晃司が寝てしまい、残された麻耶は同級生たちに組み敷かれていく。麻耶は媚薬を盛られ、自ら挿入を懇願するスケベ女に成り果てる。その姿を動画に撮られ、強請られた麻耶は同級生たちの性奴●へと化して…。【")
+  (def desc7 "学校のマドンナ的存在だった麻耶は同じ学校の晃司と結婚し、幸せな生活を送っていた。そんな中、同窓会の知らせが届き、二人が参加した。その同窓会は麻耶に憧れていた根暗な同級生たちが仕組んだ罠だった。睡眠薬を盛られて晃司が寝てしまい、残された麻耶は同級生たちに組み敷かれていく。麻耶は媚薬を盛られ、自ら挿入を懇願するスケベ女に成り果てる。その姿を動画に撮られ、強請られた麻耶は同級生たちの性奴●へと化して…。")
 
   (re-find (re-pattern "T(.+)cm") desc5)
   (def ret (remove-last-x "【" desc7))
@@ -187,6 +175,8 @@
   (desc->sentences desc5)
 
   (def ret (desc->trimed desc7))
+
+  (p/test! (desc->trimed desc7) desc7)
   )
 
 (comment
@@ -205,7 +195,6 @@
   (def titles (map :title products))
 
   (def names (into [] (map title->name titles)))
-
 
   )
 

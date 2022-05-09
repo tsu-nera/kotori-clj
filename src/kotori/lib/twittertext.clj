@@ -1,4 +1,6 @@
 (ns kotori.lib.twittertext
+  " tweet-text-javaのClojure Wrapper.
+    ref. https://github.com/twitter/twitter-text/tree/master/java"
   (:import
    (com.twitter.twittertext
     TwitterTextParser)))
@@ -37,6 +39,5 @@
 
   (parse sample2)
   (get-length sample2)
-
   ;;
   )

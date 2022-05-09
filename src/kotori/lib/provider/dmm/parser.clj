@@ -2,7 +2,10 @@
   (:require
    [clojure.pprint :as pp]
    [clojure.string :as str]
-   [kotori.lib.twittertext :as tt]))
+   [kotori.lib.twittertext :as tt])
+  (:import
+   (java.text
+    BreakIterator)))
 
 (defn ->remove-x [x s]
   (let [re (re-pattern x)]
@@ -27,21 +30,33 @@
      (-> ret
          (str/trim)))))
 
-(defn- trunc
-  [s n]
-  (subs s 0 (min (count s) n)))
+(defn ->sentences [text]
+  (let [locale java.util.Locale/JAPAN
+        bit    (doto (BreakIterator/getSentenceInstance locale)
+                 (.setText text))]
+    (loop [start (.first bit)
+           end   (.next bit)
+           xs    []]
+      (if (= end BreakIterator/DONE)
+        xs
+        (recur end (.next bit)
+               (conj xs (subs text start end)))))))
 
-(defn join-sentences [sentences & {:keys [length] :or {length 80}}]
+(defn trunc [n s]
+  (str/trim (subs s 0 (min (count s) n))))
+
+(defn join-sentences [length sentences]
   (-> (if (= 1 (count sentences))
         (trunc (first sentences) length)
         (reduce (fn [desc sentence]
-                  (if (< length (+ (count desc) (count sentence)))
-                    (if (zero? (count desc))
-                      (trunc sentence length)
+                  (if (< length (+ (tt/count desc) (tt/count sentence)))
+                    (if (zero? (tt/count desc))
+                      sentence
                       desc)
                     (str desc "\n\n" sentence)))
-                "" sentences))
-      str/trim))
+                "" sentences))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defn check! [s]
   (let [test (tt/parse s)]
@@ -61,3 +76,5 @@
    (println "lenth:")
    (check! result)
    (println "---")))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;

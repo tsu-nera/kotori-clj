@@ -31,23 +31,35 @@
   (subs s
         (- (count s) 1)))
 
-(defn add-tententen [text]
-  (let [last-char (->last-char text)]
-    (cond
-      (= last-char "。") text
-      (= last-char "！") text
-      (= last-char "？") text
-      :else              (str text "..."))))
+(defn- drop-last-char [s]
+  (subs s 0 (- (count s) 1)))
 
 (defn remove-last-x [x s]
   (let [last-char (->last-char s)]
     (if (= last-char x)
-      (str/trim (subs s 0 (- (count s) 1)))
+      (str/trim (drop-last-char s))
       s)))
+
+(defn add-tententen [text]
+  (let [last-char (->last-char text)]
+    (cond
+      (= last-char "。") (str (drop-last-char text) "…")
+      (= last-char "！") text
+      (= last-char "？") text
+      :else              (str text "…"))))
+
+(defn- zenkaku->hankaku
+  "全角を半角に変換してツイート文字数を稼ぐ"
+  [s]
+  (-> s
+      (str/replace #"！" "!")
+      (str/replace #"？" "?")
+      (str/replace #"。" ".")
+      (str/replace #"、" ",")))
 
 (defn desc->sentences [text]
   (-> text
-      (str/replace #"。。。" "。")
+      (str/replace #"。。。" ".")
       (str/replace #"。" "。\n")
       (str/replace #"！！" "！！\n")
       (str/replace #"！？" "？\n")
@@ -55,15 +67,17 @@
       (str/split-lines)))
 
 (defn desc->trimed
-  [text]
+  [text  & {:keys [length] :or {length 100}}]
   (and text
        (-> text
            trim-headline
            remove-bodysize
+           ;; zenkaku->hankaku
            desc->sentences
-           p/join-sentences
+           ((partial p/join-sentences length))
+           ((partial p/trunc length))
            ((partial remove-last-x "【")) ;; fsデータにゴミがはいったので
-           add-tententen)))
+           )))
 
 (defn ng->ok [text]
   (when text
@@ -130,10 +144,6 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defn pp [s]
-  (println)
-  (println s))
-
 (comment
 
   (require '[firebase :refer [db-prod db-dev db]]
@@ -168,15 +178,12 @@
 
   (def desc7 "学校のマドンナ的存在だった麻耶は同じ学校の晃司と結婚し、幸せな生活を送っていた。そんな中、同窓会の知らせが届き、二人が参加した。その同窓会は麻耶に憧れていた根暗な同級生たちが仕組んだ罠だった。睡眠薬を盛られて晃司が寝てしまい、残された麻耶は同級生たちに組み敷かれていく。麻耶は媚薬を盛られ、自ら挿入を懇願するスケベ女に成り果てる。その姿を動画に撮られ、強請られた麻耶は同級生たちの性奴●へと化して…。")
 
-  (re-find (re-pattern "T(.+)cm") desc5)
-  (def ret (remove-last-x "【" desc7))
-
-  (remove-bodysize desc5)
   (desc->sentences desc5)
 
   (def ret (desc->trimed desc7))
 
-  (p/test! (desc->trimed desc7) desc7)
+  (p/test! (desc->trimed desc5) desc5)
+  (def ret (p/->sentences sample))
   )
 
 (comment

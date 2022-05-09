@@ -47,7 +47,7 @@
 
 (defn join-sentences [length sentences]
   (-> (if (= 1 (count sentences))
-        (trunc (first sentences) length)
+        (first sentences)
         (reduce (fn [desc sentence]
                   (if (< length (+ (tt/count desc) (tt/count sentence)))
                     (if (zero? (tt/count desc))

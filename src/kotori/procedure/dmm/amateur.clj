@@ -65,6 +65,7 @@
 (comment
   (require '[devtools :refer [env ->screen-name]]
            '[tools.dmm :refer [creds]]
+           '[kotori.lib.kotori :refer [->next]]
            '[firebase :refer [db-prod db-dev db]])
   )
 
@@ -95,6 +96,7 @@
   (def products
     (select-scheduled-products
      {:db          (db)
-      :limit       5
+      :limit       30
       :screen-name (->screen-name "0027")}))
+  #_(map :title (map ->next products))
   )

@@ -117,6 +117,21 @@
 (defn- ->remove-4k-headline [s]
   ((partial p/->remove-x "【圧倒的4K映像でヌク！】") s))
 
+(defn ->actress-names [product]
+  (map (fn [m] (get m "name")) (:actresses product)))
+
+(defn ->title-without-actress [product]
+  (->> product
+       ((juxt :title ->actress-names))
+       ((fn [[title names]]
+          (reduce (fn [title name]
+                    (let [re (re-pattern (str name "$"))]
+                      (str/replace title re "")))
+                  title names)))))
+
+(defn ->titles-without-actress [products]
+  (map ->title-without-actress products))
+
 (defn- title->trimed [title]
   (-> title
       p/remove-hashtags
@@ -126,13 +141,16 @@
 
 (defn ->next
   [product]
-  (let [cid       (:cid product)
-        title-raw (:title product)
-        title     (-> title-raw ng->ok title->trimed)
-        desc-raw  (:description product)
-        hashtags  (p/->hashtags title-raw)
-        desc      (-> desc-raw ng->ok desc->trimed)
-        summary   (-> (:summary product) ng->ok)]
+  (let [cid                   (:cid product)
+        title-raw             (:title product)
+        title-without-actress (->title-without-actress product)
+        title                 (-> title-without-actress
+                                  ng->ok
+                                  title->trimed)
+        desc-raw              (:description product)
+        hashtags              (p/->hashtags title-raw)
+        desc                  (-> desc-raw ng->ok desc->trimed)
+        summary               (-> (:summary product) ng->ok)]
     {:cid             cid
      :title           title
      :title-raw       title-raw
@@ -198,11 +216,19 @@
      :refer [select-scheduled-products]
      :rename {select-scheduled-products select-scheduled-videocs}])
 
-  (def screen-name (->screen-name "0009"))
+  (def screen-name (->screen-name "0001"))
   (def products
-    (select-scheduled-videocs {:db          (db-prod)
-                               :limit       300
-                               :screen-name screen-name}))
+    (into []
+          (select-scheduled-products {:db          (db-prod)
+                                      :limit       50
+                                      :screen-name screen-name})))
+
+  (->titles-without-actress products)
+
+  #_(defn products->actress-names [products]
+      (let [actresses (map :actresses products)]
+        (map (fn [xm]
+               (map (fn [m] (get m "name")) xm)) actresses)))
 
   (def titles (map :title products))
 
@@ -214,5 +240,5 @@
   (def title "【配信限定特典映像付き】朝ドラ系現役アイドルT○kT○ker 西元めいさ 初体験で初絶頂 ＃初イキ ＃初巨根 ＃初3P ＃キャパオーバー ＃快感 ＃くびれボディ ＃ビクッビク【圧倒的4K映像でヌク！】")
   (def title2 "【VR】シン・時間停止 ―女湯イタズラ大戦争VR―")
 
-  (title->trimed title2)
+  (title->trimed title)
   )

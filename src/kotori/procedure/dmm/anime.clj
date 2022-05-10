@@ -51,6 +51,7 @@
 (comment
   (require '[devtools :refer [->screen-name]]
            '[tools.dmm :refer [creds]]
+           '[kotori.lib.kotori :refer [->next]]
            '[firebase :refer [db-prod db-dev db]])
 
   (def product (lib/get-anime {:creds (creds)
@@ -74,4 +75,5 @@
            {:db          (db-prod)
             :limit       5
             :screen-name (->screen-name "0024")})))
+  (map ->next products)
   )

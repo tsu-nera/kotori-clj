@@ -31,7 +31,7 @@
 (defn- ->last-char [s]
   (let [n (count s)]
     (cond-> (str s)
-      (not (zero? n)) (subs 0 (- n 1)))))
+      (not (zero? n)) (subs (- n 1) n))))
 
 (defn- drop-last-char [s]
   (subs s 0 (- (count s) 1)))
@@ -45,7 +45,7 @@
 (defn add-tenten [text]
   (let [last-char (->last-char text)]
     (cond
-      (= last-char "。") (str (drop-last-char text) "…")
+      (= last-char "。") text
       (= last-char "！") text
       (= last-char "？") text
       :else              (str text "…"))))
@@ -200,6 +200,7 @@
 
   (def desc8 " ジュポジュポイラマで口内奉仕/ビンビン乳首をツネあげられて腰砕け昇天お漏らし/唾液ダラダラ垂らしながらデカチンズップシイキまくりSEX/チ○ポを咥えながら興奮してお漏らししちゃう変態デカ尻バニー/淫乱マ○コ突かれて絶叫イキ狂い大量潮吹きSEX/ビショビショお漏らししながらイキまくり/ムチムチ淫乱バニーが勃起チ○ポたっぷりご奉仕でザーメン抜きまくり/テカテカ肉感巨乳デカ尻バニーイキまくり中出しSEX")
 
+  (->last-char desc8)
   (desc->sentences sample)
 
   (def xs (p/->sentences sample))

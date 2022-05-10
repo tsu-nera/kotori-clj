@@ -30,7 +30,7 @@
 (defn- ->last-char [s]
   (let [n (count s)]
     (cond-> (str s)
-      (not (zero? n)) (subs s (- n 1)))))
+      (not (zero? n)) (subs 0 (- n 1)))))
 
 (defn- drop-last-char [s]
   (subs s 0 (- (count s) 1)))

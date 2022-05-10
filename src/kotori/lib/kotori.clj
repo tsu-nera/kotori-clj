@@ -2,8 +2,7 @@
   (:require
    [clojure.string :as str]
    [kotori.domain.config.ngword :refer [source]]
-   [kotori.lib.provider.dmm.parser :as p]
-   [kotori.lib.twittertext :as tt]))
+   [kotori.lib.provider.dmm.parser :as p]))
 
 (defn desc->headline [text]
   (let [re (re-pattern "^＜(.+?)＞|^【(.+?)】")]
@@ -45,7 +44,7 @@
 (defn add-tenten [text]
   (let [last-char (->last-char text)]
     (cond
-      (= last-char "。") text
+      (= last-char "。") (str (drop-last-char text) "…")
       (= last-char "！") text
       (= last-char "？") text
       :else              (str text "…"))))
@@ -200,7 +199,7 @@
 
   (def desc8 " ジュポジュポイラマで口内奉仕/ビンビン乳首をツネあげられて腰砕け昇天お漏らし/唾液ダラダラ垂らしながらデカチンズップシイキまくりSEX/チ○ポを咥えながら興奮してお漏らししちゃう変態デカ尻バニー/淫乱マ○コ突かれて絶叫イキ狂い大量潮吹きSEX/ビショビショお漏らししながらイキまくり/ムチムチ淫乱バニーが勃起チ○ポたっぷりご奉仕でザーメン抜きまくり/テカテカ肉感巨乳デカ尻バニーイキまくり中出しSEX")
 
-  (->last-char desc8)
+  (drop-last-char desc8)
   (desc->sentences sample)
 
   (def xs (p/->sentences sample))

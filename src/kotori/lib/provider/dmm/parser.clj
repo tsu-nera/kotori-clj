@@ -27,8 +27,7 @@
   ([s hashtags]
    (let [ret (reduce (fn [s tag]
                        ((partial ->remove-x tag) s)) s hashtags)]
-     (-> ret
-         (str/trim)))))
+     (str/trim ret))))
 
 (defn ->sentences [text]
   (let [locale java.util.Locale/JAPAN
@@ -43,18 +42,36 @@
                (conj xs (subs text start end)))))))
 
 (defn trunc [n s]
-  (str/trim (subs s 0 (min (count s) n))))
+  (subs s 0 (min (count s) n)))
 
-(defn join-sentences [length sentences]
-  (-> (if (= 1 (count sentences))
-        (first sentences)
-        (reduce (fn [desc sentence]
-                  (if (< length (+ (tt/count desc) (tt/count sentence)))
-                    (if (zero? (tt/count desc))
-                      sentence
-                      desc)
-                    (str desc "\n\n" sentence)))
-                "" sentences))))
+(defn- join [length xs]
+  (let [s-first (first xs)
+        s-rest  (rest xs)]
+    (reduce (fn [acc s]
+              (let [s-cat (str acc "\n\n" s)]
+                (if (< length (tt/count s-cat))
+                  acc
+                  s-cat)))
+            s-first s-rest)))
+
+(defn generate-comb [xs]
+  (let [size (count xs)]
+    (cond->>
+     (partition (- size 1) 1 xs)
+      (> size 3) (concat (partition (- size 2) 1 xs)))))
+
+(defn join-sentences [length xs]
+  (let [s-all (str/join "\n\n" xs)
+        size  (count xs)]
+    (cond
+      (= 1 size)                  (trunc length (first xs))
+      (> length (tt/count s-all)) s-all
+      :else
+      (->> xs
+           (take 6)
+           generate-comb
+           (map (partial join length))
+           (apply max-key count)))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 

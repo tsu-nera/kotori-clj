@@ -37,7 +37,7 @@
   [{:keys [db cid] :as m} coll-path]
   (let [page (public/get-page m)
         ts   (time/fs-now)
-        data (product/api->data page)
+        data (json/->json page)
         path (fs/doc-path coll-path cid)]
     (fs/set! db path data)
     (fs/set! db path {:last-scraped-time ts})

@@ -29,9 +29,9 @@
 (defn ->url
   ([cid]
    (->url cid (:videoa floor)))
-  ([cid floor]
+  ([cid floor-str]
    (str "https://www.dmm.co.jp/digital/"
-        floor "/-/detail/=/cid=" cid "/")))
+        floor-str "/-/detail/=/cid=" cid "/")))
 
 (defn genres->name-id-map [genres]
   (into {} (map (juxt :name :genre_id) genres)))

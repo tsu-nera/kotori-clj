@@ -29,6 +29,28 @@
                        ((partial ->remove-x tag) s)) s hashtags)]
      (str/trim ret))))
 
+(defn join-until [xs limit]
+  (let [first-s (first xs)
+        rest-xs (rest xs)]
+    (loop [s   (first rest-xs)
+           xs  (rest rest-xs)
+           acc first-s]
+      (let [s-cat (str acc "、"  s)]
+        (if (< limit (count s-cat))
+          acc
+          (recur (first xs) (rest xs) s-cat))))))
+
+(defn split-long-sentence [s]
+  (let [limit  60
+        length (count s)]
+    (if (< length limit)
+      s
+      (let [sep     "、"
+            re      (re-pattern sep)
+            xs      (str/split s re)
+            first-s (str (join-until xs limit) sep)]
+        [first-s (str/replace s first-s "")]))))
+
 (defn ->sentences [text]
   (let [locale java.util.Locale/JAPAN
         bit    (doto (BreakIterator/getSentenceInstance locale)

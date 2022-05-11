@@ -4,7 +4,7 @@
    [kotori.lib.io :as io]))
 
 (def doc-path "configs/ngword")
-(def file-path "private/ngword.edn")
+(def file-path "ngword.edn")
 
 (def source (io/load-edn file-path))
 

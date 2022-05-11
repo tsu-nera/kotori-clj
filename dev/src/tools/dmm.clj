@@ -1,5 +1,6 @@
 (ns tools.dmm
   (:require
+   [clojure.java.browse :as b]
    [clojure.pprint :refer [pprint]]
    [clojure.string :as string]
    [devtools :refer [env kotori-info]]
@@ -92,7 +93,9 @@
 (defn ->dmm-url [cid]
   (d/->url cid))
 
-(defn get-dmm-product [cid floor]
+(defn get-dmm-product
+  "DMM APIから取得"
+  [cid floor]
   (cond
     (= floor "anime")  (product/get-anime {:cid cid :creds (creds)})
     (= floor "videoc") (product/get-videoc {:cid cid :creds (creds)})
@@ -175,8 +178,8 @@
     (download-genres! key)))
 #_(download-all-genres!)
 
-;; 主に最新のdescを取得してちゃんとdescriptionをパースできているか
-;; 確認するためのツール.
+;; 主に最新のdescをAPI経由で取得して
+;; ちゃんとdescriptionをパースできているか確認するためのツール.
 (defn scrape-descs [floor limit]
   (let [cids (->> (product/get-products {:creds (creds)
                                          :floor floor
@@ -184,6 +187,18 @@
                   (map :content_id)
                   (into []))]
     (-> (public/get-page-bulk cids floor))))
+
+(defn ->videoa-url [cid]
+  (d/->url cid "videoa"))
+
+(defn ->videoc-url [cid]
+  (d/->url cid "videoc"))
+
+(defn ->anime-url [cid]
+  (d/->url cid "anime"))
+
+(defn open-dmm-url [cid floor-str]
+  (b/browse-url (d/->url cid floor-str)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 

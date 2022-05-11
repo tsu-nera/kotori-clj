@@ -14,7 +14,8 @@
    [kotori.core :as core]
    [kotori.lib.net :refer [get-global-ip]]
    [kotori.service.firebase :refer [get-app get-db delete-app!]]
-   [portal.api :as p]))
+   [portal.api :as p]
+   [tools.dmm :refer [open-dmm-url]]))
 
 (def env-dev "private/dev/env.edn")
 (def env-prod "private/prod/env.edn")

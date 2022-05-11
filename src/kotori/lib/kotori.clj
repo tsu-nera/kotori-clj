@@ -45,9 +45,17 @@
   (let [last-char (->last-char text)]
     (cond
       (= last-char "。") (str (drop-last-char text) "…")
+      (= last-char "、") (str (drop-last-char text) "…")
       (= last-char "！") text
       (= last-char "？") text
       :else              (str text "…"))))
+
+(defn add-newline [s]
+  (let [last-char (->last-char s)]
+    (cond
+      (not (= last-char "、")) (str/replace s #"、" "、\n")
+      (not (= last-char "…"))  (str/replace s #"…" "…\n")
+      :else                    s)))
 
 (defn- normalize
   "全角を半角に変換してツイート文字数を稼ぐ"
@@ -57,6 +65,13 @@
       (str/replace #"？" "?")
       (str/replace #"。" ".")
       (str/replace #"、" ", ")))
+
+(defn- ->emoji [s]
+  (-> s
+      (str/replace #"!!" "‼")
+      (str/replace #"!\?" "⁉")
+      (str/replace #"!" "❗")
+      (str/replace #"\?" "❓")))
 
 (defn desc->sentences [text]
   (-> text
@@ -78,9 +93,11 @@
             flatten
             (map str/trim)
             ((partial p/join-sentences length))
-            ((partial remove-last-x "【")) ;; fsデータにゴミがはいったので
+            ;; ((partial remove-last-x "【")) ;; fsデータにゴミがはいったので
             add-tenten
-            normalize)))
+            ;; add-newline  うまく出来ないので保留...
+            normalize
+            ->emoji)))
 
 (defn ng->ok [text]
   (when text
@@ -202,11 +219,27 @@
   (def desc8 " ジュポジュポイラマで口内奉仕/ビンビン乳首をツネあげられて腰砕け昇天お漏らし/唾液ダラダラ垂らしながらデカチンズップシイキまくりSEX/チ○ポを咥えながら興奮してお漏らししちゃう変態デカ尻バニー/淫乱マ○コ突かれて絶叫イキ狂い大量潮吹きSEX/ビショビショお漏らししながらイキまくり/ムチムチ淫乱バニーが勃起チ○ポたっぷりご奉仕でザーメン抜きまくり/テカテカ肉感巨乳デカ尻バニーイキまくり中出しSEX")
 
   (drop-last-char desc8)
-  (desc->sentences sample)
+  #_(desc->sentences desc3)
+  (def ret (p/->sentences desc3))
+  (def ret (p/split-long-sentence ret))
 
-  (def ret (desc->trimed sample))
+  (def ret (desc->trimed desc3))
+  (p/test! (desc->trimed desc6) desc6)
+  )
 
-  (p/test! (desc->trimed desc8) desc8)
+(comment
+  (def target "いつもテレビで観ていたあの女子アナがまさかの隣人…！？あざとカワイイ成田つむぎに誘惑されまくる僕！ずっとファンだった！こんなあざとカワイイ誘惑、我慢できるわけもなくて…隣の部屋に妻がいるのにどんどん大胆にエロくなっていくつむぎさんの誘惑にイチコロ。小悪魔淫語とあざとエロいテクで僕は何回も射精させられちゃう…お茶の間騒然の中出し不倫SEX！「あたし…こんなことバレたら番組降板になっちゃう（照）」。")
+  (def xs (p/->sentences target))
+
+  (def xs2 (flatten (map p/split-long-sentence xs)))
+
+  (take 6 xs2)
+
+  (p/join-sentences 100 xs2)
+
+  (def combs (p/generate-comb (take 6 xs2)))
+
+  (apply max-key count (map (partial p/join 100) combs))
   )
 
 (comment
@@ -214,7 +247,7 @@
   (def xs (p/->sentences desc9))
 
   (def long-sentence "今回のお友達は夏より冬が好き＆寝るのも好き、一生おふざけができる人が好き、アイスも大好きな大きいオッパイで肩がこる大学生のうめちゃんは高2で初体験を経験しこれまで10～20人と経験したそうで好みのチ○ポのタイプは長くて、太くて、固いのが好きなんだって。")
-  (def ret (split-long-sentence long-sentence 60))
+  (def ret (p/split-long-sentence desc3))
 
   (def ret (desc->trimed desc9))
   )

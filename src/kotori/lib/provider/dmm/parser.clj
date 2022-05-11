@@ -66,15 +66,19 @@
 (defn trunc [n s]
   (subs s 0 (min (count s) n)))
 
-(defn- join [length xs]
-  (let [s-first (first xs)
-        s-rest  (rest xs)]
-    (reduce (fn [acc s]
-              (let [s-cat (str acc "\n\n" s)]
-                (if (< length (tt/count s-cat))
-                  acc
-                  s-cat)))
-            s-first s-rest)))
+(defn join [length xs]
+  (let [s-cat (str/join "\n\n" xs)]
+    (if (> length (tt/count s-cat))
+      s-cat
+      (let [s-first (first xs)
+            s-rest  (rest xs)]
+        (loop [acc s-first
+               s   (first s-rest)
+               xs  (rest s-rest)]
+          (let [s-cat (str acc "\n\n" s)]
+            (if (< length (tt/count s-cat))
+              acc
+              (recur s-cat (first xs) (rest xs)))))))))
 
 (defn generate-comb [xs]
   (let [size (count xs)]

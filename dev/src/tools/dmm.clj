@@ -197,7 +197,7 @@
 (defn ->anime-url [cid]
   (d/->url cid "anime"))
 
-(defn open-dmm-url
+(defn open-dmm
   ([cid]
    (b/browse-url (d/->url cid "videoa")))
   ([cid floor]

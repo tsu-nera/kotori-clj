@@ -33,12 +33,6 @@
       first
       str/trim))
 
-(defn- desc->aseq [text]
-  (let [re (re-pattern "<a(.+?)a>")]
-    (->> text
-         (re-seq re)
-         (map first))))
-
 ;; 一応実際の - の数よりも少なくしておく
 (defn- cut-underline [text]
   (let [re-line #"-------------------------------------"]
@@ -58,28 +52,8 @@
     (str/replace text #"【FANZA\(ファンザ\)】" "")
     text))
 
-(defn- lines-two->one [text]
-  (str/replace text #"<br> <br>" "<br>"))
-
-(defn- ->tag-sentences-pair [text tag]
-  (let [re (re-pattern
-            (str "<" tag ">(.+?)</" tag ">"))]
-    (re-seq re text)))
-
-(defn- remove-html-tag [tag text]
-  (let [tags-pair (->tag-sentences-pair text tag)]
-    (reduce (fn [text pair]
-              (-> text
-                  (str/replace
-                   (first pair)
-                   (second pair)))) text tags-pair)))
-
 ;; 自分でゴニョゴニョするのを諦めた.
 ;; https://stackoverflow.com/questions/3607965/how-to-convert-html-text-to-plain-text
-(defn- remove-html-tags [text]
-  (let [re (re-pattern "(?s)<[^>]*>(\\s*<[^>]*>)*")]
-    (str/replace text re "")))
-
 (defn html->plain-text [html]
   (let [re (re-pattern "(?s)<[^>]*>(\\s*<[^>]*>)*")]
     (str/replace html re "")))
@@ -87,11 +61,9 @@
 (defn ->description [m]
   (let [raw (->raw-description m)]
     (-> raw
-        remove-fanza-headline
-        cut-underline
-        lines-two->one
         html->plain-text
-        p/remove-hashtags)))
+        remove-fanza-headline
+        cut-underline)))
 
 (defn get-page [{:keys [cid floor] :or {floor (:videoa d/floor)}}]
   (let [url   (d/->url cid floor)
@@ -109,6 +81,29 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (comment
+  ;; 一応苦労して書いたから残しておくか...
+  (defn- desc->aseq [text]
+    (let [re (re-pattern "<a(.+?)a>")]
+      (->> text
+           (re-seq re)
+           (map first))))
+
+  (defn- ->tag-sentences-pair [text tag]
+    (let [re (re-pattern
+              (str "<" tag ">(.+?)</" tag ">"))]
+      (re-seq re text)))
+
+  (defn- remove-html-tag [tag text]
+    (let [tags-pair (->tag-sentences-pair text tag)]
+      (reduce (fn [text pair]
+                (-> text
+                    (str/replace
+                     (first pair)
+                     (second pair)))) text tags-pair)))
+  )
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(comment
   (def cid "h_1558csdx00007")
   (def url (d/->url cid "videoa"))
   (def data (get-page-data cid "videoa"))
@@ -125,7 +120,7 @@
         ))
   content
 
-  (def cid "pak001")
+  (def cid "pow072")
   (def resp (get-page {:cid cid :floor "videoc"}))
 
   (def data (get-page-data cid "videoc"))
@@ -137,8 +132,6 @@
   (-> (->raw-description data)
       remove-fanza-headline
       cut-underline
-      lines-two->one
-      remove-html-tags
       p/remove-hashtags
       )
   )

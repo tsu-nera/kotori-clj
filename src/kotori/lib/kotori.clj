@@ -2,6 +2,7 @@
   (:require
    [clojure.string :as str]
    [kotori.domain.config.ngword :refer [source]]
+   [kotori.lib.provider.dmm.editor :as ed]
    [kotori.lib.provider.dmm.parser :as p]
    [kotori.lib.twittertext :as tt]))
 
@@ -87,6 +88,8 @@
   [text  & {:keys [length] :or {length 100}}]
   (and text
        (->> text
+            ed/remove-hashtags
+            ed/videoc-desc->remove-stopwords
             trim-headline
             remove-bodysize
             p/->sentences
@@ -113,9 +116,6 @@
       (str name "ちゃん")
       name)))
 
-(defn- ->remove-annonymous [name]
-  ((partial p/->remove-x "（仮名）") name))
-
 (defn- ->remove-num [name]
   (-> name
       (str/replace #" 3| 2" "")))
@@ -126,16 +126,15 @@
 (defn videoc-title->name [title]
   (-> title
       ->remove-num
-      ->remove-annonymous
+      (ed/videoc-title->remove-stopwords)
       ->swap-local-wife
-      (str/replace #"天才" "")
       ->add-chan))
 
 (defn- ->remove-haishin [s]
-  ((partial p/->remove-x "【配信限定特典映像付き】") s))
+  ((partial ed/->remove-x "【配信限定特典映像付き】") s))
 
 (defn- ->remove-4k-headline [s]
-  ((partial p/->remove-x "【圧倒的4K映像でヌク！】") s))
+  ((partial ed/->remove-x "【圧倒的4K映像でヌク！】") s))
 
 (defn ->actress-names [product]
   (map (fn [m] (get m "name")) (:actresses product)))
@@ -154,7 +153,7 @@
 
 (defn title->trimed [title]
   (-> title
-      p/remove-hashtags
+      ed/remove-hashtags
       ->remove-haishin
       ->remove-4k-headline
       str/trim))
@@ -245,7 +244,7 @@
   )
 
 (comment
-  (def desc9 "素人娘と遊んでパコってHな友達も紹介してもらう企画。今回のお友達は夏より冬が好き＆寝るのも好き、一生おふざけができる人が好き、アイスも大好きな大きいオッパイで肩がこる大学生のうめちゃんは高2で初体験を経験しこれまで10～20人と経験したそうで好みのチ○ポのタイプは長くて、太くて、固いのが好きなんだって。そんなうめちゃんと観覧車に乗り濃密なDキス、大きな胸を揉まれるとうめちゃんは興奮し、固くなったチンチンをいじってくれました。いやらしい娘。ホテルに着くと早速舌を絡ませながらDキス、爆乳を揉み乳首をいじるといやらしい目をしたうめちゃんは男の乳首をベロベロ舐めるとめをうっとりさせながら「舐めたい、早く見せて～」とチ○ポを手でくすぐり勃起させたら「合格！パンパンなんだけどどこが気持ちぃ」と玉からやさしく舐め、竿を頬張るとあまりに気持ちいいので「でちゃう」と言うと「ダメ～」と言われちゃいました。うめちゃんの色気に興奮して巨尻をこすったり、爆乳に顔をうずめたり、パイズリもしてもらったので今度はうめっぷちゃんのマ○コを愛撫すると「あ～あ～イャ～まって～もう～」と声を出すうめちゃんは指マン感じて「いれて～～」懇願されたので膣奥に激ピストンすると「気持ちぃ～、もっとして～、きもちぃ～もっとしたい～いれて～」と巨尻に向けて挿入すると「これだめこれだめぃ～やばい～」と声を出し騎乗位で縦横無尽に腰を動かし、さらに激ピストンすると「これ好き気持ちぃ、イク～」と爆乳にブっかけました。うめちゃんは「まだする？」とモチベーション全開なので男友達を呼ぶとうめっぷちゃんは乳首を丁寧に舐め大好きなチ○ポを2本同時にをジュルジュル舐めるうめちゃんの濡れマンをチ○ポでこすられると「欲しい、ほしい、我慢出来ない」と言うので膣奥に挿れると「ダメ、ゾクゾクしちゃう、気持ちぃ～イクッ～」と大きなあえぎ声あげ「イッちゃう、イッちゃう」と爆乳を揺らしながら激ビストンされ悶絶するうめちゃんのおっぱいをアメリカンクラッカーのように弾かせます。「気持ちぃ、これやばい、それイクッ～」とエロい言葉を羅列しながら「いっぱい出して、かけて～」と右胸、左胸、谷間にザー汁を発射しました。Hカップの爆乳イキまくりJDはとってもいやらしい目線で誘惑してくるドスケベ娘はばちかわ友達を紹介してくれました。次回をお楽しみに！！")  q
+  (def desc9 "素人娘と遊んでパコってHな友達も紹介してもらう企画。今回のお友達は夏より冬が好き＆寝るのも好き、一生おふざけができる人が好き、アイスも大好きな大きいオッパイで肩がこる大学生のうめちゃんは高2で初体験を経験しこれまで10～20人と経験したそうで好みのチ○ポのタイプは長くて、太くて、固いのが好きなんだって。そんなうめちゃんと観覧車に乗り濃密なDキス、大きな胸を揉まれるとうめちゃんは興奮し、固くなったチンチンをいじってくれました。いやらしい娘。ホテルに着くと早速舌を絡ませながらDキス、爆乳を揉み乳首をいじるといやらしい目をしたうめちゃんは男の乳首をベロベロ舐めるとめをうっとりさせながら「舐めたい、早く見せて～」とチ○ポを手でくすぐり勃起させたら「合格！パンパンなんだけどどこが気持ちぃ」と玉からやさしく舐め、竿を頬張るとあまりに気持ちいいので「でちゃう」と言うと「ダメ～」と言われちゃいました。うめちゃんの色気に興奮して巨尻をこすったり、爆乳に顔をうずめたり、パイズリもしてもらったので今度はうめっぷちゃんのマ○コを愛撫すると「あ～あ～イャ～まって～もう～」と声を出すうめちゃんは指マン感じて「いれて～～」懇願されたので膣奥に激ピストンすると「気持ちぃ～、もっとして～、きもちぃ～もっとしたい～いれて～」と巨尻に向けて挿入すると「これだめこれだめぃ～やばい～」と声を出し騎乗位で縦横無尽に腰を動かし、さらに激ピストンすると「これ好き気持ちぃ、イク～」と爆乳にブっかけました。うめちゃんは「まだする？」とモチベーション全開なので男友達を呼ぶとうめっぷちゃんは乳首を丁寧に舐め大好きなチ○ポを2本同時にをジュルジュル舐めるうめちゃんの濡れマンをチ○ポでこすられると「欲しい、ほしい、我慢出来ない」と言うので膣奥に挿れると「ダメ、ゾクゾクしちゃう、気持ちぃ～イクッ～」と大きなあえぎ声あげ「イッちゃう、イッちゃう」と爆乳を揺らしながら激ビストンされ悶絶するうめちゃんのおっぱいをアメリカンクラッカーのように弾かせます。「気持ちぃ、これやばい、それイクッ～」とエロい言葉を羅列しながら「いっぱい出して、かけて～」と右胸、左胸、谷間にザー汁を発射しました。Hカップの爆乳イキまくりJDはとってもいやらしい目線で誘惑してくるドスケベ娘はばちかわ友達を紹介してくれました。次回をお楽しみに！！")
   (def xs (p/->sentences desc9))
 
   (def long-sentence "今回のお友達は夏より冬が好き＆寝るのも好き、一生おふざけができる人が好き、アイスも大好きな大きいオッパイで肩がこる大学生のうめちゃんは高2で初体験を経験しこれまで10～20人と経験したそうで好みのチ○ポのタイプは長くて、太くて、固いのが好きなんだって。")
@@ -258,7 +257,7 @@
   (require '[kotori.lib.provider.dmm.public :refer [get-page]])
   (require '[kotori.lib.kotori :as lib])
 
-  (def cid "tkk005")
+  (def cid "pow072")
   (def page (get-page {:cid cid :floor "videoc"}))
   (def desc (:description page))
 
@@ -274,12 +273,12 @@
      :refer [select-scheduled-products]
      :rename {select-scheduled-products select-scheduled-videocs}])
 
-  (def screen-name (->screen-name "0001"))
+  (def screen-name (->screen-name "0027"))
   (def products
     (into []
-          (select-scheduled-products {:db          (db-prod)
-                                      :limit       50
-                                      :screen-name screen-name})))
+          (select-scheduled-videocs {:db          (db-prod)
+                                     :limit       200
+                                     :screen-name screen-name})))
 
   #_(defn products->actress-names [products]
       (let [actresses (map :actresses products)]
@@ -288,7 +287,7 @@
 
   (def titles (map :title products))
 
-  (def names (into [] (map title->name titles)))
+  (def names (into [] (map videoc-title->name titles)))
 
   )
 

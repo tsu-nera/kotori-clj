@@ -41,7 +41,11 @@
   ([s]
    (let [words (p/->hashtags s)
          tags  (words->hashtags words)]
-     (remove-hashtags s tags)))
+     (-> s
+         (remove-hashtags tags)
+         ;; HTML parseでスペースが消える問題の回避のために
+         ;; 意図的にparseのときに挿入したスペースをここで除去
+         (str/replace #" " ""))))
   ([s hashtags]
    (->remove-xs s hashtags)))
 

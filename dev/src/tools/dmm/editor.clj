@@ -6,22 +6,30 @@
    [kotori.lib.kotori :as lib]
    [kotori.lib.provider.dmm.editor :as ed]
    [kotori.lib.provider.dmm.parser :as p]
+   [kotori.lib.provider.dmm.public :as public]
    [kotori.procedure.dmm.amateur
     :refer [select-scheduled-products]
     :rename {select-scheduled-products select-scheduled-videocs}]
    [kotori.procedure.strategy.dmm
     :refer [select-scheduled-products]]))
 
+(defn get-desc-from-site [cid floor]
+  (:description (public/get-page {:cid cid :floor floor})))
+
+(defn get-desc-raw [cid floor]
+  (public/->raw-description
+   (public/get-page-data cid floor)))
+
 (comment
   (def screen-name (->screen-name "0001"))
 
   (def products
     (into []
-          (select-scheduled-products {:db          (db-dev)
-                                      :limit       50
+          (select-scheduled-products {:db          (db-prod)
+                                      :limit       30
                                       :screen-name screen-name})))
 
-  (def product (nth products 1))
+  (def product (nth products 12))
   (def title (:title product))
   (def desc (:description product))
   (def names (lib/->actress-names product))
@@ -41,8 +49,16 @@
   (def next-descs (map lib/desc-raw->next products))
   #_(def nexts (map lib/->next products))
   )
-#_(defn products->actress-names [products]
-(let [actresses (map :actresses products)]
-  (map (fn [xm]
-         (map (fn [m] (get m "name")) xm)) actresses)))
-#_(def names (into [] (map videoc-title->name titles)))
+
+(comment
+  (def screen-name (->screen-name "0027"))
+
+  (def cid "yaho034")
+  (def desc (get-desc-from-site cid "videoc"))
+  (def raw (get-desc-raw cid "videoc"))
+  (public/html->plain-text raw)
+
+  (def tags (p/->hashtags desc))
+  (def ret (ed/remove-hashtags desc))
+  (def next-desc (lib/desc-raw->next desc []))
+  )

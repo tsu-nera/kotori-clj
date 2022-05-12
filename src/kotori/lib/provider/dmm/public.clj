@@ -58,10 +58,16 @@
   (let [re (re-pattern "(?s)<[^>]*>(\\s*<[^>]*>)*")]
     (str/replace html re "")))
 
+(defn replace-sharp [html]
+  (let [re (re-pattern "＃")]
+    (-> html
+        (str/replace re " ＃"))))
+
 (defn ->description [m]
   (let [raw (->raw-description m)]
     (-> raw
         html->plain-text
+        replace-sharp
         remove-fanza-headline
         cut-underline)))
 

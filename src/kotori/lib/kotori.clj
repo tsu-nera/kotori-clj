@@ -137,12 +137,7 @@
   ((partial ed/->remove-x "【圧倒的4K映像でヌク！】") s))
 
 (defn ->actress-names [product]
-  (map (fn [m] (get m "name")) (:actresses product)))
-
-(defn ->title-without-actress [product]
-  (let [title (:title product)
-        names (->actress-names product)]
-    (ed/title->without-actress title names)))
+  (into [] (map (fn [m] (get m "name")) (:actresses product))))
 
 (defn title->trimed [title]
   (-> title
@@ -151,18 +146,41 @@
       ->remove-4k-headline
       str/trim))
 
+(defn sparkle-actress [names text]
+  (let [xs #p (map ed/drop-old-name names)]
+    (reduce (fn [text name]
+
+              #p (ed/->sparkle-actress text name))
+            text xs)))
+
+(defn title-raw->next [raw names]
+  (-> raw
+      ((partial ed/title->without-actress names))
+      ng->ok
+      title->trimed))
+
+(defn desc-raw->next
+  (;; for debug
+   [product]
+   (let [desc  (:description product)
+         names (->actress-names product)]
+     (desc-raw->next desc names)))
+  ([raw actress-names]
+   (-> raw
+       ng->ok
+       ((partial sparkle-actress actress-names))
+       desc->trimed)))
+
 (defn ->next
   [product]
-  (let [cid                   (:cid product)
-        title-raw             (:title product)
-        title-without-actress (->title-without-actress product)
-        title                 (-> title-without-actress
-                                  ng->ok
-                                  title->trimed)
-        desc-raw              (:description product)
-        hashtags              (p/->hashtags title-raw)
-        desc                  (-> desc-raw ng->ok desc->trimed)
-        summary               (-> (:summary product) ng->ok)]
+  (let [cid       (:cid product)
+        title-raw (:title product)
+        names     (->actress-names product)
+        title     (title-raw->next title-raw names)
+        desc-raw  (:description product)
+        hashtags  (p/->hashtags title-raw)
+        desc      (desc-raw->next desc-raw names)
+        summary   (-> (:summary product) ng->ok)]
     {:cid             cid
      :title           title
      :title-raw       title-raw
@@ -170,6 +188,7 @@
      :description-raw desc-raw
      :summary         summary
      :hashtags        hashtags
+     :actress-names   names
      ;; :headline    (desc->headline desc)
      ;; :dialogue    (desc->dialogue desc)
      }))

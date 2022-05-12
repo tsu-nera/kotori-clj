@@ -12,26 +12,35 @@
    [kotori.procedure.strategy.dmm
     :refer [select-scheduled-products]]))
 
-(def screen-name (->screen-name "0001"))
-(def products
-  (into []
-        (select-scheduled-products {:db          (db-prod)
-                                    :limit       20
-                                    :screen-name screen-name})))
+(comment
+  (def screen-name (->screen-name "0001"))
 
-(def product (nth products 17))
-(def title (:title product))
-(def names (lib/->actress-names product))
-(def ret
-  (->> (first names)
-       ed/split-actress-name
-       flatten
-       reverse))
-(def titles-no-actress (ed/title->without-actress title names))
+  (def products
+    (into []
+          (select-scheduled-products {:db          (db-dev)
+                                      :limit       50
+                                      :screen-name screen-name})))
 
-(def titles (map :title products))
-(def titles-no-actresses (map lib/->title-without-actress products))
+  (def product (nth products 1))
+  (def title (:title product))
+  (def desc (:description product))
+  (def names (lib/->actress-names product))
+  (def titles-no-actress (ed/title->without-actress names title))
 
+  #_(ed/->sparkle-actress desc (first names))
+
+  (def next-title (lib/title-raw->next title names))
+  (def next-desc (lib/desc-raw->next desc names))
+  (def next (lib/->next product))
+
+  (def titles (map :title products))
+  (def titles-no-actresses (map lib/->title-without-actress products))
+
+  (def names-list (map lib/->actress-names products))
+
+  (def next-descs (map lib/desc-raw->next products))
+  #_(def nexts (map lib/->next products))
+  )
 #_(defn products->actress-names [products]
 (let [actresses (map :actresses products)]
   (map (fn [xm]

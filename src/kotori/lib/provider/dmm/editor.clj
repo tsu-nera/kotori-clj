@@ -51,13 +51,18 @@
       [(str/replace name (first m) "") (second m)]
       [name])))
 
-(defn title->without-actress [title names]
+(defn drop-old-name [name]
+  (first (str/split name #"（")))
+
+(defn split-actress-names [names]
+  (->> names
+       (map split-actress-name)
+       flatten))
+
+(defn title->without-actress [names title]
   ;; どうもapiで取得できる女優の順番とtitleの順番は一致するようだ.
   ;; リストをひっくり返して後ろから除去
-  (let [actress-names (->> names
-                           (map split-actress-name)
-                           flatten
-                           reverse)]
+  (let [actress-names (reverse (split-actress-names names))]
     (reduce (fn [title name]
               ;; 末尾のみ除去
               (let [re (re-pattern (str name "$"))]
@@ -66,5 +71,17 @@
                     str/trim)))
             title actress-names)))
 
-#_(defn ->sparkle-actress [s names]
-    (map ->title-without-actress products))
+(defn ->sparkle-actress [s name]
+  (let [sparkle         "✨"
+        pattern-1       (str "‘" name "’")
+        pattern-2       (str "「" name "」")
+        pattern-default name
+        alter           (str sparkle name sparkle)]
+    (cond
+      (str/includes? s pattern-1)
+      (str/replace s (re-pattern pattern-1) alter)
+      (str/includes? s pattern-2)
+      (str/replace s (re-pattern pattern-2) alter)
+      (str/includes? s pattern-default)
+      (str/replace s (re-pattern pattern-default) alter)
+      :else s)))

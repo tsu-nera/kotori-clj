@@ -228,16 +228,17 @@
   )
 
 (comment
-  (def product (crawl-product! {:db    (db)
+  (def product (crawl-product! {:db    (db-prod)
                                 :creds (creds)
-                                :cid   "hnd00967"}))
+                                :cid   "waaa00100"}))
   (def products (crawl-products! {:db    (db-dev)
                                   :creds (creds)
                                   :limit 300}))
 
   ;; 1秒以内に終わる
   (def page (public/get-page  "pred00294"))
-  (def resp (scrape-page {:cid "ebod00874" :db (db)}))
+  (def resp (scrape-page {:cid "waaa00100" :db (db-prod)}
+                         product/coll-path))
 
   ;; 並列実行
   (def resp (scrape-pages! {:cids cids :db (db)}))

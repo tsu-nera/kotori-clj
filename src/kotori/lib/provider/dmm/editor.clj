@@ -32,9 +32,15 @@
 (defn videoc-desc->remove-stopwords [s]
   (->remove-xs s videoc-desc-stopwords))
 
+;; どうもdmmは全角シャープを利用しているように思う.
+(defn words->hashtags
+  [l]
+  (map #(str "＃" %) l))
+
 (defn remove-hashtags
   ([s]
-   (let [tags (p/->hashtags s)]
+   (let [words (p/->hashtags s)
+         tags  (words->hashtags words)]
      (remove-hashtags s tags)))
   ([s hashtags]
    (->remove-xs s hashtags)))

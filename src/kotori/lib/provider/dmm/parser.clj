@@ -7,13 +7,11 @@
    (java.text
     BreakIterator)))
 
-(defn ->hashtags [s]
-  (let [re (re-pattern "[#|＃](.+?)[ |【]")]
-    (->> s
-         (re-seq re)
-         (map second)
-         (map str/trim)
-         (map #(str "＃" %)))))
+;; 自前実装での抽出が難しいのでtwitter-textをつかう
+;; なお結果はかわらない(と思う)
+(defn ->hashtags
+  [s]
+  (tt/->hashtags s))
 
 (defn join-until [xs limit]
   (let [first-s (first xs)
@@ -112,3 +110,15 @@
    (println "---")))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(comment
+  ;; 自分で書いたハッシュタグパース処理は
+  ;; いまいちだけど一応頑張ったので残しておく.
+  (defn ->hashtags [s]
+    (let [re (re-pattern "[#|＃](.+?)[ |】|【]")]
+      (->> s
+           (re-seq re)
+           (map second)
+           (map str/trim)
+           (map #(str "＃" %)))))
+  )

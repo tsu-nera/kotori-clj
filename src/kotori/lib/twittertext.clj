@@ -4,6 +4,7 @@
   (:refer-clojure :exclude [count])
   (:import
    (com.twitter.twittertext
+    Extractor
     TwitterTextParser)))
 
 (defn- parse-tweet [text]
@@ -32,6 +33,9 @@
         start (:valid-range-start ret)
         end   (:valid-range-end ret)]
     (- end start)))
+
+(defn ->hashtags [text]
+  (.extractHashtags (Extractor.) text))
 
 (comment
   ;;

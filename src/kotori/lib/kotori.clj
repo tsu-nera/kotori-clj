@@ -97,7 +97,7 @@
             flatten
             (map str/trim)
             ((partial p/join-sentences length))
-            ((partial p/trunc 100))
+            ((partial p/trunc length))
             ;; ((partial remove-last-x "【")) ;; fsデータにゴミがはいったので
             add-tenten
             ;; add-newline  うまく出来ないので保留...

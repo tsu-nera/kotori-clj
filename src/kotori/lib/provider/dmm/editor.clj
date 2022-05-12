@@ -44,3 +44,27 @@
      (remove-hashtags s tags)))
   ([s hashtags]
    (->remove-xs s hashtags)))
+
+(defn split-actress-name [name]
+  (let [re (re-pattern "（(.+?)）$")]
+    (if-let [m (re-find re name)]
+      [(str/replace name (first m) "") (second m)]
+      [name])))
+
+(defn title->without-actress [title names]
+  ;; どうもapiで取得できる女優の順番とtitleの順番は一致するようだ.
+  ;; リストをひっくり返して後ろから除去
+  (let [actress-names (->> names
+                           (map split-actress-name)
+                           flatten
+                           reverse)]
+    (reduce (fn [title name]
+              ;; 末尾のみ除去
+              (let [re (re-pattern (str name "$"))]
+                (-> title
+                    (str/replace re "")
+                    str/trim)))
+            title actress-names)))
+
+#_(defn ->sparkle-actress [s names]
+    (map ->title-without-actress products))

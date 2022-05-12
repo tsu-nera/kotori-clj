@@ -140,16 +140,9 @@
   (map (fn [m] (get m "name")) (:actresses product)))
 
 (defn ->title-without-actress [product]
-  (->> product
-       ((juxt :title ->actress-names))
-       ((fn [[title names]]
-          (reduce (fn [title name]
-                    (let [re (re-pattern (str name "$"))]
-                      (str/replace title re "")))
-                  title names)))))
-
-(defn ->titles-without-actress [products]
-  (map ->title-without-actress products))
+  (let [title (:title product)
+        names (->actress-names product)]
+    (ed/title->without-actress title names)))
 
 (defn title->trimed [title]
   (-> title
@@ -184,7 +177,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (comment
-
   (require '[firebase :refer [db-prod db-dev db]]
            '[devtools :refer [->screen-name env]]
            '[kotori.procedure.strategy.dmm
@@ -264,31 +256,6 @@
   (def ret (lib/desc->trimed desc))
 
   (tt/count ret)
-  )
-
-(comment
-  (require
-   '[clojure.string :as str]
-   '[kotori.procedure.dmm.amateur
-     :refer [select-scheduled-products]
-     :rename {select-scheduled-products select-scheduled-videocs}])
-
-  (def screen-name (->screen-name "0027"))
-  (def products
-    (into []
-          (select-scheduled-videocs {:db          (db-prod)
-                                     :limit       200
-                                     :screen-name screen-name})))
-
-  #_(defn products->actress-names [products]
-      (let [actresses (map :actresses products)]
-        (map (fn [xm]
-               (map (fn [m] (get m "name")) xm)) actresses)))
-
-  (def titles (map :title products))
-
-  (def names (into [] (map videoc-title->name titles)))
-
   )
 
 (comment

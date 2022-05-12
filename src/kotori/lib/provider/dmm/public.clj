@@ -80,13 +80,17 @@
   (let [re (re-pattern "(?s)<[^>]*>(\\s*<[^>]*>)*")]
     (str/replace text re "")))
 
+(defn html->plain-text [html]
+  (let [re (re-pattern "(?s)<[^>]*>(\\s*<[^>]*>)*")]
+    (str/replace html re "")))
+
 (defn ->description [m]
   (let [raw (->raw-description m)]
     (-> raw
         remove-fanza-headline
         cut-underline
         lines-two->one
-        remove-html-tags
+        html->plain-text
         p/remove-hashtags)))
 
 (defn get-page [{:keys [cid floor] :or {floor (:videoa d/floor)}}]
@@ -121,7 +125,7 @@
         ))
   content
 
-  (def cid "dam0003")
+  (def cid "pak001")
   (def resp (get-page {:cid cid :floor "videoc"}))
 
   (def data (get-page-data cid "videoc"))

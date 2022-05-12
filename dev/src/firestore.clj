@@ -7,8 +7,13 @@
 
 (def fs-base-url "https://console.cloud.google.com/firestore/data/")
 
-(defn ->product-path [cid]
-  (str fs-base-url dmm/coll-path "/"  cid "?project=dmm-fanza"))
+(defn ->product-path [doc-path]
+  (str fs-base-url doc-path "?project=dmm-fanza"))
 
-(defn open-dmm-fs-url [cid]
-  (b/browse-url (->product-path cid)))
+(defn open-amateur
+  [cid]
+  (b/browse-url (->product-path (dmm/amateur-doc-path cid))))
+
+(defn open-product
+  [cid]
+  (b/browse-url (->product-path (dmm/doc-path cid))))

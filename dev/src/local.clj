@@ -7,7 +7,7 @@
    [clojure.tools.namespace.repl :refer [refresh]]
    [devtools :refer :all :as t]
    [firebase :refer [creds-dev creds-prod]]
-   [firestore :refer [open-dmm-fs-url]]
+   [firestore :refer [open-product open-amateur]]
    [hashp.core]
    [integrant.repl :refer
     [clear halt go init prep set-prep! reset reset-all suspend resume]]
@@ -16,7 +16,7 @@
    [kotori.lib.net :refer [get-global-ip]]
    [kotori.service.firebase :refer [get-app get-db delete-app!]]
    [portal.api :as p]
-   [tools.dmm :refer [open-dmm-url]]))
+   [tools.dmm :refer [open-dmm]]))
 
 (def env-dev "private/dev/env.edn")
 (def env-prod "private/prod/env.edn")

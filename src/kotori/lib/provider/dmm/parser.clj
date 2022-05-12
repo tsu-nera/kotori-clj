@@ -49,7 +49,9 @@
             re      (re-pattern sep)
             xs      (str/split s re)
             first-s (str (join-until xs limit) sep)]
-        [first-s (str/replace s first-s "")]))))
+        (if (= 1 (count xs))
+          [s]
+          [first-s (str/replace s first-s "")])))))
 
 (defn ->sentences [text]
   (let [locale java.util.Locale/JAPAN
@@ -90,7 +92,7 @@
   (let [s-all (str/join "\n\n" xs)
         size  (count xs)]
     (cond
-      (= 1 size)                  (trunc length (first xs))
+      (= 1 size)                  (first xs)
       (> length (tt/count s-all)) s-all
       :else
       (->> xs
@@ -98,6 +100,9 @@
            generate-comb
            (map (partial join length))
            (apply max-key count)))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 

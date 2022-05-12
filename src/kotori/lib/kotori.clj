@@ -2,7 +2,8 @@
   (:require
    [clojure.string :as str]
    [kotori.domain.config.ngword :refer [source]]
-   [kotori.lib.provider.dmm.parser :as p]))
+   [kotori.lib.provider.dmm.parser :as p]
+   [kotori.lib.twittertext :as tt]))
 
 (defn desc->headline [text]
   (let [re (re-pattern "^＜(.+?)＞|^【(.+?)】")]
@@ -93,6 +94,7 @@
             flatten
             (map str/trim)
             ((partial p/join-sentences length))
+            ((partial p/trunc 100))
             ;; ((partial remove-last-x "【")) ;; fsデータにゴミがはいったので
             add-tenten
             ;; add-newline  うまく出来ないので保留...
@@ -150,7 +152,7 @@
 (defn ->titles-without-actress [products]
   (map ->title-without-actress products))
 
-(defn- title->trimed [title]
+(defn title->trimed [title]
   (-> title
       p/remove-hashtags
       ->remove-haishin
@@ -216,7 +218,7 @@
 
   (def desc7 "学校のマドンナ的存在だった麻耶は同じ学校の晃司と結婚し、幸せな生活を送っていた。そんな中、同窓会の知らせが届き、二人が参加した。その同窓会は麻耶に憧れていた根暗な同級生たちが仕組んだ罠だった。睡眠薬を盛られて晃司が寝てしまい、残された麻耶は同級生たちに組み敷かれていく。麻耶は媚薬を盛られ、自ら挿入を懇願するスケベ女に成り果てる。その姿を動画に撮られ、強請られた麻耶は同級生たちの性奴●へと化して…。")
 
-  (def desc8 " ジュポジュポイラマで口内奉仕/ビンビン乳首をツネあげられて腰砕け昇天お漏らし/唾液ダラダラ垂らしながらデカチンズップシイキまくりSEX/チ○ポを咥えながら興奮してお漏らししちゃう変態デカ尻バニー/淫乱マ○コ突かれて絶叫イキ狂い大量潮吹きSEX/ビショビショお漏らししながらイキまくり/ムチムチ淫乱バニーが勃起チ○ポたっぷりご奉仕でザーメン抜きまくり/テカテカ肉感巨乳デカ尻バニーイキまくり中出しSEX")
+  (def desc8 "ジュポジュポイラマで口内奉仕/ビンビン乳首をツネあげられて腰砕け昇天お漏らし/唾液ダラダラ垂らしながらデカチンズップシイキまくりSEX/チ○ポを咥えながら興奮してお漏らししちゃう変態デカ尻バニー/淫乱マ○コ突かれて絶叫イキ狂い大量潮吹きSEX/ビショビショお漏らししながらイキまくり/ムチムチ淫乱バニーが勃起チ○ポたっぷりご奉仕でザーメン抜きまくり/テカテカ肉感巨乳デカ尻バニーイキまくり中出しSEX")
 
   (drop-last-char desc8)
   #_(desc->sentences desc3)
@@ -253,6 +255,19 @@
   )
 
 (comment
+  (require '[kotori.lib.provider.dmm.public :refer [get-page]])
+  (require '[kotori.lib.kotori :as lib])
+
+  (def cid "tkk005")
+  (def page (get-page {:cid cid :floor "videoc"}))
+  (def desc (:description page))
+
+  (def ret (lib/desc->trimed desc))
+
+  (tt/count ret)
+  )
+
+(comment
   (require
    '[clojure.string :as str]
    '[kotori.procedure.dmm.amateur
@@ -265,8 +280,6 @@
           (select-scheduled-products {:db          (db-prod)
                                       :limit       50
                                       :screen-name screen-name})))
-
-  (->titles-without-actress products)
 
   #_(defn products->actress-names [products]
       (let [actresses (map :actresses products)]

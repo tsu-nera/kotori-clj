@@ -197,25 +197,11 @@
 (defn ->anime-url [cid]
   (d/->url cid "anime"))
 
-(defn open-dmm-url [cid floor-str]
-  (b/browse-url (d/->url cid floor-str)))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(comment
-  (def cid "erk022")
-  (def resp (get-dmm-product cid "videoc"))
-  (pprint resp)
-  )
-
-(comment
-  (def resp (get-floors))
-  (get-genres :videoa)
-  )
-
-(comment
-  (metadata->csv-from-fs! (db-prod) 300 "tmp/metas.csv")
-  )
+(defn open-dmm-url
+  ([cid]
+   (b/browse-url (d/->url cid "videoa")))
+  ([cid floor]
+   (b/browse-url (d/->url cid floor))))
 
 (comment
   (def info (kotori-info "0001"))
@@ -266,7 +252,7 @@
   )
 
 (comment
-  (def resp (scrape-descs "videoc" 10))
+  (def resp (scrape-descs "videoa" 20))
   (def descs (map :description resp))
   (def descs2 (map kotori/desc->trimed  descs))
   )

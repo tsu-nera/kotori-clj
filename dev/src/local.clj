@@ -7,6 +7,7 @@
    [clojure.tools.namespace.repl :refer [refresh]]
    [devtools :refer :all :as t]
    [firebase :refer [creds-dev creds-prod]]
+   [firestore :refer [open-dmm-fs-url]]
    [hashp.core]
    [integrant.repl :refer
     [clear halt go init prep set-prep! reset reset-all suspend resume]]

@@ -65,13 +65,13 @@
 (comment
   (require '[devtools :refer [env ->screen-name]]
            '[tools.dmm :refer [creds]]
-           '[kotori.lib.kotori :refer [->next]]
+           '[kotori.lib.kotori :refer [->next] :as k]
            '[firebase :refer [db-prod db-dev db]])
   )
 
 (comment
   (def product (lib/get-videoc {:creds (creds)
-                                :cid   "sgk039"}))
+                                :cid   "ttk005"}))
 
   (def product (lib/get-videoa {:creds (creds)
                                 :cid   "1kmhrs00044"}))
@@ -80,10 +80,10 @@
 (comment
   (def resp (crawl-videoc-product! {:db    (db-prod)
                                     :creds (creds)
-                                    :cid   "erk022"}))
+                                    :cid   "ttk005"}))
 
   (def resp (scrape-videoc-page! {:db  (db-prod)
-                                  :cid "sgk039"}))
+                                  :cid "ttk005"}))
 
   ;; (require '[kotori.lib.provider.dmm.public :as public])
   ;; (public/get-page {:db    (db-prod)
@@ -96,8 +96,10 @@
 
   (def products
     (select-scheduled-products
-     {:db          (db)
+     {:db          (db-prod)
       :limit       30
       :screen-name (->screen-name "0027")}))
-  #_(map :title (map ->next products))
+  (def ret (map :title (map ->next products)))
+
+  (def product (first products))
   )

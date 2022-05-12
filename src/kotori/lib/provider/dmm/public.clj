@@ -39,13 +39,6 @@
          (re-seq re)
          (map first))))
 
-(defn- remove-aseq [text]
-  (let [aseq (desc->aseq text)]
-    (reduce (fn [text a]
-              (-> text
-                  (str/replace a "")
-                  (str/replace #"「」" ""))) text aseq)))
-
 ;; 一応実際の - の数よりも少なくしておく
 (defn- cut-underline [text]
   (let [re-line #"-------------------------------------"]
@@ -81,52 +74,11 @@
                    (first pair)
                    (second pair)))) text tags-pair)))
 
-(defn- remove-bold-tag [text]
-  ((partial remove-html-tag "b") text))
-
-(defn- remove-big-tag [text]
-  ((partial remove-html-tag "big") text))
-
-(defn- remove-p-tag [text]
-  ((partial remove-html-tag "p") text))
-
-(defn- remove-span-tag [text]
-  (-> text
-      (str/replace #"</span>" "")
-      (str/replace #"<span" "")
-      (str/replace #"style=" "")
-      (str/replace #"\"color:red\">" "")
-      (str/replace #"\"color:blue\">" "")))
-
-(defn- remove-strong-tag [text]
-  (-> text
-      (str/replace #"</strong>" "")
-      (str/replace #"<strong" "")
-      (str/replace #"style=" "")
-      (str/replace #"\"color:#ff0000\">" "")))
-
-(defn- remove-br-tag [text]
-  (-> text
-      (str/replace #"<br>" " ")
-      (str/replace #"<br />" " ")))
-
+;; 自分でゴニョゴニョするのを諦めた.
+;; https://stackoverflow.com/questions/3607965/how-to-convert-html-text-to-plain-text
 (defn- remove-html-tags [text]
-  (-> text
-      remove-bold-tag
-      remove-big-tag
-      remove-br-tag
-      remove-p-tag
-      remove-span-tag
-      remove-strong-tag
-      remove-aseq))
-
-;; 文末に注意書きがあることがおおいのでtrimしておく.
-;; 文中をtrimしないように処理の最後に呼ぶ.
-;; 文中のアスタリスクがうまく裁けないので廃止.
-#_(defn- remove-last-asterisk [text]
-    (-> text
-        (str/split #"※")
-        first))
+  (let [re (re-pattern "(?s)<[^>]*>(\\s*<[^>]*>)*")]
+    (str/replace text re "")))
 
 (defn ->description [m]
   (let [raw (->raw-description m)]

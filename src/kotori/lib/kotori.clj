@@ -147,10 +147,10 @@
       str/trim))
 
 (defn sparkle-actress [names text]
-  (let [xs #p (map ed/drop-old-name names)]
+  (let [xs (map ed/drop-old-name names)]
     (reduce (fn [text name]
 
-              #p (ed/->sparkle-actress text name))
+              (ed/->sparkle-actress text name))
             text xs)))
 
 (defn title-raw->next [raw names]

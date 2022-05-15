@@ -19,8 +19,9 @@
    [slingshot.slingshot :refer [throw+ try+]]
    [twitter-clj.private :as private]))
 
-(defn make-info [{:keys [screen-name user-id auth-token ct0 proxy-map]}]
-  (d/make-info screen-name user-id
+(defn make-info [{:keys [screen-name user-id code
+                         auth-token ct0 proxy-map]}]
+  (d/make-info screen-name user-id code
                {:auth-token auth-token :ct0 ct0} proxy-map))
 
 (defn make-text [source strategy builder]

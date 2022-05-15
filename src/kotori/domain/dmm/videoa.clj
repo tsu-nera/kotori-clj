@@ -41,6 +41,11 @@
        "ゲイ" "性転換・女体化"]
       genre-names->ids))
 
+;; https://www.dmm.co.jp/digital/videoa/-/list/=/article=keyword/id=2007/
+(def fat-ids
+  (-> ["ぽっちゃり"]
+      genre-names->ids))
+
 (def ng-genres
   (into #{} (concat
              antisocial-ids

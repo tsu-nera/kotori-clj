@@ -64,6 +64,12 @@
 (def st-exclude-omnibus
   (remove #(> (:actress-count %) 4)))
 
+(defn ->st-include [genre-ids]
+  (filter #(contains-genre? genre-ids %)))
+
+(defn ->st-exclude [genre-ids]
+  (remove #(contains-genre? genre-ids %)))
+
 (def st-include-vr
   (filter #(contains-genre? videoa/vr-ids %)))
 
@@ -138,12 +144,34 @@
   (let [last-crawled-time (fs/get-in db dmm/doc-path key)]
     (assoc m :last-crawled-time last-crawled-time)))
 
-(defn select-scheduled-products [{:keys [db limit] :as m :or {limit 5}}]
-  (let [xst    [st-exclude-ng-genres
-                st-exclude-no-samples
-                st-exclude-vr
-                st-exclude-amateur
-                st-exclude-omnibus]
+(defmulti make-strategy :code)
+
+(defmethod make-strategy "0001" [_]
+  [st-exclude-ng-genres
+   st-exclude-no-samples
+   st-exclude-vr
+   st-exclude-amateur
+   st-exclude-omnibus
+   (->st-exclude videoa/fat-ids)])
+
+(defmethod make-strategy "0010" [_]
+  [st-exclude-ng-genres
+   st-exclude-no-samples
+   st-exclude-vr
+   st-exclude-amateur
+   st-exclude-omnibus
+   (->st-include videoa/fat-ids)])
+
+(defmethod make-strategy :default [_]
+  [st-exclude-ng-genres
+   st-exclude-no-samples
+   st-exclude-vr
+   st-exclude-amateur
+   st-exclude-omnibus])
+
+(defn select-scheduled-products [{:keys [info db limit]
+                                  :as   m :or {limit 5}}]
+  (let [xst    (make-strategy info)
         params (assoc-last-crawled-time
                 m db (:products-crawled-time dmm/field))]
     (->> (select-scheduled-products-with-xst params xst
@@ -229,7 +257,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (comment
   (require '[firebase :refer [db-prod db-dev db]]
-           '[devtools :refer [->screen-name env]])
+           '[devtools :refer [->screen-name env kotori-info]])
   )
 
 (comment
@@ -245,14 +273,15 @@
 
 (comment
   ;;;;;;;;;;;
-  (def screen-name (->screen-name "0001"))
-
+  (def info (kotori-info "0010"))
   ;; cf. https://www.dmm.co.jp/digital/videoa/-/list/=/sort=ranking/
   (def products
     (into []
-          (select-scheduled-products {:db          (db-prod)
-                                      :limit       10
-                                      :screen-name screen-name})))
+          (select-scheduled-products
+           {:db          (db-prod)
+            :info        info
+            :limit       100
+            :screen-name (:screen-name info)})))
   (def descs (map :description products))
 
   (count products)
@@ -270,13 +299,4 @@
   (def desc (:description product))
   (lib/desc->trimed desc)
   (lib/desc->headline desc)
-
-  (def genre-ids (->genre-ids product))
-  (defn ng-product? [product]
-    (some true? (map
-                 (comp ng-genre? #(get % "id"))
-                 (:genres product))))
-
-  (map ->print (select-scheduled-products {:db (db-prod) :limit 20}))
- ;;;;;;;;;;;
   )

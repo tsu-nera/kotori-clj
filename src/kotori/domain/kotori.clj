@@ -11,7 +11,7 @@
 (defrecord Cred [auth-token ct0])
 (defrecord Proxy [proxy-host proxy-port proxy-user proxy-pass])
 (defrecord Info
-  [screen-name user-id ^Cred cred ^Proxy proxy])
+  [screen-name user-id code ^Cred cred ^Proxy proxy])
 
 (s/def ::auth-token string?)
 (s/def ::ct0 string?)
@@ -26,17 +26,18 @@
 
 (s/def ::screen-name string?)
 (s/def ::user-id string?)
+(s/def ::code string?)
 (s/def ::info
-  (s/keys :req-un [::screen-name ::user-id ::cred]
+  (s/keys :req-un [::screen-name ::user-id ::code ::cred]
           :opt-un [::proxy]))
 
 (def guest-user "guest")
 
-(defn make-info [screen-name user-id cred-map proxy-map]
+(defn make-info [screen-name user-id code cred-map proxy-map]
   (let [cred       (s/conform ::cred (map->Cred cred-map))
         test-proxy (s/conform ::proxy (map->Proxy proxy-map))
         proxy      (if-not (s/invalid? test-proxy) test-proxy {})]
-    (s/conform ::info (->Info screen-name user-id cred proxy))))
+    (s/conform ::info (->Info screen-name user-id code cred proxy))))
 
 (defn fs->cred
   ([db user-id]
@@ -80,20 +81,13 @@
 (defn env->info [db env]
   (let [screen-name (:screen-name env)
         user-id     (:user-id env)
+        code        (:code env)
         creds       (or (:twitter-auth env)
                         (fs->cred db user-id))
         proxies     (or (:proxies env)
                         (fs->proxy db user-id))]
     {:screen-name screen-name
      :user-id     user-id
+     :code        code
      :creds       creds
      :proxies     proxies}))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(comment
-  (require '[firebase :refer [db]])
-
-  (->creds (db) "")
-  (->proxies (db) "")
-  )

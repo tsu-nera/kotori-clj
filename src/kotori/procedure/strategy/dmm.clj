@@ -153,17 +153,6 @@
     (->> products
          (into [] xstrategy))))
 
-#_(defn select-scheduled-products [{:keys [info db limit]
-                                    :as   m :or {limit 5}}]
-    (let [xst    (make-strategy info)
-          params (assoc-last-crawled-time
-                  m db (:products-crawled-time dmm/field))]
-      (->> (select-scheduled-products-with-xst params xst
-                                               product/coll-path)
-           ;; sortはtransducerに組み込まないほうが楽.
-           (sort-by :rank-popular)
-           (take limit))))
-
 (defn assoc-last-crawled-time [m db key]
   (let [last-crawled-time (fs/get-in db dmm/doc-path key)]
     (assoc m :last-crawled-time last-crawled-time)))
@@ -250,12 +239,9 @@
                                      product/coll-path xquery)
         st-exclude-last-quoted-self (make-st-exclude-last-quoted-self
                                      screen-name)
-        st-exclude-recently-tweeted-others
-        (make-st-exclude-recently-tweeted-others screen-name 14)
         st-exclude-recently-quoted  (make-st-exclude-recently-quoted 4)
         xstrategy                   (comp
                                      st-skip-debug
-                                     st-exclude-recently-tweeted-others
                                      st-exclude-last-quoted-self
                                      st-exclude-recently-quoted)]
     (->> products
@@ -305,7 +291,7 @@
   (def products
     (into [] (select-tweeted-products
               {:db          (db-prod) :limit 200
-               :screen-name (->screen-name "0019")})))
+               :screen-name (->screen-name "0018")})))
 
   (count products)
   (map ->print products)

@@ -52,7 +52,7 @@
       ["/crawl-anime-products" {:post dmm-anime/crawl-products!}]
       ["/crawl-amateur-products" {:post dmm-amateur/crawl-products!}]
       ["/crawl-qvt-descs" {:post dmm/crawl-qvt-descs!}]]
-     ["/kotori" {:middleware [#(wrap-kotori config-map %)]}
+     ["/kotori" {:middleware [#(wrap-kotori config-map %) #(wrap-dmm %)]}
       ["/dummy" kotori/dummy]
       ["/tweet" kotori/tweet]
       ["/tweet-quoted-video"

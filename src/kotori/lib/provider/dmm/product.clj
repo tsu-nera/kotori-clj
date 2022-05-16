@@ -58,9 +58,9 @@
   get-productsを呼ぶと1回のget requestで最大100つの情報が取得できる.
   それ以上取得する場合はoffsetによる制御が必要なためこの関数で対応する.
   limitを100のchunkに分割してパラレル呼び出しとマージ."
-  [{:keys [creds limit floor]
+  [{:keys [limit floor]
     :as   base-params
-    :or   {limit 5 floor (:videoa dmm/floor)}}]
+    :or   {limit 20 floor (:videoa dmm/floor)}}]
   (let [req-params (map (fn [m] (merge base-params m))
                         (make-req-params limit floor))]
 
@@ -72,10 +72,11 @@
 (defn- ->genre-req [genre-id]
   {:article (:genre dmm/article) :article_id genre-id})
 
-(defn get-by-genre [{:keys [genre-id creds]}]
+(defn get-by-genre [{:keys [genre-id] :as m}]
   (let [q (->genre-req genre-id)]
-    (->> (api/search-product creds q)
-         (into []))))
+    (if (nil? genre-id)
+      (get-products m)
+      (get-products (merge m q)))))
 
 (defn get-by-genres
   "複数genre-idをパラレルで取得して結果をマージ."

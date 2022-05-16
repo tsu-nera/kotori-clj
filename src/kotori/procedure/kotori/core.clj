@@ -76,32 +76,27 @@
 (defn get-product [{:as m}]
   (lib/->next (product/get-product m)))
 
-(defn select-next-product [{:keys [db screen-name]}]
+(defn select-next-product [{:keys [screen-name] :as m}]
   {:pre [(s/valid? ::d/screen-name screen-name)]}
-  (lib/->next (first (st-dmm/select-scheduled-products
-                      {:db db :screen-name screen-name}))))
+  (lib/->next (first (st-dmm/select-scheduled-products m))))
 
-(defn select-next-amateur-videoa [{:keys [db screen-name]}]
+(defn select-next-amateur-videoa [{:keys [screen-name] :as m}]
   {:pre [(s/valid? ::d/screen-name screen-name)]}
-  (lib/->next (first (st-dmm/select-scheduled-amateurs
-                      {:db db :screen-name screen-name}))))
+  (lib/->next (first (st-dmm/select-scheduled-amateurs m))))
 
-(defn select-next-amateur-videoc [{:keys [db screen-name]}]
+(defn select-next-amateur-videoc [{:keys [screen-name] :as m}]
   {:pre [(s/valid? ::d/screen-name screen-name)]}
-  (let [next (lib/->next (first (amateur/select-scheduled-products
-                                 {:db db :screen-name screen-name})))
+  (let [next (lib/->next (first (amateur/select-scheduled-products m)))
         name (lib/videoc-title->name (:title next))]
     (assoc next :name name)))
 
-(defn select-next-vr [{:keys [db screen-name]}]
+(defn select-next-vr [{:keys [screen-name] :as m}]
   {:pre [(s/valid? ::d/screen-name screen-name)]}
-  (lib/->next (first (vr/select-scheduled-products
-                      {:db db :screen-name screen-name}))))
+  (lib/->next (first (vr/select-scheduled-products m))))
 
-(defn select-next-anime [{:keys [db screen-name]}]
+(defn select-next-anime [{:keys [screen-name] :as m}]
   {:pre [(s/valid? ::d/screen-name screen-name)]}
-  (lib/->next (first (anime/select-scheduled-products
-                      {:db db :screen-name screen-name}))))
+  (lib/->next (first (anime/select-scheduled-products m))))
 
 (defn archive-fs-tweet-data [db user-id tweet-id]
   (f/transact!
@@ -138,11 +133,10 @@
 (comment
   ;;;
   (require '[firebase :refer [db db-prod db-dev]]
-           '[devtools :refer [env kotori-info ->screen-name ->user-id
-                              info-dev]])
+           '[tools.dmm :refer [creds]]
+           '[devtools :refer [kotori-info ->screen-name info-dev]])
 
   (def params {:db (db-dev) :info @info-dev})
-
 
   (tweet-morning params)
   (tweet-evening params)
@@ -170,6 +164,15 @@
   (def status-id (:id_str resp))
   (def resp (private/delete-tweet (twitter-auth) status-id))
   ;;;
+  )
+
+(comment
+  (def info (kotori-info "0001"))
+  (select-next-product {:db          (db-prod)
+                        :screen-name (:screen-name info)
+                        :creds       (creds)
+                        :limit       100
+                        :info        info})
   )
 
 (comment

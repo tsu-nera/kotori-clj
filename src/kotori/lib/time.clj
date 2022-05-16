@@ -13,10 +13,14 @@
 ;; python codeとの互換性を考慮してこのformatにしておく
 (def format-log "yyyy-MM-dd HH:mm:ss,SSS")
 
-(defn before? [t1 t2]
+(defn before?
+  "t2はt1よりも前か？"
+  [t1 t2]
   (t/before? t1 t2))
 
-(defn after? [t1 t2]
+(defn after?
+  "t2はt1よりもあとか？"
+  [t1 t2]
   (t/after? t1 t2))
 
 (def tz-jst

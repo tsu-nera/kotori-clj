@@ -149,11 +149,13 @@
        ;; id情報も一緒に取得ならばf/pullでMapが帰る.
        json/->clj)))
 
-(defn ids->docs
+(defn get-docs-by-ids
   ([db coll-path doc-ids]
    (-> db
        (f/coll coll-path)
-       (f/docs doc-ids))))
+       (f/docs doc-ids)
+       f/pull-docs
+       json/->clj)))
 
 (defn get-coll-ids
   [db coll-path]
@@ -334,7 +336,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (comment
-  (require '[devtools :refer [db]])
+  (require '[firebase :refer [db db-prod]])
 
   (def coll-path "experiments")
   (def dmm-path "providers/dmm/products")
@@ -349,5 +351,8 @@
                (clojure.core/assoc m k (json/->clj v))) {} id-doc-map)
 
   (doc-field-exists? (db) "providers/dmmmm" "foo")
+
+  (def resp (get-docs-by-ids (db-prod) "providers/dmm/products"
+                             ["idbd00841" "miaa00573"]))
  ;;;
   )

@@ -54,7 +54,7 @@
                               st/st-exclude-no-samples]
         params               (st/assoc-last-crawled-time
                               m db (:amateurs-crawled-time dmm/field))
-        products             (st/select-scheduled-products-with-xst
+        products             (st/select-scheduled-products-with-xst-deplicated
                               params xst coll-path)]
     (->> products
          (sort-by :rank-popular)

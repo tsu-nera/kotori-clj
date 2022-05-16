@@ -8,6 +8,7 @@
    [kotori.domain.kotori :refer [guest-user]]
    [kotori.lib.firestore :as fs]
    [kotori.lib.kotori :as lib]
+   [kotori.lib.provider.dmm.product :as lib-dmm]
    [kotori.lib.time :as time]))
 
 (defn make-st-exclude-ng-genres [ids]
@@ -41,7 +42,8 @@
                (no-sample-image? %))))
 
 (defn no-actress? [product]
-  (zero? (:actress-count product)))
+  (let [count (:actress-count product)]
+    (or (nil? count) (zero? count))))
 
 (defn ->genre-ids [product]
   (->> product
@@ -76,25 +78,30 @@
 (def st-exclude-vr
   (remove #(contains-genre? videoa/vr-ids %)))
 
+(defn recently-tweeted? [p days]
+  (let [past-time (time/date->days-ago days)
+        last-time (:last-tweet-time p)]
+    (and last-time
+         (time/after? (time/->tz-jst last-time) past-time))))
+
 (defn- make-st-exclude-recently-tweeted
   "最終投稿からXdays以上経過"
-  [self? days]
-  (remove
-   (fn [p]
-     (let [past-time        (time/date->days-ago days)
-           last-time        (:last-tweet-time p)
-           last-screen-name (:last-tweet-name p)]
-       (and last-time
-            (self? last-screen-name)
-            (time/after? (time/->tz-jst last-time) past-time))))))
+  ([days]
+   (remove #(recently-tweeted? % days)))
+  ([days pred-self?]
+   (remove
+    (fn [p]
+      (let [last-screen-name (:last-tweet-name p)]
+        (and (pred-self? last-screen-name)
+             (recently-tweeted? p days)))))))
 
 (defn make-st-exclude-recently-tweeted-self
-  [target-screen-name days]
-  (make-st-exclude-recently-tweeted #(= target-screen-name %) days))
+  [days target-screen-name]
+  (make-st-exclude-recently-tweeted days #(= target-screen-name %)))
 
 (defn make-st-exclude-recently-tweeted-others
-  [target-screen-name days]
-  (make-st-exclude-recently-tweeted #(not= target-screen-name %) days))
+  [days target-screen-name]
+  (make-st-exclude-recently-tweeted days #(not= target-screen-name %)))
 
 (defn make-st-exclude-recently-quoted
   "最終引用投稿からX日以上経過"
@@ -121,15 +128,21 @@
 (def st-skip-debug
   (remove #(get % :debug)))
 
-(defn select-scheduled-products-with-xst
+(def st-skip-not-yet-crawled
+  (remove #(nil? (get % :cid))))
+
+(def st-skip-not-yet-scraped
+  (remove #(nil? (get % :description))))
+
+(defn select-scheduled-products-with-xst-deplicated
   [{:keys [db screen-name last-crawled-time]} xst coll-path]
   (let [st-last-crawled (fs/query-filter
                          "last_crawled_time"
                          last-crawled-time)
         st-exclude-recently-tweeted-self
-        (make-st-exclude-recently-tweeted-self screen-name 28)
+        (make-st-exclude-recently-tweeted-self 28 screen-name)
         st-exclude-recently-tweeted-others
-        (make-st-exclude-recently-tweeted-others screen-name 14)
+        (make-st-exclude-recently-tweeted-others 14 screen-name)
         products        (fs/get-docs
                          db coll-path st-last-crawled)
         xstrategy       (apply comp
@@ -139,6 +152,17 @@
                                xst)]
     (->> products
          (into [] xstrategy))))
+
+#_(defn select-scheduled-products [{:keys [info db limit]
+                                    :as   m :or {limit 5}}]
+    (let [xst    (make-strategy info)
+          params (assoc-last-crawled-time
+                  m db (:products-crawled-time dmm/field))]
+      (->> (select-scheduled-products-with-xst params xst
+                                               product/coll-path)
+           ;; sortはtransducerに組み込まないほうが楽.
+           (sort-by :rank-popular)
+           (take limit))))
 
 (defn assoc-last-crawled-time [m db key]
   (let [last-crawled-time (fs/get-in db dmm/doc-path key)]
@@ -151,8 +175,7 @@
    st-exclude-no-samples
    st-exclude-vr
    st-exclude-amateur
-   st-exclude-omnibus
-   (->st-exclude videoa/fat-ids)])
+   st-exclude-omnibus])
 
 (defmethod make-strategy "0010" [_]
   [st-exclude-ng-genres
@@ -169,15 +192,30 @@
    st-exclude-amateur
    st-exclude-omnibus])
 
-(defn select-scheduled-products [{:keys [info db limit]
-                                  :as   m :or {limit 5}}]
-  (let [xst    (make-strategy info)
-        params (assoc-last-crawled-time
-                m db (:products-crawled-time dmm/field))]
-    (->> (select-scheduled-products-with-xst params xst
-                                             product/coll-path)
-         ;; sortはtransducerに組み込まないほうが楽.
-         (sort-by :rank-popular)
+(defn select-scheduled-products-with-xst
+  [{:keys [db]} xst coll-path doc-ids]
+  (let [st-exclude-recently-tweeted
+        (make-st-exclude-recently-tweeted 28)
+        products  (fs/get-docs-by-ids db coll-path doc-ids)
+        xstrategy (apply comp
+                         ;; FIXME crawlとscrapingがまだの場合の検討
+                         st-skip-not-yet-crawled
+                         st-skip-not-yet-scraped
+                         st-skip-debug
+                         st-exclude-recently-tweeted
+                         xst)]
+    (->> products
+         (into [] xstrategy))))
+
+(defn select-scheduled-products [{:keys [info db limit creds]
+                                  :as   m :or {limit 200}}]
+  (let [xst      (make-strategy info)
+        products (lib-dmm/get-by-genre {; :genre-id 2007
+                                        :creds creds
+                                        :limit limit})
+        doc-ids  (map :content_id products)]
+    (->> (select-scheduled-products-with-xst
+          m xst product/coll-path doc-ids)
          (take limit))))
 
 (defn select-scheduled-amateurs [{:keys [db limit] :as m :or {limit 5}}]
@@ -188,8 +226,8 @@
                 st-include-amateur]
         params (assoc-last-crawled-time
                 m db (:products-crawled-time dmm/field))]
-    (->> (select-scheduled-products-with-xst params xst
-                                             product/coll-path)
+    (->> (select-scheduled-products-with-xst-deplicated
+          params xst product/coll-path)
          (sort-by :rank-popular)
          (take limit))))
 
@@ -257,6 +295,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (comment
   (require '[firebase :refer [db-prod db-dev db]]
+           '[tools.dmm :refer [creds]]
            '[devtools :refer [->screen-name env kotori-info]])
   )
 
@@ -299,4 +338,29 @@
   (def desc (:description product))
   (lib/desc->trimed desc)
   (lib/desc->headline desc)
+  )
+
+(comment
+  (def resp (lib-dmm/get-by-genre {:genre-id 2007
+                                   :creds    (creds)
+                                   :limit    30}))
+  (def resp (lib-dmm/get-by-genre {:creds (creds)
+                                   :limit 30}))
+
+
+  (def cids (map :content_id resp))
+
+  (def products (fs/get-docs-by-ids (db-prod) product/coll-path cids))
+
+  (def info (kotori-info "0001"))
+  (def products (select-scheduled-products
+                 {:db          (db-prod)
+                  :info        info
+                  :creds       (creds)
+                  :limit       200
+                  :screen-name (:screen-name info)}))
+  (count products)
+
+  (def product (first products))
+  (def next (lib/->next (first products)))
   )

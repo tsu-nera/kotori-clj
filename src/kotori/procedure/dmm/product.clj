@@ -242,10 +242,13 @@
   (def product (crawl-product! {:db    (db-prod)
                                 :creds (creds)
                                 :cid   "waaa00100"}))
-  (def products (crawl-products! {:db       (db-dev)
-                                  :creds    (creds)
-                                  :genre-id 2007
-                                  :limit    10}))
+
+  (def products (-> (crawl-products! {:db       (db-dev)
+                                      :creds    (creds)
+                                      :genre-id 2007
+                                      :limit    10})
+                    :products))
+  #_(def resp (map #(get-in % [:iteminfo :genre]) products))
 
   ;; 1秒以内に終わる
   (def page (public/get-page  "pred00294"))
@@ -279,4 +282,3 @@
                  {:db    (db) :env (env)
                   :title "新生活応援30％OFF第6弾"}))
   )
-

@@ -76,12 +76,6 @@
          (reduce concat)
          (into []))))
 
-(defn get-by-genre [{:keys [genre-id] :as m}]
-  (let [q (->genre-req genre-id)]
-    (if (nil? genre-id)
-      (get-products m)
-      (get-products (merge m q)))))
-
 (defn get-by-genres
   "複数genre-idをパラレルで取得して結果をマージ."
   [{:keys [genre-ids creds]}]

@@ -112,8 +112,7 @@
 
 (defn delete-tweet! "
   1. tweets/:user_id/posts/:status_id を tweets/:user_id/archivesへ移動.
-  2. Twitterからツイートを削除.
-  "
+  2. Twitterからツイートを削除."
   [{:keys [^d/Info info db tweet-id]}]
   (let
    [{:keys [user-id cred proxy]} info]

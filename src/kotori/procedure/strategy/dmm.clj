@@ -207,12 +207,13 @@
     (->> products
          (into [] xstrategy))))
 
-(defn select-scheduled-products [{:keys [info db limit creds]
-                                  :as   m :or {limit 200}}]
+(defn select-scheduled-products
+  [{:keys [info db limit creds genre-id]
+    :as   m :or {limit 200}}]
   (let [xst      (make-strategy info)
-        products (lib-dmm/get-by-genre {; :genre-id 2007
-                                        :creds creds
-                                        :limit limit})
+        products (lib-dmm/get-products {:genre-id genre-id
+                                        :creds    creds
+                                        :limit    limit})
         doc-ids  (map :content_id products)]
     (->> (select-scheduled-products-with-xst
           m xst product/coll-path doc-ids)
@@ -312,12 +313,13 @@
 
 (comment
   ;;;;;;;;;;;
-  (def info (kotori-info "0010"))
+  (def info (kotori-info "0001"))
   ;; cf. https://www.dmm.co.jp/digital/videoa/-/list/=/sort=ranking/
   (def products
     (into []
           (select-scheduled-products
-           {:db          (db-prod)
+           {:db          (db-dev)
+            :creds       (creds)
             :info        info
             :limit       100
             :screen-name (:screen-name info)})))
@@ -352,12 +354,13 @@
 
   (def products (fs/get-docs-by-ids (db-prod) product/coll-path cids))
 
-  (def info (kotori-info "0001"))
+  (def info (kotori-info "0010"))
   (def products (select-scheduled-products
-                 {:db          (db-prod)
+                 {:db          (db-dev)
                   :info        info
+                  :genre-id    2007
                   :creds       (creds)
-                  :limit       200
+                  :limit       100
                   :screen-name (:screen-name info)}))
   (count products)
 

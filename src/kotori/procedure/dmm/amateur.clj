@@ -1,14 +1,14 @@
 (ns kotori.procedure.dmm.amateur
   (:require
    [kotori.domain.dmm.core :as dmm]
+   [kotori.domain.dmm.genre.videoa
+    :refer [amateur-genre-id]
+    :rename {amateur-genre-id videoa-id}]
+   [kotori.domain.dmm.genre.videoc :as d]
    [kotori.domain.dmm.product
     :refer [amateur-coll-path]
     :rename
     {amateur-coll-path coll-path}]
-   [kotori.domain.dmm.videoa
-    :refer [amateur-genre-id]
-    :rename {amateur-genre-id videoa-id}]
-   [kotori.domain.dmm.videoc :as d]
    [kotori.lib.provider.dmm.product :as lib]
    [kotori.lib.time :as time]
    [kotori.procedure.dmm.product :as product]
@@ -42,7 +42,7 @@
                             (lib/get-products))]
       (doto db
         (product/save-products! coll-path products ts)
-        (product/update-crawled-time! field-ts ts)
+        (product/update-crawled-time-deplicated! field-ts ts)
         (product/scrape-desc-if! coll-path field-ts floor))
       {:timestamp ts
        :count     (count products)

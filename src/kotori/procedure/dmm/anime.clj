@@ -1,7 +1,7 @@
 (ns kotori.procedure.dmm.anime
   (:require
-   [kotori.domain.dmm.anime :as d]
    [kotori.domain.dmm.core :as dmm]
+   [kotori.domain.dmm.genre.anime :as d]
    [kotori.domain.dmm.product
     :refer [anime-coll-path]
     :rename
@@ -27,7 +27,7 @@
                             (lib/get-products))]
       (doto db
         (product/save-products! coll-path products ts)
-        (product/update-crawled-time! field-ts ts)
+        (product/update-crawled-time-deplicated! field-ts ts)
         ;; いろいろ書かれてて複雑なので刈り取りは保留.
         ;; (product/scrape-desc-if! coll-path field-ts)
         )

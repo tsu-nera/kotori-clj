@@ -1,14 +1,14 @@
 (ns kotori.procedure.dmm.vr
   (:require
    [kotori.domain.dmm.core :as dmm]
+   [kotori.domain.dmm.genre.videoa
+    :refer [vr-only-id]
+    :rename
+    {vr-only-id genre-id}]
    [kotori.domain.dmm.product
     :refer [vr-coll-path]
     :rename
     {vr-coll-path coll-path}]
-   [kotori.domain.dmm.videoa
-    :refer [vr-only-id]
-    :rename
-    {vr-only-id genre-id}]
    [kotori.lib.provider.dmm.product :as lib]
    [kotori.lib.time :as time]
    [kotori.procedure.dmm.product :as product]
@@ -32,7 +32,7 @@
     (when-let [products (get-products m)]
       (doto db
         (product/save-products! coll-path products ts)
-        (product/update-crawled-time! timestamp-key ts)
+        (product/update-crawled-time-deplicated! timestamp-key ts)
         (product/scrape-desc-if! coll-path timestamp-key floor))
       {:timestamp ts
        :count     (count products)

@@ -1,16 +1,20 @@
-(ns kotori.domain.dmm.anime
+(ns kotori.domain.dmm.genre.anime
   "ref. https://www.dmm.co.jp/digital/anime/-/genre/"
   (:require
-   [kotori.domain.dmm.core :as core]
+   [kotori.domain.dmm.genre.core :as genre]
+   [kotori.domain.dmm.genre.interface :as if]
    [kotori.lib.io :as io]))
 
 (def genre-path "dmm/genre/anime.edn")
 
 (defonce genres (->> genre-path io/load-edn))
-(defonce genre-name-id-map (core/genres->name-id-map genres))
-(defonce genre-id-name-map (core/genres->id-name-map genres))
+(defonce name-id-map (genre/->name-id-map genres))
+(defonce id-name-map (genre/->id-name-map genres))
 
-(def genre-names->ids (partial core/names->genre-ids genre-name-id-map))
+(def genre-names->ids (partial genre/names->genre-ids name-id-map))
+
+(defmethod if/id->name :videoc [_ id]
+  (get id-name-map id))
 
 (def dirty-ids
   (genre-names->ids ["スカトロ" "放尿・お漏らし" "浣腸"]))

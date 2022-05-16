@@ -3,8 +3,8 @@
   (:require
    [clojure.string :as str]
    [kotori.domain.dmm.core :as dmm]
+   [kotori.domain.dmm.genre.videoa :as videoa]
    [kotori.domain.dmm.product :as product]
-   [kotori.domain.dmm.videoa :as videoa]
    [kotori.domain.kotori :refer [guest-user]]
    [kotori.lib.firestore :as fs]
    [kotori.lib.kotori :as lib]

@@ -3,6 +3,7 @@
    [clojure.spec.alpha :as s]
    [clojure.string :as str]
    [kotori.domain.dmm.core :as dmm]
+   [kotori.domain.dmm.genre.core :as genre]
    [kotori.domain.dmm.product :as product]
    [kotori.domain.tweet.qvt :as qvt]
    [kotori.lib.firestore :as fs]
@@ -115,11 +116,9 @@
      :timestamp ts
      :products  docs}))
 
-(defn- get-target-desc-cids [db coll-path timestamp-key]
-  (let [last-crawled-time
-        (fs/get-in db dmm/doc-path timestamp-key)
-        query (fs/query-filter "last_crawled_time" last-crawled-time)]
-    (->> (fs/get-docs db coll-path query)
+(defn- get-target-desc-cids [db coll-path products]
+  (let [cids (map :content_id products)]
+    (->> (fs/get-docs-by-ids db coll-path cids)
          (remove #(:description %))
          (map :cid)
          (into []))))
@@ -127,6 +126,7 @@
 (defn save-products! [db coll-path products ts]
   (let [xf         (comp (map product/api->data)
                          (map #(product/set-crawled-timestamp ts %))
+                         ;; TODO 後で削除
                          (map-indexed product/set-rank-popular)
                          (map json/->json))
         docs       (transduce xf conj products)
@@ -134,14 +134,25 @@
     (fs/batch-set! db batch-docs)
     docs))
 
-(defn update-crawled-time! [db field value]
+(defn update-crawled-time-deplicated! [db field value]
   (fs/assoc! db dmm/doc-path field value))
+
+(defn update-crawled-time!
+  ([db ts floor genre-id]
+   (let [genre-id   (or genre-id "default")
+         genre-name (if (nil? genre-id)
+                      "default"
+                      (genre/id->name floor genre-id))
+         key        (fs/make-nested-key ["last_crawled_time"
+                                         floor "genres" genre-id])
+         value      {:name genre-name :id genre-id :timestamp ts}]
+     (fs/update! db dmm/doc-path {key value}))))
 
 ;; descritionの追加スクレイピング. 取得済みのものはスキップ.
 ;; この関数は定期実行を想定しているので
 ;; 強制的に更新したいときは手動で関数をたたいて更新する.
-(defn scrape-desc-if! [db coll-path timestamp-key floor]
-  (let [cids (get-target-desc-cids db coll-path timestamp-key)]
+(defn scrape-desc-if! [db coll-path products floor]
+  (let [cids (get-target-desc-cids db coll-path products)]
     (when (and cids (< 0 (count cids)))
       (scrape-pages! {:db        db
                       :cids      cids
@@ -152,15 +163,15 @@
 ;; firestroreのbatch writeの仕様で一回の書き込みは500まで.
 ;; そのため500単位でchunkごとに書き込む.
 (defn crawl-products!
-  [{:keys [db floor] :as params :or {floor (:videoa dmm/floor)}}]
-  (let [timestamp-key "products_crawled_time"
-        ts            (time/fs-now)
-        coll-path     product/coll-path]
+  [{:keys [db floor genre-id] :as params
+    :or   {floor (:videoa dmm/floor)}}]
+  (let [ts        (time/fs-now)
+        coll-path product/coll-path]
     (when-let [products (lib/get-products params)]
       (doto db
         (save-products! coll-path products ts)
-        (update-crawled-time! timestamp-key ts)
-        (scrape-desc-if! coll-path timestamp-key floor))
+        (scrape-desc-if! coll-path products floor)
+        (update-crawled-time! ts floor genre-id))
       ;; ここでproductsオブジェクトを戻すとGCRでエラーした.
       ;; 詳細は未調査だけどMapを返せば正常終了.
       {:timestamp ts
@@ -231,9 +242,10 @@
   (def product (crawl-product! {:db    (db-prod)
                                 :creds (creds)
                                 :cid   "waaa00100"}))
-  (def products (crawl-products! {:db    (db-dev)
-                                  :creds (creds)
-                                  :limit 300}))
+  (def products (crawl-products! {:db       (db-dev)
+                                  :creds    (creds)
+                                  :genre-id 2007
+                                  :limit    10}))
 
   ;; 1秒以内に終わる
   (def page (public/get-page  "pred00294"))
@@ -241,6 +253,7 @@
                          product/coll-path))
 
   ;; 並列実行
+  ;;
   (def resp (scrape-pages! {:cids cids :db (db)}))
 
   (def products (crawl-campaign-products!
@@ -266,3 +279,4 @@
                  {:db    (db) :env (env)
                   :title "新生活応援30％OFF第6弾"}))
   )
+

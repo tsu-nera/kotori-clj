@@ -54,23 +54,27 @@
       (conj (-> (make-offset-map mod-hits (+ 1 (* page size)))
                 (assoc :floor floor))))))
 
+(defn- ->genre-req [genre-id]
+  (if (nil? genre-id)
+    {}
+    {:article (:genre dmm/article) :article_id genre-id}))
+
 (defn get-products "
   get-productsを呼ぶと1回のget requestで最大100つの情報が取得できる.
   それ以上取得する場合はoffsetによる制御が必要なためこの関数で対応する.
   limitを100のchunkに分割してパラレル呼び出しとマージ."
-  [{:keys [limit floor]
+  [{:keys [limit floor genre-id]
     :as   base-params
     :or   {limit 20 floor (:videoa dmm/floor)}}]
-  (let [req-params (map (fn [m] (merge base-params m))
-                        (make-req-params limit floor))]
-
+  (let [genre-req-params (->genre-req genre-id)
+        req-params       (->> (make-req-params limit floor)
+                              (map (fn [m] (merge base-params
+                                                  m
+                                                  genre-req-params))))]
     (->> req-params
          (request-bulk get-products-chunk)
          (reduce concat)
          (into []))))
-
-(defn- ->genre-req [genre-id]
-  {:article (:genre dmm/article) :article_id genre-id})
 
 (defn get-by-genre [{:keys [genre-id] :as m}]
   (let [q (->genre-req genre-id)]
@@ -91,6 +95,6 @@
 (comment
   (require '[tools.dmm :refer [creds]])
 
-  (def products (get-products {:creds @creds :limit 10}))
-  (def products (get-products {:creds @creds :limit 110}))
+  (def products (get-products {:creds (creds) :limit 10}))
+  (def products (get-products {:creds (creds) :limit 110}))
   )

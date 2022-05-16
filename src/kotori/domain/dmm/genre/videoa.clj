@@ -1,50 +1,56 @@
-(ns kotori.domain.dmm.videoa
+(ns kotori.domain.dmm.genre.videoa
   "refs.https://www.dmm.co.jp/digital/videoa/-/genre/"
   (:require
-   [kotori.domain.dmm.core :as core]
+   [kotori.domain.dmm.genre.core :as genre]
+   [kotori.domain.dmm.genre.interface :as if]
    [kotori.lib.io :as io]))
 
 (def genre-path "dmm/genre/videoa.edn")
 (defonce genres (->> genre-path io/load-edn))
 
-(def genre-name-id-map (core/genres->name-id-map genres))
-(def genre-id-name-map (core/genres->id-name-map genres))
-(def genre-names->ids (partial core/names->genre-ids genre-name-id-map))
+(defonce id-name-map (-> genres genre/->id-name-map))
+(defonce name-id-map (-> genres genre/->name-id-map))
 
-(def amateur-genre-id (get genre-name-id-map "素人"))
+(def names->genre-ids
+  (partial genre/names->genre-ids name-id-map))
+
+(def amateur-genre-id (get name-id-map "素人"))
 (def amateur-ids
   (-> ["素人" "ナンパ" "ハメ撮り"]
-      genre-names->ids))
+      names->genre-ids))
+
+(defmethod if/id->name :videoa [_ id]
+  (get id-name-map id))
 
 ;; 2022.05現在, VR専用はハイクオリティVRを内包する
-(def vr-only-id (get genre-name-id-map "VR専用"))
+(def vr-only-id (get name-id-map "VR専用"))
 
 (def vr-ids
   (-> ["VR専用" "ハイクオリティVR"]
-      genre-names->ids))
+      names->genre-ids))
 
 (def antisocial-ids
   (-> ["盗撮・のぞき" "ドラッグ" "監禁"]
-      genre-names->ids))
+      names->genre-ids))
 
 (def violent-ids
   (-> ["残虐表現" "鬼畜" "拷問" "蝋燭" "鼻フック"]
-      genre-names->ids))
+      names->genre-ids))
 
 (def dirty-ids
   (-> ["スカトロ" "食糞" "放尿・お漏らし"
        "飲尿" "脱糞" "浣腸" "ゲロ" "異物挿入"]
-      genre-names->ids))
+      names->genre-ids))
 
 (def trans-ids
   (-> ["女装・男の娘" "ニューハーフ" "ふたなり"
        "ゲイ" "性転換・女体化"]
-      genre-names->ids))
+      names->genre-ids))
 
 ;; https://www.dmm.co.jp/digital/videoa/-/list/=/article=keyword/id=2007/
 (def fat-ids
   (-> ["ぽっちゃり"]
-      genre-names->ids))
+      names->genre-ids))
 
 (def ng-genres
   (into #{} (concat

@@ -32,13 +32,3 @@
   ([cid floor-str]
    (str "https://www.dmm.co.jp/digital/"
         floor-str "/-/detail/=/cid=" cid "/")))
-
-(defn genres->name-id-map [genres]
-  (into {} (map (juxt :name :genre_id) genres)))
-
-(defn genres->id-name-map [genres]
-  (into {} (map (juxt :genre_id :name)) genres))
-
-(defn names->genre-ids [name-id-map names]
-  (into #{} (map (fn [name]
-                   (get name-id-map name)) names)))

@@ -139,13 +139,12 @@
 
 (defn update-crawled-time!
   ([db ts floor genre-id]
-   (let [genre-id   (or genre-id "default")
-         genre-name (if (nil? genre-id)
-                      "default"
-                      (genre/id->name floor genre-id))
-         key        (fs/make-nested-key ["last_crawled_time"
-                                         floor "genres" genre-id])
-         value      {:name genre-name :id genre-id :timestamp ts}]
+   (let [id    (or genre-id "default")
+         name  (if (nil? genre-id)
+                 "default"
+                 (genre/id->name floor genre-id))
+         key   (dmm/->timestamp-key floor genre-id)
+         value {:name name :id id :timestamp ts}]
      (fs/update! db dmm/doc-path {key value}))))
 
 ;; descritionの追加スクレイピング. 取得済みのものはスキップ.
@@ -163,15 +162,17 @@
 ;; firestroreのbatch writeの仕様で一回の書き込みは500まで.
 ;; そのため500単位でchunkごとに書き込む.
 (defn crawl-products!
-  [{:keys [db floor genre-id] :as params
-    :or   {floor (:videoa dmm/floor)}}]
-  (let [ts        (time/fs-now)
-        coll-path product/coll-path]
+  [{:keys [db floor genre-id coll-path scrape?] :as params
+    :or   {floor     (:videoa dmm/floor)
+           coll-path product/coll-path
+           scrape?   true}}]
+  (let [ts (time/fs-now)]
     (when-let [products (lib/get-products params)]
       (doto db
         (save-products! coll-path products ts)
-        (scrape-desc-if! coll-path products floor)
         (update-crawled-time! ts floor genre-id))
+      (when scrape?
+        (scrape-desc-if! db coll-path products floor))
       ;; ここでproductsオブジェクトを戻すとGCRでエラーした.
       ;; 詳細は未調査だけどMapを返せば正常終了.
       {:timestamp ts
@@ -243,10 +244,10 @@
                                 :creds (creds)
                                 :cid   "waaa00100"}))
 
-  (def products (-> (crawl-products! {:db       (db-dev)
+  (def products (-> (crawl-products! {:db       (db-prod)
                                       :creds    (creds)
-                                      :genre-id 2007
-                                      :limit    10})
+                                      :genre-id 4024
+                                      :limit    300})
                     :products))
   #_(def resp (map #(get-in % [:iteminfo :genre]) products))
 

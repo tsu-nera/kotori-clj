@@ -22,6 +22,12 @@
 (def st-exclude-ng-genres
   (make-st-exclude-ng-genres videoa/ng-genres))
 
+(defn no-genres? [product]
+  (nil? (:genres product)))
+
+(def st-exclude-no-genres
+  (remove #(no-genres? %)))
+
 (defn no-sample-movie? [product]
   (:no-sample-movie product))
 
@@ -128,6 +134,9 @@
 (def st-skip-debug
   (remove #(get % :debug)))
 
+(def st-skip-ignore
+  (remove #(get % :ignore)))
+
 (def st-skip-not-yet-crawled
   (remove #(nil? (get % :cid))))
 
@@ -153,8 +162,13 @@
     (->> products
          (into [] xstrategy))))
 
-(defn assoc-last-crawled-time [m db key]
-  (let [last-crawled-time (fs/get-in db dmm/doc-path key)]
+(defn get-last-crawled-time [db floor genre-id]
+  (-> db
+      (fs/get-in dmm/doc-path :last-crawled-time)
+      (get-in [floor "genres" genre-id "timestamp"])))
+
+(defn assoc-last-crawled-time [m db floor genre-id]
+  (let [last-crawled-time (get-last-crawled-time db floor genre-id)]
     (assoc m :last-crawled-time last-crawled-time)))
 
 (defmulti make-strategy :code)
@@ -165,6 +179,13 @@
    st-exclude-vr
    st-exclude-amateur
    st-exclude-omnibus])
+
+(defmethod make-strategy "0009" [_]
+  [st-exclude-ng-genres
+   st-exclude-no-samples
+   st-exclude-vr
+   st-exclude-omnibus
+   st-include-amateur])
 
 (defmethod make-strategy "0010" [_]
   [st-exclude-ng-genres
@@ -191,6 +212,7 @@
                          st-skip-not-yet-crawled
                          st-skip-not-yet-scraped
                          st-skip-debug
+                         st-skip-ignore
                          st-exclude-recently-tweeted
                          xst)]
     (->> products
@@ -206,19 +228,6 @@
         doc-ids  (map :content_id products)]
     (->> (select-scheduled-products-with-xst
           m xst product/coll-path doc-ids)
-         (take limit))))
-
-(defn select-scheduled-amateurs [{:keys [db limit] :as m :or {limit 5}}]
-  (let [xst    [st-exclude-ng-genres
-                st-exclude-no-samples
-                st-exclude-vr
-                st-exclude-omnibus
-                st-include-amateur]
-        params (assoc-last-crawled-time
-                m db (:products-crawled-time dmm/field))]
-    (->> (select-scheduled-products-with-xst-deplicated
-          params xst product/coll-path)
-         (sort-by :rank-popular)
          (take limit))))
 
 (defn select-tweeted-products [{:keys [db limit screen-name]
@@ -313,13 +322,19 @@
 
   (count products)
 
-  (def screen-name (->screen-name "0009"))
+  (def info (kotori-info "0009"))
   (def amateurs
     (into []
-          (select-scheduled-amateurs {:db          (db-prod)
-                                      :limit       5
-                                      :screen-name screen-name})))
+          (select-scheduled-products
+           {:db          (db-prod)
+            :creds       (creds)
+            :info        info
+            :limit       100
+            :genre-id    4024
+            :screen-name (:screen-name info)})))
   (count amateurs)
+
+  (fs/get-in (db-prod) dmm/doc-path "amateurs_crawled_time")
 
   (def product (nth products 27))
   (def next (lib/->next product))
@@ -340,11 +355,11 @@
 
   (def products (fs/get-docs-by-ids (db-prod) product/coll-path cids))
 
-  (def info (kotori-info "0010"))
+  (def info (kotori-info "0009"))
   (def products (select-scheduled-products
-                 {:db          (db-dev)
+                 {:db          (db-prod)
                   :info        info
-                  :genre-id    2007
+                  :genre-id    4024
                   :creds       (creds)
                   :limit       100
                   :screen-name (:screen-name info)}))

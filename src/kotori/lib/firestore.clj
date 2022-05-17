@@ -100,12 +100,17 @@
 
 (def query-one (query-limit 1))
 
-(defn get-in [db doc-path ^String field_name]
+(defn get-in "
+  ドット表記のネスト構造には対応していないので
+  ネスト内部の値が必要な場合はマップを呼び出し元で処理すること."
+  [db doc-path ^String field_name]
   (-> db
       (f/doc doc-path)
       .get
       deref
       .getData
+      (as-> x (into {} x))
+      json/->clj
       (get field_name)))
 
 (defn get-doc

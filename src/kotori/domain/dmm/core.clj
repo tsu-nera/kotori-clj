@@ -1,6 +1,7 @@
 (ns kotori.domain.dmm.core
   (:require
-   [clojure.spec.alpha :as s]))
+   [clojure.spec.alpha :as s]
+   [clojure.string :as str]))
 
 (def doc-path "providers/dmm")
 
@@ -19,6 +20,12 @@
    :genre   "genre"   ; ジャンル
    :actress "actress" ; 女優
    })
+
+(defn ->timestamp-key
+  ([floor]
+   (->timestamp-key floor "default"))
+  ([floor genre-id]
+   (str/join "." ["last_crawled_time" floor "genres" genre-id])))
 
 (def field
   {:products-crawled-time "products_crawled_time"

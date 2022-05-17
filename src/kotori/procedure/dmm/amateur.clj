@@ -10,9 +10,10 @@
     :rename
     {amateur-coll-path coll-path}]
    [kotori.lib.provider.dmm.product :as lib]
-   [kotori.lib.time :as time]
    [kotori.procedure.dmm.product :as product]
    [kotori.procedure.strategy.dmm :as st]))
+
+(def floor (:videoc dmm/floor))
 
 ;; 素人ジャンルはvideocに属するものとvideoaに属するジャンルがある.
 ;; 素人ジャンル作品として女優を利用していればvideoa,
@@ -32,28 +33,17 @@
       (assoc :floor (:videoc dmm/floor))
       (product/scrape-page coll-path)))
 
-(defn crawl-products!
-  [{:keys [db] :as m}]
-  (let [floor    (:videoc dmm/floor)
-        field-ts (:amateurs-crawled-time  dmm/field)
-        ts       (time/fs-now)]
-    (when-let [products (-> m
-                            (assoc :floor floor)
-                            (lib/get-products))]
-      (doto db
-        (product/save-products! coll-path products ts)
-        (product/update-crawled-time-deplicated! field-ts ts)
-        (product/scrape-desc-if! coll-path field-ts floor))
-      {:timestamp ts
-       :count     (count products)
-       :products  products})))
+(defn crawl-products! [{:as m}]
+  (let [opts {:coll-path coll-path
+              :floor     floor}]
+    (product/crawl-products! (merge m opts))))
 
 (defn select-scheduled-products [{:as m :keys [db limit] :or {limit 5}}]
   (let [st-exclude-ng-genres (st/make-st-exclude-ng-genres d/ng-genres)
         xst                  [st-exclude-ng-genres
                               st/st-exclude-no-samples]
         params               (st/assoc-last-crawled-time
-                              m db (:amateurs-crawled-time dmm/field))
+                              m db floor "default")
         products             (st/select-scheduled-products-with-xst-deplicated
                               params xst coll-path)]
     (->> products
@@ -90,14 +80,14 @@
   ;;                   :floor "videoc"
   ;;                   :cid   "erk022"})
 
-  (def resp (crawl-products! {:db    (db)
+  (def resp (crawl-products! {:db    (db-prod)
                               :creds (creds)
                               :limit 120}))
 
   (def products
     (select-scheduled-products
      {:db          (db-prod)
-      :limit       30
+      :limit       10
       :screen-name (->screen-name "0027")}))
   (def ret (map :title (map ->next products)))
 

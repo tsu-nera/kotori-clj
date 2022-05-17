@@ -82,7 +82,10 @@
 
 (defn select-next-amateur-videoa [{:keys [screen-name] :as m}]
   {:pre [(s/valid? ::d/screen-name screen-name)]}
-  (lib/->next (first (st-dmm/select-scheduled-amateurs m))))
+  (lib/->next (first (st-dmm/select-scheduled-products
+                      (-> m
+                          ;; TODO hotfix
+                          (assoc :genre-id 4024))))))
 
 (defn select-next-amateur-videoc [{:keys [screen-name] :as m}]
   {:pre [(s/valid? ::d/screen-name screen-name)]}
@@ -167,17 +170,20 @@
 
 (comment
   (def info (kotori-info "0001"))
-  (select-next-product {:db          (db-prod)
-                        :screen-name (:screen-name info)
-                        :creds       (creds)
-                        :limit       100
-                        :info        info})
+  (def resp (select-next-product {:db          (db-prod)
+                                  :screen-name (:screen-name info)
+                                  :creds       (creds)
+                                  :limit       100
+                                  :info        info}))
   )
 
 (comment
-  (def screen-name (->screen-name "0009"))
-  (select-next-amateur-videoc {:db (db-prod) :screen-name screen-name})
-
+  (def info (kotori-info "0027"))
+  (def resp (select-next-amateur-videoc
+             {:db          (db-prod)
+              :creds       (creds)
+              :info        info
+              :screen-name (:screen-name info)}))
   )
 
 (comment

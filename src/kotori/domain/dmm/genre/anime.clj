@@ -13,7 +13,7 @@
 
 (def genre-names->ids (partial genre/names->genre-ids name-id-map))
 
-(defmethod if/id->name :videoc [_ id]
+(defmethod if/id->name :anime [_ id]
   (get id-name-map id))
 
 (def dirty-ids

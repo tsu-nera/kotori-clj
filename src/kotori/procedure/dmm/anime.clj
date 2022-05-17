@@ -7,7 +7,6 @@
     :rename
     {anime-coll-path coll-path}]
    [kotori.lib.provider.dmm.product :as lib]
-   [kotori.lib.time :as time]
    [kotori.procedure.dmm.product :as product]
    [kotori.procedure.strategy.dmm :as st]))
 
@@ -18,34 +17,26 @@
       (assoc :floor floor)
       (product/crawl-product! coll-path)))
 
-(defn crawl-products!
-  [{:keys [db] :as m}]
-  (let [field-ts (:animes-crawled-time dmm/field)
-        ts       (time/fs-now)]
-    (when-let [products (-> m
-                            (assoc :floor floor)
-                            (lib/get-products))]
-      (doto db
-        (product/save-products! coll-path products ts)
-        (product/update-crawled-time-deplicated! field-ts ts)
-        ;; いろいろ書かれてて複雑なので刈り取りは保留.
-        ;; (product/scrape-desc-if! coll-path field-ts)
-        )
-      {:timestamp ts
-       :count     (count products)
-       :products  products})))
+(defn crawl-products! [{:as m}]
+  (let [opts {:coll-path coll-path
+              ;; いろいろ書かれてて複雑なので刈り取りは保留.
+              :scrape?   false
+              :floor     floor}]
+    (product/crawl-products! (merge m opts))))
 
 (defn select-scheduled-products [{:as m :keys [db limit] :or {limit 5}}]
   (let [st-exclude-ng-genres (st/make-st-exclude-ng-genres d/ng-genres)
-        xst                  [st-exclude-ng-genres
+        xst                  [#_st/st-exclude-no-genres
+                              st-exclude-ng-genres
                               st/st-exclude-no-samples]
-        params               (st/assoc-last-crawled-time
-                              m db (:animes-crawled-time dmm/field))
+        ts                   (st/get-last-crawled-time db floor "default")
+        params               (assoc m :last-crawled-time ts)
         products             (st/select-scheduled-products-with-xst-deplicated
                               params xst coll-path)]
     (->> products
          (sort-by :rank-popular)
          (take limit))))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (comment
@@ -75,5 +66,6 @@
            {:db          (db-prod)
             :limit       5
             :screen-name (->screen-name "0024")})))
+
   (map ->next products)
   )

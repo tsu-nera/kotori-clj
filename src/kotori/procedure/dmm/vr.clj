@@ -10,33 +10,24 @@
     :rename
     {vr-coll-path coll-path}]
    [kotori.lib.provider.dmm.product :as lib]
-   [kotori.lib.time :as time]
    [kotori.procedure.dmm.product :as product]
    [kotori.procedure.strategy.dmm :as st]))
 
 (def floor (:videoa dmm/floor))
 
-(defn get-products [{:as params}]
-  (let [opts {:floor      floor
-              :article    (:genre dmm/article)
-              :article_id genre-id}]
-    (lib/get-products (merge params opts))))
+(defn get-products [{:as m}]
+  (let [opts {:floor    floor
+              :genre-id genre-id}]
+    (lib/get-products (merge m opts))))
 
 (defn crawl-product! [{:as m}]
   (product/crawl-product! m coll-path))
 
-(defn crawl-products!
-  [{:keys [db] :as m}]
-  (let [timestamp-key (:vrs-crawled-time dmm/field)
-        ts            (time/fs-now)]
-    (when-let [products (get-products m)]
-      (doto db
-        (product/save-products! coll-path products ts)
-        (product/update-crawled-time-deplicated! timestamp-key ts)
-        (product/scrape-desc-if! coll-path timestamp-key floor))
-      {:timestamp ts
-       :count     (count products)
-       :products  products})))
+(defn crawl-products! [{:as m}]
+  (let [opts {:coll-path coll-path
+              :genre-id  genre-id
+              :floor     floor}]
+    (product/crawl-products! (merge m opts))))
 
 ;; サンプル動画として公開されて利用できるものは半年以上前のものばかり.
 ;; https://www.dmm.co.jp/litevideo/-/list/=/article=keyword/id=6793/
@@ -75,8 +66,8 @@
                              :cid "bibivr00059"}))
 
   (def resp (crawl-products! {:db    (db-dev)
-                              :env   (env)
-                              :limit 300}))
+                              :creds (creds)
+                              :limit 10}))
 
 
   (def vrs

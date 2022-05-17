@@ -16,5 +16,22 @@
   (if/id->name (keyword floor) id))
 
 (comment
-  (id->name "videoa" nil)
+  ;; プロトコルに入門しようとしたけどわからなくなっちゃったので中断
+  ;; コードは残しておくのでいずれ再挑戦.
+  (defprotocol IGenre
+    (id->name [this id])
+    (name->id [this name]))
+
+  (defrecord Genre
+      [floor id-name-map name-id-map]
+    IGenre
+    (id->name [_ id] (get id-name-map id))
+    (name->id [_ name] (get name-id-map name)))
+
+  (defn make-genre [floor]
+    (->Genre floor nil nil))
+
+  (def videoa (make-genre "videoa"))
+  (:floor videoa)
+  (id->name videoa 2007)
   )

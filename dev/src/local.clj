@@ -3,11 +3,12 @@
   (:require
    [clojure.edn :as edn]
    [clojure.java.io :as io]
+   [clojure.pprint :refer [pprint]]
    [clojure.repl :refer :all]
    [clojure.tools.namespace.repl :refer [refresh]]
    [devtools :refer :all :as t]
    [firebase :refer [creds-dev creds-prod]]
-   [firestore :refer [open-product open-amateur]]
+   [firestore :refer [open-product open-amateur open-vr open-anime]]
    [hashp.core]
    [integrant.repl :refer
     [clear halt go init prep set-prep! reset reset-all suspend resume]]
@@ -16,7 +17,7 @@
    [kotori.lib.net :refer [get-global-ip]]
    [kotori.service.firebase :refer [get-app get-db delete-app!]]
    [portal.api :as p]
-   [tools.dmm :refer [open-dmm]]))
+   [tools.dmm :refer [open-dmm get-dmm]]))
 
 (def env-dev "private/dev/env.edn")
 (def env-prod "private/prod/env.edn")

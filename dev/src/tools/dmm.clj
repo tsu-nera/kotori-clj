@@ -3,6 +3,7 @@
    [clojure.java.browse :as b]
    [clojure.pprint :refer [pprint]]
    [clojure.string :as string]
+   [defun.core :refer [defun]]
    [devtools :refer [env kotori-info]]
    [firebase :refer [db-dev db-prod]]
    [integrant.repl.state :refer [config system]]
@@ -93,14 +94,13 @@
 (defn ->dmm-url [cid]
   (d/->url cid))
 
-(defn get-dmm-product
+(defun get-dmm
   "DMM APIから取得"
-  [cid floor]
-  (cond
-    (= floor "anime")  (product/get-anime {:cid cid :creds (creds)})
-    (= floor "videoc") (product/get-videoc {:cid cid :creds (creds)})
-    :else              (product/get-videoa {:cid cid :creds (creds)})))
-#_(get-dmm-product "ssis00337")
+  ([cid "anime"] (product/get-anime {:cid cid :creds (creds)}))
+  ([cid "videoc"] (product/get-videoc {:cid cid :creds (creds)}))
+  ([cid "videoa"] (product/get-videoa {:cid cid :creds (creds)}))
+  ([cid] (product/get-videoa {:cid cid :creds (creds)})))
+#_(get-dmm "ssis00337")
 
 (defn get-dmm-campaign [title]
   (product/get-products {:limit 10 :keyword title :creds (creds)}))

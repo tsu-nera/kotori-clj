@@ -10,10 +10,21 @@
 (defn ->product-path [doc-path]
   (str fs-base-url doc-path "?project=dmm-fanza"))
 
-(defn open-amateur
-  [cid]
-  (b/browse-url (->product-path (dmm/amateur-doc-path cid))))
+(defn open-doc [doc-path cid]
+  (b/browse-url (->product-path (doc-path cid))))
 
 (defn open-product
   [cid]
-  (b/browse-url (->product-path (dmm/doc-path cid))))
+  (open-doc dmm/doc-path cid))
+
+(defn open-amateur
+  [cid]
+  (open-doc dmm/amateur-doc-path cid))
+
+(defn open-anime
+  [cid]
+  (open-doc dmm/anime-doc-path cid))
+
+(defn open-vr
+  [cid]
+  (open-doc dmm/vr-doc-path cid))

@@ -13,6 +13,7 @@
   enlive/enlive       {:mvn/version "1.1.6"}
 
   ;; utilites
+  defun/defun                         {:mvn/version "0.3.1"}
   cheshire/cheshire                   {:mvn/version "5.10.2"}
   jarohen/chime                       {:mvn/version "0.3.3"}
   camel-snake-kebab/camel-snake-kebab {:mvn/version "0.4.2"}
@@ -32,7 +33,7 @@
   com.twitter.twittertext/twitter-text {:mvn/version "3.1.0"}
 
   ;; Google Cloud Platform
-  com.google.auth/google-auth-library-oauth2-http {:mvn/version "1.6.0"}
+  com.google.auth/google-auth-library-oauth2-http {:mvn/version "1.7.0"}
   com.google.cloud/google-cloud-firestore         {:mvn/version "3.1.0"}
   com.google.firebase/firebase-admin              {:mvn/version "8.1.0"}
   lurodrigo/firestore-clj                         {:mvn/version "1.2.1"}
@@ -65,7 +66,7 @@
                            cider/cider-nrepl               {:mvn/version "0.28.3"}
                            io.github.clojure/tools.build   {:git/tag "v0.8.2" :git/sha "ba1a2bf"}
                            com.google.cloud.tools/jib-core {:mvn/version "0.21.0"}
-                           djblue/portal                   {:mvn/version "0.25.0"}
+                           djblue/portal                   {:mvn/version "0.26.0"}
                            clj-commons/pomegranate         {:mvn/version "1.2.1"}}}
   ;; clojure -M:outdated (--upgrade --download)
   :outdated {:extra-deps {com.github.liquidz/antq {:mvn/version "RELEASE"}}

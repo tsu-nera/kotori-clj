@@ -42,14 +42,13 @@
   (let [st-exclude-ng-genres (st/make-st-exclude-ng-genres d/ng-genres)
         xst                  [st-exclude-ng-genres
                               st/st-exclude-no-samples]
-        params               (st/assoc-last-crawled-time
-                              m db floor "default")
+        ts                   (st/get-last-crawled-time db floor "default")
+        params               (assoc m :last-crawled-time ts)
         products             (st/select-scheduled-products-with-xst-deplicated
                               params xst coll-path)]
     (->> products
          (sort-by :rank-popular)
-         (take limit)
-         (into []))))
+         (take limit))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (comment
@@ -82,13 +81,16 @@
 
   (def resp (crawl-products! {:db    (db-prod)
                               :creds (creds)
-                              :limit 120}))
+                              :limit 300}))
 
   (def products
     (select-scheduled-products
      {:db          (db-prod)
-      :limit       10
+      :limit       100
       :screen-name (->screen-name "0027")}))
+
+  (count products)
+
   (def ret (map :title (map ->next products)))
 
   (def product (first products))

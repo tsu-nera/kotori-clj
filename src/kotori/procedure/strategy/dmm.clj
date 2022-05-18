@@ -146,14 +146,12 @@
 (defn select-scheduled-products-with-xst-deplicated
   [{:keys [db screen-name last-crawled-time]} xst coll-path]
   (let [st-last-crawled (fs/query-filter
-                         "last_crawled_time"
-                         last-crawled-time)
+                         "last_crawled_time" last-crawled-time)
         st-exclude-recently-tweeted-self
         (make-st-exclude-recently-tweeted-self 28 screen-name)
         st-exclude-recently-tweeted-others
         (make-st-exclude-recently-tweeted-others 14 screen-name)
-        products        (fs/get-docs
-                         db coll-path st-last-crawled)
+        products        (fs/get-docs db coll-path st-last-crawled)
         xstrategy       (apply comp
                                st-skip-debug
                                st-exclude-recently-tweeted-self
@@ -367,4 +365,21 @@
 
   (def product (first products))
   (def next (lib/->next (first products)))
+  )
+
+(comment
+  (fs/get-docs (db-prod) "providers/dmm/amateurs"
+               (fs/query-filter
+                "last_crawled_time"
+                (get-last-crawled-time (db-prod) "videoc" "default")))
+
+  (def ts (get-last-crawled-time (db-prod) "videoc" "default"))
+
+  (require '[firestore-clj.core :as f])
+
+  (-> (db-prod)
+      (f/coll "providers/dmm/amateurs")
+      (f/filter= "last_crawled_time" ts)
+      f/pullv)
+
   )

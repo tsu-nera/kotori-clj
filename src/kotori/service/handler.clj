@@ -77,7 +77,8 @@
 
 (comment
   (require '[devtools :refer [kotori-names ->screen-name]]
-           '[firebase :refer [db]])
+           '[tools.dmm :refer [creds]]
+           '[firebase :refer [db db-prod]])
   (def app (make-app (kotori-names)))
 
   (def screen-name (->screen-name "0003"))
@@ -86,6 +87,11 @@
 
   (app {:request-method :post :uri "/api/ping"})
   (app {:request-method :post :uri "/api/dmm/get-product"})
+  (app {:request-method :post
+        :uri            "/api/dmm/crawl-products"
+        :params         {:db    (db-prod)
+                         :limit 100
+                         :creds (creds)}})
 
   (app {:request-method :get
         :uri            "/api/kotori/select-next-product"

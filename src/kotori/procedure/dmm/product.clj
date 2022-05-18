@@ -143,7 +143,7 @@
          name  (if (nil? genre-id)
                  "default"
                  (genre/id->name floor genre-id))
-         key   (dmm/->timestamp-key floor genre-id)
+         key   (dmm/->timestamp-key floor name)
          value {:name name :id id :timestamp ts}]
      (fs/update! db dmm/doc-path {key value}))))
 
@@ -244,10 +244,10 @@
                                 :creds (creds)
                                 :cid   "waaa00100"}))
 
-  (def products (-> (crawl-products! {:db       (db-prod)
-                                      :creds    (creds)
-                                      :genre-id 4024
-                                      :limit    300})
+  (def products (-> (crawl-products! {:db    (db-prod)
+                                      :creds (creds)
+                                      ;; :genre-id 4024
+                                      :limit 100})
                     :products))
   #_(def resp (map #(get-in % [:iteminfo :genre]) products))
 

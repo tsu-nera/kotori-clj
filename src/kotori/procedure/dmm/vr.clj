@@ -45,8 +45,8 @@
                   st/st-exclude-no-image
                   st/st-exclude-omnibus
                   st/st-include-vr]
-        params   (st/assoc-last-crawled-time
-                  m db (:vrs-crawled-time dmm/field))
+        ts       (st/get-last-crawled-time db floor genre-id)
+        params   (assoc m :last-crawled-time ts)
         products (st/select-scheduled-products-with-xst-deplicated
                   params xst coll-path)]
     (->> products
@@ -69,11 +69,10 @@
                               :creds (creds)
                               :limit 10}))
 
-
   (def vrs
     (into []
           (select-scheduled-products
            {:db          (db-prod)
-            :limit       10
+            :limit       100
             :screen-name (->screen-name "0028")})))
   )

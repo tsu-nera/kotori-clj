@@ -165,7 +165,7 @@
 (defn get-last-crawled-time [db floor genre-id]
   (-> db
       (fs/get-in dmm/doc-path :last-crawled-time)
-      (get-in [floor "genres" genre-id "timestamp"])))
+      (get-in [floor "genres" (str genre-id) "timestamp"])))
 
 (defn assoc-last-crawled-time [m db floor genre-id]
   (let [last-crawled-time (get-last-crawled-time db floor genre-id)]

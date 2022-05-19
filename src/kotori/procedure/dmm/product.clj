@@ -143,7 +143,7 @@
          name  (if (nil? genre-id)
                  "default"
                  (genre/id->name (genre/make-genre floor) genre-id))
-         key   (dmm/->timestamp-key floor name)
+         key   (dmm/->timestamp-key floor genre-id)
          value {:name name :id id :timestamp ts}]
      (fs/update! db dmm/doc-path {key value}))))
 

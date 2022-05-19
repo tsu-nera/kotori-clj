@@ -35,7 +35,7 @@
 (s/def ::screen-name string?)
 (s/def ::user-id string?)
 (s/def ::code string?)
-(s/def ::genre-id int?)
+(s/def ::genre-id (s/nilable int?))
 (s/def ::info
   (s/keys :req-un [::screen-name ::user-id ::code ::cred]
           :opt-un [::proxy ::genre-id]))

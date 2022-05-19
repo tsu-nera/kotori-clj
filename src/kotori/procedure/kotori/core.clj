@@ -80,13 +80,6 @@
   {:pre [(s/valid? ::d/screen-name screen-name)]}
   (lib/->next (first (st-dmm/select-scheduled-products m))))
 
-(defn select-next-amateur-videoa [{:keys [screen-name] :as m}]
-  {:pre [(s/valid? ::d/screen-name screen-name)]}
-  (lib/->next (first (st-dmm/select-scheduled-products
-                      (-> m
-                          ;; TODO hotfix
-                          (assoc :genre-id 4024))))))
-
 (defn select-next-amateur-videoc [{:keys [screen-name] :as m}]
   {:pre [(s/valid? ::d/screen-name screen-name)]}
   (let [next (lib/->next (first (amateur/select-scheduled-products m)))

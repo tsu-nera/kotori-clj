@@ -62,8 +62,6 @@
       ["/tweet-random" kotori/tweet-random]
       ["/get-product" {:get kotori/get-product}]
       ["/select-next-product" {:get kotori/select-next-product}]
-      ["/select-next-amateur-videoa"
-       {:get kotori/select-next-amateur-videoa}]
       ["/select-next-amateur-videoc"
        {:get kotori/select-next-amateur-videoc}]
       ["/select-next-vr" {:get kotori/select-next-vr}]

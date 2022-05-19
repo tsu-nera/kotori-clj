@@ -60,7 +60,7 @@
 
 (comment
   (def product (lib/get-videoc {:creds (creds)
-                                :cid   "ttk005"}))
+                                :cid   "srsy030"}))
 
   (def product (lib/get-videoa {:creds (creds)
                                 :cid   "1kmhrs00044"}))
@@ -69,10 +69,10 @@
 (comment
   (def resp (crawl-videoc-product! {:db    (db-prod)
                                     :creds (creds)
-                                    :cid   "ttk005"}))
+                                    :cid   "shinki066"}))
 
   (def resp (scrape-videoc-page! {:db  (db-prod)
-                                  :cid "ttk005"}))
+                                  :cid "shinki066"}))
 
   ;; (require '[kotori.lib.provider.dmm.public :as public])
   ;; (public/get-page {:db    (db-prod)
@@ -91,7 +91,7 @@
 
   (count products)
 
-  (def ret (map :title (map ->next products)))
+  (def ret (map :description (map ->next products)))
 
   (def product (first products))
   )

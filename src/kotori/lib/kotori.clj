@@ -29,6 +29,13 @@
           (str/replace target ""))
       text)))
 
+(defn remove-headdesc [text]
+  (let [re (re-pattern "^--------------(.+)--------------|^//////////////(.+)//////////////")]
+    (if-let [target (first (re-find re text))]
+      (-> text
+          (str/replace target ""))
+      text)))
+
 (defn- ->last-char [s]
   (let [n (count s)]
     (cond-> (str s)
@@ -43,6 +50,12 @@
       (str/trim (drop-last-char s))
       s)))
 
+(defn remove-extra [s]
+  (-> s
+      (str/replace #"^、" "")
+      (str/replace #"^？" "")
+      (str/trim)))
+
 (defn add-tenten [text]
   (let [last-char (->last-char text)]
     (cond
@@ -56,7 +69,7 @@
   (let [last-char (->last-char s)]
     (cond
       (not (= last-char "、")) (str/replace s #"、" "、\n")
-      (not (= last-char "…"))  (str/replace s #"…" "…\n")
+      (not (= last-char "…")) (str/replace s #"…" "…\n")
       :else                    s)))
 
 (defn- normalize
@@ -92,12 +105,14 @@
             ed/videoc-desc->remove-stopwords
             trim-headline
             remove-bodysize
+            remove-headdesc
             p/->sentences
             (map p/split-long-sentence)
             flatten
             (map str/trim)
             ((partial p/join-sentences length))
             ((partial p/trunc length))
+            remove-extra
             ;; ((partial remove-last-x "【")) ;; fsデータにゴミがはいったので
             add-tenten
             ;; add-newline  うまく出来ないので保留...
@@ -123,11 +138,20 @@
 (defn- ->swap-local-wife [name]
   (str/replace name #"ローカル妻" "匿名希望の奥さん"))
 
+(defn limit-two [s]
+  (let [names (str/split s #"＆")]
+    (if (> (count names) 2)
+      (str (->> names
+                (take 2)
+                (str/join "＆")) "…")
+      s)))
+
 (defn videoc-title->name [title]
   (-> title
       ->remove-num
       (ed/videoc-title->remove-stopwords)
       ->swap-local-wife
+      limit-two
       ->add-chan))
 
 (defn- ->remove-haishin [s]
@@ -268,7 +292,7 @@
   (require '[kotori.lib.provider.dmm.public :refer [get-page]])
   (require '[kotori.lib.kotori :as lib])
 
-  (def cid "pow072")
+  (def cid "sth018")
   (def page (get-page {:cid cid :floor "videoc"}))
   (def desc (:description page))
 
@@ -282,4 +306,11 @@
   (def title2 "【VR】シン・時間停止 ―女湯イタズラ大戦争VR―")
 
   (title->trimed title)
+  )
+
+(comment
+  (videoc-title->name  "S66ちゃん＆K66ちゃん＆A66ちゃん＆H66ちゃん＆Y66ちゃん＆R66ちゃん")
+
+  (def text "S66ちゃん＆K66ちゃん＆A66ちゃん＆H66ちゃん＆Y66ちゃん＆R66ちゃん")
+  (def text2 "ドMちゃん 2（仮名）")
   )

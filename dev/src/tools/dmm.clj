@@ -252,7 +252,9 @@
   )
 
 (comment
-  (def resp (scrape-descs "videoa" 20))
+  (def resp (scrape-descs "videoc" 20))
   (def descs (map :description resp))
   (def descs2 (map kotori/desc->trimed  descs))
+
+  (def page (nth resp 6))
   )

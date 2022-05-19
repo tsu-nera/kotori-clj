@@ -126,7 +126,7 @@
         ))
   content
 
-  (def cid "pow072")
+  (def cid "shinki066")
   (def resp (get-page {:cid cid :floor "videoc"}))
 
   (def data (get-page-data cid "videoc"))
@@ -135,9 +135,4 @@
 
   (def hastags (p/->hashtags description))
 
-  (-> (->raw-description data)
-      remove-fanza-headline
-      cut-underline
-      p/remove-hashtags
-      )
   )

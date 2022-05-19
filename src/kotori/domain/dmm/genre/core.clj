@@ -1,37 +1,35 @@
 (ns kotori.domain.dmm.genre.core
   (:require
-   [kotori.domain.dmm.genre.interface :as if]))
+   [kotori.domain.dmm.genre.anime]
+   [kotori.domain.dmm.genre.interface :as if]
+   [kotori.domain.dmm.genre.videoa]
+   [kotori.domain.dmm.genre.videoc])
+  (:import
+   (kotori.domain.dmm.genre.anime
+    Anime)
+   (kotori.domain.dmm.genre.videoa
+    Videoa)
+   (kotori.domain.dmm.genre.videoc
+    Videoc)))
 
-(defn ->name-id-map [genres]
-  (into {} (map (juxt :name :genre_id) genres)))
+(defn make-genre [floor]
+  (case floor
+    "videoa" (Videoa. "videoa")
+    "videoc" (Videoc. "videoc")
+    "anime"  (Anime. "anime")
+    (Videoa. "videoa")))
 
-(defn ->id-name-map [genres]
-  (into {} (map (juxt :genre_id :name)) genres))
+(defn id->name [genre id]
+  (if/id->name genre id))
 
-(defn names->genre-ids [name-id-map names]
-  (into #{} (map (fn [name]
-                   (get name-id-map name)) names)))
-
-(defn id->name [floor id]
-  (if/id->name (keyword floor) id))
+(defn name->id [genre name]
+  (if/name->id genre name))
 
 (comment
   ;; プロトコルに入門しようとしたけどわからなくなっちゃったので中断
   ;; コードは残しておくのでいずれ再挑戦.
-  (defprotocol IGenre
-    (id->name [this id])
-    (name->id [this name]))
-
-  (defrecord Genre
-      [floor id-name-map name-id-map]
-    IGenre
-    (id->name [_ id] (get id-name-map id))
-    (name->id [_ name] (get name-id-map name)))
-
-  (defn make-genre [floor]
-    (->Genre floor nil nil))
 
   (def videoa (make-genre "videoa"))
   (:floor videoa)
-  (id->name videoa 2007)
+  (if/name->id videoa "ぽっちゃり")
   )

@@ -1,8 +1,9 @@
-(ns kotori.domain.kotori
+(ns kotori.domain.kotori.core
   (:require
    [clojure.set :refer [rename-keys]]
    [clojure.spec.alpha :as s]
    [clojure.walk :refer [keywordize-keys]]
+   [kotori.domain.dmm.genre.core :as genre]
    [kotori.lib.firestore :as fs]))
 
 (def coll-name "kotoris")
@@ -10,8 +11,15 @@
 
 (defrecord Cred [auth-token ct0])
 (defrecord Proxy [proxy-host proxy-port proxy-user proxy-pass])
+
+(def code-genre-map
+  {"0001" ["videoa" nil]
+   "0009" ["videoa" "素人"]
+   "0010" ["videoa" "ぽっちゃり"]})
+
 (defrecord Info
-  [screen-name user-id code ^Cred cred ^Proxy proxy])
+  [screen-name user-id code genre-id
+   ^Cred cred ^Proxy proxy])
 
 (s/def ::auth-token string?)
 (s/def ::ct0 string?)
@@ -27,17 +35,25 @@
 (s/def ::screen-name string?)
 (s/def ::user-id string?)
 (s/def ::code string?)
+(s/def ::genre-id int?)
 (s/def ::info
   (s/keys :req-un [::screen-name ::user-id ::code ::cred]
-          :opt-un [::proxy]))
+          :opt-un [::proxy ::genre-id]))
 
 (def guest-user "guest")
+
+(defn code->genre-id [code]
+  (let [[floor name] (get code-genre-map code)
+        genre        (genre/make-genre floor)]
+    (genre/name->id genre name)))
 
 (defn make-info [screen-name user-id code cred-map proxy-map]
   (let [cred       (s/conform ::cred (map->Cred cred-map))
         test-proxy (s/conform ::proxy (map->Proxy proxy-map))
-        proxy      (if-not (s/invalid? test-proxy) test-proxy {})]
-    (s/conform ::info (->Info screen-name user-id code cred proxy))))
+        proxy      (if-not (s/invalid? test-proxy) test-proxy {})
+        genre-id   (code->genre-id code)]
+    (s/conform ::info (->Info screen-name user-id code genre-id
+                              cred proxy))))
 
 (defn fs->cred
   ([db user-id]

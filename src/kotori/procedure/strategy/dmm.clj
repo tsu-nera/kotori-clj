@@ -5,11 +5,36 @@
    [kotori.domain.dmm.core :as dmm]
    [kotori.domain.dmm.genre.videoa :as videoa]
    [kotori.domain.dmm.product :as product]
-   [kotori.domain.kotori :refer [guest-user]]
+   [kotori.domain.kotori.core :refer [guest-user]]
    [kotori.lib.firestore :as fs]
    [kotori.lib.kotori :as lib]
    [kotori.lib.provider.dmm.product :as lib-dmm]
-   [kotori.lib.time :as time]))
+   [kotori.lib.time :as time])
+  (:import
+   (kotori.domain.kotori.core
+    Info)))
+
+(defn ->genre-ids [product]
+  (->> product
+       :genres
+       (map #(get % "id"))
+       (into [])))
+
+(defn contains-genre? [genre-id-set product]
+  (some true?
+        (map #(contains? genre-id-set %) (->genre-ids product))))
+
+(defn ->st-include [genre-ids]
+  (filter #(contains-genre? genre-ids %)))
+
+(defn ->st-exclude [genre-ids]
+  (remove #(contains-genre? genre-ids %)))
+
+(defn no-genres? [product]
+  (nil? (:genres product)))
+
+(def st-exclude-no-genres
+  (remove #(no-genres? %)))
 
 (defn make-st-exclude-ng-genres [ids]
   (remove
@@ -21,12 +46,6 @@
 
 (def st-exclude-ng-genres
   (make-st-exclude-ng-genres videoa/ng-genres))
-
-(defn no-genres? [product]
-  (nil? (:genres product)))
-
-(def st-exclude-no-genres
-  (remove #(no-genres? %)))
 
 (defn no-sample-movie? [product]
   (:no-sample-movie product))
@@ -47,19 +66,15 @@
   (remove #(or (no-sample-movie? %)
                (no-sample-image? %))))
 
+(def st-include-vr
+  (filter #(contains-genre? videoa/vr-ids %)))
+
+(def st-exclude-vr
+  (remove #(contains-genre? videoa/vr-ids %)))
+
 (defn no-actress? [product]
   (let [count (:actress-count product)]
     (or (nil? count) (zero? count))))
-
-(defn ->genre-ids [product]
-  (->> product
-       :genres
-       (map #(get % "id"))
-       (into [])))
-
-(defn contains-genre? [genre-id-set product]
-  (some true?
-        (map #(contains? genre-id-set %) (->genre-ids product))))
 
 (def st-exclude-amateur
   (remove #(or (no-actress? %)
@@ -72,17 +87,50 @@
 (def st-exclude-omnibus
   (remove #(> (:actress-count %) 4)))
 
-(defn ->st-include [genre-ids]
-  (filter #(contains-genre? genre-ids %)))
+(comment
+  (defprotocol Strategy
+    (make-strategy [this]))
 
-(defn ->st-exclude [genre-ids]
-  (remove #(contains-genre? genre-ids %)))
+  (extend-protocol Strategy
+    Info
+    (make-strategy [this]
+      [st-exclude-ng-genres
+       st-exclude-no-samples
+       st-exclude-vr
+       st-exclude-amateur
+       st-exclude-omnibus]))
+  )
 
-(def st-include-vr
-  (filter #(contains-genre? videoa/vr-ids %)))
+(defmulti make-strategy :code)
 
-(def st-exclude-vr
-  (remove #(contains-genre? videoa/vr-ids %)))
+(defmethod make-strategy "0001" [_]
+  [st-exclude-ng-genres
+   st-exclude-no-samples
+   st-exclude-vr
+   st-exclude-amateur
+   st-exclude-omnibus])
+
+(defmethod make-strategy "0009" [_]
+  [st-exclude-ng-genres
+   st-exclude-no-samples
+   st-exclude-vr
+   st-exclude-omnibus
+   st-include-amateur])
+
+(defmethod make-strategy "0010" [_]
+  [st-exclude-ng-genres
+   st-exclude-no-samples
+   st-exclude-vr
+   st-exclude-amateur
+   st-exclude-omnibus
+   (->st-include videoa/fat-ids)])
+
+(defmethod make-strategy :default [_]
+  [st-exclude-ng-genres
+   st-exclude-no-samples
+   st-exclude-vr
+   st-exclude-amateur
+   st-exclude-omnibus])
 
 (defn recently-tweeted? [p days]
   (let [past-time (time/date->days-ago days)
@@ -169,37 +217,6 @@
   (let [last-crawled-time (get-last-crawled-time db floor genre-id)]
     (assoc m :last-crawled-time last-crawled-time)))
 
-(defmulti make-strategy :code)
-
-(defmethod make-strategy "0001" [_]
-  [st-exclude-ng-genres
-   st-exclude-no-samples
-   st-exclude-vr
-   st-exclude-amateur
-   st-exclude-omnibus])
-
-(defmethod make-strategy "0009" [_]
-  [st-exclude-ng-genres
-   st-exclude-no-samples
-   st-exclude-vr
-   st-exclude-omnibus
-   st-include-amateur])
-
-(defmethod make-strategy "0010" [_]
-  [st-exclude-ng-genres
-   st-exclude-no-samples
-   st-exclude-vr
-   st-exclude-amateur
-   st-exclude-omnibus
-   (->st-include videoa/fat-ids)])
-
-(defmethod make-strategy :default [_]
-  [st-exclude-ng-genres
-   st-exclude-no-samples
-   st-exclude-vr
-   st-exclude-amateur
-   st-exclude-omnibus])
-
 (defn select-scheduled-products-with-xst
   [{:keys [db]} xst coll-path doc-ids]
   (let [st-exclude-recently-tweeted
@@ -218,11 +235,13 @@
 
 (defn select-scheduled-products
   [{:keys [info db limit creds genre-id]
-    :as   m :or {limit 200}}]
-  (let [xst      (make-strategy info)
-        products (lib-dmm/get-products {:genre-id genre-id
+    :as   m
+    :or   {limit    200
+           genre-id (:genre-id info)}}]
+  (let [products (lib-dmm/get-products {:genre-id genre-id
                                         :creds    creds
                                         :limit    limit})
+        xst      (make-strategy info)
         doc-ids  (map :content_id products)]
     (->> (select-scheduled-products-with-xst
           m xst product/coll-path doc-ids)
@@ -306,12 +325,12 @@
 
 (comment
   ;;;;;;;;;;;
-  (def info (kotori-info "0001"))
+  (def info (kotori-info "0009"))
   ;; cf. https://www.dmm.co.jp/digital/videoa/-/list/=/sort=ranking/
   (def products
     (into []
           (select-scheduled-products
-           {:db          (db-dev)
+           {:db          (db-prod)
             :creds       (creds)
             :info        info
             :limit       100

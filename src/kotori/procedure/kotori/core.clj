@@ -2,7 +2,7 @@
   (:require
    [clojure.spec.alpha :as s]
    [firestore-clj.core :as f]
-   [kotori.domain.kotori :as d]
+   [kotori.domain.kotori.core :as d]
    [kotori.domain.source.meigen :as meigen]
    [kotori.domain.tweet.core :as tweet]
    [kotori.domain.tweet.post :as post]

@@ -12,10 +12,32 @@
 (defrecord Cred [auth-token ct0])
 (defrecord Proxy [proxy-host proxy-port proxy-user proxy-pass])
 
+;; TODO EDNファイルで定義してもいい.そしてRole Recordでもいい.
 (def code-genre-map
   {"0001" ["videoa" nil]
-   "0009" ["videoa" "素人"]
-   "0010" ["videoa" "ぽっちゃり"]})
+   "0002" ["videoa" "痴女"] ;1031
+   "0007" ["videoa" "巨乳"] ;2001
+   "0009" ["videoa" "素人"] ;4024
+   "0010" ["videoa" "ぽっちゃり"] ;2007
+   "0011" ["videoa" "熟女"] ;1014
+   "0012" ["videoa" "ギャル"] ;1034
+   "0024" ["anime" nil]
+   "0027" ["videoc" nil]
+   "0028" ["videoa" "VR専用"] ;6793
+   })
+
+(defn floor-genres [name]
+  (let [genre (genre/make-genre name)]
+    (->>
+     (for [[k v] (vals code-genre-map)
+           :when (= k name)]
+       (genre/name->id genre v))
+     (filter some?)
+     (into #{}))))
+
+(def videoa-genres (floor-genres "videoa"))
+(def videoc-genres (floor-genres "videoc"))
+(def anime-genres (floor-genres "anime"))
 
 (defrecord Info
   [screen-name user-id code genre-id

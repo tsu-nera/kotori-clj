@@ -222,15 +222,18 @@
 (comment
   (require '[firebase :refer [db-prod db-dev db]]
            '[devtools :refer [->screen-name env]]
+           '[tools.dmm :refer [creds]]
            '[kotori.procedure.strategy.dmm
              :refer [select-scheduled-products]])
 
   (def screen-name (->screen-name "0001"))
   (def products
     (into []
-          (select-scheduled-products {:db          (db-prod)
-                                      :limit       20
-                                      :screen-name screen-name})))
+          (select-scheduled-products
+           {:db          (db-prod)
+            :limit       20
+            :creds       (creds)
+            :screen-name screen-name})))
   (def descs (map :description products))
 
   (map desc->dialogue descs)

@@ -76,6 +76,9 @@
   (let [count (:actress-count product)]
     (or (nil? count) (zero? count))))
 
+(def st-exclude-no-actress
+  (remove #(no-actress? %)))
+
 (def st-exclude-amateur
   (remove #(or (no-actress? %)
                (contains-genre? videoa/amateur-ids %))))
@@ -87,50 +90,33 @@
 (def st-exclude-omnibus
   (remove #(> (:actress-count %) 4)))
 
-(comment
-  (defprotocol Strategy
-    (make-strategy [this]))
+(def videoa-default-xst
+  [st-exclude-ng-genres  ; NGジャンル除外
+   st-exclude-no-samples ; サンプル画像と動画なしを除外
+   st-exclude-no-actress                                        ; 女優数0を除外
+   st-exclude-omnibus ; 詰め合わせを除外
+   ])
 
-  (extend-protocol Strategy
-    Info
-    (make-strategy [this]
-      [st-exclude-ng-genres
-       st-exclude-no-samples
-       st-exclude-vr
-       st-exclude-amateur
-       st-exclude-omnibus]))
-  )
+(def videoa-extra-xst
+  [st-exclude-amateur
+   st-exclude-vr])
 
 (defmulti make-strategy :code)
 
-(defmethod make-strategy "0001" [_]
-  [st-exclude-ng-genres
-   st-exclude-no-samples
-   st-exclude-vr
-   st-exclude-amateur
-   st-exclude-omnibus])
-
 (defmethod make-strategy "0009" [_]
-  [st-exclude-ng-genres
-   st-exclude-no-samples
-   st-exclude-vr
-   st-exclude-omnibus
-   st-include-amateur])
+  (conj videoa-default-xst
+        st-exclude-vr))
 
-(defmethod make-strategy "0010" [_]
+(defmethod make-strategy "0028" [_]
   [st-exclude-ng-genres
-   st-exclude-no-samples
-   st-exclude-vr
-   st-exclude-amateur
-   st-exclude-omnibus
-   (->st-include videoa/fat-ids)])
+   st-exclude-movie
+   st-exclude-no-image
+   st-exclude-no-actress
+   st-exclude-omnibus])
 
 (defmethod make-strategy :default [_]
-  [st-exclude-ng-genres
-   st-exclude-no-samples
-   st-exclude-vr
-   st-exclude-amateur
-   st-exclude-omnibus])
+  (concat videoa-default-xst
+          videoa-extra-xst))
 
 (defn recently-tweeted? [p days]
   (let [past-time (time/date->days-ago days)
@@ -325,16 +311,19 @@
 
 (comment
   ;;;;;;;;;;;
-  (def info (kotori-info "0009"))
-  ;; cf. https://www.dmm.co.jp/digital/videoa/-/list/=/sort=ranking/
+  (def info (kotori-info "0010"))
+
   (def products
     (into []
           (select-scheduled-products
            {:db          (db-prod)
             :creds       (creds)
             :info        info
-            :limit       100
+            :limit       150
             :screen-name (:screen-name info)})))
+
+  (count products)
+
   (def descs (map :description products))
 
   (count products)
@@ -400,5 +389,46 @@
       (f/coll "providers/dmm/amateurs")
       (f/filter= "last_crawled_time" ts)
       f/pullv)
+
+  )
+
+(comment
+  (defprotocol Strategy
+    (make-strategy [this]))
+
+  (extend-protocol Strategy
+    Info
+    (make-strategy [this]
+      [st-exclude-ng-genres
+       st-exclude-no-samples
+       st-exclude-vr
+       st-exclude-amateur
+       st-exclude-omnibus]))
+  )
+
+(comment
+
+  (def info (kotori-info "0002"))
+  (def genre-id (:genre-id info))
+  (def products (lib-dmm/get-products {:genre-id genre-id
+                                       :creds    (creds)
+                                       :limit    100}))
+
+  (def xst (make-strategy info))
+  (def doc-ids  (map :content_id products))
+
+  (def products  (fs/get-docs-by-ids (db-prod)
+                                     product/coll-path
+                                     doc-ids))
+
+  (def xstrategy (apply comp
+                        st-skip-not-yet-crawled
+                        st-skip-not-yet-scraped
+                        st-skip-debug
+                        st-skip-ignore
+                        xst
+                        ))
+
+  (def ret (into [] xstrategy products))
 
   )

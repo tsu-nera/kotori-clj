@@ -25,7 +25,7 @@
   ([floor]
    (->timestamp-key floor "default"))
   ([floor genre-id]
-   (str/join "." ["last_crawled_time" floor "genres" genre-id])))
+   (str/join "." ["last_crawled_time" floor "genres" (str genre-id)])))
 
 (def field
   {:products-crawled-time "products_crawled_time"

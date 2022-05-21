@@ -1,6 +1,5 @@
 (ns kotori.domain.dmm.product
   (:require
-   [clojure.string :as string]
    [kotori.domain.dmm.core :as dmm]
    [kotori.domain.tweet.core :as tweet]
    [kotori.lib.firestore :as fs]
@@ -11,9 +10,6 @@
 
 (def vr-coll-path (str dmm/doc-path "/vrs"))
 (defn vr-doc-path [cid] (str vr-coll-path "/" cid))
-
-(def anime-coll-path (str dmm/doc-path "/animes"))
-(defn anime-doc-path [cid] (str anime-coll-path "/" cid))
 
 (def amateur-coll-path (str dmm/doc-path "/amateurs"))
 (defn amateur-doc-path [cid] (str amateur-coll-path "/" cid))
@@ -36,10 +32,6 @@
 (defn- ->actresses [raw]
   (get-in raw [:iteminfo :actress]))
 
-(defn- ->performer [raw]
-  (string/join
-   "," (map #(:name %) (->actresses raw))))
-
 (defn- ->released-time [raw]
   (let [date-str (:date raw)]
     (-> date-str
@@ -49,34 +41,11 @@
 (defn- ->genres [raw]
   (get-in raw [:iteminfo :genre]))
 
-(defn- ->genre [raw]
-  (string/join
-   "," (map #(:name %) (->genres raw))))
-
-(defn- ->timestamp
-  ([] (time/fs-now))
-  ([_] (time/fs-now)))
-
 (defn- sample-movie? [raw]
   (contains? raw :sampleMovieURL))
 
 (defn- sample-image? [raw]
   (contains? raw :sampleImageURL))
-
-(defn ->legacy [raw]
-  {:cid         (->cid raw)
-   :title       (->title raw)
-   :url         (->affiliate-url raw)
-   :performer   (->performer raw)
-   :released_at (->released-time raw)
-   :created_at  (->timestamp raw)
-   :updated_at  (->timestamp raw)
-   :genre       (->genre raw)
-   :status      "READY"
-   :ranking     nil
-   :posted_at   nil
-   :tweet_link  nil
-   :tweet_id    nil})
 
 (defn api->data
   "dmm response map -> firestore doc mapの写像"
@@ -91,22 +60,9 @@
                    :released_time   (->released-time raw)
                    :genres          (->genres raw)
                    :no_sample_movie (not (sample-movie? raw))
-                   :no_sample_image (not (sample-image? raw))}
-        legacy    (->legacy raw)]
+                   :no_sample_image (not (sample-image? raw))}]
     (-> data
-        (assoc :raw raw)
-        (assoc :legacy legacy))))
-
-;; 最新人気ランキングを設定
-;; 他にも価格, レビュー, マッチングのランキングがある.
-;; ユースケースが明らかになったら改造する.
-;; map-indexedとともに呼ばれることを想定.
-;; firestoreの検索を想定してarrayではなくフィールドに保持する.
-(defn set-rank-popular [i data]
-  (let [ranking (+ i 1)]
-    (-> data
-        (assoc :rank_popular ranking)
-        (assoc-in [:legacy :ranking] ranking))))
+        (assoc :raw raw))))
 
 ;; docごとにtimestampを生成すると
 ;; ms単位の誤差によって正確なソートができないため
@@ -143,7 +99,6 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (comment
-  (require '[firebase :refer [db]])
   (require '[devtools :refer [env]])
 
   (def raw

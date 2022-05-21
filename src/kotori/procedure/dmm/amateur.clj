@@ -4,7 +4,6 @@
    [kotori.domain.dmm.genre.videoa
     :refer [amateur-genre-id]
     :rename {amateur-genre-id videoa-id}]
-   [kotori.domain.dmm.genre.videoc :as d]
    [kotori.domain.dmm.product
     :refer [amateur-coll-path]
     :rename
@@ -38,21 +37,15 @@
               :floor     floor}]
     (product/crawl-products! (merge m opts))))
 
-(defn select-scheduled-products [{:as m :keys [db limit] :or {limit 5}}]
-  (let [st-exclude-ng-genres (st/make-st-exclude-ng-genres d/ng-genres)
-        xst                  [st-exclude-ng-genres
-                              st/st-exclude-no-samples]
-        ts                   (st/get-last-crawled-time db floor "default")
-        params               (assoc m :last-crawled-time ts)
-        products             (st/select-scheduled-products-with-xst-deplicated
-                              params xst coll-path)]
-    (->> products
-         (sort-by :rank-popular)
-         (take limit))))
+(defn select-scheduled-products
+  [{:as m}]
+  (st/select-scheduled-products
+   (-> m
+       (assoc :floor floor))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (comment
-  (require '[devtools :refer [env ->screen-name]]
+  (require '[devtools :refer [env ->screen-name kotori-info]]
            '[tools.dmm :refer [creds]]
            '[kotori.lib.kotori :refer [->next] :as k]
            '[firebase :refer [db-prod db-dev db]])
@@ -74,11 +67,6 @@
   (def resp (scrape-videoc-page! {:db  (db-prod)
                                   :cid "shinki066"}))
 
-  ;; (require '[kotori.lib.provider.dmm.public :as public])
-  ;; (public/get-page {:db    (db-prod)
-  ;;                   :floor "videoc"
-  ;;                   :cid   "erk022"})
-
   (def resp (crawl-products! {:db    (db-prod)
                               :creds (creds)
                               :limit 300}))
@@ -86,7 +74,9 @@
   (def products
     (select-scheduled-products
      {:db          (db-prod)
+      :creds       (creds)
       :limit       100
+      :info        (kotori-info "0027")
       :screen-name (->screen-name "0027")}))
 
   (count products)

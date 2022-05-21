@@ -3,7 +3,10 @@
   (:require
    [clojure.string :as str]
    [kotori.domain.dmm.core :as dmm]
+   [kotori.domain.dmm.genre.anime :as anime]
+   [kotori.domain.dmm.genre.core :as genre]
    [kotori.domain.dmm.genre.videoa :as videoa]
+   [kotori.domain.dmm.genre.videoc :as videoc]
    [kotori.domain.dmm.product :as product]
    [kotori.domain.kotori.core :refer [guest-user]]
    [kotori.lib.firestore :as fs]
@@ -107,6 +110,14 @@
   (conj videoa-default-xst
         st-exclude-vr))
 
+(defmethod make-strategy "0024" [_]
+  [(make-st-exclude-ng-genres anime/ng-genres)
+   st-exclude-no-samples])
+
+(defmethod make-strategy "0027" [_]
+  [(make-st-exclude-ng-genres videoc/ng-genres)
+   st-exclude-no-samples])
+
 (defmethod make-strategy "0028" [_]
   [st-exclude-ng-genres
    st-exclude-movie
@@ -177,23 +188,6 @@
 (def st-skip-not-yet-scraped
   (remove #(nil? (get % :description))))
 
-(defn select-scheduled-products-with-xst-deplicated
-  [{:keys [db screen-name last-crawled-time]} xst coll-path]
-  (let [st-last-crawled (fs/query-filter
-                         "last_crawled_time" last-crawled-time)
-        st-exclude-recently-tweeted-self
-        (make-st-exclude-recently-tweeted-self 28 screen-name)
-        st-exclude-recently-tweeted-others
-        (make-st-exclude-recently-tweeted-others 14 screen-name)
-        products        (fs/get-docs db coll-path st-last-crawled)
-        xstrategy       (apply comp
-                               st-skip-debug
-                               st-exclude-recently-tweeted-self
-                               st-exclude-recently-tweeted-others
-                               xst)]
-    (->> products
-         (into [] xstrategy))))
-
 (defn get-last-crawled-time [db floor genre-id]
   (-> db
       (fs/get-in dmm/doc-path :last-crawled-time)
@@ -209,9 +203,7 @@
         (make-st-exclude-recently-tweeted 28)
         products  (fs/get-docs-by-ids db coll-path doc-ids)
         xstrategy (apply comp
-                         ;; FIXME crawlとscrapingがまだの場合の検討
                          st-skip-not-yet-crawled
-                         st-skip-not-yet-scraped
                          st-skip-debug
                          st-skip-ignore
                          st-exclude-recently-tweeted
@@ -220,17 +212,23 @@
          (into [] xstrategy))))
 
 (defn select-scheduled-products
-  [{:keys [info db limit creds genre-id]
+  [{:keys [info db limit creds genre-id floor coll-path]
     :as   m
     :or   {limit    200
+           floor    "videoa" ;; TODO 念の為, 後で削除.
            genre-id (:genre-id info)}}]
-  (let [products (lib-dmm/get-products {:genre-id genre-id
-                                        :creds    creds
-                                        :limit    limit})
-        xst      (make-strategy info)
-        doc-ids  (map :content_id products)]
-    (->> (select-scheduled-products-with-xst
-          m xst product/coll-path doc-ids)
+  (let [genre     (genre/make-genre floor)
+        coll-path (or coll-path (genre/->coll-path genre))
+        products  (lib-dmm/get-products {:floor    floor
+                                         :genre-id genre-id
+                                         :creds    creds
+                                         :limit    limit})
+        xst       (cond-> (make-strategy info)
+                    ;; FIXME crawlとscrapingがまだの場合の検討
+                    (not= floor "anime")
+                    (conj st-skip-not-yet-scraped))
+        doc-ids   (map :content_id products)]
+    (->> (select-scheduled-products-with-xst m xst coll-path doc-ids)
          (take limit))))
 
 (defn select-tweeted-products [{:keys [db limit screen-name]
@@ -278,9 +276,8 @@
                       (subs title 0 15)))
         actresses (str/join "," (map #(get % "name") (:actresses raw)))
         ;; genres  (str/join "," (map #(get % "name") (:genres raw)))
-        ranking   (:rank-popular raw)]
+        ]
     {:cid             cid
-     :ranking         ranking
      :title           title
      :actresses       actresses
      ;; :no-sample-movie (:no-sample-movie raw)

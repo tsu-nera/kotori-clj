@@ -4,6 +4,8 @@
    [clojure.string :as str]))
 
 (def doc-path "providers/dmm")
+(def vr-coll-path (str doc-path "/vrs"))
+(def amateur-coll-path (str doc-path "/amateurs"))
 
 (s/def ::cid string?)
 
@@ -27,6 +29,7 @@
   ([floor genre-id]
    (str/join "." ["last_crawled_time" floor "genres" (str genre-id)])))
 
+;; TODO 削除
 (def field
   {:products-crawled-time "products_crawled_time"
    :vrs-crawled-time      "vrs_crawled_time"

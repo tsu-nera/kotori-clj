@@ -126,16 +126,11 @@
 (defn save-products! [db coll-path products ts]
   (let [xf         (comp (map product/api->data)
                          (map #(product/set-crawled-timestamp ts %))
-                         ;; TODO 後で削除
-                         (map-indexed product/set-rank-popular)
                          (map json/->json))
         docs       (transduce xf conj products)
         batch-docs (fs/make-batch-docs "cid" coll-path docs)]
     (fs/batch-set! db batch-docs)
     docs))
-
-(defn update-crawled-time-deplicated! [db field value]
-  (fs/assoc! db dmm/doc-path field value))
 
 (defn update-crawled-time!
   ([db ts floor genre-id]

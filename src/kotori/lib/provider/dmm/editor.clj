@@ -12,6 +12,7 @@
    "202X年、世界はウイルスの渦に包まれた。ナンパは枯れ、合コンは裂け、全ての出会いが壊滅したかのように見えた。だが、ワンナイは死滅していなかった！世はマッチアプリが支配する弱肉以下略。"
    "愛などいらぬ！性帝サウザーです。"
    "素人ホイホイstayhome"
+   "↑サンプル必見↑"
    "※本編顔出しです。"])
 
 (defn ->remove-x [x s]
@@ -76,6 +77,11 @@
                     (str/replace re "")
                     str/trim)))
             title actress-names)))
+
+(defn ->sparkle-amateur [s name]
+  (let [sparkle       "♀️"
+        sparkled-name (str sparkle name)]
+    (str/replace s (re-pattern name) sparkled-name)))
 
 (defn ->sparkle-actress [s name]
   (let [sparkle         "✨"

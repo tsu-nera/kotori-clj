@@ -2,7 +2,9 @@
 
 (defprotocol Genre
   (id->name [this id])
-  (name->id [this name]))
+  (name->id [this name])
+  (->coll-path [this])
+  (->doc-path [this id]))
 
 (defn ->name-id-map [genres]
   (into {} (map (juxt :name :genre_id) genres)))

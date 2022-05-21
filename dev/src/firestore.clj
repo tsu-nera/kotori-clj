@@ -1,9 +1,9 @@
 (ns firestore
   (:require
    [clojure.java.browse :as b]
-   [kotori.domain.dmm.product :as dmm]))
-
-"https://console.cloud.google.com/firestore/data/providers/dmm/products/fcdc00141?project=dmm-fanza"
+   [kotori.domain.dmm.genre.anime :as anime]
+   [kotori.domain.dmm.genre.videoa :as videoa]
+   [kotori.domain.dmm.genre.videoc :as videoc]))
 
 (def fs-base-url "https://console.cloud.google.com/firestore/data/")
 
@@ -15,16 +15,17 @@
 
 (defn open-product
   [cid]
-  (open-doc dmm/doc-path cid))
+  (open-doc videoa/->doc-path cid))
 
 (defn open-amateur
   [cid]
-  (open-doc dmm/amateur-doc-path cid))
+  (open-doc videoc/->doc-path cid))
 
 (defn open-anime
   [cid]
-  (open-doc dmm/anime-doc-path cid))
+  (open-doc anime/->doc-path cid))
 
 (defn open-vr
   [cid]
-  (open-doc dmm/vr-doc-path cid))
+  ;; TODO
+  (open-doc "providers/dmm/vrs" cid))

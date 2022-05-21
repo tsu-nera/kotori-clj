@@ -2,10 +2,6 @@
   (:require
    [kotori.domain.dmm.core :as dmm]
    [kotori.domain.dmm.genre.anime :as d]
-   [kotori.domain.dmm.product
-    :refer [anime-coll-path]
-    :rename
-    {anime-coll-path coll-path}]
    [kotori.lib.provider.dmm.product :as lib]
    [kotori.procedure.dmm.product :as product]
    [kotori.procedure.strategy.dmm :as st]))
@@ -15,32 +11,24 @@
 (defn crawl-product! [{:as m}]
   (-> m
       (assoc :floor floor)
-      (product/crawl-product! coll-path)))
+      (product/crawl-product! d/coll-path)))
 
 (defn crawl-products! [{:as m}]
-  (let [opts {:coll-path coll-path
+  (let [opts {:coll-path d/coll-path
               ;; いろいろ書かれてて複雑なので刈り取りは保留.
               :scrape?   false
               :floor     floor}]
     (product/crawl-products! (merge m opts))))
 
-(defn select-scheduled-products [{:as m :keys [db limit] :or {limit 5}}]
-  (let [st-exclude-ng-genres (st/make-st-exclude-ng-genres d/ng-genres)
-        xst                  [#_st/st-exclude-no-genres
-                              st-exclude-ng-genres
-                              st/st-exclude-no-samples]
-        ts                   (st/get-last-crawled-time db floor "default")
-        params               (assoc m :last-crawled-time ts)
-        products             (st/select-scheduled-products-with-xst-deplicated
-                              params xst coll-path)]
-    (->> products
-         (sort-by :rank-popular)
-         (take limit))))
+(defn select-scheduled-products
+  [{:as m}]
+  (st/select-scheduled-products
+   (-> m (assoc :floor floor))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (comment
-  (require '[devtools :refer [->screen-name]]
+  (require '[devtools :refer [->screen-name kotori-info]]
            '[tools.dmm :refer [creds]]
            '[kotori.lib.kotori :refer [->next]]
            '[firebase :refer [db-prod db-dev db]])
@@ -64,8 +52,12 @@
     (into []
           (select-scheduled-products
            {:db          (db-prod)
-            :limit       5
+            :limit       50
+            :creds       (creds)
+            :info        (kotori-info "0024")
             :screen-name (->screen-name "0024")})))
+
+  (into [] (apply comp (st/make-strategy (kotori-info "0024"))) products)
 
   (map ->next products)
   )

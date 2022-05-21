@@ -154,6 +154,11 @@
       limit-two
       ->add-chan))
 
+;; さくっとできなかった, 保留...
+#_(defn videoc-desc->sparkle [desc name]
+    (-> desc
+        (ed/->sparkle-amateur name)))
+
 (defn- ->remove-haishin [s]
   ((partial ed/->remove-x "【配信限定特典映像付き】") s))
 
@@ -173,7 +178,6 @@
 (defn sparkle-actress [names text]
   (let [xs (map ed/drop-old-name names)]
     (reduce (fn [text name]
-
               (ed/->sparkle-actress text name))
             text xs)))
 

@@ -347,9 +347,6 @@
   (def dmm-path "providers/dmm/products")
 
   (def q-limit (query-limit 5))
-
-  (def queries (make-xquery [q-limit q-order-popular]))
-
   (def id-doc-map (get-id-doc-map (db) dmm-path))
 
   (reduce-kv (fn [m k v]

@@ -39,22 +39,14 @@
 ;; 手動でも自動でも一応ダウンロードはできるがあえて規約違反を犯すリスクを
 ;; 取りつつダウンロードして利用するべきでないため動画は選択ロジックから除外.
 ;; よい素材が今後開放されることを願いつつ待つ.
-(defn select-scheduled-products [{:as m :keys [db limit] :or {limit 5}}]
-  (let [xst      [st/st-exclude-ng-genres
-                  st/st-exclude-movie
-                  st/st-exclude-no-image
-                  st/st-exclude-omnibus
-                  st/st-include-vr]
-        ts       (st/get-last-crawled-time db floor genre-id)
-        params   (assoc m :last-crawled-time ts)
-        products (st/select-scheduled-products-with-xst-deplicated
-                  params xst coll-path)]
-    (->> products
-         (sort-by :rank-popular)
-         (take limit))))
+(defn select-scheduled-products
+  [{:as m}]
+  (st/select-scheduled-products
+   (-> m
+       (assoc :coll-path coll-path))))
 
 (comment
-  (require '[devtools :refer [env ->screen-name]]
+  (require '[devtools :refer [kotori-info]]
            '[tools.dmm :refer [creds]]
            '[firebase :refer [db-prod db-dev db]])
 
@@ -72,7 +64,8 @@
   (def vrs
     (into []
           (select-scheduled-products
-           {:db          (db-prod)
-            :limit       100
-            :screen-name (->screen-name "0028")})))
+           {:db    (db-prod)
+            :limit 100
+            :creds (creds)
+            :info  (kotori-info "0028")})))
   )

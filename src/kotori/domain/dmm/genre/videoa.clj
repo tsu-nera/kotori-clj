@@ -1,6 +1,7 @@
 (ns kotori.domain.dmm.genre.videoa
   "refs.https://www.dmm.co.jp/digital/videoa/-/genre/"
   (:require
+   [kotori.domain.dmm.core :refer [doc-path]]
    [kotori.domain.dmm.genre.interface :as if]
    [kotori.lib.io :as io]))
 
@@ -18,10 +19,15 @@
   (-> ["素人" "ナンパ" "ハメ撮り"]
       names->genre-ids))
 
+(def coll-path (str doc-path "/products"))
+(defn ->doc-path [cid] (str coll-path "/" cid))
+
 (defrecord Videoa [floor]
            if/Genre
            (id->name [_ id] (get id-name-map id))
-           (name->id [_ name] (get name-id-map name)))
+           (name->id [_ name] (get name-id-map name))
+           (->coll-path [_] coll-path)
+           (->doc-path [_ cid] (->doc-path cid)))
 
 ;; 2022.05現在, VR専用はハイクオリティVRを内包する
 (def vr-only-id (get name-id-map "VR専用"))

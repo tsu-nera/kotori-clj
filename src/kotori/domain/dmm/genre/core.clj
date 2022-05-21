@@ -19,11 +19,10 @@
     "anime"  (Anime. "anime")
     (Videoa. "videoa")))
 
-(defn id->name [genre id]
-  (if/id->name genre id))
-
-(defn name->id [genre name]
-  (if/name->id genre name))
+(defn id->name [genre id] (if/id->name genre id))
+(defn name->id [genre name] (if/name->id genre name))
+(defn ->coll-path [genre] (if/->coll-path genre))
+(defn ->doc-path [genre cid] (if/->doc-path genre cid))
 
 (comment
   ;; プロトコルに入門しようとしたけどわからなくなっちゃったので中断

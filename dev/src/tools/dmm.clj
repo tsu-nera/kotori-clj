@@ -2,6 +2,7 @@
   (:require
    [clojure.java.browse :as b]
    [clojure.pprint :refer [pprint]]
+   [clojure.string :as str]
    [clojure.string :as string]
    [defun.core :refer [defun]]
    [devtools :refer [env kotori-info]]
@@ -111,11 +112,31 @@
 (defn ->product-dump-path [service floor cid]
   (str "dmm/product/" service "/" floor "/" cid ".edn"))
 
+(defn remove-headdesc [text]
+  (let [re (re-pattern "^--------------(.+)--------------|^//////////////(.+)//////////////")]
+    (if-let [target (first (re-find re text))]
+      (-> text
+          (str/replace target ""))
+      text)))
+
+(defn ->af-id-removed [url]
+  (let [re (re-pattern "&af_id=(.+?)&")]
+    (if-let [target (second (re-find re url))]
+      (-> url
+          (str/replace target "hogehoge-xxx"))
+      url)))
+
 (defn dump-ebook! [cid]
   (let [floor     "comic"
         file-path (->product-dump-path "ebook" floor cid)]
-    (when-let [data (get-dmm cid floor)]
-      (io/dump-edn! file-path data))))
+    (when-let [m (get-dmm cid floor)]
+      (-> m
+          (update :affiliateURL ->af-id-removed)
+          (update-in [:URL :affiliateURL] ->af-id-removed)
+          (as-> x (io/dump-edn! file-path x))))))
+
+(def m (get-dmm "b104atint00851" "comic"))
+(update-in m [:tachiyomi :URL :affiliateURL] ->af-id-removed)
 
 (defn get-dmm-campaign [title]
   (product/get-products {:limit 10 :keyword title :creds (creds)}))

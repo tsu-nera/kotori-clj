@@ -25,7 +25,7 @@
   :author
   [{:id 266944, :name "たなかななたか"} {:id 293897, :name "MUJIN編集部"}]},
  :affiliateURL
- "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fbook.dmm.co.jp%2Fdetail%2Fb104atint00851%2F&af_id=romanchikubi-992&ch=api",
+ "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fbook.dmm.co.jp%2Fdetail%2Fb104atint00851%2F&af_id=hogehoge-xxx&ch=api",
  :floor_name "コミック",
  :title "もてあましづま【1話立ち読み付き】",
  :volume "190",
@@ -36,6 +36,6 @@
  {:URL
   "https://book.dmm.co.jp/tachiyomi/?cid=FRNfXRNVFW1RAQxaAgZSVhUMWEIACVwMU05EDl0VClQMBllNB1o*UFcKWhRHVwVfCBxZW1kEVQ__&lin=1&sd=0",
   :affiliateURL
-  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fbook.dmm.co.jp%2Ftachiyomi%2F%3Fcid%3DFRNfXRNVFW1RAQxaAgZSVhUMWEIACVwMU05EDl0VClQMBllNB1o%2AUFcKWhRHVwVfCBxZW1kEVQ__%26lin%3D1%26sd%3D0%2F&af_id=romanchikubi-992&ch=api"},
+  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fbook.dmm.co.jp%2Ftachiyomi%2F%3Fcid%3DFRNfXRNVFW1RAQxaAgZSVhUMWEIACVwMU05EDl0VClQMBllNB1o%2AUFcKWhRHVwVfCBxZW1kEVQ__%26lin%3D1%26sd%3D0%2F&af_id=hogehoge-xxx&ch=api"},
  :service_code "ebook",
  :URL "https://book.dmm.co.jp/detail/b104atint00851/"}

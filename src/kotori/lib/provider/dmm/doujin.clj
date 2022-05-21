@@ -26,9 +26,11 @@
     (first resp)))
 
 (comment
-  (require '[tools.dmm :refer [creds]])
+  (require '[tools.dmm :refer [creds dump-doujin!]])
 
-  (def cid "d_227233")
-
+  ;; CG
+  ;; https://www.dmm.co.jp/dc/doujin/-/detail/=/cid=d_205949/
+  (def cid "d_205949")
   (def resp (get-doujin {:cid cid :creds (creds)}))
+  (dump-doujin! cid)
   )

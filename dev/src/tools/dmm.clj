@@ -13,6 +13,7 @@
    [kotori.lib.io :as io]
    [kotori.lib.kotori :as kotori]
    [kotori.lib.provider.dmm.api :as api]
+   [kotori.lib.provider.dmm.doujin :as doujin]
    [kotori.lib.provider.dmm.ebook :as ebook]
    [kotori.lib.provider.dmm.product :as product]
    [kotori.lib.provider.dmm.public :as public]
@@ -102,12 +103,9 @@
   ([cid "videoc"] (product/get-videoc {:cid cid :creds (creds)}))
   ([cid "videoa"] (product/get-videoa {:cid cid :creds (creds)}))
   ([cid "comic"] (ebook/get-comic {:cid cid :creds (creds)}))
+  ([cid "digital_doujin"] (doujin/get-doujin {:cid cid :creds (creds)}))
   ([cid] (product/get-videoa {:cid cid :creds (creds)})))
 #_(get-dmm "ssis00337")
-
-(defn dump-dmm! [cid floor file-path]
-  (when-let [data (get-dmm cid floor)]
-    (io/dump-edn! file-path data)))
 
 (defn ->product-dump-path [service floor cid]
   (str "dmm/product/" service "/" floor "/" cid ".edn"))
@@ -126,17 +124,21 @@
           (str/replace target "hogehoge-xxx"))
       url)))
 
-(defn dump-ebook! [cid]
-  (let [floor     "comic"
-        file-path (->product-dump-path "ebook" floor cid)]
+(defn dump-product! [service floor cid]
+  (let [file-path (->product-dump-path service floor cid)]
     (when-let [m (get-dmm cid floor)]
-      (-> m
-          (update :affiliateURL ->af-id-removed)
-          (update-in [:URL :affiliateURL] ->af-id-removed)
-          (as-> x (io/dump-edn! file-path x))))))
+      (let [data (cond-> m
+                   (:affiliateURL m)
+                   (update :affiliateURL ->af-id-removed)
+                   (get-in m [:URL :affiliateURL])
+                   (update-in [:URL :affiliateURL] ->af-id-removed))]
+        (io/dump-example-edn! file-path data)))))
 
-(def m (get-dmm "b104atint00851" "comic"))
-(update-in m [:tachiyomi :URL :affiliateURL] ->af-id-removed)
+(defn dump-doujin! [cid]
+  (dump-product! "doujin" "digital_doujin" cid))
+
+(defn dump-comic! [cid]
+  (dump-product! "ebook" "comic" cid))
 
 (defn get-dmm-campaign [title]
   (product/get-products {:limit 10 :keyword title :creds (creds)}))
@@ -296,5 +298,5 @@
   )
 
 (comment
-  (dump-ebook! "b104atint00851")
+  (dump-comic! "b104atint00851")
   )

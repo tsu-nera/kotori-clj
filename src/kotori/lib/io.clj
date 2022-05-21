@@ -21,11 +21,20 @@
         edn/read-string)))
 
 (defn dump-edn! [file-path data]
-  (let [save-data (with-out-str (pprint data))]
-    ;; io/resouceはfileが存在しないときはnilを返す.
-    ;; fileが存在しない場合は新規作成したいので io/resouceは使わない.
-    (-> (str "resources/" file-path)
-        (spit save-data))))
+  (let [save-data (with-out-str (pprint data))
+        ;; io/resouceはfileが存在しないときはnilを返す.
+        ;; fileが存在しない場合は新規作成したいので io/resouceは使わない.
+        save-path (str "resources/" file-path)]
+    (doto save-path
+      io/make-parents  ;; ディレクトリが存在しないならば新規作成
+      (spit save-data))))
+
+(defn dump-example-edn! [file-path data]
+  (let [save-data (with-out-str (pprint data))
+        save-path (str "examples/" file-path)]
+    (doto save-path
+      io/make-parents
+      (spit save-data))))
 
 (defn dump-str! [file-path data]
   (spit file-path data))

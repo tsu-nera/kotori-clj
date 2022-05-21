@@ -1,11 +1,8 @@
 (ns kotori.lib.provider.dmm.doujin
   (:require
-   [kotori.domain.dmm.core :as dmm]
-   [kotori.lib.provider.dmm.api :as api]
-   [kotori.lib.provider.dmm.core :refer [request-bulk]]))
+   [kotori.lib.provider.dmm.api :as api]))
 
 ;; APIで取得した情報を転機
-
 (def fanza-doujin
   {:name  "同人",
    :code  "doujin",
@@ -25,12 +22,25 @@
                              (assoc :cid cid)))]
     (first resp)))
 
+;; "https://pics.dmm.co.jp/digital/cg/d_205949/d_205949pt.jpg"
+(defn ->format [resp]
+  (let [url (get-in resp [:imageURL :list])
+        re  (re-pattern
+             "digital/(cg|voice|game|comic)/d_")]
+    (second (re-find re url))))
+
 (comment
   (require '[tools.dmm :refer [creds dump-doujin!]])
 
-  ;; CG
-  ;; https://www.dmm.co.jp/dc/doujin/-/detail/=/cid=d_205949/
-  (def cid "d_205949")
+  (def cid "d_229101") ;; CG cg
+  (def cid "d_223288") ;; デモムービー動画ジャンルだけどCG
+  (def cid "d_230940") ;; コミック comic
+  (def cid "d_226142") ;; ゲームgame
+  (def cid "d_217813") ;; 音声 voice
+  (def cid "d_cos0027") ;; コスプレ動画 genreid=156007
+
   (def resp (get-doujin {:cid cid :creds (creds)}))
   (dump-doujin! cid)
+
+  (->format resp)
   )

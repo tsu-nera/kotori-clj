@@ -1,0 +1,28 @@
+{:imageURL
+ {:list "https://pics.dmm.co.jp/digital/cg/d_cos0027/d_cos0027pt.jpg",
+  :large
+  "https://pics.dmm.co.jp/digital/cg/d_cos0027/d_cos0027pl.jpg"},
+ :date "2016-04-25 10:00:00",
+ :content_id "d_cos0027",
+ :service_name "同人",
+ :floor_code "digital_doujin",
+ :product_id "d_cos0027",
+ :iteminfo
+ {:genre
+  [{:id 5002, :name "フェラ"}
+   {:id 156007, :name "コスプレ動画"}
+   {:id 156004, :name "動画ファイル"}],
+  :maker [{:id 72798, :name "アキバ同人AVサークル"}]},
+ :affiliateURL
+ "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdc%2Fdoujin%2F-%2Fdetail%2F%3D%2Fcid%3Dd_cos0027%2F&af_id=hogehoge-xxx&ch=api",
+ :floor_name "同人",
+ :title "オフパコ。 アニ声レイヤーぴんちゃん（仮）2",
+ :volume "動画1本",
+ :category_name "同人 (同人)",
+ :prices
+ {:price "1650",
+  :list_price "1650",
+  :deliveries
+  {:delivery [{:type "download", :price "1650", :list_price "1650"}]}},
+ :service_code "doujin",
+ :URL "https://www.dmm.co.jp/dc/doujin/-/detail/=/cid=d_cos0027/"}

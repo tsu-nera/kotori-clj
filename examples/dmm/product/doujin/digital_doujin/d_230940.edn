@@ -1,0 +1,38 @@
+{:imageURL
+ {:list "https://pics.dmm.co.jp/digital/comic/d_230940/d_230940pt.jpg",
+  :large
+  "https://pics.dmm.co.jp/digital/comic/d_230940/d_230940pl.jpg"},
+ :date "2022-05-20 16:00:00",
+ :content_id "d_230940",
+ :service_name "同人",
+ :floor_code "digital_doujin",
+ :product_id "d_230940",
+ :iteminfo
+ {:genre
+  [{:id 55, :name "処女"}
+   {:id 27, :name "辱め"}
+   {:id 48, :name "制服"}
+   {:id 527, :name "お嬢様・令嬢"}
+   {:id 553, :name "学園もの"}
+   {:id 5001, :name "中出し"}
+   {:id 153003, :name "おっぱい"}
+   {:id 154024, :name "巨根"}
+   {:id 154025, :name "金髪"}
+   {:id 156022, :name "男性向け"}
+   {:id 156023, :name "成人向け"}
+   {:id 2001, :name "巨乳"}],
+  :series [{:id 3007916, :name "種付け自由学園"}],
+  :maker [{:id 200302, :name "パンダエキス"}]},
+ :affiliateURL
+ "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdc%2Fdoujin%2F-%2Fdetail%2F%3D%2Fcid%3Dd_230940%2F&af_id=hogehoge-xxx&ch=api",
+ :floor_name "同人",
+ :title "種付け自由学園 2",
+ :volume "45",
+ :category_name "同人 (同人)",
+ :prices
+ {:price "880",
+  :list_price "880",
+  :deliveries
+  {:delivery [{:type "download", :price "880", :list_price "880"}]}},
+ :service_code "doujin",
+ :URL "https://www.dmm.co.jp/dc/doujin/-/detail/=/cid=d_230940/"}

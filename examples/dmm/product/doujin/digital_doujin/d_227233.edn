@@ -1,0 +1,41 @@
+{:imageURL
+ {:list "https://pics.dmm.co.jp/digital/comic/d_227233/d_227233pt.jpg",
+  :large
+  "https://pics.dmm.co.jp/digital/comic/d_227233/d_227233pl.jpg"},
+ :date "2022-04-02 00:00:00",
+ :content_id "d_227233",
+ :service_name "同人",
+ :floor_code "digital_doujin",
+ :product_id "d_227233",
+ :iteminfo
+ {:genre
+  [{:id 48, :name "制服"}
+   {:id 55, :name "処女"}
+   {:id 553, :name "学園もの"}
+   {:id 2001, :name "巨乳"}
+   {:id 4020, :name "野外・露出"}
+   {:id 5001, :name "中出し"}
+   {:id 5002, :name "フェラ"}
+   {:id 5003, :name "ぶっかけ"}
+   {:id 5019, :name "パイズリ"}
+   {:id 153003, :name "おっぱい"}
+   {:id 156022, :name "男性向け"}
+   {:id 156023, :name "成人向け"}],
+  :series [{:id 3007784, :name "妊娠係 俺が孕ませた雁屋先輩の1ヵ月"}],
+  :maker [{:id 25530, :name "STUDIOふあん"}]},
+ :affiliateURL
+ "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdc%2Fdoujin%2F-%2Fdetail%2F%3D%2Fcid%3Dd_227233%2F&af_id=hogehoge-xxx&ch=api",
+ :floor_name "同人",
+ :title "妊娠係 雁屋先輩と俺の孕ませ1ヵ月間",
+ :volume "1461",
+ :category_name "同人 (同人)",
+ :prices
+ {:price "847",
+  :list_price "1210",
+  :deliveries
+  {:delivery [{:type "download", :price "847", :list_price "1210"}]}},
+ :review {:count 102, :average "4.62"},
+ :campaign
+ [{:date_begin "2022-05-17T00:00:00Z", :date_end "", :title "30%OFF"}],
+ :service_code "doujin",
+ :URL "https://www.dmm.co.jp/dc/doujin/-/detail/=/cid=d_227233/"}

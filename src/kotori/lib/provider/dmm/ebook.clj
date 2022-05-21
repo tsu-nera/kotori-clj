@@ -33,9 +33,21 @@
                              (assoc :cid cid)))]
     (first resp)))
 
+(defn get-unlimited-comic
+  "なんか取得できない..."
+  [{:keys [cid creds]}]
+  (when-let [resp (api/search-product
+                   creds {:service "unlimited_book"
+                          :floor   "unlimited_comic"
+                          :cid     cid})]
+    (first resp)))
+
 (comment
   (require '[tools.dmm :refer [creds]])
 
-  (def cid "b104atint00851")
-  (def resp (get-book {:cid cid :creds (creds)}))
+  (def cid "b915awnmg01007")
+
+  (def resp (get-comic {:cid cid :creds (creds)}))
+  (def resp (get-unlimited-comic {:cid   "b425aakkg00201"
+                                  :creds (creds)}))
   )

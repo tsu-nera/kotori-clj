@@ -5,12 +5,12 @@
   "https://ebook-assets.dmm.co.jp/digital/e-book/b104atint00851/b104atint00851ps.jpg",
   :large
   "https://ebook-assets.dmm.co.jp/digital/e-book/b104atint00851/b104atint00851pl.jpg"},
- :date "2020-12-18 00:00:04",
- :content_id "b104atint00851",
- :service_name "FANZAブックス",
- :number "1",
- :floor_code "comic",
- :product_id "b104atint00851",
+ :date          "2020-12-18 00:00:04",
+ :content_id    "b104atint00851",
+ :service_name  "FANZAブックス",
+ :number        "1",
+ :floor_code    "comic",
+ :product_id    "b104atint00851",
  :iteminfo
  {:genre
   [{:id 54, :name "単行本"}
@@ -20,22 +20,22 @@
    {:id 5001, :name "中出し"}
    {:id 6164, :name "ビッチ"}
    {:id 6661, :name "先行販売"}],
-  :series [{:id 4040467, :name "もてあましづま"}],
+  :series      [{:id 4040467, :name "もてあましづま"}],
   :manufacture [{:id 50123, :name "ティーアイネット"}],
   :author
   [{:id 266944, :name "たなかななたか"} {:id 293897, :name "MUJIN編集部"}]},
  :affiliateURL
  "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fbook.dmm.co.jp%2Fdetail%2Fb104atint00851%2F&af_id=hogehoge-xxx&ch=api",
- :floor_name "コミック",
- :title "もてあましづま【1話立ち読み付き】",
- :volume "190",
+ :floor_name    "コミック",
+ :title         "もてあましづま【1話立ち読み付き】",
+ :volume        "190",
  :category_name "コミック (電子書籍)",
- :prices {:price "1100"},
- :review {:count 2, :average "4.00"},
+ :prices        {:price "1100"},
+ :review        {:count 2, :average "4.00"},
  :tachiyomi
  {:URL
   "https://book.dmm.co.jp/tachiyomi/?cid=FRNfXRNVFW1RAQxaAgZSVhUMWEIACVwMU05EDl0VClQMBllNB1o*UFcKWhRHVwVfCBxZW1kEVQ__&lin=1&sd=0",
   :affiliateURL
   "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fbook.dmm.co.jp%2Ftachiyomi%2F%3Fcid%3DFRNfXRNVFW1RAQxaAgZSVhUMWEIACVwMU05EDl0VClQMBllNB1o%2AUFcKWhRHVwVfCBxZW1kEVQ__%26lin%3D1%26sd%3D0%2F&af_id=hogehoge-xxx&ch=api"},
- :service_code "ebook",
- :URL "https://book.dmm.co.jp/detail/b104atint00851/"}
+ :service_code  "ebook",
+ :URL           "https://book.dmm.co.jp/detail/b104atint00851/"}

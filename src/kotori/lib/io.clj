@@ -3,7 +3,8 @@
    [clojure.data.csv :as csv]
    [clojure.edn :as edn]
    [clojure.java.io :as io]
-   [clojure.pprint :refer [pprint]]))
+   [clojure.pprint :refer [pprint]]
+   [clojure.string :as str]))
 
 (defn resource [args]
   (io/resource args))
@@ -65,3 +66,19 @@
    writes csv file."
   [file-path maps]
   (->> maps maps->csv-data (dump-csv! file-path)))
+
+(defn download!
+  "file-pathのルートはプロジェクトのrootとなる."
+  ([uri]
+   (let [file-name (-> uri io/file .getName)
+         file-path (str "tmp/" file-name)]
+     (download! uri file-path)))
+  ([uri file-path]
+   (with-open [in  (io/input-stream uri)
+               out (io/output-stream file-path)]
+     (io/copy in out))))
+
+(comment
+  (def uri "https://doujin-assets.dmm.co.jp/digital/comic/d_227233/d_227233pr.jpg")
+  (download! uri)
+  )

@@ -34,17 +34,19 @@
 (defn ->url [cid]
   (str "https://www.dmm.co.jp/dc/doujin/-/detail/=/cid=" cid "/"))
 
-(defn get-image-urls "
-  末尾でリストにjuxtをあてることで第一戻り値はサムネイル画像URL,
-  残りはサンプルURLのリストとなる."
+(defn ->thumbnail-url [urls]
+  (first urls))
+
+(defn ->sample-urls [urls]
+  (into [] (rest urls)))
+
+(defn get-image-urls
   [cid]
   (let [page-url (->url cid)]
     (when-let [resp (public/get-page-data page-url)]
       (->
        (->> (html/select resp [:a.fn-colorbox])
-            (map (fn [item] (get-in item [:attrs :href]))))
-       ((juxt first
-              #(into [] (rest %))))))))
+            (map (fn [item] (get-in item [:attrs :href]))))))))
 
 (comment
   (require '[tools.dmm :refer [creds dump-doujin!]])

@@ -96,8 +96,11 @@
 (def videoa-default-xst
   [st-exclude-ng-genres  ; NGジャンル除外
    st-exclude-no-samples ; サンプル画像と動画なしを除外
-   st-exclude-no-actress                                        ; 女優数0を除外
-   st-exclude-omnibus ; 詰め合わせを除外
+   ])
+
+(def videoa-actress-xst
+  [st-exclude-no-actress ;; 女優数0を除外
+   st-exclude-omnibus ;; 詰め合わせを除外
    ])
 
 (def videoa-extra-xst
@@ -105,6 +108,11 @@
    st-exclude-vr])
 
 (defmulti make-strategy :code)
+
+(defmethod make-strategy "0001" [_]
+  (concat videoa-default-xst
+          videoa-actress-xst
+          videoa-extra-xst))
 
 (defmethod make-strategy "0009" [_]
   (conj videoa-default-xst
@@ -215,7 +223,6 @@
   [{:keys [info db limit creds genre-id floor coll-path]
     :as   m
     :or   {limit    200
-           floor    "videoa" ;; TODO 念の為, 後で削除.
            genre-id (:genre-id info)}}]
   (let [genre     (genre/make-genre floor)
         coll-path (or coll-path (genre/->coll-path genre))
@@ -263,30 +270,6 @@
          ;; 新しい順に並び替える
          (sort-by :last-tweet-time #(compare %2 %1))
          (take limit))))
-
-(defn ->print
-  [product]
-  (let [raw       (-> product
-                      (dissoc :legacy)
-                      (dissoc :raw))
-        cid       (:cid raw)
-        title     (let [title (:title raw)]
-                    (if (< (count title) 15)
-                      title
-                      (subs title 0 15)))
-        actresses (str/join "," (map #(get % "name") (:actresses raw)))
-        ;; genres  (str/join "," (map #(get % "name") (:genres raw)))
-        ]
-    {:cid             cid
-     :title           title
-     :actresses       actresses
-     ;; :no-sample-movie (:no-sample-movie raw)
-     ;; :genres  genres
-     ;; :last-crawled-time (:last-crawled-time raw)
-     ;; :raw             raw
-     :last-tweet-id   (:last-tweet-id raw)
-     :last-tweet-name (:last-tweet-name raw)
-     :last-tweet-time (:last-tweet-time raw)}))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (comment

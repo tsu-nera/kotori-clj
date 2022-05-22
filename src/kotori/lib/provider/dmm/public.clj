@@ -18,7 +18,7 @@
        :body
        html/html-snippet))
   ([cid floor]
-   (let [url (d/->url cid floor)]
+   (let [url (d/->url floor cid)]
      (get-page-data url))))
 
 (defn ->title
@@ -72,7 +72,7 @@
         cut-underline)))
 
 (defn get-page [{:keys [cid floor] :or {floor (:videoa d/floor)}}]
-  (let [url   (d/->url cid floor)
+  (let [url   (d/->url floor cid)
         m     (get-page-data url)
         title (->title m)
         desc  (->description m)]
@@ -111,7 +111,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (comment
   (def cid "h_1558csdx00007")
-  (def url (d/->url cid "videoa"))
+  (def url (d/->url "videoa" cid))
   (def data (get-page-data cid "videoa"))
 
   (def title (->title data))

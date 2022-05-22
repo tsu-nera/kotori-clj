@@ -38,7 +38,9 @@
 
 (defn ->url
   ([cid]
-   (->url cid (:videoa floor)))
-  ([cid floor-str]
-   (str "https://www.dmm.co.jp/digital/"
-        floor-str "/-/detail/=/cid=" cid "/")))
+   (->url "videoa" cid))
+  ([floor cid]
+   (->url "digital" floor cid))
+  ([service floor cid]
+   (str "https://www.dmm.co.jp/"
+        service "/" floor "/-/detail/=/cid=" cid "/")))

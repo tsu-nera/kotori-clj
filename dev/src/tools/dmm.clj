@@ -227,19 +227,19 @@
     (-> (public/get-page-bulk cids floor))))
 
 (defn ->videoa-url [cid]
-  (d/->url cid "videoa"))
+  (d/->url "videoa" cid))
 
 (defn ->videoc-url [cid]
-  (d/->url cid "videoc"))
+  (d/->url "videoc" cid))
 
 (defn ->anime-url [cid]
-  (d/->url cid "anime"))
+  (d/->url "anime" cid))
 
 (defn open-dmm
   ([cid]
-   (b/browse-url (d/->url cid "videoa")))
+   (b/browse-url (d/->url "videoa" cid)))
   ([cid floor]
-   (b/browse-url (d/->url cid floor))))
+   (b/browse-url (d/->url floor cid))))
 
 (comment
   (def info (kotori-info "0001"))

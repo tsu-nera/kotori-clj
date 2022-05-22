@@ -78,6 +78,11 @@
                out (io/output-stream file-path)]
      (io/copy in out))))
 
+(defn downloads!
+  "tmpへのパラレルダウンロード. 個数制限しないので呼び出し元で注意"
+  [uris]
+  (->> uris (pmap download!) doall))
+
 (comment
   (def uri "https://doujin-assets.dmm.co.jp/digital/comic/d_227233/d_227233pr.jpg")
   (download! uri)

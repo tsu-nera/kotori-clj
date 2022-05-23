@@ -8,7 +8,7 @@
    [kotori.lib.firestore :as fs]
    [kotori.procedure.kotori.core :as kotori]))
 
-(def dead-name (->screen-name "0005"))
+(def dead-name (->screen-name "0012"))
 
 (defn ->retweets-coll-path [code]
   (let [user-id (->user-id code)]
@@ -20,8 +20,18 @@
      (-> (f/coll db alive-path)
          (f/filter= "screen_name" dead-name)))))
 
-#_(delete-suspended-retweets! (db-prod) "0012")
+;;;;
+(comment
+  (def retweeters
+    ["0002" "0007" "0009" "0010"
+     "0011" "0019" "0020" "0025"])
 
+  (let [db (db-prod)]
+    (for [code retweeters]
+      (delete-suspended-retweets! db code)))
+
+  #_(delete-suspended-retweets! (db-prod) "0001")
+  )
 ;;;;;;;
 
 (defn get-quoted-products [db quoted-screen-name]

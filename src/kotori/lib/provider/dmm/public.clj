@@ -12,11 +12,20 @@
   {:user-agent user-agent
    :cookie     "age_check_done=1"})
 
+(defn page-exists? [url]
+  (if-let [resp (client/head url {:headers          headers
+                                  :throw-exceptions false})]
+    (= (:status resp) 200)
+    false))
+
 (defn get-page-data
   ([url]
-   (-> (client/get url {:headers headers})
-       :body
-       html/html-snippet))
+   ;; getの中でtimeout(socket/connection/connection-request)を設定しても
+   ;; タイムアウトが効かないのでheadでページの存在をチェック.
+   (when (page-exists? url)
+     (-> (client/get url {:headers headers})
+         :body
+         html/html-snippet)))
   ([cid floor]
    (let [url (d/->url floor cid)]
      (get-page-data url))))
@@ -72,11 +81,12 @@
         cut-underline)))
 
 (defn get-page [{:keys [cid floor] :or {floor (:videoa d/floor)}}]
-  (let [url   (d/->url floor cid)
-        m     (get-page-data url)
-        title (->title m)
-        desc  (->description m)]
-    {:cid cid :title title :description desc :url url}))
+  (let [url (d/->url floor cid)]
+    (when-let [m (get-page-data url)]
+      {:cid         cid
+       :url         url
+       :title       (->title m)
+       :description (->description m)})))
 
 (defn get-page-bulk [cids floor]
   (->> cids
@@ -134,5 +144,25 @@
   (def description (->description data))
 
   (def hastags (p/->hashtags description))
+  )
+
+(comment
+
+
+  (def cid "oba00186")
+  (def url "https://www.dmm.co.jp/digital/videoa/-/detail/=/cid=oba00186/")
+  (def data (get-page-data cid "videoa"))
+  (def page (get-page {:cid cid}))
+
+
+
+  (def resp (page-exists? url))
+
+
+  (def resp (client/get url {:headers                    headers
+                             :socket-timeout             1000
+                             :connection-timeout         1000
+                             :connection-request-timeout 1000
+                             }))
 
   )

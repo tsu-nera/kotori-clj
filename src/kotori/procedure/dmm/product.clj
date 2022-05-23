@@ -49,7 +49,11 @@
     :or   {ts        (time/fs-now)
            coll-path product/coll-path
            floor     (:videoa dmm/floor)}}]
-  (when-let [pages (public/get-page-bulk cids floor)]
+  ;; pagesが存在しない場合はnilとなるのでkeepで落とす.
+  ;; これはが存在しないページがcidsで来るたびにたまっていくので
+  ;; どうするか検討.
+  (when-let [pages (keep identity
+                         (public/get-page-bulk cids floor))]
     (->> pages
          (map #(product/set-scraped-timestamp ts %))
          (map #(json/->json %))
@@ -239,12 +243,12 @@
                                 :creds (creds)
                                 :cid   "waaa00100"}))
 
-  (def products (-> (crawl-products! {:db       (db-dev)
-                                      :creds    (creds)
+  (def products (-> (crawl-products! {:db    (db-dev)
+                                      :creds (creds)
                                       ;; :genre-id 4024
-                                      :limit    100})
+                                      :limit 100})
                     :products))
-  #_(def resp (map #(get-in % [:iteminfo :genre]) products))
+  (count products)
 
   ;; 1秒以内に終わる
   (def page (public/get-page  "pred00294"))
@@ -262,10 +266,12 @@
 
 (comment
   (def resp (get-qvts-without-desc {:db    (db-prod)
-                                    :limit 300}))
+                                    :limit 100}))
+  (def cids (map :cid resp))
+  (def resp2 (scrape-pages! {:cids cids :db (db-prod)}))
 
-  (def resp (crawl-qvt-descs! {:db    (db-prod)
-                               :limit 100}))
+  (def resp3 (crawl-qvt-descs! {:db    (db-prod)
+                                :limit 100}))
 
   )
 

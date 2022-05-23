@@ -1,6 +1,7 @@
 (ns kotori.procedure.kotori.core
   (:require
    [clojure.spec.alpha :as s]
+   [clojure.string :as str]
    [firestore-clj.core :as f]
    [kotori.domain.kotori.core :as d]
    [kotori.domain.source.meigen :as meigen]
@@ -45,7 +46,7 @@
   (let [{:keys [user-id cred proxy]} info
         text-length                  (count text)]
     (if-let [resp (handle-tweet-response
-                   private/create-tweet cred proxy text)]
+                   private/create-tweet cred {:text text :proxies proxy})]
       (let [tweet-id (:id_str resp)
             doc-path (tweet/->post-doc-path user-id tweet-id)]
         (log/info (str "post tweet completed. id=" tweet-id
@@ -154,7 +155,7 @@
 
   (def tweet (private/get-tweet (twitter-auth) "xxxxxxxx"))
   (def user (private/get-user (twitter-auth) "46130870"))
-  (def resp (private/create-tweet (twitter-auth) "test"))
+  (def resp (private/create-tweet (twitter-auth) {:text "test"}))
 
   (def status-id (:id_str resp))
   (def resp (private/delete-tweet (twitter-auth) status-id))
@@ -181,4 +182,12 @@
 
 (comment
   (def resp (get-product {:db (db-prod) :cid "fcdc00141"}))
+  )
+
+(comment
+  (def resp (private/create-tweet (twitter-auth) {:text "test"}))
+  (def media-ids [])
+  (def resp (private/create-tweet (twitter-auth)
+                                  {:text      "test3"
+                                   :media-ids media-ids}))
   )

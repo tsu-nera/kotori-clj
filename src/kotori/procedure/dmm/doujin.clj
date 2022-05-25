@@ -8,7 +8,8 @@
    [kotori.lib.json :as json]
    [kotori.lib.provider.dmm.doujin :as lib]
    [kotori.lib.time :as time]
-   [kotori.procedure.dmm.product :as product]))
+   [kotori.procedure.dmm.product :as product]
+   [kotori.procedure.strategy.dmm :as st]))
 
 (defn crawl-product! [{:keys [db] :as m}]
   (when-let [product (lib/get-product m)]
@@ -30,14 +31,27 @@
      :count     (count docs)
      :products  docs}))
 
-#_(defn select-scheduled-products
-    [{:as m}]
-    (st/select-scheduled-products
-     (-> m (assoc :floor floor))))
+(defn image-product? [p]
+  (or (= "cg" (:format p))
+      (= "comic" (:format p))))
+
+(defn select-scheduled-image
+  [{:keys [info db limit creds]
+    :as   m
+    :or   {limit 200}}]
+  (let [products (lib/get-products {:creds creds
+                                    :limit limit})
+        xst      [(filter image-product?)]
+        doc-ids  (map :content_id products)]
+    (->> (st/select-scheduled-products-with-xst
+          m xst coll-path doc-ids)
+         (take limit))))
 
 (comment
-  (require '[tools.dmm :refer [creds]]
-           '[firebase :refer [db]])
+  (require
+   '[devtools :refer [kotori-info]]
+   '[tools.dmm :refer [creds]]
+   '[firebase :refer [db]])
 
   (def cid "d_227233")
   (def resp (lib/get-product {:cid cid :creds (creds)}))
@@ -47,5 +61,12 @@
   (def products (crawl-products! {:db    (db)
                                   :creds (creds)
                                   :limit 10}))
+
+  (def products
+    (select-scheduled-image
+     {:db    (db)
+      :info  (kotori-info "0029")
+      :limit 30
+      :creds (creds)}))
 
   )

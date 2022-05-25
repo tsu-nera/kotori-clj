@@ -13,6 +13,7 @@
    [kotori.lib.log :as log]
    [kotori.procedure.dmm.amateur :as amateur]
    [kotori.procedure.dmm.anime :as anime]
+   [kotori.procedure.dmm.doujin :as doujin]
    [kotori.procedure.dmm.product :as product]
    [kotori.procedure.dmm.vr :as vr]
    [kotori.procedure.strategy.core :as st]
@@ -94,6 +95,10 @@
 (defn select-next-anime [{:keys [screen-name] :as m}]
   {:pre [(s/valid? ::d/screen-name screen-name)]}
   (lib/->next (first (anime/select-scheduled-products m))))
+
+(defn select-next-doujin-image [{:keys [screen-name] :as m}]
+  {:pre [(s/valid? ::d/screen-name screen-name)]}
+  (lib/->next (first (doujin/select-scheduled-image m))))
 
 (defn archive-fs-tweet-data [db user-id tweet-id]
   (f/transact!

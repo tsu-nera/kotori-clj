@@ -14,6 +14,9 @@
 (def amateur-coll-path (str dmm/doc-path "/amateurs"))
 (defn amateur-doc-path [cid] (str amateur-coll-path "/" cid))
 
+(def doujin-coll-path (str dmm/doc-path "/doujins"))
+(defn doujin-doc-path [cid] (str doujin-coll-path "/" cid))
+
 (defn- ->cid [raw]
   (:content_id raw))
 

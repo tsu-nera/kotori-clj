@@ -103,7 +103,7 @@
   ([cid "videoc"] (product/get-videoc {:cid cid :creds (creds)}))
   ([cid "videoa"] (product/get-videoa {:cid cid :creds (creds)}))
   ([cid "comic"] (ebook/get-comic {:cid cid :creds (creds)}))
-  ([cid "digital_doujin"] (doujin/get-doujin {:cid cid :creds (creds)}))
+  ([cid "digital_doujin"] (doujin/get-product {:cid cid :creds (creds)}))
   ([cid] (product/get-videoa {:cid cid :creds (creds)})))
 #_(get-dmm "ssis00337")
 

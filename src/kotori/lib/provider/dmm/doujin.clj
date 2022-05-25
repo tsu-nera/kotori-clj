@@ -27,11 +27,16 @@
   {:service service-code
    :floor   floor-code})
 
-(defn get-doujin [{:keys [cid creds]}]
+(defn get-product [{:keys [cid creds]}]
   (when-let [resp (api/search-product
                    creds (-> base-req-opts
                              (assoc :cid cid)))]
     (first resp)))
+
+(defn get-products [{:keys [creds] :as m}]
+  (when-let [resp (api/search-product
+                   creds (merge m base-req-opts))]
+    resp))
 
 ;; "https://pics.dmm.co.jp/digital/cg/d_205949/d_205949pt.jpg"
 (defn ->format [resp]
@@ -90,7 +95,7 @@
   (def cid "d_217813") ;; 音声 voice
   (def cid "d_cos0027") ;; コスプレ動画 genreid=156007
 
-  (def resp (get-doujin {:cid cid :creds (creds)}))
+  (def resp (get-product {:cid cid :creds (creds)}))
   (dump-doujin! cid)
 
   (->format resp)

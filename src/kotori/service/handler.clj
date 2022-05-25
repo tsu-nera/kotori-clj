@@ -4,6 +4,7 @@
    [kotori.lib.provider.dmm.api :as api]
    [kotori.procedure.dmm.amateur :as dmm-amateur]
    [kotori.procedure.dmm.anime :as dmm-anime]
+   [kotori.procedure.dmm.doujin :as dmm-doujin]
    [kotori.procedure.dmm.product :as dmm]
    [kotori.procedure.dmm.vr :as dmm-vr]
    [kotori.procedure.kotori.core :as kotori]
@@ -51,6 +52,7 @@
       ["/crawl-vr-products" {:post dmm-vr/crawl-products!}]
       ["/crawl-anime-products" {:post dmm-anime/crawl-products!}]
       ["/crawl-amateur-products" {:post dmm-amateur/crawl-products!}]
+      ["/crawl-doujin-products" {:post dmm-doujin/crawl-products!}]
       ["/crawl-qvt-descs" {:post dmm/crawl-qvt-descs!}]]
      ["/kotori" {:middleware [#(wrap-kotori config-map %) #(wrap-dmm %)]}
       ["/dummy" kotori/dummy]

@@ -41,18 +41,20 @@
   {:offset offset
    :hits   size})
 
-(defn- make-req-params [limit floor]
+(defn- make-req-params [limit floor service]
   (let [size         100
         page         (quot limit size)
         ->offset-map (partial make-offset-map size)
         xf           (comp          (map #(+ (* % size) 1))
                                     (map ->offset-map)
+                                    (map #(assoc % :service service))
                                     (map #(assoc % :floor floor)))
         mod-hits     (mod limit size)]
     (cond-> (into [] xf (range page))
       (not (= 0 mod-hits))
       (conj (-> (make-offset-map mod-hits (+ 1 (* page size)))
-                (assoc :floor floor))))))
+                (assoc :floor floor)
+                (assoc :service service))))))
 
 (defn- ->genre-req [genre-id]
   (if (nil? genre-id)
@@ -63,11 +65,13 @@
   get-productsを呼ぶと1回のget requestで最大100つの情報が取得できる.
   それ以上取得する場合はoffsetによる制御が必要なためこの関数で対応する.
   limitを100のchunkに分割してパラレル呼び出しとマージ."
-  [{:keys [limit floor genre-id]
+  [{:keys [limit floor genre-id service]
     :as   base-params
-    :or   {limit 20 floor (:videoa dmm/floor)}}]
+    :or   {limit   20
+           floor   (:videoa dmm/floor)
+           service "digital"}}]
   (let [genre-req-params (->genre-req genre-id)
-        req-params       (->> (make-req-params limit floor)
+        req-params       (->> (make-req-params limit floor service)
                               (map (fn [m] (merge base-params
                                                   m
                                                   genre-req-params))))]

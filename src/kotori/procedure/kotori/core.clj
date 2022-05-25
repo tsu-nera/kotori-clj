@@ -181,7 +181,8 @@
   )
 
 (comment
-  (def resp (get-product {:db (db-prod) :cid "fcdc00141"}))
+  (def resp (get-product {:db (db-prod) :cid "lzdm00050"}))
+  (count (:description resp))
   )
 
 (comment

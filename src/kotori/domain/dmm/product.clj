@@ -17,37 +17,37 @@
 (def doujin-coll-path (str dmm/doc-path "/doujins"))
 (defn doujin-doc-path [cid] (str doujin-coll-path "/" cid))
 
-(defn- ->cid [raw]
+(defn ->cid [raw]
   (:content_id raw))
 
-(defn- ->title [raw]
+(defn ->title [raw]
   (:title raw))
 
-(defn- ->url [raw]
+(defn ->url [raw]
   (:URL raw))
 
 ;; 普通の動画だと :affiliateURLspという属性があるがVR動画はない.
 ;; sp自体が古い仕様でこれから:affiliateURLに統一されることを予測して
 ;; spの属性をみるのはやめる. spはおそらく携帯用.
-(defn- ->affiliate-url [raw]
+(defn ->affiliate-url [raw]
   (:affiliateURL raw))
 
-(defn- ->actresses [raw]
+(defn ->actresses [raw]
   (get-in raw [:iteminfo :actress]))
 
-(defn- ->released-time [raw]
+(defn ->released-time [raw]
   (let [date-str (:date raw)]
     (-> date-str
         (time/parse-dmm-timestamp)
         (time/->fs-timestamp))))
 
-(defn- ->genres [raw]
+(defn ->genres [raw]
   (get-in raw [:iteminfo :genre]))
 
-(defn- sample-movie? [raw]
+(defn sample-movie? [raw]
   (contains? raw :sampleMovieURL))
 
-(defn- sample-image? [raw]
+(defn sample-image? [raw]
   (contains? raw :sampleImageURL))
 
 (defn api->data

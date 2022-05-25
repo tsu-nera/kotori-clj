@@ -1,5 +1,6 @@
 (ns kotori.lib.provider.dmm.doujin
   (:require
+   [kotori.domain.dmm.product :as product]
    [kotori.lib.io :as io]
    [kotori.lib.provider.dmm.api :as api]
    [kotori.lib.provider.dmm.public :as public]
@@ -44,6 +45,19 @@
         re  (re-pattern
              "digital/(cg|voice|game|comic)/d_")]
     (second (re-find re url))))
+
+(defn api->data
+  "dmm response map -> firestore doc mapの写像"
+  [raw]
+  (let [data {:cid           (product/->cid raw)
+              :title         (product/->title  raw)
+              :url           (product/->url raw)
+              :affiliate_url (product/->affiliate-url raw)
+              :released_time (product/->released-time raw)
+              :genres        (product/->genres raw)
+              :format        (->format raw)}]
+    (-> data
+        (assoc :raw raw))))
 
 (defn ->url [cid]
   (str "https://www.dmm.co.jp/dc/doujin/-/detail/=/cid=" cid "/"))

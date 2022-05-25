@@ -127,14 +127,17 @@
          (map :cid)
          (into []))))
 
-(defn save-products! [db coll-path products ts]
-  (let [xf         (comp (map product/api->data)
-                         (map #(product/set-crawled-timestamp ts %))
-                         (map json/->json))
-        docs       (transduce xf conj products)
-        batch-docs (fs/make-batch-docs "cid" coll-path docs)]
-    (fs/batch-set! db batch-docs)
-    docs))
+(defn save-products!
+  ([db coll-path docs]
+   (let [batch-docs (fs/make-batch-docs "cid" coll-path docs)]
+     (fs/batch-set! db batch-docs)
+     docs))
+  ([db coll-path products ts]
+   (let [xf   (comp (map product/api->data)
+                    (map #(product/set-crawled-timestamp ts %))
+                    (map json/->json))
+         docs (transduce xf conj products)]
+     (save-products! db coll-path docs))))
 
 (defn update-crawled-time!
   ([db ts floor genre-id]

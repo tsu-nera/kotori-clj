@@ -1,9 +1,11 @@
 (ns kotori.procedure.dmm.doujin
   (:require
    [kotori.domain.dmm.product
+    :as d
     :refer [doujin-coll-path]
     :rename
     {doujin-coll-path coll-path}]
+   [kotori.lib.json :as json]
    [kotori.lib.provider.dmm.doujin :as lib]
    [kotori.lib.time :as time]
    [kotori.procedure.dmm.product :as product]))
@@ -16,14 +18,17 @@
                            (time/fs-now))))
 
 (defn crawl-products! [{:keys [db] :as m}]
-  (let [ts       (time/fs-now)
-        products (lib/get-products m)]
+  (let [ts   (time/fs-now)
+        docs (->> (lib/get-products m)
+                  (map lib/api->data)
+                  (map (fn [m] (d/set-crawled-timestamp ts m)))
+                  (map json/->json))]
     (doto db
-      (product/save-products! coll-path products ts)
+      (product/save-products! coll-path docs)
       (product/update-crawled-time! ts "doujin" nil))
     {:timestamp ts
-     :count     (count products)
-     :products  products}))
+     :count     (count docs)
+     :products  docs}))
 
 #_(defn select-scheduled-products
     [{:as m}]

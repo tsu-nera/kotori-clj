@@ -41,8 +41,7 @@
 
 (defn resolve-qvt [db code]
   (let [screen-name (->screen-name code)]
-    (when-let [products (get-quoted-products
-                         db screen-name)]
+    (when-let [products (get-quoted-products db screen-name)]
       (->> products
            (map (fn [m]
                   (let [tweet-id (:last-quoted-tweet-id m)]
@@ -64,12 +63,15 @@
 (comment
   (->user-id "0021")
   (delete-qvt-tweet! (db-prod) "0019" "xxx")
-  (delete-qvt-tweets! (db-prod) "0019")
+
+  (->screen-name "0021")
+  (resolve-qvt (db-prod) "0021")
+  (delete-qvt-tweets! (db-prod) "0025")
   )
 
 ;;;;;;;;;;;;;;;
 
-(defn remove-last-qvt-product [db cid]
+(defn remove-last-qvt-product! [db cid]
   (-> db
       (f/doc (product/doc-path cid))
       (f/dissoc! "last_tweet_id"
@@ -81,12 +83,14 @@
                  (str "tweets." dead-name)
                  "quoted_tweets")))
 
-(defn remove-last-qvt-products [db]
+(defn remove-last-qvt-products! [db]
   (let [products (fs/get-filter-docs
                   db product/coll-path
                   {"last_tweet_name" dead-name})
         cids     (map :cid products)]
     (doseq [cid cids]
-      (remove-last-qvt-product db cid))))
+      (remove-last-qvt-product! db cid))))
 
-#_(remove-last-qvt-products (db-prod))
+(comment
+  (remove-last-qvt-products! (db-prod))
+  )

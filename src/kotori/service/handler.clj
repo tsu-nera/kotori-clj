@@ -62,6 +62,7 @@
       ["/tweet-morning" kotori/tweet-morning]
       ["/tweet-evening" kotori/tweet-evening]
       ["/tweet-random" kotori/tweet-random]
+      ["/tweet-doujin-image" kotori/tweet-doujin-image]
       ["/get-product" {:get kotori/get-product}]
       ["/select-next-product" {:get kotori/select-next-product}]
       ["/select-next-amateur-videoc"

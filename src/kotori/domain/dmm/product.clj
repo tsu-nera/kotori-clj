@@ -100,6 +100,24 @@
      "last_quoted_tweet_id" tweet-id
      quoted-tweet-key       quoted-tweet-val}))
 
+(defn tweet->doc [tweet exinfo]
+  (let [screen-name (tweet/->screen-name tweet)
+        tweet-id    (tweet/->id tweet)
+        tweet-time  (tweet/->created-time tweet)
+        tweet-link  (tweet/->url screen-name tweet-id)
+        tweet-key   (fs/make-nested-key ["tweets"
+                                         screen-name tweet-id])
+        tweet-val   {"screen_name" screen-name
+                     ;; "user_id"            user-id
+                     "tweet_id"    tweet-id
+                     "tweet_time"  tweet-time
+                     "tweet_link"  tweet-link
+                     "text"        (:text tweet)}]
+    {"last_tweet_time" tweet-time
+     "last_tweet_name" screen-name
+     "last_tweet_id"   tweet-id
+     tweet-key         (merge tweet-val exinfo)}))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (comment
   (require '[devtools :refer [env]])

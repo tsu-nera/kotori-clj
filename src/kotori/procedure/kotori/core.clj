@@ -3,11 +3,13 @@
    [clojure.spec.alpha :as s]
    [clojure.string :as str]
    [firestore-clj.core :as f]
+   [kotori.domain.dmm.product :as d-product]
    [kotori.domain.kotori.core :as d]
    [kotori.domain.source.meigen :as meigen]
    [kotori.domain.tweet.core :as tweet]
    [kotori.domain.tweet.post :as post]
    [kotori.lib.firestore :as fs]
+   [kotori.lib.io :as io]
    [kotori.lib.json :as json]
    [kotori.lib.kotori :as lib]
    [kotori.lib.log :as log]
@@ -43,15 +45,18 @@
      (log/error (:throwable &throw-context) "unexpected error")
      (throw+))))
 
-(defn tweet [{:keys [^d/Info info db text type]}]
+(defn tweet [{:keys [^d/Info info db text type media-ids]}]
   (let [{:keys [user-id cred proxy]} info
-        text-length                  (count text)]
+        text-length                  (count text)
+        params                       {:text      text
+                                      :proxies   proxy
+                                      :media-ids media-ids}]
     (if-let [resp (handle-tweet-response
-                   private/create-tweet cred {:text text :proxies proxy})]
+                   private/create-tweet cred params)]
       (let [tweet-id (:id_str resp)
             doc-path (tweet/->post-doc-path user-id tweet-id)]
         (log/info (str "post tweet completed. id=" tweet-id
-                       ", length=" text-length))
+                       ", length=" text-length ",media-ids=" media-ids))
         (->> resp
              (post/->doc type)
              (fs/set! db doc-path))
@@ -75,6 +80,29 @@
         text         (make-text source strategy text-builder)]
     (tweet (assoc params :text text :type :text))))
 
+(defn tweet-doujin-image [{:keys [^d/Info info db] :as m}]
+  (let [doc       (doujin/select-next-image m)
+        cid       (:cid doc)
+        ;; TODO build-messageのmultimethodでreplace
+        urls      (into [] (take 4 (rest (:urls doc))))
+        media-ids (->> urls
+                       io/downloads!
+                       (map (fn [file-path]
+                              {:creds     (:cred info)
+                               :proxy     (:proxy info)
+                               :file-path file-path}))
+                       (map private/upload-image)
+                       (map :media-id)
+                       (into []))
+        message   (str (:title doc) " (sample 1/1)")
+        exinfo    {"cid" cid "media_ids" media-ids}
+        params    (merge m {:text      message
+                            :type      :photo
+                            :media-ids media-ids})]
+    (when-let [resp (tweet params)]
+      (let [doc-path (d-product/doujin-doc-path cid)]
+        (fs/update! db doc-path (d-product/tweet->doc resp exinfo))))))
+
 (defn get-product [{:as m}]
   (lib/->next (product/get-product m)))
 
@@ -95,10 +123,6 @@
 (defn select-next-anime [{:keys [screen-name] :as m}]
   {:pre [(s/valid? ::d/screen-name screen-name)]}
   (lib/->next (first (anime/select-scheduled-products m))))
-
-(defn select-next-doujin-image [{:keys [screen-name] :as m}]
-  {:pre [(s/valid? ::d/screen-name screen-name)]}
-  (lib/->next (first (doujin/select-scheduled-image m))))
 
 (defn archive-fs-tweet-data [db user-id tweet-id]
   (f/transact!
@@ -196,4 +220,39 @@
   (def resp (private/create-tweet (twitter-auth)
                                   {:text      "test3"
                                    :media-ids media-ids}))
+  )
+
+(comment
+  (def resp (doujin/select-next-image {:db    (db)
+                                       :creds (creds)
+                                       :info  (kotori-info "0003")}))
+
+  (def urls (into [] (take 4 (rest (:urls resp)))))
+  (def paths (->> (range 1 5)
+                  (map (fn [n] (str "tmp/image-" n ".jpg")))))
+
+
+  (mapcat io/download! urls paths)
+
+  (doseq [url  urls
+          path paths]
+    (println url path)
+    #_(io/download! url path))
+
+  (def image-paths (io/downloads! urls))
+
+
+  (def resp2 (tweet-doujin-image {:db    (db)
+                                  :creds (creds)
+                                  :info  (kotori-info "0003")}))
+  (def ret (tweet resp2))
+
+  (->> urls
+       io/downloads!
+       (map (fn [file-path]
+              {:creds     (twitter-auth)
+               :file-path file-path}))
+       (map private/upload-image)
+       (map :media-id))
+
   )

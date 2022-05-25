@@ -47,6 +47,15 @@
           m xst coll-path doc-ids)
          (take limit))))
 
+(defn select-next-image [{:as params}]
+  (let [doc        (first (select-scheduled-image params))
+        cid        (:cid doc)
+        title      (:title doc)
+        image-urls (lib/get-image-urls cid)]
+    {:cid   cid
+     :title title
+     :urls  image-urls}))
+
 (comment
   (require
    '[devtools :refer [kotori-info]]

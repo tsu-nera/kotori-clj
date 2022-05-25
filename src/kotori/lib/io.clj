@@ -76,14 +76,20 @@
   ([uri file-path]
    (with-open [in  (io/input-stream uri)
                out (io/output-stream file-path)]
-     (io/copy in out))))
+     (io/copy in out)
+     file-path)))
 
 (defn downloads!
-  "tmpへのパラレルダウンロード. 個数制限しないので呼び出し元で注意"
+  "個数制限しないので呼び出し元で注意"
   [uris]
-  (->> uris (pmap download!) doall))
+  (->> uris
+       (pmap download!)
+       (into [])))
 
 (comment
   (def uri "https://doujin-assets.dmm.co.jp/digital/comic/d_227233/d_227233pr.jpg")
   (download! uri)
+
+  (str "tmp/image-" 1 ".jpg")
+
   )

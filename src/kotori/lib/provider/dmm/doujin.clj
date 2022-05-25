@@ -70,7 +70,6 @@
 
 ;; cidからパスが推測できるならいらいなかもしれない.
 ;; 法則性がある程度はっきりしたら検討
-;;
 (defn get-image-urls
   [cid]
   (let [page-url (->url cid)]

@@ -34,28 +34,29 @@
            '[firebase :refer [db-prod db-dev db]])
 
   (def product (lib/get-anime {:creds (creds)
-                               :cid   "196glod00227"}))
+                               :cid   "h_1379jdxa57641"}))
 
   (def products (lib/get-products {:creds @creds
                                    :limit 10
                                    :floor "anime"}))
 
-  (def resp (crawl-product! {:db    (db)
+  (def resp (crawl-product! {:db    (db-prod)
                              :creds (creds)
                              :cid   "196glod00227"}))
 
   (def resp (crawl-products! {:db    (db)
                               :creds (creds)
-                              :limit 10}))
+                              :limit 300}))
 
   (def products
     (into []
           (select-scheduled-products
-           {:db          (db-prod)
-            :limit       50
+           {:db          (db)
+            :limit       200
             :creds       (creds)
             :info        (kotori-info "0024")
             :screen-name (->screen-name "0024")})))
+  (count products)
 
   (into [] (apply comp (st/make-strategy (kotori-info "0024"))) products)
 

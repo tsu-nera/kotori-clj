@@ -44,6 +44,12 @@
 (defn ->genres [raw]
   (get-in raw [:iteminfo :genre]))
 
+(defn ->maker-id [raw]
+  (-> raw
+      (get-in [:iteminfo :maker])
+      first
+      :id))
+
 (defn sample-movie? [raw]
   (contains? raw :sampleMovieURL))
 
@@ -62,6 +68,7 @@
                    :actress_count   (count actresses)
                    :released_time   (->released-time raw)
                    :genres          (->genres raw)
+                   :maker_id        (->maker-id raw)
                    :no_sample_movie (not (sample-movie? raw))
                    :no_sample_image (not (sample-image? raw))}]
     (-> data

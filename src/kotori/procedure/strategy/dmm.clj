@@ -93,6 +93,10 @@
 (def st-exclude-omnibus
   (remove #(> (:actress-count %) 4)))
 
+;; アニメ: ルネサスピクチャーズ
+(def st-include-lunesoft
+  (filter #(= (:maker-id %) 45012)))
+
 (def videoa-default-xst
   [st-exclude-ng-genres  ; NGジャンル除外
    st-exclude-no-samples ; サンプル画像と動画なしを除外
@@ -118,8 +122,14 @@
   (conj videoa-default-xst
         st-exclude-vr))
 
+;; 現状公式にはルネサスピクチャーズのみ動画サンプルの利用が可能なので
+;; ほかのメーカーを投稿しないように抑止をいれておく.
+;; いちおうほかの動画もAPIで取得できちゃうので
+;; なにが許可されているのか判定しづらい.
+;; 現在はだんだんサンプル動画が許可され始めているので様子をみて素材開放を待つ
 (defmethod make-strategy "0024" [_]
-  [(make-st-exclude-ng-genres anime/ng-genres)
+  [st-include-lunesoft
+   (make-st-exclude-ng-genres anime/ng-genres)
    st-exclude-no-samples])
 
 (defmethod make-strategy "0027" [_]

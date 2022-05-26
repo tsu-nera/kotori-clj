@@ -41,7 +41,7 @@
       names->genre-ids))
 
 (def violent-ids
-  (-> ["残虐表現" "鬼畜" "拷問" "蝋燭" "鼻フック"]
+  (-> ["残虐表現" "鬼畜" "拷問" "蝋燭" "鼻フック" "拘束"]
       names->genre-ids))
 
 (def dirty-ids

@@ -31,7 +31,7 @@
   (genre-names->ids ["鬼畜"]))
 
 (def antisocial-ids
-  (genre-names->ids ["監禁" "盗撮・のぞき" "ドラッグ"]))
+  (genre-names->ids ["監禁" "盗撮・のぞき" "ドラッグ" "拘束"]))
 
 (def ng-genres
   (into #{} (concat

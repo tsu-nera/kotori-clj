@@ -3,8 +3,7 @@
    [clojure.data.csv :as csv]
    [clojure.edn :as edn]
    [clojure.java.io :as io]
-   [clojure.pprint :refer [pprint]]
-   [clojure.string :as str]))
+   [clojure.pprint :refer [pprint]]))
 
 (defn resource [args]
   (io/resource args))

@@ -45,12 +45,13 @@
      (log/error (:throwable &throw-context) "unexpected error")
      (throw+))))
 
-(defn tweet [{:keys [^d/Info info db text type media-ids]}]
+(defn tweet [{:keys [^d/Info info db text type media-ids reply-tweet-id]}]
   (let [{:keys [user-id cred proxy]} info
         text-length                  (count text)
-        params                       {:text      text
-                                      :proxies   proxy
-                                      :media-ids media-ids}]
+        params                       {:text           text
+                                      :proxies        proxy
+                                      :media-ids      media-ids
+                                      :reply-tweet-id reply-tweet-id}]
     (if-let [resp (handle-tweet-response
                    private/create-tweet cred params)]
       (let [tweet-id (:id_str resp)
@@ -81,27 +82,38 @@
     (tweet (assoc params :text text :type :text))))
 
 (defn tweet-doujin-image [{:keys [^d/Info info db] :as m}]
-  (let [doc       (doujin/select-next-image m)
-        cid       (:cid doc)
+  (let [doc           (doujin/select-next-image m)
+        cid           (:cid doc)
         ;; TODO build-messageのmultimethodでreplace
-        urls      (into [] (take 4 (rest (:urls doc))))
-        media-ids (->> urls
-                       io/downloads!
-                       (map (fn [file-path]
-                              {:creds     (:cred info)
-                               :proxy     (:proxy info)
-                               :file-path file-path}))
-                       (map private/upload-image)
-                       (map :media-id)
-                       (into []))
-        message   (str (:title doc) " (sample 1/1)")
-        exinfo    {"cid" cid "media_ids" media-ids}
-        params    (merge m {:text      message
-                            :type      :photo
-                            :media-ids media-ids})]
-    (when-let [resp (tweet params)]
+        urls          (into [] (take 8 (rest (:urls doc))))
+        media-ids     (->> urls
+                           io/downloads!
+                           (map (fn [file-path]
+                                  {:creds     (:cred info)
+                                   :proxy     (:proxy info)
+                                   :file-path file-path}))
+                           (map private/upload-image)
+                           (map :media-id)
+                           (into []))
+        exinfo        {"cid" cid "media_ids" media-ids}
+        ;; TODO リファクタリングが必要.
+        media-ids-sep (partition 4 media-ids)
+        media-ids-1   (first media-ids-sep)
+        media-ids-2   (second media-ids-sep)
+        message-1     (str (:title doc) "\n" "(sample 1/2)")
+        params-1      (merge m {:text      message-1
+                                :type      :photo
+                                :media-ids media-ids-1})
+        message-2     (str cid "\n" "(sample 2/2)")
+        params-2      (merge m {:text      message-2
+                                :type      :photo
+                                :media-ids media-ids-2})]
+    (when-let [resp (tweet params-1)]
+      (let [tweet-id (:id_str resp)]
+        (tweet (assoc params-2 :reply-tweet-id tweet-id)))
       (let [doc-path (d-product/doujin-doc-path cid)]
-        (fs/update! db doc-path (d-product/tweet->doc resp exinfo))))))
+        (fs/update! db doc-path (d-product/tweet->doc resp exinfo)))
+      resp)))
 
 (defn get-product [{:as m}]
   (lib/->next (product/get-product m)))
@@ -227,7 +239,7 @@
                                        :creds (creds)
                                        :info  (kotori-info "0003")}))
 
-  (def urls (into [] (take 4 (rest (:urls resp)))))
+  (def urls (into [] (take 8 (rest (:urls resp)))))
   (def paths (->> (range 1 5)
                   (map (fn [n] (str "tmp/image-" n ".jpg")))))
 
@@ -247,12 +259,11 @@
                                   :info  (kotori-info "0003")}))
   (def ret (tweet resp2))
 
-  (->> urls
-       io/downloads!
-       (map (fn [file-path]
-              {:creds     (twitter-auth)
-               :file-path file-path}))
-       (map private/upload-image)
-       (map :media-id))
-
+  (def media-ids (->> urls
+                      io/downloads!
+                      (map (fn [file-path]
+                             {:creds     (twitter-auth)
+                              :file-path file-path}))
+                      (map private/upload-image)
+                      (map :media-id)))
   )

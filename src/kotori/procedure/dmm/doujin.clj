@@ -6,6 +6,7 @@
     :rename
     {doujin-coll-path coll-path}]
    [kotori.lib.json :as json]
+   [kotori.lib.kotori :refer [ng->ok]]
    [kotori.lib.provider.dmm.doujin :as lib]
    [kotori.lib.time :as time]
    [kotori.procedure.dmm.product :as product]
@@ -50,7 +51,7 @@
 (defn select-next-image [{:as params}]
   (let [doc        (first (select-scheduled-image params))
         cid        (:cid doc)
-        title      (:title doc)
+        title      (-> (:title doc) ng->ok)
         image-urls (lib/get-image-urls cid)]
     {:cid   cid
      :title title

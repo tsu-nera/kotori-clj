@@ -1,21 +1,8 @@
 (ns kotori.lib.provider.dmm.editor
   (:require
    [clojure.string :as str]
+   [kotori.domain.dmm.genre.videoc :as videoc]
    [kotori.lib.provider.dmm.parser :as p]))
-
-(def videoc-title-stopwords
-  ["（仮名）" "（裏垢）" "天才"])
-
-(def videoc-desc-stopwords
-  ["いつもオナ素材としてのご利用ありがとうございます。たかまり↑おじさんです。ハメ撮り同人AV活動で生計を立てております。"
-   "いつもおせわになっております。"
-   "二代目つば飲みおじさんでございます。"
-   "202X年、世界はウイルスの渦に包まれた。ナンパは枯れ、合コンは裂け、全ての出会いが壊滅したかのように見えた。だが、ワンナイは死滅していなかった！世はマッチアプリが支配する弱肉以下略。"
-   "性帝サウザーです。"
-   "素人ホイホイstayhome"
-   "刺さった街で女性をナンパする企画ダーツナンパ in Tokyo ！"
-   "↑サンプル必見↑"
-   "※本編顔出しです。"])
 
 (defn ->remove-x [x s]
   (let [re (re-pattern x)]
@@ -32,10 +19,10 @@
        str/trim))
 
 (defn videoc-title->remove-stopwords [s]
-  (->remove-xs s videoc-title-stopwords))
+  (->remove-xs s videoc/title-stopwords))
 
 (defn videoc-desc->remove-stopwords [s]
-  (->remove-xs s videoc-desc-stopwords))
+  (->remove-xs s videoc/desc-stopwords))
 
 ;; どうもdmmは全角シャープを利用しているように思う.
 (defn words->hashtags

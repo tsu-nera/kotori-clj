@@ -133,7 +133,7 @@
 
 (defn- ->remove-num [name]
   (-> name
-      (str/replace #" 3| 2" "")))
+      (str/replace #" 3| 2|2|3" "")))
 
 (defn- ->swap-local-wife [name]
   (str/replace name #"ローカル妻" "匿名希望の奥さん"))

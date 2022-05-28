@@ -21,6 +21,10 @@
 (comment
   (require '[firebase :refer [db-dev db-prod]])
 
-  (download! (db-dev))
-  (upload! (db-prod))
+  (download! (db-prod))
+
+  (defn uploads! []
+    (upload! (db-dev))
+    (upload! (db-prod)))
+  #_(uploads!)
   )

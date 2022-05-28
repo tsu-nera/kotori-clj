@@ -3,6 +3,7 @@
    [kotori.domain.tweet.core :as tweet]
    [kotori.lib.time :as time]))
 
+;; TODO 見直し必要
 (def data-type
   {:text  "text"
    :video "video"

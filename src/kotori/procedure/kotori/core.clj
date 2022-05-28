@@ -61,6 +61,14 @@
         (->> resp
              (post/->doc type)
              (fs/set! db doc-path))
+        (when reply-tweet-id
+          (let [replying-doc-path
+                (tweet/->post-doc-path user-id reply-tweet-id)]
+            (doto db
+              (fs/assoc! doc-path
+                         "self_replying_tweet_id" reply-tweet-id)
+              (fs/assoc! replying-doc-path
+                         "self_replyed_tweet_id" tweet-id))))
         resp)
       (do
         (log/error (str "post tweet failed," " length=" text-length))
@@ -102,11 +110,11 @@
         media-ids-2   (second media-ids-sep)
         message-1     (str (:title doc) "\n" "(sample 1/2)")
         params-1      (merge m {:text      message-1
-                                :type      :photo
+                                :type      :comic ;; TODO 仮対応
                                 :media-ids media-ids-1})
         message-2     (str cid "\n" "(sample 2/2)")
         params-2      (merge m {:text      message-2
-                                :type      :photo
+                                :type      :comic ;; TODO 仮対応
                                 :media-ids media-ids-2})]
     (when-let [resp (tweet params-1)]
       (let [tweet-id (:id_str resp)]
@@ -178,6 +186,10 @@
   (tweet-morning params)
   (tweet-evening params)
   (tweet-random params)
+
+  (def reply-tweet-id "xx")
+  (def resp (tweet (merge params {:text           "リプテスト3"
+                                  :reply-tweet-id reply-tweet-id})))
 
  ;;;
   )
@@ -257,6 +269,7 @@
   (def resp2 (tweet-doujin-image {:db    (db)
                                   :creds (creds)
                                   :info  (kotori-info "0003")}))
+
   (def ret (tweet resp2))
 
   (def media-ids (->> urls

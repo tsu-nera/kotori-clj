@@ -159,7 +159,7 @@
     (io/dump-csv-from-maps! csv-path maps)))
 
 (defn get-floors []
-  (-> (api/get-floors creds) :site))
+  (-> (api/get-floors (creds)) :site))
 
 (defn download-floors! []
   (let [file-path "dmm/floor.edn"]
@@ -191,10 +191,10 @@
       second
       java.net.URLDecoder/decode))
 
-(defn get-genres [floor-name]
-  (let [q {:floor_id (floor-name @video-floor-map)
+(defn get-genres [floor-id]
+  (let [q {:floor_id floor-id
            :hits     500}]
-    (->> (api/search-genre creds q)
+    (->> (api/search-genre (creds) q)
          :genre
          (map (fn [m]
                 (if-let [list-url (:list_url m)]
@@ -204,16 +204,24 @@
                 (assoc m :genre_id (Integer/parseInt (:genre_id m)))))
          (sort-by :genre_id))))
 
-(defn download-genres! [floor-name]
-  (let [floor-name-str (name floor-name)
-        file-path      (str "dmm/genre/" floor-name-str ".edn")]
-    (->> (get-genres floor-name)
+(defn download-genres! [floor-id floor-code]
+  (let [floor-id  81
+        file-path (str "dmm/genre/" floor-code ".edn")]
+    (->> (get-genres floor-id)
          (io/dump-edn! file-path))))
-#_(download-genres! :videoa)
+#_(download-genres! 81 "digital_doujin")
+
+(defn download-video-genres! [floor-name]
+  (let [floor-name-str (name floor-name)
+        floor-id       (floor-name @video-floor-map)
+        file-path      (str "dmm/genre/" floor-name-str ".edn")]
+    (->> (get-genres floor-id)
+         (io/dump-edn! file-path))))
+#_(download-video-genres! :videoa)
 
 (defn download-all-genres! []
   (doseq [key (keys @video-floor-map)]
-    (download-genres! key)))
+    (download-video-genres! key)))
 #_(download-all-genres!)
 
 ;; 主に最新のdescをAPI経由で取得して

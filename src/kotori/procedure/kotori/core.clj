@@ -140,6 +140,29 @@
         (fs/update! db doc-path (d-product/tweet->doc resp exinfo)))
       resp)))
 
+(defn tweet-doujin-voice [{:keys [^d/Info info db] :as m}]
+  (let [doc        (doujin/select-next-voice m)
+        cid        (:cid doc)
+        urls       (into [] (take 2 (:urls doc)))
+        exinfo     {"cid" cid}
+        ;; TODO リファクタリングが必要.
+        sample-max (count urls)
+        message    (str (:title doc) "\n\n"
+                        "お試し1\n"
+                        (nth urls 0)
+                        "\nお試し2\n"
+                        (nth urls 1)
+                        "\n\nサンプル音声は全" sample-max "コ✨"
+                        "\n\n"
+                        "続き:point-down:\n" (:affiliate_url doc))
+        params     (merge m {:text message
+                             :type :voice ;; TODO 仮対応
+                             })]
+    (when-let [resp (tweet params)]
+      (let [doc-path (d-product/doujin-doc-path cid)]
+        (fs/update! db doc-path (d-product/tweet->doc resp exinfo)))
+      resp)))
+
 (defn get-product [{:as m}]
   (lib/->next (product/get-product m)))
 
@@ -271,9 +294,7 @@
   (def paths (->> (range 1 5)
                   (map (fn [n] (str "tmp/image-" n ".jpg")))))
 
-
   (mapcat io/download! urls paths)
-
   (doseq [url  urls
           path paths]
     (println url path)
@@ -294,4 +315,17 @@
                               :file-path file-path}))
                       (map private/upload-image)
                       (map :media-id)))
+  )
+
+(comment
+  (def m {:db    (db)
+          :creds (creds)
+          :info  (kotori-info "0003")})
+
+  (def doc (doujin/select-next-voice m))
+  (def resp (tweet-doujin-voice {:db    (db)
+                                 :creds (creds)
+                                 :info  (kotori-info "0003")}))
+
+
   )

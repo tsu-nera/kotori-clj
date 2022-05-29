@@ -216,9 +216,9 @@
     (assoc m :last-crawled-time last-crawled-time)))
 
 (defn select-scheduled-products-with-xst
-  [{:keys [db]} xst coll-path doc-ids]
+  [{:keys [db past-days] :or {past-days 28}} xst coll-path doc-ids]
   (let [st-exclude-recently-tweeted
-        (make-st-exclude-recently-tweeted 28)
+        (make-st-exclude-recently-tweeted past-days)
         products  (fs/get-docs-by-ids db coll-path doc-ids)
         xstrategy (apply comp
                          st-skip-not-yet-crawled

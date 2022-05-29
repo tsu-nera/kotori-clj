@@ -13,17 +13,25 @@
       (assoc :floor floor)
       (product/crawl-product! d/coll-path)))
 
+(def lune-opt
+  {:article    "maker"
+   :article_id 45012})
+
 (defn crawl-products! [{:as m}]
   (let [opts {:coll-path d/coll-path
               ;; いろいろ書かれてて複雑なので刈り取りは保留.
               :scrape?   false
               :floor     floor}]
-    (product/crawl-products! (merge m opts))))
+    ;; 現在結局ルネサスピクチャーズしかサンプル動画が利用できないルールなので
+    ;; このメーカに限定してクロールする. それにしてもルール無視した投稿は多い.
+    (product/crawl-products! (merge m opts lune-opt))))
 
 (defn select-scheduled-products
   [{:as m}]
   (st/select-scheduled-products
-   (-> m (assoc :floor floor))))
+   (merge m
+          {:floor     floor
+           :past-days 18})))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -44,15 +52,15 @@
                              :creds (creds)
                              :cid   "196glod00227"}))
 
-  (def resp (crawl-products! {:db    (db)
+  (def resp (crawl-products! {:db    (db-prod)
                               :creds (creds)
                               :limit 300}))
 
   (def products
     (into []
           (select-scheduled-products
-           {:db          (db)
-            :limit       200
+           {:db          (db-prod)
+            :limit       300
             :creds       (creds)
             :info        (kotori-info "0024")
             :screen-name (->screen-name "0024")})))

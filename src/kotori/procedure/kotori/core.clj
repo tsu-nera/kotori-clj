@@ -75,7 +75,7 @@
              (post/->doc type)
              (fs/set! db doc-path))
         (when reply-tweet-id
-          (assoc-thred-id! db user-id reply-tweet-id tweet-id))
+          (assoc-thread-id! db user-id reply-tweet-id tweet-id))
         resp)
       (do
         (log/error (str "post tweet failed," " length=" text-length))

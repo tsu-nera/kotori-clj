@@ -82,6 +82,10 @@
   [{:as params}]
   (tweet (assoc params :text "今日もお疲れ様でした" :type :text)))
 
+(defn- sample->format
+  [i n]
+  (format "(sample %d/%d)" i n))
+
 (defn tweet-random [{:keys [^d/Info info db env] :as params}]
   (let [source       meigen/source
         strategy     st/pick-random
@@ -93,7 +97,9 @@
   (let [doc           (doujin/select-next-image m)
         cid           (:cid doc)
         ;; TODO build-messageのmultimethodでreplace
-        urls          (into [] (take 8 (rest (:urls doc))))
+        ;; 1枚目がサムネイルのことも多いがそうでなく8枚のものも多いので
+        ;; 先頭から8枚をとる.
+        urls          (into [] (take 8 (:urls doc)))
         media-ids     (->> urls
                            io/downloads!
                            (map (fn [file-path]
@@ -108,17 +114,21 @@
         media-ids-sep (partition 4 media-ids)
         media-ids-1   (first media-ids-sep)
         media-ids-2   (second media-ids-sep)
-        message-1     (str (:title doc) "\n" "(sample 1/2)")
+        total         (if (< (count media-ids-2) 4) 1 2)
+        message-1     (str (:title doc) " " cid
+                           "\n" (sample->format 1 total))
         params-1      (merge m {:text      message-1
                                 :type      :comic ;; TODO 仮対応
                                 :media-ids media-ids-1})
-        message-2     (str cid "\n" "(sample 2/2)")
+        message-2     (sample->format 2 total)
         params-2      (merge m {:text      message-2
                                 :type      :comic ;; TODO 仮対応
                                 :media-ids media-ids-2})]
     (when-let [resp (tweet params-1)]
-      (let [tweet-id (:id_str resp)]
-        (tweet (assoc params-2 :reply-tweet-id tweet-id)))
+      ;; リプライ投稿は画像があるときだけ.
+      (when (= 2 total)
+        (let [tweet-id (:id_str resp)]
+          (tweet (assoc params-2 :reply-tweet-id tweet-id))))
       (let [doc-path (d-product/doujin-doc-path cid)]
         (fs/update! db doc-path (d-product/tweet->doc resp exinfo)))
       resp)))
@@ -179,7 +189,8 @@
   ;;;
   (require '[firebase :refer [db db-prod db-dev]]
            '[tools.dmm :refer [creds]]
-           '[devtools :refer [kotori-info ->screen-name info-dev]])
+           '[devtools :refer [kotori-info ->screen-name
+                              info-dev twitter-auth]])
 
   (def params {:db (db-dev) :info @info-dev})
 
@@ -203,8 +214,6 @@
 
 (comment
   ;;;
-  (require '[devtools :refer [twitter-auth]])
-  (def auth (twitter-auth))
 
   (def tweet (private/get-tweet (twitter-auth) "xxxxxxxx"))
   (def user (private/get-user (twitter-auth) "46130870"))
@@ -264,7 +273,6 @@
     #_(io/download! url path))
 
   (def image-paths (io/downloads! urls))
-
 
   (def resp2 (tweet-doujin-image {:db    (db)
                                   :creds (creds)

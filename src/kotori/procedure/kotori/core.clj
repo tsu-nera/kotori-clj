@@ -45,6 +45,19 @@
      (log/error (:throwable &throw-context) "unexpected error")
      (throw+))))
 
+(defn- assoc-thread-id!
+  "ツイートの親子関係をtweet-idでさかのぼれるように双方向リンクしとく"
+  [db user-id parent-id child-id]
+  (let [parent-doc-path
+        (tweet/->post-doc-path user-id parent-id)
+        child-doc-path
+        (tweet/->post-doc-path user-id child-id)]
+    (doto db
+      (fs/assoc! child-doc-path
+                 "self_replying_tweet_id" parent-id)
+      (fs/assoc! parent-doc-path
+                 "self_replyed_tweet_id" child-id))))
+
 (defn tweet [{:keys [^d/Info info db text type media-ids reply-tweet-id]}]
   (let [{:keys [user-id cred proxy]} info
         text-length                  (count text)
@@ -62,13 +75,7 @@
              (post/->doc type)
              (fs/set! db doc-path))
         (when reply-tweet-id
-          (let [replying-doc-path
-                (tweet/->post-doc-path user-id reply-tweet-id)]
-            (doto db
-              (fs/assoc! doc-path
-                         "self_replying_tweet_id" reply-tweet-id)
-              (fs/assoc! replying-doc-path
-                         "self_replyed_tweet_id" tweet-id))))
+          (assoc-thred-id! db user-id reply-tweet-id tweet-id))
         resp)
       (do
         (log/error (str "post tweet failed," " length=" text-length))

@@ -82,9 +82,10 @@
 
 (defn get-by-genres
   "複数genre-idをパラレルで取得して結果をマージ."
-  [{:keys [genre-ids creds]}]
+  [genre-ids {:as m :keys [creds]}]
   (->> genre-ids
        (map #(->genre-req %))
+       (map #(merge m %))
        (pmap #(api/search-product creds %))
        flatten
        (into #{})

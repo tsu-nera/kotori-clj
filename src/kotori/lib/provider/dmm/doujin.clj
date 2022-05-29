@@ -1,8 +1,10 @@
 (ns kotori.lib.provider.dmm.doujin
   (:require
+   [kotori.domain.dmm.genre.doujin :as genre]
    [kotori.domain.dmm.product :as product]
    [kotori.lib.io :as io]
    [kotori.lib.provider.dmm.api :as api]
+   [kotori.lib.provider.dmm.product :as lib]
    [kotori.lib.provider.dmm.public :as public]
    [net.cgrand.enlive-html :as html]))
 
@@ -45,6 +47,18 @@
         re  (re-pattern
              "digital/(cg|voice|game|comic)/d_")]
     (second (re-find re url))))
+
+;; 人気順で取得すると音声作品は人気がないので取得できない.
+;; そのため音声作品を特定できるgenre-id指定で取得する.
+;; これだけでOKというgenre-idがないので複数個のgenre-idで取得して
+;; 結果をマージする.
+(defn get-voice-products [{:keys [creds]}]
+  (when-let [products (lib/get-by-genres
+                       genre/voice-ids
+                       (merge base-req-opts {:creds creds
+                                             :hits  100}))]
+    (filter (fn [p]
+              (= "voice" (->format p))) products)))
 
 (defn api->data
   "dmm response map -> firestore doc mapの写像"
@@ -98,7 +112,7 @@
   (map (fn [n]
          (generate-image-url media cid n)) (range 1 (+ 1 count))))
 
-(defn get-audio-urls
+(defn get-voice-urls
   [cid]
   (let [page-url (->url cid)
         xf       (comp
@@ -149,7 +163,6 @@
   (def image-url (first urls))
 
   (io/download! image-url)
-
   (io/downloads! urls)
   )
 
@@ -164,5 +177,7 @@
   (def url (->url cid))
   (def raw (public/get-page-raw url))
 
-  (def urls (get-audio-urls cid))
+  (def urls (get-voice-urls cid))
+
+  (def voices (get-voice-products {:creds (creds)}))
   )

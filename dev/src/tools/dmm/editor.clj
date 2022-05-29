@@ -18,7 +18,7 @@
 
 (defn get-desc-raw [cid floor]
   (public/->raw-description
-   (public/get-page-data cid floor)))
+   (public/get-page-raw cid floor)))
 
 (comment
   (def screen-name (->screen-name "0001"))

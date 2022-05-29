@@ -73,7 +73,7 @@
 (defn get-image-urls
   [cid]
   (let [page-url (->url cid)]
-    (when-let [resp (public/get-page-data page-url)]
+    (when-let [resp (public/get-page-raw page-url)]
       (->
        (->> (html/select resp [:a.fn-colorbox])
             (map (fn [item] (get-in item [:attrs :href]))))))))
@@ -97,6 +97,16 @@
 (defn generate-image-urls [media cid count]
   (map (fn [n]
          (generate-image-url media cid n)) (range 1 (+ 1 count))))
+
+(defn get-audio-urls
+  [cid]
+  (let [page-url (->url cid)
+        xf       (comp
+                  (map :content)
+                  (map second)
+                  (map (fn [item] (get-in item [:attrs :src]))))]
+    (when-let [raw (public/get-page-raw page-url)]
+      (->> (html/select raw [:video]) (into [] xf)))))
 
 (comment
   (require '[tools.dmm :refer [creds dump-doujin!]])
@@ -147,4 +157,12 @@
   (def cid "d_227233")
   (def urls (generate-image-urls "comic" cid 3))
 
+  )
+
+(comment
+  (def cid "d_214569")
+  (def url (->url cid))
+  (def raw (public/get-page-raw url))
+
+  (def urls (get-audio-urls cid))
   )

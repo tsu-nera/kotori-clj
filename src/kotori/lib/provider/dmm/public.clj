@@ -18,7 +18,7 @@
     (= (:status resp) 200)
     false))
 
-(defn get-page-data
+(defn get-page-raw
   ([url]
    ;; getの中でtimeout(socket/connection/connection-request)を設定しても
    ;; タイムアウトが効かないのでheadでページの存在をチェック.
@@ -28,7 +28,7 @@
          html/html-snippet)))
   ([cid floor]
    (let [url (d/->url floor cid)]
-     (get-page-data url))))
+     (get-page-raw url))))
 
 (defn ->title
   "APIで取得できる内容にあわせてサブタイトルはカット, 女優名は残す"
@@ -82,7 +82,7 @@
 
 (defn get-page [{:keys [cid floor] :or {floor (:videoa d/floor)}}]
   (let [url (d/->url floor cid)]
-    (when-let [m (get-page-data url)]
+    (when-let [m (get-page-raw url)]
       {:cid         cid
        :url         url
        :title       (->title m)
@@ -122,7 +122,7 @@
 (comment
   (def cid "h_1558csdx00007")
   (def url (d/->url "videoa" cid))
-  (def data (get-page-data cid "videoa"))
+  (def data (get-page-raw cid "videoa"))
 
   (def title (->title data))
   (def description (->description data))
@@ -139,7 +139,7 @@
   (def cid "shinki066")
   (def resp (get-page {:cid cid :floor "videoc"}))
 
-  (def data (get-page-data cid "videoc"))
+  (def data (get-page-raw cid "videoc"))
   (def raw-desc (->raw-description data))
   (def description (->description data))
 
@@ -151,7 +151,7 @@
 
   (def cid "oba00186")
   (def url "https://www.dmm.co.jp/digital/videoa/-/detail/=/cid=oba00186/")
-  (def data (get-page-data cid "videoa"))
+  (def data (get-page-raw cid "videoa"))
   (def page (get-page {:cid cid}))
 
 
@@ -166,3 +166,4 @@
                              }))
 
   )
+

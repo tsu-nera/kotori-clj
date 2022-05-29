@@ -140,24 +140,40 @@
         (fs/update! db doc-path (d-product/tweet->doc resp exinfo)))
       resp)))
 
-(defn tweet-doujin-voice [{:keys [^d/Info info db] :as m}]
-  (let [doc        (doujin/select-next-voice m)
-        cid        (:cid doc)
-        urls       (into [] (take 2 (:urls doc)))
-        exinfo     {"cid" cid}
-        ;; TODO リファクタリングが必要.
+(defn- ->otameshi [urls i]
+  (str "お試し"
+       (+ 1 i)
+       "\n"
+       (nth urls i)
+       "\n"))
+
+(defn make-doujin-voice-text [doc urls]
+  (let [new-line   "\n\n"
         sample-max (count urls)
-        message    (str (:title doc) "\n\n"
-                        "お試し1\n"
-                        (nth urls 0)
-                        "\nお試し2\n"
-                        (nth urls 1)
-                        "\n\nサンプル音声は全" sample-max "コ✨"
-                        "\n\n"
-                        "続き:point-down:\n" (:affiliate_url doc))
-        params     (merge m {:text message
-                             :type :voice ;; TODO 仮対応
-                             })]
+        title      (:title doc)
+        af-url     (:affiliate-url doc)]
+    (str "[voice]"
+         title
+         new-line
+         (->otameshi urls 0)
+         (when (< 1 sample-max)
+           (->otameshi urls 1))
+         "\n"
+         (when (< 2 sample-max)
+           (str "無料サンプル音声は全部で" sample-max "つ✨"
+                new-line))
+         "⬇️続きはコチラ\n" af-url)))
+
+(defn tweet-doujin-voice [{:keys [^d/Info info db] :as m}]
+  (let [doc     (doujin/select-next-voice m)
+        cid     (:cid doc)
+        urls    (into [] (:urls doc))
+        exinfo  {"cid" cid}
+        ;; TODO リファクタリングが必要.
+        message (make-doujin-voice-text doc urls)
+        params  (merge m {:text message
+                          :type :voice ;; TODO 仮対応
+                          })]
     (when-let [resp (tweet params)]
       (let [doc-path (d-product/doujin-doc-path cid)]
         (fs/update! db doc-path (d-product/tweet->doc resp exinfo)))

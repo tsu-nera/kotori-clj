@@ -69,9 +69,10 @@
         cid        (:cid doc)
         title      (-> (:title doc) ng->ok)
         image-urls (lib/get-image-urls cid)]
-    {:cid   cid
-     :title title
-     :urls  image-urls}))
+    {:cid           cid
+     :title         title
+     :affiliate-url (:affiliate-url doc)
+     :urls          image-urls}))
 
 (defn select-scheduled-voice
   [{:keys [info db limit creds]
@@ -92,7 +93,7 @@
         voice-urls (lib/get-voice-urls cid)]
     {:cid           cid
      :title         title
-     :affiliate_url (:affiliate_url doc)
+     :affiliate-url (:affiliate-url doc)
      :urls          voice-urls}))
 
 (comment

@@ -34,7 +34,7 @@
   {:pre [(<= limit 500)]}
   (lib/get-products m))
 
-(defn scrape-page
+(defn scrape-page!
   [{:keys [db cid] :as m} coll-path]
   (let [page (public/get-page m)
         ts   (time/fs-now)
@@ -244,7 +244,7 @@
 (comment
   (def product (crawl-product! {:db    (db-prod)
                                 :creds (creds)
-                                :cid   "waaa00100"}))
+                                :cid   "ipx00268"}))
 
   (def products (-> (crawl-products! {:db    (db-dev)
                                       :creds (creds)
@@ -255,8 +255,8 @@
 
   ;; 1秒以内に終わる
   (def page (public/get-page  "pred00294"))
-  (def resp (scrape-page {:cid "waaa00100" :db (db-prod)}
-                         product/coll-path))
+  (def resp (scrape-page! {:cid "ipx00268" :db (db-prod)}
+                          product/coll-path))
 
   ;; 並列実行
   ;;

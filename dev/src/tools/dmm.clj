@@ -150,6 +150,13 @@
   ([cid db]
    (dmm/crawl-product! {:db db :cid cid :env (env)})))
 
+(defn prepare-videoa!
+  [cid]
+  (let [db (db-prod)]
+    (dmm/crawl-product! {:db db :cid cid :creds (creds)})
+    (dmm/scrape-page! {:cid cid :db db}
+                      "providers/dmm/products")))
+
 (defn metadata->csv-from-fs! [db limit csv-path]
   (dmm/crawl-qvt-descs! {:db db :limit limit})
   (let [qvts (dmm/get-qvts-without-summary {:db db :limit limit})

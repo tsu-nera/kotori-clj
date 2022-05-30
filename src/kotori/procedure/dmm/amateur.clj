@@ -30,7 +30,7 @@
 (defn scrape-videoc-page! [{:as m}]
   (-> m
       (assoc :floor (:videoc dmm/floor))
-      (product/scrape-page coll-path)))
+      (product/scrape-page! coll-path)))
 
 (defn crawl-products! [{:as m}]
   (let [opts {:coll-path coll-path

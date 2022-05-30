@@ -1,21 +1,17 @@
 (ns kotori.procedure.kotori.core
   (:require
    [clojure.spec.alpha :as s]
-   [clojure.string :as str]
    [firestore-clj.core :as f]
-   [kotori.domain.dmm.product :as d-product]
    [kotori.domain.kotori.core :as d]
    [kotori.domain.source.meigen :as meigen]
    [kotori.domain.tweet.core :as tweet]
    [kotori.domain.tweet.post :as post]
    [kotori.lib.firestore :as fs]
-   [kotori.lib.io :as io]
    [kotori.lib.json :as json]
    [kotori.lib.kotori :as lib]
    [kotori.lib.log :as log]
    [kotori.procedure.dmm.amateur :as amateur]
    [kotori.procedure.dmm.anime :as anime]
-   [kotori.procedure.dmm.doujin :as doujin]
    [kotori.procedure.dmm.product :as product]
    [kotori.procedure.dmm.vr :as vr]
    [kotori.procedure.strategy.core :as st]
@@ -89,95 +85,12 @@
   [{:as params}]
   (tweet (assoc params :text "今日もお疲れ様でした" :type :text)))
 
-(defn- sample->format
-  [i n]
-  (format "(sample %d/%d)" i n))
-
 (defn tweet-random [{:keys [^d/Info info db env] :as params}]
   (let [source       meigen/source
         strategy     st/pick-random
         text-builder meigen/build-text
         text         (make-text source strategy text-builder)]
     (tweet (assoc params :text text :type :text))))
-
-(defn tweet-doujin-image [{:keys [^d/Info info db] :as m}]
-  (let [doc           (doujin/select-next-image m)
-        cid           (:cid doc)
-        ;; TODO build-messageのmultimethodでreplace
-        ;; 1枚目がサムネイルのことも多いがそうでなく8枚のものも多いので
-        ;; 先頭から8枚をとる.
-        urls          (into [] (take 8 (:urls doc)))
-        media-ids     (->> urls
-                           io/downloads!
-                           (map (fn [file-path]
-                                  {:creds     (:cred info)
-                                   :proxy     (:proxy info)
-                                   :file-path file-path}))
-                           (map private/upload-image)
-                           (map :media-id)
-                           (into []))
-        exinfo        {"cid" cid "media_ids" media-ids}
-        ;; TODO リファクタリングが必要.
-        media-ids-sep (partition 4 media-ids)
-        media-ids-1   (first media-ids-sep)
-        media-ids-2   (second media-ids-sep)
-        total         (if (< (count media-ids-2) 4) 1 2)
-        message-1     (str (:title doc) " " cid
-                           "\n" (sample->format 1 total))
-        params-1      (merge m {:text      message-1
-                                :type      :comic ;; TODO 仮対応
-                                :media-ids media-ids-1})
-        message-2     (sample->format 2 total)
-        params-2      (merge m {:text      message-2
-                                :type      :comic ;; TODO 仮対応
-                                :media-ids media-ids-2})]
-    (when-let [resp (tweet params-1)]
-      ;; リプライ投稿は画像があるときだけ.
-      (when (= 2 total)
-        (let [tweet-id (:id_str resp)]
-          (tweet (assoc params-2 :reply-tweet-id tweet-id))))
-      (let [doc-path (d-product/doujin-doc-path cid)]
-        (fs/update! db doc-path (d-product/tweet->doc resp exinfo)))
-      resp)))
-
-(defn- ->otameshi [urls i]
-  (str "お試し"
-       (+ 1 i)
-       "\n"
-       (nth urls i)
-       "\n"))
-
-(defn make-doujin-voice-text [doc urls]
-  (let [new-line   "\n\n"
-        sample-max (count urls)
-        title      (:title doc)
-        af-url     (:affiliate-url doc)]
-    (str "[voice]"
-         title
-         new-line
-         (->otameshi urls 0)
-         (when (< 1 sample-max)
-           (->otameshi urls 1))
-         "\n"
-         (when (< 2 sample-max)
-           (str "無料サンプル音声は全部で" sample-max "つ✨"
-                new-line))
-         "⬇️続きはコチラ\n" af-url)))
-
-(defn tweet-doujin-voice [{:keys [^d/Info info db] :as m}]
-  (let [doc     (doujin/select-next-voice m)
-        cid     (:cid doc)
-        urls    (into [] (:urls doc))
-        exinfo  {"cid" cid}
-        ;; TODO リファクタリングが必要.
-        message (make-doujin-voice-text doc urls)
-        params  (merge m {:text message
-                          :type :voice ;; TODO 仮対応
-                          })]
-    (when-let [resp (tweet params)]
-      (let [doc-path (d-product/doujin-doc-path cid)]
-        (fs/update! db doc-path (d-product/tweet->doc resp exinfo)))
-      resp)))
 
 (defn get-product [{:as m}]
   (lib/->next (product/get-product m)))
@@ -301,47 +214,3 @@
                                    :media-ids media-ids}))
   )
 
-(comment
-  (def resp (doujin/select-next-image {:db    (db)
-                                       :creds (creds)
-                                       :info  (kotori-info "0003")}))
-
-  (def urls (into [] (take 8 (rest (:urls resp)))))
-  (def paths (->> (range 1 5)
-                  (map (fn [n] (str "tmp/image-" n ".jpg")))))
-
-  (mapcat io/download! urls paths)
-  (doseq [url  urls
-          path paths]
-    (println url path)
-    #_(io/download! url path))
-
-  (def image-paths (io/downloads! urls))
-
-  (def resp2 (tweet-doujin-image {:db    (db)
-                                  :creds (creds)
-                                  :info  (kotori-info "0003")}))
-
-  (def ret (tweet resp2))
-
-  (def media-ids (->> urls
-                      io/downloads!
-                      (map (fn [file-path]
-                             {:creds     (twitter-auth)
-                              :file-path file-path}))
-                      (map private/upload-image)
-                      (map :media-id)))
-  )
-
-(comment
-  (def m {:db    (db)
-          :creds (creds)
-          :info  (kotori-info "0003")})
-
-  (def doc (doujin/select-next-voice m))
-  (def resp (tweet-doujin-voice {:db    (db)
-                                 :creds (creds)
-                                 :info  (kotori-info "0003")}))
-
-
-  )

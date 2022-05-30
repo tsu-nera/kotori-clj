@@ -8,6 +8,7 @@
    [kotori.procedure.dmm.product :as dmm]
    [kotori.procedure.dmm.vr :as dmm-vr]
    [kotori.procedure.kotori.core :as kotori]
+   [kotori.procedure.kotori.doujin :as doujin]
    [kotori.procedure.kotori.qvt :as qvt]
    [reitit.ring :as ring]
    [ring.util.response :as resp]))
@@ -63,8 +64,8 @@
       ["/tweet-morning" kotori/tweet-morning]
       ["/tweet-evening" kotori/tweet-evening]
       ["/tweet-random" kotori/tweet-random]
-      ["/tweet-doujin-image" kotori/tweet-doujin-image]
-      ["/tweet-doujin-voice" kotori/tweet-doujin-voice]
+      ["/tweet-doujin-image" doujin/tweet-image]
+      ["/tweet-doujin-voice" doujin/tweet-voice]
       ["/get-product" {:get kotori/get-product}]
       ["/select-next-product" {:get kotori/select-next-product}]
       ["/select-next-amateur-videoc"

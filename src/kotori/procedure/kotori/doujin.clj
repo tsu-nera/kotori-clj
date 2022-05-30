@@ -1,8 +1,12 @@
 (ns kotori.procedure.kotori.doujin
   (:require
+   [kotori.domain.dmm.genre.doujin :as genre]
    [kotori.domain.dmm.product :as product]
+   [kotori.domain.tweet.core :as tweet]
+   [kotori.lib.discord :as discord]
    [kotori.lib.firestore :as fs]
    [kotori.lib.io :as io]
+   [kotori.lib.provider.dmm.doujin :refer [->url]]
    [kotori.procedure.dmm.doujin :as doujin]
    [kotori.procedure.kotori.core :as kotori]
    [twitter-clj.private :as private]))
@@ -10,6 +14,16 @@
 (defn- sample->format
   [i n]
   (format "(sample %d/%d)" i n))
+
+(defn ->discord! [tweet cid]
+  (let [screen-name (tweet/->screen-name tweet)
+        tweet-id    (tweet/->id tweet)
+        tweet-link  (tweet/->url screen-name tweet-id)
+        dmm-url     (->url cid)
+        message     (str screen-name " post tweet completed.\n"
+                         dmm-url "\n"
+                         tweet-link "\n")]
+    (discord/notify! :kotori-post message)))
 
 (defn tweet-image [{:keys [info db] :as m}]
   (let [doc           (doujin/select-next-image m)
@@ -47,8 +61,9 @@
       (when (= 2 total)
         (let [tweet-id (:id_str resp)]
           (kotori/tweet (assoc params-2 :reply-tweet-id tweet-id))))
-      (let [doc-path (product/doujin-doc-path cid)]
-        (fs/update! db doc-path (product/tweet->doc resp exinfo)))
+      (let [doc-path (genre/->doc-path cid)]
+        (fs/update! db doc-path (product/tweet->doc resp exinfo))
+        (->discord! resp cid))
       resp)))
 
 (defn- ->otameshi [urls i]
@@ -58,7 +73,7 @@
        (nth urls i)
        "\n"))
 
-(defn make-doujin-voice-text [doc urls]
+(defn make-voice-text [doc urls]
   (let [new-line   "\n\n"
         sample-max (count urls)
         title      (:title doc)
@@ -81,13 +96,14 @@
         urls    (into [] (:urls doc))
         exinfo  {"cid" cid}
         ;; TODO リファクタリングが必要.
-        message (make-doujin-voice-text doc urls)
+        message (make-voice-text doc urls)
         params  (merge m {:text message
                           :type :voice ;; TODO 仮対応
                           })]
     (when-let [resp (kotori/tweet params)]
-      (let [doc-path (product/doujin-doc-path cid)]
-        (fs/update! db doc-path (product/tweet->doc resp exinfo)))
+      (let [doc-path (genre/->doc-path cid)]
+        (fs/update! db doc-path (product/tweet->doc resp exinfo))
+        (->discord! resp cid))
       resp)))
 
 (comment

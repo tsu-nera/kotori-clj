@@ -22,7 +22,7 @@
         doc      (fs/get-doc db doc-path)]
     (qvt/doc-> doc)))
 
-(defn qvt->discord! [qvt tweet]
+(defn ->discord! [tweet qvt]
   (let [screen-name        (tweet/->screen-name tweet)
         tweet-id           (tweet/->id tweet)
         tweet-link         (tweet/->url screen-name tweet-id)
@@ -40,7 +40,7 @@
   一つのページへのアクセスは高速なのでこのタイミングで問題ない."
   [qvt]
   (if (not (:description qvt))
-    (let [cid (:cid qvt)
+    (let [cid    (:cid qvt)
           ;; FIXME とりあえずqvtでのvideoa以外の対応はあとで.
           params {:cid cid :floor (:videoa dmm/floor)}
           page   (public/get-page params)
@@ -82,13 +82,8 @@
            (update-product-with-qvt! db result qvt cid)
            ;; tweets collectionも追加情報でupdate
            (update-post-with-qvt! db result qvt user-id)
-           ;; crawledされてない場合はここで追加で処理をする.
-           ;; 通常はcrawledされているのでtoolで追加した場合がこうなる.
-           ;; そんなに時間かからないと思うので同期処理
-           #_(when-not (:craweled? qvt)
-               (dmm/crawl-product! {:db db :env env :cid cid}))
            ;; discord通知
-           (qvt->discord! qvt result)
+           (->discord! result qvt)
            result)
          {:result :failed})
        (do

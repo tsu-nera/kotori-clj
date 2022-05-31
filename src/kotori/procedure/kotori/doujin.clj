@@ -59,7 +59,7 @@
                                 :media-ids media-ids-2})]
     (when-let [resp (kotori/tweet params-1)]
       ;; リプライ投稿は画像があるときだけ.
-      (when (= 2 total)
+      (when-not (nil? media-ids-2)
         (let [tweet-id (:id_str resp)]
           (kotori/tweet (assoc params-2 :reply-tweet-id tweet-id))))
       (let [doc-path (genre/->doc-path cid)]
@@ -145,6 +145,5 @@
   (def resp (tweet-voice {:db    (db-prod)
                           :creds (creds)
                           :info  (kotori-info "0002")}))
-
-
   )
+

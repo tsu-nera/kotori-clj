@@ -41,7 +41,10 @@
                            (map private/upload-image)
                            (map :media-id)
                            (into []))
-        exinfo        {"cid" cid "media_ids" media-ids}
+        exinfo        {"cid"       cid
+                       "media_ids" media-ids
+                       "type"      "comic" ;; TODO 仮対応
+                       }
         ;; TODO リファクタリングが必要.
         media-ids-sep (partition 4 media-ids)
         media-ids-1   (first media-ids-sep)
@@ -50,11 +53,9 @@
         message-1     (str (:title doc) " " cid
                            "\n" (sample->format 1 total))
         params-1      (merge m {:text      message-1
-                                :type      :comic ;; TODO 仮対応
                                 :media-ids media-ids-1})
         message-2     (sample->format 2 total)
         params-2      (merge m {:text      message-2
-                                :type      :comic ;; TODO 仮対応
                                 :media-ids media-ids-2})]
     (when-let [resp (kotori/tweet params-1)]
       ;; リプライ投稿は画像があるときだけ.
@@ -94,12 +95,12 @@
   (let [doc     (doujin/select-next-voice m)
         cid     (:cid doc)
         urls    (into [] (:urls doc))
-        exinfo  {"cid" cid}
+        exinfo  {"cid"  cid
+                 "type" "voice" ;; TODO 仮対応
+                 }
         ;; TODO リファクタリングが必要.
         message (make-voice-text doc urls)
-        params  (merge m {:text message
-                          :type :voice ;; TODO 仮対応
-                          })]
+        params  (assoc m :text message)]
     (when-let [resp (kotori/tweet params)]
       (let [doc-path (genre/->doc-path cid)]
         (fs/update! db doc-path (product/tweet->doc resp exinfo))
@@ -140,9 +141,10 @@
           :info  (kotori-info "0003")})
 
   (def doc (doujin/select-next-voice m))
-  (def resp (tweet-voice {:db    (db)
+
+  (def resp (tweet-voice {:db    (db-prod)
                           :creds (creds)
-                          :info  (kotori-info "0003")}))
+                          :info  (kotori-info "0002")}))
 
 
   )

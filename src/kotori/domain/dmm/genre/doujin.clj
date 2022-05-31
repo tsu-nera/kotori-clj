@@ -23,5 +23,9 @@
            (->doc-path [_ cid] (->doc-path cid)))
 
 (def voice-ids
-  (genre-names->ids
-   ["焦らし" "言葉責め" "ASMR" "耳舐め" "ささやき" "バイノーラル"]))
+  (-> ["焦らし" "言葉責め" "ASMR" "耳舐め" "ささやき" "バイノーラル"]
+      genre-names->ids))
+
+(def chikubi-ids
+  (-> ["乳首・乳輪" "メスイキ"]
+      genre-names->ids))

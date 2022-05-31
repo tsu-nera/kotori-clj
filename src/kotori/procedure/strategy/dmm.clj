@@ -5,6 +5,7 @@
    [kotori.domain.dmm.core :as dmm]
    [kotori.domain.dmm.genre.anime :as anime]
    [kotori.domain.dmm.genre.core :as genre]
+   [kotori.domain.dmm.genre.doujin :as doujin]
    [kotori.domain.dmm.genre.videoa :as videoa]
    [kotori.domain.dmm.genre.videoc :as videoc]
    [kotori.domain.dmm.product :as product]

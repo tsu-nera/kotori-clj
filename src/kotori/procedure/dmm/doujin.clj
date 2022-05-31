@@ -1,5 +1,6 @@
 (ns kotori.procedure.dmm.doujin
   (:require
+   [kotori.domain.dmm.genre.doujin :as genre]
    [kotori.domain.dmm.product
     :as d
     :refer [doujin-coll-path]
@@ -52,13 +53,29 @@
 (defn voice-product? [p]
   (= "voice" (:format p)))
 
+(defmulti make-strategy :code)
+
+(defmethod make-strategy "0002" [_]
+  [(filter voice-product?)
+   (st/->st-include genre/chikubi-ids)])
+
+(defmethod make-strategy "0029" [_]
+  [(filter image-product?)])
+
+(defmethod make-strategy "0031" [_]
+  [(filter voice-product?)
+   (st/->st-exclude genre/chikubi-ids)])
+
+(defmethod make-strategy :default [_]
+  [])
+
 (defn select-scheduled-image
   [{:keys [info db limit creds]
     :as   m
     :or   {limit 200}}]
   (let [products (lib/get-products {:creds creds
                                     :limit limit})
-        xst      [(filter image-product?)]
+        xst      (make-strategy info)
         doc-ids  (map :content_id products)]
     (->> (st/select-scheduled-products-with-xst
           m xst coll-path doc-ids)
@@ -80,7 +97,7 @@
     :or   {limit 200}}]
   (let [products (lib/get-voice-products {:creds creds
                                           :limit limit})
-        xst      [(filter voice-product?)]
+        xst      (make-strategy info)
         doc-ids  (map :content_id products)]
     (->> (st/select-scheduled-products-with-xst
           m xst coll-path doc-ids)
@@ -115,7 +132,8 @@
                                   :limit 300}))
 
   (def products (crawl-voice-products! {:db    (db)
-                                        :creds (creds)}))
+                                        :creds (creds)
+                                        :limit 100}))
 
 
   (def products
@@ -125,11 +143,11 @@
       :limit 30
       :creds (creds)}))
 
-
   (def products
     (select-scheduled-voice
      {:db    (db)
-      :info  (kotori-info "0003")
-      :limit 30
+      :info  (kotori-info "0031")
+      :limit 200
       :creds (creds)}))
+  (count products)
   )

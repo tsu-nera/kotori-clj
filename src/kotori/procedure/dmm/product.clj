@@ -246,10 +246,10 @@
                                 :creds (creds)
                                 :cid   "ipx00268"}))
 
-  (def products (-> (crawl-products! {:db    (db-dev)
-                                      :creds (creds)
-                                      ;; :genre-id 4024
-                                      :limit 100})
+  (def products (-> (crawl-products! {:db       (db-prod)
+                                      :creds    (creds)
+                                      :genre-id 1031
+                                      :limit    300})
                     :products))
   (count products)
 

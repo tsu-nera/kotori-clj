@@ -85,25 +85,25 @@
   (let [url (->endpoint "SeriesSearch")]
     nil))
 
+;; どうもsite=DMMしか指定できない/site=FANZAは無視されfloor-idも無効.
 (defn search-author
   "作者検索API: https://affiliate.dmm.com/api/v3/authorsearch.html"
   [^Credentials creds q]
   (let [url (->endpoint "AuthorSearch")]
-    nil))
+    (-get url creds q)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (comment
-  (require '[tools.dmm :refer [dmm-creds]])
-  (def creds (dmm-creds))
+  (require '[tools.dmm :refer [creds]])
 
-  (search-product creds {:hits    10
-                         :sort    "date"
-                         :keyword "上原亜衣"})
+  (search-product (creds) {:hits    10
+                           :sort    "date"
+                           :keyword "上原亜衣"})
 
-  (search-product creds {:cid "ssis00312"})
+  (search-product (creds) {:cid "ssis00312"})
 
-  (search-actress creds {:actress_id "1008785"})
+  (search-actress (creds) {:actress_id "1008785"})
 
-  (def resp (search-product creds {:hits 100 :sort "rank"}))
+  (def resp (search-product (creds) {:hits 100 :sort "rank"}))
   )

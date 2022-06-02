@@ -76,6 +76,23 @@
 (def st-exclude-vr
   (remove #(contains-genre? videoa/vr-ids %)))
 
+;; さもあり監督はハズレなし.
+(def director-id-samoari 114124)
+(def st-include-chikubi
+  (filter (fn [p] (or
+                   (= (:director-id p) director-id-samoari)
+                   (str/includes? (:title p) "乳首")
+                   (str/includes? (:description p) "乳首")
+                   (str/includes? (:title p) "チクビ")))))
+;; かつお物産は人気なもののちょっとジャンルからそれるので排他しておく.
+(def maker-id-katsuo 6608)
+(def st-exclude-katsuo
+  (remove (fn [p] (= (:maker-id p) maker-id-katsuo))))
+
+(def maker-id-gas 45050)
+(def st-exclude-gas
+  (remove (fn [p] (= (:maker-id p) maker-id-gas))))
+
 (defn no-actress? [product]
   (let [count (:actress-count product)]
     (or (nil? count) (zero? count))))
@@ -121,7 +138,10 @@
 
 (defmethod make-strategy "0002" [_]
   (concat videoa-default-xst
-          videoa-extra-xst))
+          [st-exclude-vr
+           st-include-chikubi
+           st-exclude-katsuo
+           st-exclude-gas]))
 
 (defmethod make-strategy "0009" [_]
   (conj videoa-default-xst
@@ -237,7 +257,7 @@
 (defn select-scheduled-products
   [{:keys [info db limit creds genre-id floor coll-path]
     :as   m
-    :or   {limit    200
+    :or   {limit    300
            genre-id (:genre-id info)}}]
   (let [genre     (genre/make-genre floor)
         coll-path (or coll-path (genre/->coll-path genre))
@@ -301,22 +321,19 @@
                :screen-name (->screen-name "0018")})))
 
   (count products)
-  (map ->print products)
   )
 
 (comment
   ;;;;;;;;;;;
-  (def info (kotori-info "0010"))
-
+  (def info (kotori-info "0002"))
   (def products
     (into []
           (select-scheduled-products
            {:db          (db-prod)
             :creds       (creds)
             :info        info
-            :limit       150
+            :limit       500
             :screen-name (:screen-name info)})))
-
   (count products)
 
   (def descs (map :description products))
@@ -405,6 +422,7 @@
 
   (def info (kotori-info "0002"))
   (def genre-id (:genre-id info))
+
   (def products (lib-dmm/get-products {:genre-id genre-id
                                        :creds    (creds)
                                        :limit    100}))

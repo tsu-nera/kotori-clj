@@ -6,7 +6,6 @@
    [tools.dmm :refer [creds]]))
 
 (comment
-
   (def products
     (lib/get-products {:creds      (creds)
                        :sort       "rank"
@@ -32,12 +31,17 @@
     (lib/get-products {:creds   (creds)
                        :sort    "rank"
                        :floor   "videoa"
-                       ;; :article    "genre"
-                       ;; :article_id 1031
-                       :keyword "xx"
+                       :keyword "さもあり"
                        }))
 
   (->> keywords
        (map :title))
+
+  )
+
+(comment
+  (def resp (api/search-author (creds) {:floor_id 43
+                                        :initial  "あ"
+                                        }))
 
   )

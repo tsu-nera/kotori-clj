@@ -67,9 +67,10 @@
   (def resp (scrape-videoc-page! {:db  (db-prod)
                                   :cid "shinki066"}))
 
-  (def resp (crawl-products! {:db    (db-prod)
-                              :creds (creds)
-                              :limit 300}))
+  (def resp (crawl-products! {:db       (db-prod)
+                              :creds    (creds)
+                              :genre-id 1031
+                              :limit    300}))
 
   (def products
     (select-scheduled-products

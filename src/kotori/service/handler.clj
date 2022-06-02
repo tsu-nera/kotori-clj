@@ -80,13 +80,15 @@
 
 
 (comment
-  (require '[devtools :refer [kotori-names ->screen-name]]
+  (require '[devtools :refer [kotori-names ->screen-name kotori-info]]
            '[tools.dmm :refer [creds]]
            '[firebase :refer [db db-prod]])
   (def app (make-app (kotori-names)))
 
-  (def screen-name (->screen-name "0003"))
-  (def params {:db          (db)
+  (def screen-name (->screen-name "0031"))
+  (def params {:db          (db-prod)
+               :creds       (creds)
+               :info        (kotori-info "0031")
                :screen-name screen-name})
 
   (app {:request-method :post :uri "/api/ping"})
@@ -111,7 +113,7 @@
         :params         params})
 
   (app {:request-method :post
-        :uri            "/api/kotori/tweet-quoted-video"
+        :uri            "/api/kotori/tweet-doujin-voice"
         :params         params})
 
   )

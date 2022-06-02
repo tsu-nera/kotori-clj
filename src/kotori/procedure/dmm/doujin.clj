@@ -117,7 +117,7 @@
   (require
    '[devtools :refer [kotori-info]]
    '[tools.dmm :refer [creds]]
-   '[firebase :refer [db]])
+   '[firebase :refer [db db-prod]])
 
   (def cid "d_227233")
   (def resp (lib/get-product {:cid cid :creds (creds)}))

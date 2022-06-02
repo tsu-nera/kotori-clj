@@ -66,7 +66,6 @@
                            cider/cider-nrepl               {:mvn/version "0.28.3"}
                            io.github.clojure/tools.build   {:git/tag "v0.8.2" :git/sha "ba1a2bf"}
                            com.google.cloud.tools/jib-core {:mvn/version "0.21.0"}
-                           djblue/portal                   {:mvn/version "0.26.0"}
                            clj-commons/pomegranate         {:mvn/version "1.2.1"}}}
   ;; clojure -M:outdated (--upgrade --download)
   :outdated {:extra-deps {com.github.liquidz/antq {:mvn/version "RELEASE"}}

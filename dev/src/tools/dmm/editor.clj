@@ -1,4 +1,5 @@
 (ns tools.dmm.editor
+  "主にスクレイピングしたデータをパースしてゴニョゴニョする実験ツール"
   (:require
    [clojure.string :as str]
    [devtools :refer [->screen-name env]]

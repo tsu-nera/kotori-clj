@@ -1,10 +1,27 @@
 (ns tools.twitter
   (:require
-   [clojure.java.io :as io]
+   [clojure.pprint :refer [pprint]]
    [devtools :refer [->screen-name ->user-id kotori-params twitter-auth]]
-   [firebase :refer [db-prod]]
    [kotori.procedure.kotori.core :as kotori]
+   [twitter-clj.guest :as guest]
    [twitter-clj.private :as private]))
+
+(defn get-tweet-guest [id]
+  (guest/get-tweet id))
+
+(defn get-tweet-private [id]
+  (private/get-tweet (twitter-auth) id))
+
+(defn tweet-id->media-ids [id]
+  (when-let [resp (get-tweet-private id)]
+    (->> resp
+         :entities
+         :media
+         (map :id_str))))
+
+(defn tweet-id->studio-video-url [id]
+  (let [media-id (first (tweet-id->media-ids id))]
+    (str "https://studio.twitter.com/library/7_" media-id "/edit")))
 
 (defn delete-tweet! [db code tweet-id]
   (let [params (kotori-params db code)]
@@ -47,4 +64,9 @@
 
   (private/create-tweet (twitter-auth) {:text      "test4"
                                         :media-ids [(:media-id ret)]})
+  )
+
+(comment
+  (def resp (tweet-id->studio-video-url ""))
+
   )

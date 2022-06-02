@@ -16,7 +16,6 @@
    [kotori.core :as core]
    [kotori.lib.net :refer [get-global-ip]]
    [kotori.service.firebase :refer [get-app get-db delete-app!]]
-   [portal.api :as p]
    [tools.dmm :refer [open-dmm get-dmm]]))
 
 (def env-dev "private/dev/env.edn")
@@ -51,16 +50,6 @@
   :stopped)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(comment
-
-  (def p (p/open))
-  (add-tap #'p/submit)
-
-  (tap> :hello)
-  (p/clear)
-
-  (tap> config)
-  )
 
 (comment
   (def db (get-db))

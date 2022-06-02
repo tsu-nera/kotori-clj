@@ -50,16 +50,48 @@
       first
       :id))
 
+(defn ->director-id [raw]
+  (-> raw
+      (get-in [:iteminfo :director])
+      first
+      :id))
+
+(defn ->label-id [raw]
+  (-> raw
+      (get-in [:iteminfo :label])
+      first
+      :id))
+
+(defn ->series-id [raw]
+  (-> raw
+      (get-in [:iteminfo :series])
+      first
+      :id))
+
 (defn sample-movie? [raw]
   (contains? raw :sampleMovieURL))
 
 (defn sample-image? [raw]
   (contains? raw :sampleImageURL))
 
+(defn- info->id [info key]
+  (-> info
+      key
+      first
+      :id))
+
+(defn assoc-iteminfo [data info]
+  (cond-> data
+    (:maker info)    (assoc :maker_id (info->id info :maker))
+    (:label info)    (assoc :label_id (info->id info :label))
+    (:director info) (assoc :director_id (info->id info :director))
+    (:series info)   (assoc :series_id (info->id info :series))))
+
 (defn api->data
   "dmm response map -> firestore doc mapの写像"
   [raw]
   (let [actresses (->actresses raw)
+        iteminfo  (:iteminfo raw)
         data      {:cid             (->cid raw)
                    :title           (->title raw)
                    :url             (->url raw)
@@ -68,10 +100,10 @@
                    :actress_count   (count actresses)
                    :released_time   (->released-time raw)
                    :genres          (->genres raw)
-                   :maker_id        (->maker-id raw)
                    :no_sample_movie (not (sample-movie? raw))
                    :no_sample_image (not (sample-image? raw))}]
     (-> data
+        (assoc-iteminfo iteminfo)
         (assoc :raw raw))))
 
 ;; docごとにtimestampを生成すると
@@ -125,30 +157,3 @@
      "last_tweet_id"   tweet-id
      tweet-key         (merge tweet-val exinfo)}))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(comment
-  (require '[devtools :refer [env]])
-
-  (def raw
-    (dmm/get-product {:cid "ssis00165" :env (env)}))
-  (def product
-    (dmm/get-product {:cid "jusd00912" :env (env)}))
-
-  (contains? raw :sampleMovieURL)
-  (contains? product :sampleImageURL)
-
-  (def actresses (->actresses raw))
-  (count actresses)
-  (map #(:name %) actresses)
-
-  (def data (api->data raw))
-
-  (->released-time raw)
-  )
-
-(comment
-  (require '[portal.api :as p])
-  (def d (p/open))
-  (reset! d (api->data (dmm/get-product {:cid "ssis00335" :env (env)})))
-  @d
-  )

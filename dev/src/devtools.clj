@@ -20,17 +20,10 @@
 (defn prod? []
   (= (:env (env)) :production))
 
-(defn get-tweet-guest [id]
-  (guest/get-tweet id))
-
 (defn twitter-auth []
   (-> system
       (get :kotori.service.env/env)
       :twitter-auth))
-
-(defn get-tweet-private
-  ([id]
-   (private/get-tweet (twitter-auth) id)))
 
 (defn proxies []
   (-> system

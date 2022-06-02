@@ -119,6 +119,10 @@
           videoa-actress-xst
           videoa-extra-xst))
 
+(defmethod make-strategy "0002" [_]
+  (concat videoa-default-xst
+          videoa-extra-xst))
+
 (defmethod make-strategy "0009" [_]
   (conj videoa-default-xst
         st-exclude-vr))

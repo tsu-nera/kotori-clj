@@ -2,6 +2,7 @@
   (:require
    [clojure.pprint :refer [pprint]]
    [devtools :refer [->screen-name ->user-id kotori-params twitter-auth]]
+   [firebase :refer [db-prod]]
    [kotori.procedure.kotori.core :as kotori]
    [twitter-clj.guest :as guest]
    [twitter-clj.private :as private]))
@@ -28,7 +29,7 @@
     (kotori/delete-tweet!
      (assoc params :tweet-id tweet-id))))
 
-#_(delete-tweet! (db-prod) "0027" "")
+#_(delete-tweet! (db-prod) "0029" "")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (comment

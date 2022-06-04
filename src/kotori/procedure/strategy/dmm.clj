@@ -100,6 +100,13 @@
 (def st-exclude-no-actress
   (remove #(no-actress? %)))
 
+(defn released? [product]
+  (let [released-time (:released-time product)]
+    (time/past-now? released-time)))
+
+(def st-exclude-not-yet-released
+  (filter #(released? %)))
+
 (def st-exclude-amateur
   (remove #(or (no-actress? %)
                (contains-genre? videoa/amateur-ids %))))
@@ -249,6 +256,7 @@
                          st-skip-not-yet-crawled
                          st-skip-debug
                          st-skip-ignore
+                         st-exclude-not-yet-released
                          st-exclude-recently-tweeted
                          xst)]
     (->> products
@@ -325,16 +333,17 @@
 
 (comment
   ;;;;;;;;;;;
-  (def info (kotori-info "0002"))
+  (def info (kotori-info "0001"))
   (def products
     (into []
           (select-scheduled-products
            {:db          (db-prod)
             :creds       (creds)
             :info        info
-            :limit       500
+            :limit       200
             :screen-name (:screen-name info)})))
   (count products)
+
 
   (def descs (map :description products))
 

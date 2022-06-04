@@ -85,6 +85,16 @@
 (defn fs-now []
   (t/java-date (now)))
 
+(defn future-now?
+  "tは今よりも未来か？"
+  [ts]
+  (.after ts (fs-now)))
+
+(defn past-now?
+  "tは今よりも過去か？"
+  [ts]
+  (.before ts (fs-now)))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 #_(now)

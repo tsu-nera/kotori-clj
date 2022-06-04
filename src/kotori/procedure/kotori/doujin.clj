@@ -7,6 +7,7 @@
    [kotori.lib.firestore :as fs]
    [kotori.lib.io :as io]
    [kotori.lib.provider.dmm.doujin :refer [->url]]
+   [kotori.lib.provider.dmm.parser :as perser]
    [kotori.procedure.dmm.doujin :as doujin]
    [kotori.procedure.kotori.core :as kotori]
    [twitter-clj.private :as private]))
@@ -77,10 +78,9 @@
 (defn make-voice-text [doc urls]
   (let [new-line   "\n\n"
         sample-max (count urls)
-        title      (:title doc)
+        title      (perser/trunc 60 (:title doc))
         af-url     (:affiliate-url doc)]
-    (str "[voice]"
-         title
+    (str title
          new-line
          (->otameshi urls 0)
          (when (< 1 sample-max)
@@ -138,9 +138,7 @@
 
   (def m {:db    (db-prod)
           :creds (creds)
-          :info  (kotori-info "0003")})
-
-  (def doc (doujin/select-next-voice m))
+          :info  (kotori-info "0002")})
 
   (def resp (tweet-voice {:db    (db-prod)
                           :creds (creds)

@@ -74,7 +74,7 @@
     :as   m
     :or   {limit 200}}]
   (let [products (lib/get-products {:creds creds
-                                    :limit limit})
+                                    :hits  limit})
         xst      (make-strategy info)
         doc-ids  (map :content_id products)]
     (->> (st/select-scheduled-products-with-xst
@@ -135,13 +135,16 @@
                                         :creds (creds)
                                         :limit 100}))
 
+  (lib/get-products {:creds (creds)
+                     :hits  200})
 
   (def products
     (select-scheduled-image
-     {:db    (db)
+     {:db    (db-prod)
       :info  (kotori-info "0029")
-      :limit 30
+      :limit 200
       :creds (creds)}))
+  (count products)
 
   (def products
     (select-scheduled-voice

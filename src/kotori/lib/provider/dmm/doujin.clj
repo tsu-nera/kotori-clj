@@ -37,8 +37,7 @@
     (first resp)))
 
 (defn get-products [{:keys [creds] :as m}]
-  (when-let [resp (api/search-product
-                   creds (merge m base-req-opts))]
+  (when-let [resp (lib/get-products (merge m base-req-opts))]
     resp))
 
 ;; "https://pics.dmm.co.jp/digital/cg/d_205949/d_205949pt.jpg"
@@ -52,11 +51,11 @@
 ;; そのため音声作品を特定できるgenre-id指定で取得する.
 ;; これだけでOKというgenre-idがないので複数個のgenre-idで取得して
 ;; 結果をマージする.
-(defn get-voice-products [{:keys [creds]}]
+(defn get-voice-products [{:keys [creds limit] :or {limit 100}}]
   (when-let [products (lib/get-by-genres
                        genre/voice-ids
                        (merge base-req-opts {:creds creds
-                                             :hits  100}))]
+                                             :hits  limit}))]
     (filter (fn [p]
               (= "voice" (->format p))) products)))
 
@@ -122,6 +121,8 @@
     (when-let [raw (public/get-page-raw page-url)]
       (->> (html/select raw [:video]) (into [] xf)))))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 (comment
   (require '[tools.dmm :refer [creds dump-doujin!]])
 
@@ -135,7 +136,8 @@
   (def resp (get-product {:cid cid :creds (creds)}))
   (dump-doujin! cid)
 
-  (->format resp)
+  (def doujins (get-products {:creds (creds) :limit 200}))
+  (count doujins)
   )
 
 (comment
@@ -169,7 +171,6 @@
 (comment
   (def cid "d_227233")
   (def urls (generate-image-urls "comic" cid 3))
-
   )
 
 (comment

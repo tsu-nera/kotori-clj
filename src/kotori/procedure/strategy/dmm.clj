@@ -102,7 +102,9 @@
 
 (defn released? [product]
   (let [released-time (:released-time product)]
-    (time/past-now? released-time)))
+    ;; released-timeが存在しない商品がある？
+    ;; ぬるぽしたのでガードを入れておく. 気が向いたら調査.
+    (and released-time (time/past-now? released-time))))
 
 (def st-exclude-not-yet-released
   (filter #(released? %)))

@@ -74,7 +74,7 @@
     :as   m
     :or   {limit 200}}]
   (let [products (lib/get-products {:creds creds
-                                    :hits  limit})
+                                    :limit limit})
         xst      (make-strategy info)
         doc-ids  (map :content_id products)]
     (->> (st/select-scheduled-products-with-xst

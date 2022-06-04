@@ -8,6 +8,7 @@
     {doujin-coll-path coll-path}]
    [kotori.lib.json :as json]
    [kotori.lib.kotori :refer [ng->ok]]
+   [kotori.lib.log :as log]
    [kotori.lib.provider.dmm.doujin :as lib]
    [kotori.lib.time :as time]
    [kotori.procedure.dmm.product :as product]
@@ -103,15 +104,20 @@
           m xst coll-path doc-ids)
          (take limit))))
 
+(defn- select-while-url-exists [docs]
+  (let [doc  (first docs)
+        cid  (:cid doc)
+        urls (lib/get-voice-urls cid)]
+    (if (> (count urls) 0)
+      {:cid           cid
+       :urls          urls
+       :affiliate-url (:affiliate-url doc)
+       :title         (-> (:title doc) ng->ok)}
+      (recur (rest docs)))))
+
 (defn select-next-voice [{:as params}]
-  (let [doc        (first (select-scheduled-voice params))
-        cid        (:cid doc)
-        title      (-> (:title doc) ng->ok)
-        voice-urls (lib/get-voice-urls cid)]
-    {:cid           cid
-     :title         title
-     :affiliate-url (:affiliate-url doc)
-     :urls          voice-urls}))
+  (let [docs (select-scheduled-voice params)]
+    (select-while-url-exists (take 5 docs))))
 
 (comment
   (require
@@ -152,4 +158,5 @@
       :info  (kotori-info "0031")
       :creds (creds)}))
   (count products)
+  (select-while-url-exists products)
   )

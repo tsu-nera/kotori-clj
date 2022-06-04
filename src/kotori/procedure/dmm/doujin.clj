@@ -94,7 +94,7 @@
 (defn select-scheduled-voice
   [{:keys [info db limit creds]
     :as   m
-    :or   {limit 200}}]
+    :or   {limit 100}}]
   (let [products (lib/get-voice-products {:creds creds
                                           :limit limit})
         xst      (make-strategy info)
@@ -148,9 +148,8 @@
 
   (def products
     (select-scheduled-voice
-     {:db    (db)
+     {:db    (db-prod)
       :info  (kotori-info "0031")
-      :limit 200
       :creds (creds)}))
   (count products)
   )

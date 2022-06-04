@@ -31,7 +31,7 @@
         ;; TODO build-messageのmultimethodでreplace
         ;; 1枚目がサムネイルのことも多いがそうでなく8枚のものも多いので
         ;; 先頭から8枚をとる.
-        urls          (into [] (take 8 (:urls doc)))
+        urls          (into [] (take 4 (:urls doc)))
         media-ids     (->> urls
                            io/downloads!
                            (map (fn [file-path]
@@ -46,10 +46,10 @@
                        "type"      "comic" ;; TODO 仮対応
                        }
         ;; TODO リファクタリングが必要.
-        media-ids-sep (partition 4 media-ids)
+        media-ids-sep (partition 2 media-ids)
         media-ids-1   (first media-ids-sep)
         media-ids-2   (second media-ids-sep)
-        total         (if (< (count media-ids-2) 4) 1 2)
+        total         (if (< (count media-ids-2) 2) 1 2)
         message-1     (str (:title doc) " " cid
                            "\n" (sample->format 1 total))
         params-1      (merge m {:text      message-1
@@ -113,9 +113,9 @@
            '[devtools :refer [kotori-info ->screen-name
                               info-dev twitter-auth]])
 
-  (def resp (doujin/select-next-image {:db    (db)
+  (def resp (doujin/select-next-image {:db    (db-prod)
                                        :creds (creds)
-                                       :info  (kotori-info "0003")}))
+                                       :info  (kotori-info "0029")}))
 
   (def urls (into [] (take 8 (rest (:urls resp)))))
   (def paths (->> (range 1 5)
@@ -129,9 +129,9 @@
 
   (def image-paths (io/downloads! urls))
 
-  (def resp2 (tweet-image {:db    (db)
+  (def resp2 (tweet-image {:db    (db-prod)
                            :creds (creds)
-                           :info  (kotori-info "0003")}))
+                           :info  (kotori-info "0029")}))
   )
 
 (comment

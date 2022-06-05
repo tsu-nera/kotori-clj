@@ -336,7 +336,7 @@
       (f/doc doc-path)
       (f/delete!)))
 
-#_ (defn fs->edn [db coll-path file-path])
+#_(defn fs->edn [db coll-path file-path])
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 

@@ -14,11 +14,18 @@
 
   ;; utilites
   defun/defun                         {:mvn/version "0.3.1"}
-  cheshire/cheshire                   {:mvn/version "5.10.2"}
+  cheshire/cheshire                   {:mvn/version "5.11.0"}
   jarohen/chime                       {:mvn/version "0.3.3"}
-  camel-snake-kebab/camel-snake-kebab {:mvn/version "0.4.2"}
-  clojure.java-time/clojure.java-time {:mvn/version "0.3.3"}
-  org.clojure/data.csv                {:mvn/version "1.0.1"}
+  camel-snake-kebab/camel-snake-kebab {:mvn/version "0.4.3"}
+
+  org.clojure/data.csv {:mvn/version "1.0.1"}
+
+  ;;clojure.java-time/clojure.java-time {:mvn/version "0.3.3"}
+  ;; clojure 1.11にあげたら absのwarningがでる.
+  ;; コレは最新では修正されているがなかなかタグがつかないので
+  ;; GitHugを直接参照する.
+  io.github.dm3/clojure.java-time
+  {:git/sha "693dffad2343cd9722482a5f200efe75dfbfbd31"}
 
   ;; avoid SLF4J warnings
   org.slf4j/slf4j-nop {:mvn/version "RELEASE"}
@@ -34,8 +41,8 @@
 
   ;; Google Cloud Platform
   com.google.auth/google-auth-library-oauth2-http {:mvn/version "1.7.0"}
-  com.google.cloud/google-cloud-firestore         {:mvn/version "3.1.0"}
-  com.google.firebase/firebase-admin              {:mvn/version "8.1.0"}
+  com.google.cloud/google-cloud-firestore         {:mvn/version "3.2.0"}
+  com.google.firebase/firebase-admin              {:mvn/version "8.2.0"}
   lurodrigo/firestore-clj                         {:mvn/version "1.2.1"}
   ;; firesotre-cljを追加したらio.perfmarkが見つからずにエラーしたので追加.
   io.perfmark/perfmark-api                        {:mvn/version "0.25.0"}
@@ -63,7 +70,7 @@
                            hashp/hashp                     {:mvn/version "0.2.1"}
                            nrepl/nrepl                     {:mvn/version "0.9.0"}
                            refactor-nrepl/refactor-nrepl   {:mvn/version "3.5.2"}
-                           cider/cider-nrepl               {:mvn/version "0.28.3"}
+                           cider/cider-nrepl               {:mvn/version "0.28.4"}
                            io.github.clojure/tools.build   {:git/tag "v0.8.2" :git/sha "ba1a2bf"}
                            com.google.cloud.tools/jib-core {:mvn/version "0.21.0"}
                            clj-commons/pomegranate         {:mvn/version "1.2.1"}}}

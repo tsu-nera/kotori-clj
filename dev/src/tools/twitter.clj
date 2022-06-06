@@ -31,7 +31,7 @@
    (let [params (kotori-params db code)]
      (kotori/delete-tweet!
       (assoc params :tweet-id tweet-id)))))
-#_(delete-tweet! (db-dev) "0003" "1531132049448669186")
+#_(delete-tweet! (db-dev) "0003" "")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (comment

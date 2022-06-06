@@ -150,6 +150,7 @@
   ([cid db]
    (dmm/crawl-product! {:db db :cid cid :env (env)})))
 
+;; crawl-product!ではscrapeしないので両方実施.
 (defn prepare-videoa!
   [cid]
   (let [db (db-prod)]

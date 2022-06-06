@@ -53,9 +53,9 @@
   (def products (get-products {:creds (creds)
                                :limit 10}))
 
-  (def resp (crawl-product! {:db  (db)
-                             :env (env)
-                             :cid "bibivr00059"}))
+  (def resp (crawl-product! {:db    (db-prod)
+                             :creds (creds)
+                             :cid   "vec00360"}))
 
   (def resp (crawl-products! {:db    (db-dev)
                               :creds (creds)

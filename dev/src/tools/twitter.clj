@@ -2,7 +2,7 @@
   (:require
    [clojure.pprint :refer [pprint]]
    [devtools :refer [->screen-name ->user-id kotori-params twitter-auth]]
-   [firebase :refer [db-prod]]
+   [firebase :refer [db-dev db-prod]]
    [kotori.procedure.kotori.core :as kotori]
    [twitter-clj.guest :as guest]
    [twitter-clj.private :as private]))
@@ -24,12 +24,14 @@
   (let [media-id (first (tweet-id->media-ids id))]
     (str "https://studio.twitter.com/library/7_" media-id "/edit")))
 
-(defn delete-tweet! [db code tweet-id]
-  (let [params (kotori-params db code)]
-    (kotori/delete-tweet!
-     (assoc params :tweet-id tweet-id))))
-
-#_(delete-tweet! (db-prod) "0029" "")
+(defn delete-tweet!
+  ([code tweet-id]
+   (delete-tweet! (db-prod) code tweet-id))
+  ([db code tweet-id]
+   (let [params (kotori-params db code)]
+     (kotori/delete-tweet!
+      (assoc params :tweet-id tweet-id)))))
+#_(delete-tweet! (db-dev) "0003" "1531132049448669186")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (comment
@@ -69,5 +71,11 @@
 
 (comment
   (def resp (tweet-id->studio-video-url ""))
+  )
+
+(comment
+
+  (def screen-name "gmdtz")
+  (def resp (private/get-user screen-name))
 
   )

@@ -54,10 +54,10 @@
 (comment
   (def screen-name (->screen-name "0027"))
 
-  (def cid "yaho034")
+  (def cid "stcv107")
   (def desc (get-desc-from-site cid "videoc"))
   (def raw (get-desc-raw cid "videoc"))
-  (public/html->plain-text raw)
+  #_(public/html->plain-text raw)
 
   (def tags (p/->hashtags desc))
   (def ret (ed/remove-hashtags desc))

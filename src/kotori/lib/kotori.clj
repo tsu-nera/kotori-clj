@@ -195,9 +195,9 @@
      (desc-raw->next desc names)))
   ([raw actress-names]
    (-> raw
+       desc->trimed
        ng->ok
-       ((partial sparkle-actress actress-names))
-       desc->trimed)))
+       ((partial sparkle-actress actress-names)))))
 
 (defn ->next
   [product]

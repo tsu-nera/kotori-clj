@@ -33,8 +33,7 @@
   100件以上の取得はget-productsで対応."
   [{:keys [creds hits] :or {hits 100} :as params}]
   {:pre [(<= hits 100)]}
-  (let [req   (assoc params :sort "rank")
-        items (api/search-product creds req)]
+  (let [items (api/search-product creds params)]
     items))
 
 (defn- make-offset-map [size offset]
@@ -65,11 +64,12 @@
   get-productsを呼ぶと1回のget requestで最大100つの情報が取得できる.
   それ以上取得する場合はoffsetによる制御が必要なためこの関数で対応する.
   limitを100のchunkに分割してパラレル呼び出しとマージ."
-  [{:keys [limit floor genre-id service]
+  [{:keys [limit floor genre-id service sort]
     :as   base-params
     :or   {limit   20
            floor   (:videoa dmm/floor)
-           service "digital"}}]
+           service "digital"
+           sort    "rank"}}]
   (let [genre-req-params (->genre-req genre-id)
         req-params       (->> (make-req-params limit floor service)
                               (map (fn [m] (merge base-params

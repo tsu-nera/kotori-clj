@@ -59,6 +59,11 @@
   (-> ["ぽっちゃり"]
       names->genre-ids))
 
+(def ng-genres-non-hard
+  (into #{} (concat
+             dirty-ids
+             trans-ids)))
+
 (def ng-genres
   (into #{} (concat
              antisocial-ids

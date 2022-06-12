@@ -5,7 +5,6 @@
    [kotori.domain.dmm.core :as dmm]
    [kotori.domain.dmm.genre.anime :as anime]
    [kotori.domain.dmm.genre.core :as genre]
-   [kotori.domain.dmm.genre.doujin :as doujin]
    [kotori.domain.dmm.genre.videoa :as videoa]
    [kotori.domain.dmm.genre.videoc :as videoc]
    [kotori.domain.dmm.product :as product]
@@ -51,6 +50,9 @@
 (def st-exclude-ng-genres
   (make-st-exclude-ng-genres videoa/ng-genres))
 
+(def st-exclude-ng-genres-non-hard
+  (make-st-exclude-ng-genres videoa/ng-genres-non-hard))
+
 (defn no-sample-movie? [product]
   (:no-sample-movie product))
 
@@ -78,12 +80,20 @@
 
 ;; さもあり監督はハズレなし.
 (def director-id-samoari 114124)
+
+(defn contains-chikubi? [p]
+  (or
+   (= (:director-id p) director-id-samoari)
+   (str/includes? (:title p) "乳首")
+   (str/includes? (:description p) "乳首")
+   (str/includes? (:title p) "チクビ")))
+
 (def st-include-chikubi
-  (filter (fn [p] (or
-                   (= (:director-id p) director-id-samoari)
-                   (str/includes? (:title p) "乳首")
-                   (str/includes? (:description p) "乳首")
-                   (str/includes? (:title p) "チクビ")))))
+  (filter contains-chikubi?))
+
+(def st-exclude-chikubi
+  (remove contains-chikubi?))
+
 ;; かつお物産は人気なもののちょっとジャンルからそれるので排他しておく.
 (def maker-id-katsuo 6608)
 (def st-exclude-katsuo
@@ -155,6 +165,16 @@
 (defmethod make-strategy "0009" [_]
   (conj videoa-default-xst
         st-exclude-vr))
+
+(defmethod make-strategy "0020" [_]
+  [st-exclude-ng-genres-non-hard
+   st-exclude-vr
+   st-exclude-no-samples])
+
+(defmethod make-strategy "0025" [_]
+  (concat videoa-default-xst
+          [st-exclude-vr
+           st-exclude-chikubi]))
 
 ;; 現状公式にはルネサスピクチャーズのみ動画サンプルの利用が可能なので
 ;; ほかのメーカーを投稿しないように抑止をいれておく.
@@ -265,23 +285,28 @@
          (into [] xstrategy))))
 
 (defn select-scheduled-products
-  [{:keys [info db limit creds genre-id floor coll-path]
+  [{:keys [info db limit creds genre-id floor coll-path sort]
     :as   m
     :or   {limit    300
-           genre-id (:genre-id info)}}]
+           genre-id (:genre-id info)
+           sort     "rank"}}]
   (let [genre     (genre/make-genre floor)
         coll-path (or coll-path (genre/->coll-path genre))
         products  (lib-dmm/get-products {:floor    floor
                                          :genre-id genre-id
                                          :creds    creds
-                                         :limit    limit})
+                                         :limit    limit
+                                         :sort     sort})
         xst       (cond-> (make-strategy info)
                     ;; FIXME crawlとscrapingがまだの場合の検討
                     (not= floor "anime")
                     (conj st-skip-not-yet-scraped))
-        doc-ids   (map :content_id products)]
-    (->> (select-scheduled-products-with-xst m xst coll-path doc-ids)
-         (take limit))))
+        doc-ids   (map :content_id products)
+        products  (select-scheduled-products-with-xst
+                   m xst coll-path doc-ids)]
+    (if (and (zero? (count products)) (= sort "rank"))
+      (select-scheduled-products (assoc m :sort "review"))
+      (take limit products))))
 
 (defn select-tweeted-products [{:keys [db limit screen-name]
                                 :or   {limit       5
@@ -335,14 +360,15 @@
 
 (comment
   ;;;;;;;;;;;
-  (def info (kotori-info "0001"))
+  (def info (kotori-info "0002"))
   (def products
     (into []
           (select-scheduled-products
            {:db          (db-prod)
             :creds       (creds)
             :info        info
-            :limit       200
+            :limit       300
+            ;; :sort        "review"
             :screen-name (:screen-name info)})))
   (count products)
 
@@ -436,7 +462,9 @@
 
   (def products (lib-dmm/get-products {:genre-id genre-id
                                        :creds    (creds)
-                                       :limit    100}))
+                                       :limit    200
+                                       :sort     "review"}))
+  (count products)
 
   (def xst (make-strategy info))
   (def doc-ids  (map :content_id products))

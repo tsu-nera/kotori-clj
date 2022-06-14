@@ -8,6 +8,12 @@
 (defn ->archive-coll-path [user-id]
   (str "tweets/" user-id "/archives"))
 
+(defn ->retweet-coll-path [user-id]
+  (str "tweets/" user-id "/retweets"))
+
+(defn ->unretweet-coll-path [user-id]
+  (str "tweets/" user-id "/unretweets"))
+
 (defn ->post-doc-path [user-id tweet-id]
   (str (->post-coll-path user-id) "/" tweet-id))
 

@@ -143,7 +143,8 @@
   ([db coll-path]
    ;; (get-docs db coll-path identity)
    ;; どうせこのルートはデバッグ用なので小さい値を入れておく.
-   (get-docs db coll-path (query-limit 3)))
+   ;; (get-docs db coll-path (query-limit 3))
+   (get-docs db coll-path identity))
   ([db coll-path xquery]
    (-> db
        (f/coll coll-path)
@@ -182,12 +183,12 @@
                              m k (json/->clj v))) {} x)))))
 
 (defn get-filter-docs
-  ([db coll-path filter-map]
-   (-> db
-       (f/coll coll-path)
-       (f/filter= filter-map)
-       f/pullv
-       json/->clj)))
+  [db coll-path filter-map]
+  (-> db
+      (f/coll coll-path)
+      (f/filter= filter-map)
+      f/pullv
+      json/->clj))
 
 (defn get-docs-with-assoc-id
   [db coll-path]

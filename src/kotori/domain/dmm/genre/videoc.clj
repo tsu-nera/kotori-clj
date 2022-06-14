@@ -39,6 +39,10 @@
              violent-ids
              dirty-ids)))
 
+;; ぽっちゃりは2007と8510の２つがあるものの
+;; 実際に使われているのは
+(def fat-ids #{8510})
+
 (def title-stopwords
   ["（仮名）" "（裏垢）" "天才"])
 

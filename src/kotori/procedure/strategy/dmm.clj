@@ -103,6 +103,12 @@
 (def st-exclude-gas
   (remove (fn [p] (= (:maker-id p) maker-id-gas))))
 
+(def st-include-videoc-fat
+  (filter #(contains-genre? videoc/fat-ids %)))
+
+(def st-exclude-videoc-fat
+  (remove #(contains-genre? videoc/fat-ids %)))
+
 (defn no-actress? [product]
   (let [count (:actress-count product)]
     (or (nil? count) (zero? count))))
@@ -188,7 +194,8 @@
 
 (defmethod make-strategy "0027" [_]
   [(make-st-exclude-ng-genres videoc/ng-genres)
-   st-exclude-no-samples])
+   st-exclude-no-samples
+   st-exclude-videoc-fat])
 
 (defmethod make-strategy "0028" [_]
   [st-exclude-ng-genres
@@ -196,6 +203,11 @@
    st-exclude-no-image
    st-exclude-no-actress
    st-exclude-omnibus])
+
+(defmethod make-strategy "0040" [_]
+  [(make-st-exclude-ng-genres videoc/ng-genres)
+   st-exclude-no-samples
+   st-include-videoc-fat])
 
 (defmethod make-strategy :default [_]
   (concat videoa-default-xst

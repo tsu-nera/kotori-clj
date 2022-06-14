@@ -22,6 +22,10 @@
               :article_id videoa-id}]
     (lib/get-products (merge params opts))))
 
+(defn get-videoc-products [{:as params}]
+  (let [opts {:floor (:videoc dmm/floor)}]
+    (lib/get-products (merge params opts))))
+
 (defn crawl-videoc-product! [{:as m}]
   (-> m
       (assoc :floor (:videoc dmm/floor))
@@ -60,6 +64,13 @@
   )
 
 (comment
+  (def videocs (get-videoc-products {:creds      (creds)
+                                     :article    "genre"
+                                     :article_id 8510}))
+
+  )
+
+(comment
   (def resp (crawl-videoc-product! {:db    (db-prod)
                                     :creds (creds)
                                     :cid   "shinki066"}))
@@ -69,17 +80,16 @@
 
   (def resp (crawl-products! {:db       (db-prod)
                               :creds    (creds)
-                              :genre-id 1031
+                              :genre-id 8510
                               :limit    300}))
 
+  (def info (kotori-info "0027"))
   (def products
     (select-scheduled-products
      {:db          (db-prod)
       :creds       (creds)
-      :limit       100
-      :info        (kotori-info "0027")
-      :screen-name (->screen-name "0027")}))
-
+      :info        info
+      :screen-name (:screen-name info)}))
   (count products)
 
   (def ret (map :description (map ->next products)))

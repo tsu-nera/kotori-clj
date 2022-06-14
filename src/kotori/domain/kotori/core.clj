@@ -25,7 +25,8 @@
    "0025" ["videoa" "M男"]
    "0027" ["videoc" nil]
    "0028" ["videoa" "VR専用"] ;6793
-   "0040" ["videoc" "ぼっちゃり"]})
+   "0040" ["videoc" "ぽっちゃり"] ; 8510. 2007ではない.
+   })
 
 (defn floor-genres [name]
   (let [genre (genre/make-genre name)]

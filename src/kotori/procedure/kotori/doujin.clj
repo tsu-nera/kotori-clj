@@ -54,7 +54,8 @@
         message-1     (str (:title doc) " " cid
                            "\n" (sample->format 1 total))
         params-1      (merge m {:text      message-1
-                                :media-ids media-ids-1})
+                                :media-ids media-ids-1
+                                :type      "comic"})
         message-2     (sample->format 2 total)
         params-2      (merge m {:text      message-2
                                 :media-ids media-ids-2})]
@@ -100,7 +101,9 @@
                  }
         ;; TODO リファクタリングが必要.
         message (make-voice-text doc urls)
-        params  (assoc m :text message)]
+        params  (-> m
+                    (assoc :text message)
+                    (assoc :type "voice"))]
     (when-let [resp (kotori/tweet params)]
       (let [doc-path (genre/->doc-path cid)]
         (fs/update! db doc-path (product/tweet->doc resp exinfo))

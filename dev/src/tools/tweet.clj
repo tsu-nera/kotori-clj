@@ -24,14 +24,30 @@
                           (db-prod)
                           (->post-coll-path user-id)
                           {"self_retweet" true})
-                         (map :tweet-id))
+                         (map :tweet-id)
+                         (keep identity))
         retweet-ids (->> (fs/get-docs
                           (db-prod)
                           (->retweet-coll-path user-id))
-                         (map :tweet-id))
+                         (map :tweet-id)
+                         (keep identity))
         diff-ids    (into [] (clojure.set/difference
                               (into #{} post-ids)
                               (into #{} retweet-ids)))]
     (doseq [tweet-id diff-ids]
       (disable-self-retweet! user-id tweet-id))))
-#_(disable-self-retweets! "0020")
+#_(disable-self-retweets! "0001")
+
+(defn update-post-type! [code type]
+  (let [user-id  (->user-id code)
+        post-ids (->> (fs/get-docs
+                       (db-prod)
+                       (->post-coll-path user-id))
+                      (map :tweet-id)
+                      (keep identity))]
+    (doseq [tweet-id post-ids]
+      (fs/merge! (db-prod)
+                 (->post-doc-path user-id tweet-id)
+                 {"type"       type
+                  "updated_at" (fs-now)}))))
+#_(update-post-type! "0029" "comic")

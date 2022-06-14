@@ -371,31 +371,7 @@
             ;; :sort        "review"
             :screen-name (:screen-name info)})))
   (count products)
-
-
-  (def descs (map :description products))
-
-  (count products)
-
-  (def info (kotori-info "0009"))
-  (def amateurs
-    (into []
-          (select-scheduled-products
-           {:db          (db-prod)
-            :creds       (creds)
-            :info        info
-            :limit       100
-            :genre-id    4024
-            :screen-name (:screen-name info)})))
-  (count amateurs)
-
-  (fs/get-in (db-prod) dmm/doc-path "amateurs_crawled_time")
-
-  (def product (nth products 27))
-  (def next (lib/->next product))
-  (def desc (:description product))
-  (lib/desc->trimed desc)
-  (lib/desc->headline desc)
+  ;;
   )
 
 (comment

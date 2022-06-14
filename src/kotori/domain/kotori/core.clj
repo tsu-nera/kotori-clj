@@ -6,7 +6,7 @@
    [kotori.domain.dmm.genre.core :as genre]))
 
 (def coll-name "kotoris")
-(defn coll-path [user-id] (str coll-name "/" user-id))
+(defn ->doc-path [user-id] (str coll-name "/" user-id))
 
 (defrecord Cred [auth-token ct0])
 (defrecord Proxy [proxy-host proxy-port proxy-user proxy-pass])
@@ -25,7 +25,7 @@
    "0025" ["videoa" "M男"]
    "0027" ["videoc" nil]
    "0028" ["videoa" "VR専用"] ;6793
-   })
+   "0040" ["videoc" "ぼっちゃり"]})
 
 (defn floor-genres [name]
   (let [genre (genre/make-genre name)]

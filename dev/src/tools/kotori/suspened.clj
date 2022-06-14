@@ -1,4 +1,4 @@
-(ns tools.suspened
+(ns tools.kotori.suspened
   "凍結アカウント後処理 aka. 凍らされた小鳥への鎮魂歌(レクイエム)"
   (:require
    [devtools :refer [->screen-name ->user-id kotori-params]]

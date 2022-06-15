@@ -10,6 +10,7 @@
    [kotori.lib.json :as json]
    [kotori.lib.kotori :as lib]
    [kotori.lib.log :as log]
+   [kotori.lib.provider.dmm.public :as public]
    [kotori.procedure.dmm.amateur :as amateur]
    [kotori.procedure.dmm.anime :as anime]
    [kotori.procedure.dmm.product :as product]
@@ -107,7 +108,11 @@
 
 (defn select-next-vr [{:keys [screen-name] :as m}]
   {:pre [(s/valid? ::d/screen-name screen-name)]}
-  (lib/->next (first (vr/select-scheduled-products m))))
+  (when-let [next (lib/->next (first (vr/select-scheduled-products m)))]
+    (let [cid (:cid next)
+          uri (public/cid->vr-uri cid)]
+      (cond-> next
+        (public/uri-exists? uri) (assoc :sample-movie-url uri)))))
 
 (defn select-next-anime [{:keys [screen-name] :as m}]
   {:pre [(s/valid? ::d/screen-name screen-name)]}
@@ -195,6 +200,15 @@
 (comment
   (def info (kotori-info "0027"))
   (def resp (select-next-amateur-videoc
+             {:db          (db-prod)
+              :creds       (creds)
+              :info        info
+              :screen-name (:screen-name info)}))
+  )
+
+(comment
+  (def info (kotori-info "0028"))
+  (def resp (select-next-vr
              {:db          (db-prod)
               :creds       (creds)
               :info        info

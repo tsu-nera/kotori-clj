@@ -12,17 +12,21 @@
   {:user-agent user-agent
    :cookie     "age_check_done=1"})
 
-(defn page-exists? [url]
-  (if-let [resp (client/head url {:headers          headers
+(defn uri-exists? [uri]
+  (if-let [resp (client/head uri {:headers          headers
                                   :throw-exceptions false})]
     (= (:status resp) 200)
     false))
+
+(defn cid->vr-uri [cid]
+  (format "https://cc3001.dmm.co.jp/vrsample/%.1s/%.3s/%s/%svrlite.mp4"
+          cid cid cid cid))
 
 (defn get-page-raw
   ([url]
    ;; getの中でtimeout(socket/connection/connection-request)を設定しても
    ;; タイムアウトが効かないのでheadでページの存在をチェック.
-   (when (page-exists? url)
+   (when (uri-exists? url)
      (-> (client/get url {:headers headers})
          :body
          html/html-snippet)))
@@ -154,11 +158,6 @@
   (def data (get-page-raw cid "videoa"))
   (def page (get-page {:cid cid}))
 
-
-
-  (def resp (page-exists? url))
-
-
   (def resp (client/get url {:headers                    headers
                              :socket-timeout             1000
                              :connection-timeout         1000
@@ -167,3 +166,15 @@
 
   )
 
+(comment
+  (def cid "sivr00208")
+
+  (defn uri-exists? [url]
+    (if-let [resp (client/head url {:headers          headers
+                                    :throw-exceptions false})]
+      (= (:status resp) 200)
+      false))
+
+  (def uri (cid->vr-uri cid))
+  (def ret (uri-exists? uri))
+  )

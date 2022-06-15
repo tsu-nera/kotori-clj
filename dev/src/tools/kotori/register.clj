@@ -7,19 +7,25 @@
    [kotori.lib.firestore :as fs]
    [kotori.lib.json :refer [->json-keyword]]))
 
-(defn edn->twitter-auth->fs!
+(defn kotori->twitter-auth [m]
+  (-> m
+      (select-keys
+       [:auth-token :ct0 :login-ip :creation-ip])
+      (clojure.walk/stringify-keys)
+      (->json-keyword)
+      (clojure.set/rename-keys {"ct_0" "ct0"})))
+
+(defn kotori-edn->fs!
   "kotori.ednの情報をfirestoreへ"
-  [code]
-  (let [kotori       (kotori-by-code code)
-        user-id      (:user-id kotori)
-        twitter-auth (-> kotori
-                         (select-keys
-                          [:auth-token :ct0 :login-ip :creation-ip])
-                         (clojure.walk/stringify-keys)
-                         (->json-keyword)
-                         (clojure.set/rename-keys {"ct_0" "ct0"}))
-        doc-path     (->doc-path user-id)]
-    (-> (db-prod)
-        (f/doc doc-path)
-        (f/assoc! "twitter_auth" twitter-auth))))
-#_(edn->twitter-auth->fs! "0040")
+  ([code]
+   (kotori-edn->fs! code (db-prod)))
+  ([code db]
+   (let [kotori       (kotori-by-code code)
+         user-id      (:user-id kotori)
+         af-id        (:dmm-af-id kotori)
+         twitter-auth (kotori->twitter-auth kotori)
+         doc-path     (->doc-path user-id)]
+     (doto (f/doc db doc-path)
+       (f/assoc! "twitter_auth" twitter-auth)
+       (f/assoc! "dmm_af_id" af-id)))))
+#_(kotori-edn->fs! "0003")

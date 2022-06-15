@@ -257,6 +257,8 @@
   ([cid floor]
    (b/browse-url (d/->url floor cid))))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 (comment
   (def info (kotori-info "0001"))
   (def screen-name (:screen-name info))

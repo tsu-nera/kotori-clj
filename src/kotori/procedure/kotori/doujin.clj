@@ -6,6 +6,7 @@
    [kotori.lib.discord :as discord]
    [kotori.lib.firestore :as fs]
    [kotori.lib.io :as io]
+   [kotori.lib.log :as log]
    [kotori.lib.provider.dmm.doujin :refer [->url]]
    [kotori.lib.provider.dmm.parser :as perser]
    [kotori.procedure.dmm.doujin :as doujin]
@@ -26,13 +27,15 @@
                          tweet-link "\n")]
     (discord/notify! :kotori-post message)))
 
+(defn- append-title [params title]
+  (update params :text (fn [s]
+                         (str title "\n" s))))
+
 (defn tweet-image [{:keys [info db] :as m}]
   (let [doc           (doujin/select-next-image m)
         cid           (:cid doc)
-        ;; TODO build-messageのmultimethodでreplace
-        ;; 1枚目がサムネイルのことも多いがそうでなく8枚のものも多いので
-        ;; 先頭から8枚をとる.
-        urls          (into [] (take 4 (:urls doc)))
+        urls          (into [] (rest (:urls doc)))
+        title         (:title doc)
         media-ids     (->> urls
                            io/downloads!
                            (map (fn [file-path]
@@ -46,26 +49,26 @@
                        "media_ids" media-ids
                        "type"      "comic" ;; TODO 仮対応
                        }
-        ;; TODO リファクタリングが必要.
-        media-ids-sep (partition 2 media-ids)
-        media-ids-1   (first media-ids-sep)
-        media-ids-2   (second media-ids-sep)
-        total         (if (< (count media-ids-2) 2) 1 2)
-        message-1     (str (:title doc) " " cid
-                           "\n" (sample->format 1 total))
-        params-1      (merge m {:text      message-1
-                                :media-ids media-ids-1
-                                :type      "comic"})
-        message-2     (sample->format 2 total)
-        params-2      (merge m {:text      message-2
-                                :media-ids media-ids-2})]
-    (when-let [resp (kotori/tweet params-1)]
-      ;; リプライ投稿は画像があるときだけ.
-      (when-not (nil? media-ids-2)
-        (let [tweet-id (:id_str resp)]
-          (kotori/tweet (assoc params-2 :reply-tweet-id tweet-id))))
+        media-ids-sep (partition-all 2 media-ids)
+        page-total    (count media-ids-sep)
+        page-params   (->> media-ids-sep
+                           (map-indexed (fn [page-index ids]
+                                          {:text
+                                           (sample->format (+ page-index 1)
+                                                           page-total)
+                                           :media-ids (into [] ids)
+                                           :type      :photo}))
+                           (map #(merge m %)))
+        first-params  (append-title (first page-params) title)
+        rest-params   (into [] (rest page-params))]
+    (doseq [params (reverse rest-params)]
+      (kotori/tweet params)
+      (Thread/sleep 10000))
+    (when-let [resp (kotori/tweet first-params)]
       (let [doc-path (genre/->doc-path cid)]
         (fs/update! db doc-path (product/tweet->doc resp exinfo))
+        (log/info
+         (str "post tweet-image completed, cid=" cid ", title=" title))
         (->discord! resp cid))
       resp)))
 
@@ -94,6 +97,7 @@
 
 (defn tweet-voice [{:keys [info db] :as m}]
   (let [doc     (doujin/select-next-voice m)
+        title   (:title doc)
         cid     (:cid doc)
         urls    (into [] (:urls doc))
         exinfo  {"cid"  cid
@@ -103,10 +107,12 @@
         message (make-voice-text doc urls)
         params  (-> m
                     (assoc :text message)
-                    (assoc :type "voice"))]
+                    (assoc :type :text))]
     (when-let [resp (kotori/tweet params)]
       (let [doc-path (genre/->doc-path cid)]
         (fs/update! db doc-path (product/tweet->doc resp exinfo))
+        (log/info
+         (str "post tweet-voice completed, cid=" cid ", title=" title))
         (->discord! resp cid))
       resp)))
 
@@ -119,18 +125,23 @@
   (def resp (doujin/select-next-image {:db    (db-prod)
                                        :creds (creds)
                                        :info  (kotori-info "0029")}))
+  (def urls (into [] (rest (:urls resp))))
 
-  (def urls (into [] (take 8 (rest (:urls resp)))))
-  (def paths (->> (range 1 5)
-                  (map (fn [n] (str "tmp/image-" n ".jpg")))))
+  (def media-ids-sep (partition-all 2 urls))
+  (def page-total (count media-ids-sep))
 
-  (mapcat io/download! urls paths)
-  (doseq [url  urls
-          path paths]
-    (println url path)
-    #_(io/download! url path))
+  (def page-params (map-indexed (fn [page-index ids]
+                                  {:text      (sample->format (+ page-index 1)
+                                                              page-total)
+                                   :media-ids ids
+                                   :type      "comic"})
+                                media-ids-sep))
 
-  (def image-paths (io/downloads! urls))
+  (def title (:title resp))
+  (def params (append-title (first page-params) title))
+
+  (def rest-params (into [] (rest page-params)))
+
 
   (def resp2 (tweet-image {:db    (db-prod)
                            :creds (creds)
@@ -143,8 +154,7 @@
           :creds (creds)
           :info  (kotori-info "0002")})
 
-  (def resp (tweet-voice {:db    (db-prod)
+  (def resp (tweet-voice {:db    (db-dev)
                           :creds (creds)
-                          :info  (kotori-info "0002")}))
+                          :info  (kotori-info "0003")}))
   )
-

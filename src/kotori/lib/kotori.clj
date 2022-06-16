@@ -2,6 +2,7 @@
   (:require
    [clojure.string :as str]
    [kotori.domain.config.ngword :refer [source]]
+   [kotori.lib.provider.dmm.core :refer [swap-af-id]]
    [kotori.lib.provider.dmm.editor :as ed]
    [kotori.lib.provider.dmm.parser :as p]
    [kotori.lib.twittertext :as tt]))
@@ -201,25 +202,32 @@
 
 (defn ->next
   [product]
-  (let [cid       (:cid product)
-        title-raw (:title product)
-        names     (->actress-names product)
-        title     (title-raw->next title-raw names)
-        desc-raw  (:description product)
-        hashtags  (p/->hashtags title-raw)
-        desc      (desc-raw->next desc-raw names)
-        summary   (-> (:summary product) ng->ok)]
+  (let [cid           (:cid product)
+        title-raw     (:title product)
+        names         (->actress-names product)
+        title         (title-raw->next title-raw names)
+        desc-raw      (:description product)
+        hashtags      (p/->hashtags title-raw)
+        desc          (desc-raw->next desc-raw names)
+        affiliate-url (:affiliate-url product)
+        ;; summary       (-> (:summary product) ng->ok)
+        ]
     {:cid             cid
      :title           title
      :title-raw       title-raw
      :description     desc
      :description-raw desc-raw
-     :summary         summary
      :hashtags        hashtags
      :actress-names   names
+     :affiliate-url   affiliate-url
+     ;; :summary       summary
      ;; :headline    (desc->headline desc)
      ;; :dialogue    (desc->dialogue desc)
      }))
+
+(defn next->swap-af-id [next af-id]
+  (let [fn-swap-af-id (partial swap-af-id af-id)]
+    (update next :affiliate-url fn-swap-af-id)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 

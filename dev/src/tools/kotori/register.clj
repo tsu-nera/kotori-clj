@@ -15,6 +15,15 @@
       (->json-keyword)
       (clojure.set/rename-keys {"ct_0" "ct0"})))
 
+(defn update-af-id [code db]
+  (let [kotori   (kotori-by-code code)
+        user-id  (:user-id kotori)
+        af-id    (:dmm-af-id kotori)
+        doc-path (->doc-path user-id)]
+    (doto (f/doc db doc-path)
+      (f/assoc! "dmm_af_id" af-id))))
+#_(update-af-id "0031" (db-prod))
+
 (defn kotori-edn->fs!
   "kotori.ednの情報をfirestoreへ"
   ([code]

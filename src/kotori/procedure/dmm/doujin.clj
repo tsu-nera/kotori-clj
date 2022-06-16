@@ -6,9 +6,11 @@
     :refer [doujin-coll-path]
     :rename
     {doujin-coll-path coll-path}]
+   [kotori.domain.kotori.core :refer [info->af-id]]
    [kotori.lib.json :as json]
-   [kotori.lib.kotori :refer [ng->ok]]
+   [kotori.lib.kotori :refer [ng->ok next->swap-af-id]]
    [kotori.lib.log :as log]
+   [kotori.lib.provider.dmm.core :refer [swap-af-id]]
    [kotori.lib.provider.dmm.doujin :as lib]
    [kotori.lib.time :as time]
    [kotori.procedure.dmm.product :as product]
@@ -82,14 +84,15 @@
           m xst coll-path doc-ids)
          (take limit))))
 
-(defn select-next-image [{:as params}]
+(defn select-next-image [{:keys [info] :as params}]
   (let [doc        (first (select-scheduled-image params))
         cid        (:cid doc)
         title      (-> (:title doc) ng->ok)
+        af-id      (info->af-id info)
         image-urls (lib/get-image-urls cid)]
     {:cid           cid
      :title         title
-     :affiliate-url (:affiliate-url doc)
+     :affiliate-url (swap-af-id af-id (:affiliate-url doc))
      :urls          image-urls}))
 
 (defn select-scheduled-voice
@@ -115,9 +118,11 @@
        :title         (-> (:title doc) ng->ok)}
       (recur (rest docs)))))
 
-(defn select-next-voice [{:as params}]
-  (let [docs (select-scheduled-voice params)]
-    (select-while-url-exists (take 5 docs))))
+(defn select-next-voice [{:keys [info] :as params}]
+  (let [docs  (select-scheduled-voice params)
+        af-id (info->af-id info)]
+    (-> (select-while-url-exists (take 5 docs))
+        (next->swap-af-id af-id))))
 
 (comment
   (require
@@ -147,7 +152,7 @@
   (def products
     (select-scheduled-image
      {:db    (db-prod)
-      :info  (kotori-info "0029")
+      :info  (kotori-info "0040")
       :limit 200
       :creds (creds)}))
   (count products)

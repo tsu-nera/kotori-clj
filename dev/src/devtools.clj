@@ -3,7 +3,7 @@
   (:refer-clojure :exclude [proxy])
   (:require
    [integrant.repl.state :refer [config system]]
-   [kotori.procedure.kotori.core :refer [make-info]]
+   [kotori.procedure.kotori.core :refer [config->info]]
    [kotori.service.firebase :refer [get-db]]
    [twitter-clj.guest :as guest]
    [twitter-clj.private :as private]))
@@ -58,13 +58,13 @@
       (get code)))
 
 (defn kotori-info-by-name [screen-name]
-  (make-info (kotori-by-name screen-name)))
+  (config->info (kotori-by-name screen-name)))
 
 (defn kotori-info [code]
-  (make-info (kotori-by-code code)))
+  (config->info (kotori-by-code code)))
 
 (defn kotori-params [db code]
-  (let [info (make-info (kotori-by-code code))]
+  (let [info (config->info (kotori-by-code code))]
     {:db db :info info}))
 
 (def info-dev (delay (kotori-info "0003")))

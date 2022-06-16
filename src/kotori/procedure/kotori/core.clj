@@ -20,10 +20,12 @@
    [slingshot.slingshot :refer [throw+ try+]]
    [twitter-clj.private :as private]))
 
-(defn make-info [{:keys [screen-name user-id code
-                         auth-token ct0 proxy-map]}]
-  (d/make-info screen-name user-id code
-               {:auth-token auth-token :ct0 ct0} proxy-map))
+(defn config->info [{:keys [screen-name user-id code proxy-map]
+                     :as   m}]
+  (let [cred-map (d/config->cred-map m)]
+    (d/make-info screen-name user-id code
+                 cred-map
+                 proxy-map)))
 
 (defn make-text [source strategy builder]
   (builder (strategy source)))
@@ -96,27 +98,46 @@
 (defn get-product [{:as m}]
   (lib/->next (product/get-product m)))
 
-(defn select-next-product [{:keys [screen-name] :as m}]
+(defn select-next-product [{:keys [info screen-name] :as m}]
   {:pre [(s/valid? ::d/screen-name screen-name)]}
-  (lib/->next (first (st-dmm/select-scheduled-products m))))
+  (let [af-id (d/info->af-id info)]
+    (-> m
+        st-dmm/select-scheduled-products
+        first
+        lib/->next
+        (lib/next->swap-af-id af-id))))
 
-(defn select-next-amateur-videoc [{:keys [screen-name] :as m}]
+(defn select-next-amateur-videoc [{:keys [info screen-name] :as m}]
   {:pre [(s/valid? ::d/screen-name screen-name)]}
-  (let [next (lib/->next (first (amateur/select-scheduled-products m)))
-        name (lib/videoc-title->name (:title next))]
-    (assoc next :name name)))
+  (let [name  (lib/videoc-title->name (:title next))
+        af-id (d/info->af-id info)]
+    (-> m
+        amateur/select-scheduled-products
+        first
+        lib/->next
+        (assoc :name name)
+        (lib/next->swap-af-id af-id))))
 
-(defn select-next-vr [{:keys [screen-name] :as m}]
+(defn select-next-vr [{:keys [info screen-name] :as m}]
   {:pre [(s/valid? ::d/screen-name screen-name)]}
-  (when-let [next (lib/->next (first (vr/select-scheduled-products m)))]
+  (when-let [next (-> m
+                      vr/select-scheduled-products
+                      first
+                      lib/->next
+                      (lib/next->swap-af-id (d/info->af-id info)))]
     (let [cid (:cid next)
           uri (public/cid->vr-uri cid)]
       (cond-> next
         (public/uri-exists? uri) (assoc :sample-movie-url uri)))))
 
-(defn select-next-anime [{:keys [screen-name] :as m}]
+(defn select-next-anime [{:keys [info screen-name] :as m}]
   {:pre [(s/valid? ::d/screen-name screen-name)]}
-  (lib/->next (first (anime/select-scheduled-products m))))
+  (let [af-id (d/info->af-id info)]
+    (-> m
+        anime/select-scheduled-products
+        first
+        lib/->next
+        (lib/next->swap-af-id af-id))))
 
 (defn archive-fs-tweet-data [db user-id tweet-id]
   (f/transact!

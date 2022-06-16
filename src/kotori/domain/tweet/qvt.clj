@@ -21,11 +21,11 @@
         default (str text "\n" url)
         title   (:title qvt)
         desc    (some-> (:description qvt) lib/desc->trimed)
-        summary (:summary qvt)
+        ;; summary (:summary qvt)
         message (-> (cond
                       (= type "title")       title
                       (= type "description") (or desc title)
-                      (= type "summary")     (or summary desc title)
+                      ;; (= type "summary")     (or summary desc title)
                       :else                  nil)
                     (lib/ng->ok))]
     (if message
@@ -39,7 +39,7 @@
         screen-name (:last-tweet-name data)
         tweet-time  (:last-tweet-time data)
         crawled?    (contains? data :last-crawled-time)
-        summary     (:summary data)
+        ;; summary     (:summary data)
         description (:description data)
         url         (tweet/->quoted-video-url screen-name tweet-id)]
     {:url         url
@@ -48,7 +48,7 @@
      :tweet-id    tweet-id
      :screen-name screen-name
      :tweet-time  tweet-time
-     :summary     summary
+     ;; :summary     summary
      :description description
      :crawled?    crawled?}))
 

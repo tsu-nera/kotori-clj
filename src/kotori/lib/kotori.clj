@@ -99,7 +99,7 @@
       (str/split-lines)))
 
 (defn desc->trimed
-  [text  & {:keys [length] :or {length 100}}]
+  [text & {:keys [length] :or {length 100}}]
   (and text
        (->> text
             ed/remove-hashtags
@@ -169,12 +169,13 @@
 (defn ->actress-names [product]
   (into [] (map (fn [m] (get m "name")) (:actresses product))))
 
-(defn title->trimed [title]
+(defn title->trimed [title & {:keys [length] :or {length 90}}]
   (-> title
       ed/remove-hashtags
       ->remove-haishin
       ->remove-4k-headline
-      str/trim))
+      str/trim
+      ((partial p/trunc length))))
 
 (defn sparkle-actress [names text]
   (let [xs (map ed/drop-old-name names)]

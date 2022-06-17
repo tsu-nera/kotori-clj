@@ -7,6 +7,9 @@
 (def vr-coll-path (str doc-path "/vrs"))
 (def amateur-coll-path (str doc-path "/amateurs"))
 
+(defn ->coll-path [floor] (str doc-path "/" floor))
+(defn ->product-doc-path [floor cid] (str (->coll-path floor) "/" cid))
+
 (s/def ::cid string?)
 
 (def floor

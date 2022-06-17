@@ -1,0 +1,36 @@
+{:imageURL
+ {:list "https://pics.dmm.co.jp/digital/comic/d_231127/d_231127pt.jpg",
+  :large
+  "https://pics.dmm.co.jp/digital/comic/d_231127/d_231127pl.jpg"},
+ :date "2022-05-14 00:00:00",
+ :content_id "d_231127",
+ :service_name "同人",
+ :floor_code "digital_doujin",
+ :product_id "d_231127",
+ :iteminfo
+ {:genre
+  [{:id 28, :name "羞恥"}
+   {:id 97, :name "筋肉"}
+   {:id 558, :name "ボーイズラブ"}
+   {:id 569, :name "ラブコメ"}
+   {:id 5008, :name "オナニー"}
+   {:id 5011, :name "放尿・お漏らし"}
+   {:id 5017, :name "おもちゃ"}
+   {:id 155017, :name "言葉責め"}
+   {:id 156006, :name "女性向け"}
+   {:id 156023, :name "成人向け"}
+   {:id 160030, :name "ピックアップ"}],
+  :maker [{:id 77671, :name "つゆだく"}]},
+ :affiliateURL
+ "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdc%2Fdoujin%2F-%2Fdetail%2F%3D%2Fcid%3Dd_231127%2F&af_id=hogehoge-xxx&ch=api",
+ :floor_name "同人",
+ :title "憧れの美人メスお兄さんがド変態だった話",
+ :volume "44",
+ :category_name "同人 (同人)",
+ :prices
+ {:price "770",
+  :list_price "770",
+  :deliveries
+  {:delivery [{:type "download", :price "770", :list_price "770"}]}},
+ :service_code "doujin",
+ :URL "https://www.dmm.co.jp/dc/doujin/-/detail/=/cid=d_231127/"}

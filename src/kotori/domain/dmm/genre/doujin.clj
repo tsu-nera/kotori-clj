@@ -29,3 +29,10 @@
 (def chikubi-ids
   (-> ["乳首・乳輪" "メスイキ"]
       genre-names->ids))
+
+(def for-boy-id 156022) ;; 男性向け
+(def for-girl-id 156006) ;; 女性向け. TL/BL含む
+(def bl-id 558) ;; BL
+;; TL. TLのタグがついてない場合もあるので女性向けとBLの差集合でもいい.
+(def tl-id 152002)
+(def gay-id 4060)

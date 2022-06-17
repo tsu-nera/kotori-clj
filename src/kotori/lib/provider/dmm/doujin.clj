@@ -3,6 +3,7 @@
    [kotori.domain.dmm.genre.doujin :as genre]
    [kotori.domain.dmm.product :as product]
    [kotori.lib.io :as io]
+   [kotori.lib.json :as json]
    [kotori.lib.provider.dmm.api :as api]
    [kotori.lib.provider.dmm.product :as lib]
    [kotori.lib.provider.dmm.public :as public]
@@ -22,6 +23,12 @@
    :cg    "cg"
    :voice "voice"})
 
+;; FANZAのURLをみるとsectionはこの３種類に分けられている.
+(def section
+  {:mens "mens"
+   :tl   "tl"
+   :bl   "bl"})
+
 (def service-code (:code fanza-doujin))
 (def floor-code "digital_doujin")
 (def floor-id 81)
@@ -29,6 +36,30 @@
 (def base-req-opts
   {:service service-code
    :floor   floor-code})
+
+(defn for-x? [genre-id product]
+  (let [genre-ids (->> (get-in (json/->clj product) [:iteminfo :genre])
+                       (map :id)
+                       (into []))]
+    (.contains genre-ids genre-id)))
+
+(defn for-girl? [product]
+  (for-x? genre/for-girl-id product))
+
+(defn bl? [product]
+  (for-x? genre/bl-id product))
+
+(defn gay? [product]
+  (for-x? genre/gay-id product))
+
+;; 実際にTLラベルがついているものが少ない気がする
+(defn tl? [product]
+  (and (for-girl? product)
+       (not (bl? product))
+       (not (gay? product))))
+
+(defn for-boy? [product]
+  (for-x? genre/for-boy-id product))
 
 (defn get-product [{:keys [cid creds]}]
   (when-let [resp (api/search-product
@@ -39,6 +70,24 @@
 (defn get-products [{:keys [creds] :as m}]
   (when-let [resp (lib/get-products (merge m base-req-opts))]
     resp))
+
+(defn get-mens-products [{:as m}]
+  (when-let [products (lib/get-products
+                       (merge base-req-opts m
+                              {:genre-id genre/for-boy-id}))]
+    products))
+
+(defn get-tl-products [{:as m}]
+  (when-let [products (lib/get-products
+                       (merge base-req-opts m
+                              {:genre-id genre/for-girl-id}))]
+    (filter tl? products)))
+
+(defn get-bl-products [{:as m}]
+  (when-let [products (lib/get-products
+                       (merge base-req-opts m
+                              {:genre-id genre/for-girl-id}))]
+    (filter bl? products)))
 
 ;; "https://pics.dmm.co.jp/digital/cg/d_205949/d_205949pt.jpg"
 (defn ->format [resp]
@@ -58,6 +107,12 @@
                                              :hits  limit}))]
     (filter (fn [p]
               (= "voice" (->format p))) products)))
+
+(defn get-girls-products [{:keys [creds limit] :or {limit 100} :as m}]
+  (when-let [products (lib/get-products
+                       (merge m base-req-opts
+                              {:genre-id genre/for-girl-id}))]
+    products))
 
 (defn api->data
   "dmm response map -> firestore doc mapの写像"
@@ -125,6 +180,9 @@
 
 (comment
   (require '[tools.dmm :refer [creds dump-doujin!]])
+  )
+
+(comment
 
   (def cid "d_229101") ;; CG cg
   (def cid "d_223288") ;; デモムービー動画ジャンルだけどCG
@@ -138,6 +196,35 @@
 
   (def doujins (get-products {:creds (creds) :limit 200}))
   (count doujins)
+  )
+
+(comment
+  (def girls (get-products {:creds    (creds)
+                            :limit    300
+                            :genre-id genre/for-girl-id}))
+  (count girls)
+
+  (def bls (filter bl? girls))
+  (count bls)
+
+  (def tls (filter tl? girls))
+  (count tls)
+  )
+
+(comment
+  (def cid "d_231127")  ;; BL
+  (def cid "d_231143")  ;; TL
+
+  (def product (get-product {:cid cid :creds (creds)}))
+  (dump-doujin! cid)
+
+  (def doujins (get-products {:creds (creds) :limit 300}))
+
+  (def for-girls (filter for-girl? doujins))
+  (count for-girls)
+
+  (def for-boys (filter for-boy? doujins))
+  (count for-boys)
   )
 
 (comment

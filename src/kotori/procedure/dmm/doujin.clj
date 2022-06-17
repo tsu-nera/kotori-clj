@@ -3,9 +3,7 @@
    [kotori.domain.dmm.genre.doujin :as genre]
    [kotori.domain.dmm.product
     :as d
-    :refer [doujin-coll-path]
-    :rename
-    {doujin-coll-path coll-path}]
+    :refer [doujin-coll-path tl-coll-path bl-coll-path]]
    [kotori.domain.kotori.core :refer [info->af-id]]
    [kotori.lib.json :as json]
    [kotori.lib.kotori :refer [ng->ok next->swap-af-id]]
@@ -19,19 +17,51 @@
 (defn crawl-product! [{:keys [db] :as m}]
   (when-let [product (lib/get-product m)]
     (product/save-product! db
-                           coll-path
+                           doujin-coll-path
                            product
                            (time/fs-now))))
 
-(defn crawl-products! [{:keys [db] :as m}]
+(defn crawl-products!
+  "男性向け"
+  [{:keys [db] :as m}]
   (let [ts   (time/fs-now)
-        docs (->> (lib/get-products m)
+        docs (->> (lib/get-mens-products m)
                   (map lib/api->data)
                   (map (fn [m] (d/set-crawled-timestamp ts m)))
                   (map json/->json))]
     (doto db
-      (product/save-products! coll-path docs)
-      (product/update-crawled-time! ts "doujin" nil))
+      (product/save-products! doujin-coll-path docs)
+      (product/update-crawled-time! ts "doujin" genre/for-boy-id))
+    {:timestamp ts
+     :count     (count docs)
+     :products  docs}))
+
+(defn crawl-tl-products!
+  "女性向け(TL)"
+  [{:keys [db] :as m}]
+  (let [ts   (time/fs-now)
+        docs (->> (lib/get-tl-products m)
+                  (map lib/api->data)
+                  (map (fn [m] (d/set-crawled-timestamp ts m)))
+                  (map json/->json))]
+    (doto db
+      (product/save-products! tl-coll-path docs)
+      (product/update-crawled-time! ts "doujin" genre/for-girl-id))
+    {:timestamp ts
+     :count     (count docs)
+     :products  docs}))
+
+(defn crawl-bl-products!
+  "女性向け(BL)"
+  [{:keys [db] :as m}]
+  (let [ts   (time/fs-now)
+        docs (->> (lib/get-bl-products m)
+                  (map lib/api->data)
+                  (map (fn [m] (d/set-crawled-timestamp ts m)))
+                  (map json/->json))]
+    (doto db
+      (product/save-products! bl-coll-path docs)
+      (product/update-crawled-time! ts "doujin" genre/bl-id))
     {:timestamp ts
      :count     (count docs)
      :products  docs}))
@@ -43,7 +73,7 @@
                   (map (fn [m] (d/set-crawled-timestamp ts m)))
                   (map json/->json))]
     (doto db
-      (product/save-products! coll-path docs)
+      (product/save-products! doujin-coll-path docs)
       (product/update-crawled-time! ts "doujin" nil))
     {:timestamp ts
      :count     (count docs)
@@ -81,7 +111,7 @@
         xst      (make-strategy info)
         doc-ids  (map :content_id products)]
     (->> (st/select-scheduled-products-with-xst
-          m xst coll-path doc-ids)
+          m xst doujin-coll-path doc-ids)
          (take limit))))
 
 (defn select-next-image [{:keys [info] :as params}]
@@ -104,7 +134,7 @@
         xst      (make-strategy info)
         doc-ids  (map :content_id products)]
     (->> (st/select-scheduled-products-with-xst
-          m xst coll-path doc-ids)
+          m xst doujin-coll-path doc-ids)
          (take limit))))
 
 (defn- select-while-url-exists [docs]
@@ -164,4 +194,15 @@
       :creds (creds)}))
   (count products)
   (select-while-url-exists products)
+  )
+
+(comment
+
+  (def tls (crawl-tl-products! {:db    (db)
+                                :creds (creds)
+                                :limit 300}))
+
+  (def bls (crawl-bl-products! {:db    (db)
+                                :creds (creds)
+                                :limit 300}))
   )

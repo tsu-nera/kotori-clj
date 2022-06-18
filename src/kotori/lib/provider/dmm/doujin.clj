@@ -67,26 +67,26 @@
                              (assoc :cid cid)))]
     (first resp)))
 
-(defn get-products [{:keys [creds] :as m}]
+(defn get-products [{:as m}]
   (when-let [resp (lib/get-products (merge m base-req-opts))]
     resp))
 
-(defn get-mens-products [{:as m}]
-  (when-let [products (lib/get-products
-                       (merge base-req-opts m
-                              {:genre-id genre/for-boy-id}))]
+(defn get-boys-products [{:as m}]
+  (when-let [products (get-products
+                       (assoc m :genre-id genre/for-boy-id))]
+    products))
+
+(defn get-girls-products [{:as m}]
+  (when-let [products (get-products
+                       (assoc m :genre-id genre/for-girl-id))]
     products))
 
 (defn get-tl-products [{:as m}]
-  (when-let [products (lib/get-products
-                       (merge base-req-opts m
-                              {:genre-id genre/for-girl-id}))]
+  (when-let [products (get-girls-products m)]
     (filter tl? products)))
 
 (defn get-bl-products [{:as m}]
-  (when-let [products (lib/get-products
-                       (merge base-req-opts m
-                              {:genre-id genre/for-girl-id}))]
+  (when-let [products (get-girls-products m)]
     (filter bl? products)))
 
 ;; "https://pics.dmm.co.jp/digital/cg/d_205949/d_205949pt.jpg"

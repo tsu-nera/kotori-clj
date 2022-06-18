@@ -3,7 +3,7 @@
    [kotori.domain.dmm.genre.doujin :as genre]
    [kotori.domain.dmm.product
     :as d
-    :refer [doujin-coll-path tl-coll-path bl-coll-path]]
+    :refer [doujin-coll-path girls-coll-path]]
    [kotori.domain.kotori.core :refer [info->af-id]]
    [kotori.lib.json :as json]
    [kotori.lib.kotori :refer [ng->ok next->swap-af-id]]
@@ -25,7 +25,7 @@
   "男性向け"
   [{:keys [db] :as m}]
   (let [ts   (time/fs-now)
-        docs (->> (lib/get-mens-products m)
+        docs (->> (lib/get-boys-products m)
                   (map lib/api->data)
                   (map (fn [m] (d/set-crawled-timestamp ts m)))
                   (map json/->json))]
@@ -36,32 +36,17 @@
      :count     (count docs)
      :products  docs}))
 
-(defn crawl-tl-products!
-  "女性向け(TL)"
+(defn crawl-girls-products!
+  "女性向け"
   [{:keys [db] :as m}]
   (let [ts   (time/fs-now)
-        docs (->> (lib/get-tl-products m)
+        docs (->> (lib/get-girls-products m)
                   (map lib/api->data)
                   (map (fn [m] (d/set-crawled-timestamp ts m)))
                   (map json/->json))]
     (doto db
-      (product/save-products! tl-coll-path docs)
+      (product/save-products! girls-coll-path docs)
       (product/update-crawled-time! ts "doujin" genre/for-girl-id))
-    {:timestamp ts
-     :count     (count docs)
-     :products  docs}))
-
-(defn crawl-bl-products!
-  "女性向け(BL)"
-  [{:keys [db] :as m}]
-  (let [ts   (time/fs-now)
-        docs (->> (lib/get-bl-products m)
-                  (map lib/api->data)
-                  (map (fn [m] (d/set-crawled-timestamp ts m)))
-                  (map json/->json))]
-    (doto db
-      (product/save-products! bl-coll-path docs)
-      (product/update-crawled-time! ts "doujin" genre/bl-id))
     {:timestamp ts
      :count     (count docs)
      :products  docs}))
@@ -171,6 +156,10 @@
   (def products (crawl-products! {:db    (db)
                                   :creds (creds)
                                   :limit 300}))
+
+  (def girls (crawl-girls-products! {:db    (db)
+                                     :creds (creds)
+                                     :limit 300}))
 
   (def products (crawl-voice-products! {:db    (db)
                                         :creds (creds)

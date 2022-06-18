@@ -17,11 +17,8 @@
 (def doujin-coll-path (str dmm/doc-path "/doujins"))
 (defn doujin-doc-path [cid] (str doujin-coll-path "/" cid))
 
-(def tl-coll-path (str dmm/doc-path "/tls"))
-(defn tl-doc-path [cid] (str tl-coll-path "/" cid))
-
-(def bl-coll-path (str dmm/doc-path "/bls"))
-(defn bl-doc-path [cid] (str bl-coll-path "/" cid))
+(def girls-coll-path (str dmm/doc-path "/girls"))
+(defn girls-doc-path [cid] (str girls-coll-path "/" cid))
 
 (defn ->cid [raw]
   (:content_id raw))

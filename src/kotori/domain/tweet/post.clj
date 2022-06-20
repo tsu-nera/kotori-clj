@@ -4,11 +4,12 @@
    [kotori.lib.time :as time]))
 
 ;; TODO 見直し必要
-(def data-type
-  {:text  "text"
-   :video "video"
-   :photo "photo"
-   :qvt   "quoted_video"})
+;; 一旦マスク.これはRTの検索で必要な情報のためそのとき再検討する.
+#_(def data-type
+    {:text  "text"
+     :video "video"
+     :photo "photo"
+     :qvt   "quoted_video"})
 
 (defn ->archive-data [data]
   (let [ts (time/fs-now)]
@@ -38,7 +39,7 @@
    (-> tweet
        ->doc
        (cond-> type
-         (assoc :type (type data-type))))))
+         (assoc :type type)))))
 
 (comment
 ;;;

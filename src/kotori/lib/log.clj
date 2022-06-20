@@ -17,6 +17,10 @@
   [& args]
   (timbre/info args))
 
+(defn debug
+  [& args]
+  (timbre/debug args))
+
 (comment
   (timbre/refer-timbre)
   ;; (timbre/merge-config! timbre-config)

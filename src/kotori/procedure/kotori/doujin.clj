@@ -32,6 +32,7 @@
                          (str title "\n" s))))
 
 (defn- upload-images [urls creds proxy]
+  (log/debug (str "upload images...cnt=" (count urls)))
   (->> urls
        io/downloads!
        (map (fn [file-path]
@@ -49,7 +50,7 @@
    "thread_ids" thread-ids})
 
 (defn- make-page-params [base-params media-ids]
-  (let  [media-ids-sep (partition-all 2 media-ids)
+  (let  [media-ids-sep (partition-all 4 media-ids)
          page-total    (count media-ids-sep)]
     (->> media-ids-sep
          (map-indexed (fn [page-index ids]
@@ -85,11 +86,12 @@
               thread-ids (conj thread-ids tweet-id)
               exinfo     (make-exinfo cid "comic" media-ids thread-ids)]
           (doto db
+            (kotori/assoc-cid! user-id tweet-id cid)
             (kotori/assoc-thread-ids! user-id tweet-id thread-ids)
             (fs/update! doc-path (product/tweet->doc resp exinfo)))
+          (->discord! resp cid)
           (log/info
-           (str "post tweet-image completed, cid=" cid ", title=" title))
-          (->discord! resp cid))
+           (str "post tweet-image completed, cid=" cid ", title=" title)))
         resp))))
 
 ;; TODO インタフェースで解決する.

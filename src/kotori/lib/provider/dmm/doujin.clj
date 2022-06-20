@@ -97,12 +97,12 @@
 (defn api->data
   "dmm response map -> firestore doc mapの写像"
   [raw]
-  (let [data {:cid           (product/->cid raw)
-              :title         (product/->title  raw)
-              :url           (product/->url raw)
-              :affiliate_url (product/->affiliate-url raw)
-              :released_time (product/->released-time raw)
-              :genres        (product/->genres raw)
+  (let [data {:cid           (product/api->cid raw)
+              :title         (product/api->title  raw)
+              :url           (product/api->url raw)
+              :affiliate_url (product/api->affiliate-url raw)
+              :released_time (product/api->released-time raw)
+              :genres        (product/api->genres raw)
               :format        (->format raw)}]
     (-> data
         (assoc :raw raw))))

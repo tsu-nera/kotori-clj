@@ -20,67 +20,70 @@
 (def girls-coll-path (str dmm/doc-path "/girls"))
 (defn girls-doc-path [cid] (str girls-coll-path "/" cid))
 
-(defn ->cid [raw]
-  (:content_id raw))
+;; TODO api->docの変換はdomainではなくlibに移動すべき
+;; これは副作用のないデータの変換に過ぎないので.
 
-(defn ->title [raw]
-  (:title raw))
+(defn api->cid [resp]
+  (:content_id resp))
 
-(defn ->url [raw]
-  (:URL raw))
+(defn api->title [resp]
+  (:title resp))
+
+(defn api->url [resp]
+  (:URL resp))
 
 ;; 普通の動画だと :affiliateURLspという属性があるがVR動画はない.
 ;; sp自体が古い仕様でこれから:affiliateURLに統一されることを予測して
 ;; spの属性をみるのはやめる. spはおそらく携帯用.
-(defn ->affiliate-url [raw]
-  (:affiliateURL raw))
+(defn api->affiliate-url [resp]
+  (:affiliateURL resp))
 
-(defn ->actresses [raw]
-  (get-in raw [:iteminfo :actress]))
+(defn api->actresses [resp]
+  (get-in resp [:iteminfo :actress]))
 
-(defn ->released-time [raw]
-  (let [date-str (:date raw)]
+(defn api->released-time [resp]
+  (let [date-str (:date resp)]
     (-> date-str
         (time/parse-dmm-timestamp)
         (time/->fs-timestamp))))
 
-(defn ->genres [raw]
-  (get-in raw [:iteminfo :genre]))
+(defn api->genres [resp]
+  (get-in resp [:iteminfo :genre]))
 
-(defn ->genre-ids [raw]
-  (->> (->genres raw)
+(defn api->genre-ids [resp]
+  (->> (api->genres resp)
        (map #(get % "id"))
        (into [])))
 
-(defn ->maker-id [raw]
-  (-> raw
+(defn api->maker-id [resp]
+  (-> resp
       (get-in [:iteminfo :maker])
       first
       :id))
 
-(defn ->director-id [raw]
-  (-> raw
+(defn api->director-id [resp]
+  (-> resp
       (get-in [:iteminfo :director])
       first
       :id))
 
-(defn ->label-id [raw]
-  (-> raw
+(defn api->label-id [resp]
+  (-> resp
       (get-in [:iteminfo :label])
       first
       :id))
 
-(defn ->series-id [raw]
-  (-> raw
+(defn api->series-id [resp]
+  (-> resp
       (get-in [:iteminfo :series])
       first
       :id))
 
-(defn sample-movie? [raw]
-  (contains? raw :sampleMovieURL))
+(defn sample-movie? [resp]
+  (contains? resp :sampleMovieURL))
 
-(defn sample-image? [raw]
-  (contains? raw :sampleImageURL))
+(defn sample-image? [resp]
+  (contains? resp :sampleImageURL))
 
 (defn- info->id [info key]
   (-> info
@@ -97,22 +100,22 @@
 
 (defn api->doc
   "dmm response map -> firestore doc mapの写像"
-  [raw]
-  (let [actresses (->actresses raw)
-        iteminfo  (:iteminfo raw)
-        data      {:cid             (->cid raw)
-                   :title           (->title raw)
-                   :url             (->url raw)
-                   :affiliate_url   (->affiliate-url raw)
+  [resp]
+  (let [actresses (api->actresses resp)
+        iteminfo  (:iteminfo resp)
+        data      {:cid             (api->cid resp)
+                   :title           (api->title resp)
+                   :url             (api->url resp)
+                   :affiliate_url   (api->affiliate-url resp)
                    :actresses       actresses
                    :actress_count   (count actresses)
-                   :released_time   (->released-time raw)
-                   :genres          (->genres raw)
-                   :no_sample_movie (not (sample-movie? raw))
-                   :no_sample_image (not (sample-image? raw))}]
+                   :released_time   (api->released-time resp)
+                   :genres          (api->genres resp)
+                   :no_sample_movie (not (sample-movie? resp))
+                   :no_sample_image (not (sample-image? resp))}]
     (-> data
         (assoc-iteminfo iteminfo)
-        (assoc :raw raw))))
+        (assoc :raw resp))))
 
 ;; docごとにtimestampを生成すると
 ;; ms単位の誤差によって正確なソートができないため

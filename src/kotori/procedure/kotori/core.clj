@@ -57,6 +57,11 @@
       (fs/assoc! parent-doc-path
                  "self_replyed_tweet_id" child-id))))
 
+(defn assoc-cid!
+  [db user-id tweet-id cid]
+  (let [doc-path (tweet/->post-doc-path user-id tweet-id)]
+    (fs/assoc! db doc-path "cid" cid)))
+
 (defn assoc-thread-ids!
   "一つのtweet-idのフィールドに関連idのリストをまとめてbind"
   [db user-id tweet-id thread-ids]
@@ -88,18 +93,18 @@
 
 (defn tweet-morning
   [{:as params}]
-  (tweet (assoc params :text "おはようございます" :type :text)))
+  (tweet (assoc params :text "おはようございます" :type "text")))
 
 (defn tweet-evening
   [{:as params}]
-  (tweet (assoc params :text "今日もお疲れ様でした" :type :text)))
+  (tweet (assoc params :text "今日もお疲れ様でした" :type "text")))
 
 (defn tweet-random [{:keys [^d/Kotori info db env] :as params}]
   (let [source       meigen/source
         strategy     st/pick-random
         text-builder meigen/build-text
         text         (make-text source strategy text-builder)]
-    (tweet (assoc params :text text :type :text))))
+    (tweet (assoc params :text text :type "text"))))
 
 (defn get-product [{:as m}]
   (lib/->next (product/get-product m)))

@@ -10,6 +10,7 @@
 (defrecord Proxy [proxy-host proxy-port proxy-user proxy-pass])
 
 ;; TODO EDNファイルで定義してもいい.そしてRole Recordでもいい.
+;; TODO doujin対応
 (def code-genre-map
   {"0001" ["videoa" nil]
    "0002" ["videoa" "痴女"] ;1031
@@ -38,8 +39,9 @@
 (def videoa-genres (floor-genres "videoa"))
 (def videoc-genres (floor-genres "videoc"))
 (def anime-genres (floor-genres "anime"))
+(def doujin-genres (floor-genres "doujin"))
 
-(defrecord Info
+(defrecord Kotori
   [screen-name user-id code genre-id
    ^Cred cred ^Proxy proxy])
 
@@ -75,8 +77,8 @@
 (defn config->cred-map [config]
   (select-keys config [:auth-token :ct0 :dmm-af-id]))
 
-(defn info->af-id [info]
-  (get-in info [:cred :dmm-af-id]))
+(defn kotori->af-id [kotori]
+  (get-in kotori [:cred :dmm-af-id]))
 
 ;; Abstract Factory Pattern
 (defn make-info [screen-name user-id code cred-map proxy-map]
@@ -84,5 +86,5 @@
         test-proxy (s/conform ::proxy (map->Proxy proxy-map))
         proxy      (if-not (s/invalid? test-proxy) test-proxy {})
         genre-id   (code->genre-id code)]
-    (s/conform ::info (->Info screen-name user-id code genre-id
-                              cred proxy))))
+    (s/conform ::info (->Kotori screen-name user-id code genre-id
+                                cred proxy))))

@@ -15,7 +15,7 @@
    [kotori.lib.time :as time])
   (:import
    (kotori.domain.kotori.core
-    Info)))
+    Kotori)))
 
 (defn ->genre-ids [product]
   (->> product
@@ -434,7 +434,7 @@
     (make-strategy [this]))
 
   (extend-protocol Strategy
-    Info
+    Kotori
     (make-strategy [this]
       [st-exclude-ng-genres
        st-exclude-no-samples

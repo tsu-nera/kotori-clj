@@ -4,7 +4,7 @@
    [kotori.domain.dmm.product
     :as d
     :refer [doujin-coll-path girls-coll-path]]
-   [kotori.domain.kotori.core :refer [info->af-id]]
+   [kotori.domain.kotori.core :refer [kotori->af-id]]
    [kotori.lib.json :as json]
    [kotori.lib.kotori :refer [ng->ok next->swap-af-id]]
    [kotori.lib.log :as log]
@@ -87,23 +87,25 @@
 (defmethod make-strategy :default [_]
   [])
 
+;; TODO とりあえずやっつけで分岐するがあとでインタフェースで解決する.
 (defn select-scheduled-image
-  [{:keys [info db limit creds]
+  [{:keys [info db limit creds coll-path genre-id]
     :as   m
     :or   {limit 200}}]
-  (let [products (lib/get-products {:creds creds
-                                    :limit limit})
+  (let [products (lib/get-products {:genre-id genre-id
+                                    :creds    creds
+                                    :limit    limit})
         xst      (make-strategy info)
         doc-ids  (map :content_id products)]
     (->> (st/select-scheduled-products-with-xst
-          m xst doujin-coll-path doc-ids)
+          m xst coll-path doc-ids)
          (take limit))))
 
 (defn select-next-image [{:keys [info] :as params}]
   (let [doc        (first (select-scheduled-image params))
         cid        (:cid doc)
         title      (-> (:title doc) ng->ok)
-        af-id      (info->af-id info)
+        af-id      (kotori->af-id info)
         image-urls (lib/get-image-urls cid)]
     {:cid           cid
      :title         title
@@ -135,7 +137,7 @@
 
 (defn select-next-voice [{:keys [info] :as params}]
   (let [docs  (select-scheduled-voice params)
-        af-id (info->af-id info)]
+        af-id (kotori->af-id info)]
     (-> (select-while-url-exists (take 5 docs))
         (next->swap-af-id af-id))))
 
@@ -153,11 +155,11 @@
 
   (def resp (crawl-product! {:db (db) :cid cid :creds (creds)}))
 
-  (def products (crawl-products! {:db    (db)
+  (def products (crawl-products! {:db    (db-prod)
                                   :creds (creds)
                                   :limit 300}))
 
-  (def girls (crawl-girls-products! {:db    (db)
+  (def girls (crawl-girls-products! {:db    (db-prod)
                                      :creds (creds)
                                      :limit 300}))
 
@@ -170,10 +172,12 @@
 
   (def products
     (select-scheduled-image
-     {:db    (db-prod)
-      :info  (kotori-info "0040")
-      :limit 200
-      :creds (creds)}))
+     {:db        (db-prod)
+      :info      (kotori-info "0026")
+      :limit     200
+      :coll-path "providers/dmm/girls"
+      :genre-id  genre/for-girl-id
+      :creds     (creds)}))
   (count products)
 
   (def products
@@ -185,13 +189,3 @@
   (select-while-url-exists products)
   )
 
-(comment
-
-  (def tls (crawl-tl-products! {:db    (db)
-                                :creds (creds)
-                                :limit 300}))
-
-  (def bls (crawl-bl-products! {:db    (db)
-                                :creds (creds)
-                                :limit 300}))
-  )

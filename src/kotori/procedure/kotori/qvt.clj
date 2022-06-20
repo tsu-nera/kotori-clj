@@ -61,12 +61,12 @@
     (->> qvt qvt/->doc (fs/update! db doc-path))))
 
 (defn tweet-quoted-video
-  ([{:keys [^d/Info info db] :as params}]
+  ([{:keys [^d/Kotori info db] :as params}]
    (let [screen-name (:screen-name info)
          qvt         (select-next-qvt-product
                       {:db db :screen-name screen-name})]
      (tweet-quoted-video params (assoc-desc-unless qvt))))
-  ([{:keys [^d/Info info db source-label message-type]
+  ([{:keys [^d/Kotori info db source-label message-type]
      :as   params} qvt]
    (let [cid          (:cid qvt)
          user-id      (:user-id info)

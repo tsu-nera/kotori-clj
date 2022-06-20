@@ -1,12 +1,15 @@
 (ns kotori.domain.dmm.genre.core
   (:require
    [kotori.domain.dmm.genre.anime]
+   [kotori.domain.dmm.genre.doujin]
    [kotori.domain.dmm.genre.interface :as if]
    [kotori.domain.dmm.genre.videoa]
    [kotori.domain.dmm.genre.videoc])
   (:import
    (kotori.domain.dmm.genre.anime
     Anime)
+   (kotori.domain.dmm.genre.doujin
+    Doujin)
    (kotori.domain.dmm.genre.videoa
     Videoa)
    (kotori.domain.dmm.genre.videoc
@@ -17,6 +20,7 @@
     "videoa" (Videoa. "videoa")
     "videoc" (Videoc. "videoc")
     "anime"  (Anime. "anime")
+    "doujin" (Doujin. "doujin")
     (Videoa. "videoa")))
 
 (defn id->name [genre id] (if/id->name genre id))

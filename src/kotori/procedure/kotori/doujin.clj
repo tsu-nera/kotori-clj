@@ -31,7 +31,7 @@
   (update params :text (fn [s]
                          (str title "\n" s))))
 
-(defn tweet-image [{:keys [info db] :as m}]
+(defn- tweet-image [{:keys [info db coll-path] :as m}]
   (let [doc           (doujin/select-next-image m)
         cid           (:cid doc)
         urls          (into [] (rest (:urls doc)))
@@ -65,12 +65,24 @@
       (kotori/tweet params)
       (Thread/sleep 10000))
     (when-let [resp (kotori/tweet first-params)]
-      (let [doc-path (genre/->doc-path cid)]
+      (let [doc-path (str coll-path "/" cid)]
         (fs/update! db doc-path (product/tweet->doc resp exinfo))
         (log/info
          (str "post tweet-image completed, cid=" cid ", title=" title))
         (->discord! resp cid))
       resp)))
+
+;; TODO インタフェースで解決する.
+(defn tweet-boys-image [{:as m}]
+  (tweet-image
+   (merge m {:genre-id  genre/for-boy-id
+             :coll-path product/doujin-coll-path})))
+
+;; TODO インタフェースで解決する.
+(defn tweet-girls-image [{:as m}]
+  (tweet-image
+   (merge m {:genre-id  genre/for-girl-id
+             :coll-path product/girls-coll-path})))
 
 (defn- ->otameshi [urls i]
   (str "お試し"
@@ -143,9 +155,14 @@
   (def rest-params (into [] (rest page-params)))
 
 
-  (def resp2 (tweet-image {:db    (db-prod)
-                           :creds (creds)
-                           :info  (kotori-info "0029")}))
+  (def resp2 (tweet-boys-image {:db    (db)
+                                :creds (creds)
+                                :info  (kotori-info "0003")}))
+
+  (def resp3 (tweet-girls-image {:db    (db-prod)
+                                 :creds (creds)
+                                 :info  (kotori-info "0026")}))
+
   )
 
 (comment

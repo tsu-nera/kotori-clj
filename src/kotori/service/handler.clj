@@ -55,6 +55,7 @@
       ["/crawl-amateur-products" {:post dmm-amateur/crawl-products!}]
       ["/crawl-doujin-products" {:post dmm-doujin/crawl-products!}]
       ["/crawl-doujin-voices" {:post dmm-doujin/crawl-voice-products!}]
+      ["/crawl-doujin-girls" {:post dmm-doujin/crawl-girls-products!}]
       ["/crawl-qvt-descs" {:post dmm/crawl-qvt-descs!}]]
      ["/kotori" {:middleware [#(wrap-kotori config-map %) #(wrap-dmm %)]}
       ["/dummy" kotori/dummy]
@@ -64,7 +65,9 @@
       ["/tweet-morning" kotori/tweet-morning]
       ["/tweet-evening" kotori/tweet-evening]
       ["/tweet-random" kotori/tweet-random]
-      ["/tweet-doujin-image" doujin/tweet-image]
+      ["/tweet-boys-doujin-image" doujin/tweet-boys-image]
+      ["/tweet-girls-doujin-image" doujin/tweet-girls-image]
+      ["/tweet-doujin-image" doujin/tweet-boys-image] ;; TODO 後で削除
       ["/tweet-doujin-voice" doujin/tweet-voice]
       ["/get-product" {:get kotori/get-product}]
       ["/select-next-product" {:get kotori/select-next-product}]

@@ -108,12 +108,6 @@
     (filter (fn [p]
               (= "voice" (->format p))) products)))
 
-(defn get-girls-products [{:keys [creds limit] :or {limit 100} :as m}]
-  (when-let [products (lib/get-products
-                       (merge m base-req-opts
-                              {:genre-id genre/for-girl-id}))]
-    products))
-
 (defn api->data
   "dmm response map -> firestore doc mapの写像"
   [raw]

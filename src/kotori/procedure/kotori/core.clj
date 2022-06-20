@@ -57,7 +57,7 @@
       (fs/assoc! parent-doc-path
                  "self_replyed_tweet_id" child-id))))
 
-(defn tweet [{:keys [^d/Info info db text type media-ids reply-tweet-id]}]
+(defn tweet [{:keys [^d/Kotori info db text type media-ids reply-tweet-id]}]
   (let [{:keys [user-id cred proxy]} info
         text-length                  (count text)
         params                       {:text           text
@@ -88,7 +88,7 @@
   [{:as params}]
   (tweet (assoc params :text "今日もお疲れ様でした" :type :text)))
 
-(defn tweet-random [{:keys [^d/Info info db env] :as params}]
+(defn tweet-random [{:keys [^d/Kotori info db env] :as params}]
   (let [source       meigen/source
         strategy     st/pick-random
         text-builder meigen/build-text
@@ -100,7 +100,7 @@
 
 (defn select-next-product [{:keys [info screen-name] :as m}]
   {:pre [(s/valid? ::d/screen-name screen-name)]}
-  (let [af-id (d/info->af-id info)]
+  (let [af-id (d/kotori->af-id info)]
     (-> m
         st-dmm/select-scheduled-products
         first
@@ -109,7 +109,7 @@
 
 (defn select-next-amateur-videoc [{:keys [info screen-name] :as m}]
   {:pre [(s/valid? ::d/screen-name screen-name)]}
-  (let [af-id (d/info->af-id info)
+  (let [af-id (d/kotori->af-id info)
         next  (-> m
                   amateur/select-scheduled-products
                   first
@@ -124,7 +124,7 @@
                       vr/select-scheduled-products
                       first
                       lib/->next
-                      (lib/next->swap-af-id (d/info->af-id info)))]
+                      (lib/next->swap-af-id (d/kotori->af-id info)))]
     (let [cid (:cid next)
           uri (public/cid->vr-uri cid)]
       (cond-> next
@@ -132,7 +132,7 @@
 
 (defn select-next-anime [{:keys [info screen-name] :as m}]
   {:pre [(s/valid? ::d/screen-name screen-name)]}
-  (let [af-id (d/info->af-id info)]
+  (let [af-id (d/kotori->af-id info)]
     (-> m
         anime/select-scheduled-products
         first
@@ -154,7 +154,7 @@
 (defn delete-tweet! "
   1. tweets/:user_id/posts/:status_id を tweets/:user_id/archivesへ移動.
   2. Twitterからツイートを削除."
-  [{:keys [^d/Info info db tweet-id]}]
+  [{:keys [^d/Kotori info db tweet-id]}]
   (let
    [{:keys [user-id cred proxy]} info]
     (try
@@ -166,7 +166,7 @@
         (log/error "delete tweet Failed." (.getMessage e))))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(defn dummy [{:keys [^d/Info info db text]}]
+(defn dummy [{:keys [Kotorinfo info db text]}]
   (assoc info :text text))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

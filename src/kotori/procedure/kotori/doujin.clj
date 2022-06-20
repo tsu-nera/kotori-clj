@@ -118,7 +118,7 @@
         af-url     (:affiliate-url doc)]
     (str title
          new-line
-         t       (->otameshi urls 0)
+         (->otameshi urls 0)
          (when (< 1 sample-max)
            (->otameshi urls 1))
          "\n"

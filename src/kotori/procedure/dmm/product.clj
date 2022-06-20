@@ -84,7 +84,7 @@
       (scrape-pages! {:db db :cids cids}))))
 
 (defn save-product! [db coll-path product ts]
-  (let [data (-> product product/api->data)
+  (let [data (-> product product/api->doc)
         cid  (:cid data)
         path (fs/doc-path coll-path cid)]
     (doto db
@@ -109,7 +109,7 @@
   (let [products   (lib/get-products-by-cids params)
         count      (count products)
         ts         (time/fs-now)
-        xf         (comp (map product/api->data)
+        xf         (comp (map product/api->doc)
                          (map #(product/set-crawled-timestamp ts %))
                          (map json/->json))
         docs       (transduce xf conj products)
@@ -133,7 +133,7 @@
      (fs/batch-set! db batch-docs)
      docs))
   ([db coll-path products ts]
-   (let [xf   (comp (map product/api->data)
+   (let [xf   (comp (map product/api->doc)
                     (map #(product/set-crawled-timestamp ts %))
                     (map json/->json))
          docs (transduce xf conj products)]
@@ -212,7 +212,7 @@
         ts                     (time/fs-now)
         batch-docs             (->>
                                 products
-                                (map product/api->data)
+                                (map product/api->doc)
                                 (map #(product/set-crawled-timestamp ts %))
                                 (fs/make-batch-docs
                                  "cid" campaign-products-path))]
@@ -226,7 +226,7 @@
         campaign  (product->campaign product)
         id        (campaign->id campaign)
         coll-path (make-campaign-products-path id)
-        data      (product/api->data product)
+        data      (product/api->doc product)
         cid       (get data "cid")]
     (doto db
       (fs/set! (fs/doc-path coll-path cid) data)

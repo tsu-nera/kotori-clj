@@ -17,15 +17,10 @@
    (kotori.domain.kotori.core
     Kotori)))
 
-(defn ->genre-ids [product]
-  (->> product
-       :genres
-       (map #(get % "id"))
-       (into [])))
-
 (defn contains-genre? [genre-id-set product]
-  (some true?
-        (map #(contains? genre-id-set %) (->genre-ids product))))
+  (let [genre-ids (product/->genre-ids product)]
+    (some true?
+          (map #(contains? genre-id-set %) genre-ids))))
 
 (defn ->st-include [genre-ids]
   (filter #(contains-genre? genre-ids %)))
@@ -285,7 +280,7 @@
   [{:keys [db past-days] :or {past-days 28}} xst coll-path doc-ids]
   (let [st-exclude-recently-tweeted
         (make-st-exclude-recently-tweeted past-days)
-        products  (fs/get-docs-by-ids db coll-path doc-ids)
+        docs      (fs/get-docs-by-ids db coll-path doc-ids)
         xstrategy (apply comp
                          st-skip-not-yet-crawled
                          st-skip-debug
@@ -293,7 +288,7 @@
                          st-exclude-not-yet-released
                          st-exclude-recently-tweeted
                          xst)]
-    (->> products
+    (->> docs
          (into [] xstrategy))))
 
 (defn select-scheduled-products

@@ -71,11 +71,23 @@
 (defn voice-product? [p]
   (= "voice" (:format p)))
 
+(defn tl-product? [p]
+  (let [genre-ids (d/doc->genre-ids p)]
+    (lib/tl? genre-ids)))
+
+(defn bl-product? [p]
+  (let [genre-ids (d/doc->genre-ids p)]
+    (lib/bl? genre-ids)))
+
 (defmulti make-strategy :code)
 
 (defmethod make-strategy "0002" [_]
   [(filter voice-product?)
    (st/->st-include genre/chikubi-ids)])
+
+(defmethod make-strategy "0026" [_]
+  [(filter image-product?)
+   (filter tl-product?)])
 
 (defmethod make-strategy "0029" [_]
   [(filter image-product?)])
@@ -174,7 +186,7 @@
     (select-scheduled-image
      {:db        (db-prod)
       :info      (code->kotori "0026")
-      :limit     200
+      :limit     100
       :coll-path "providers/dmm/girls"
       :genre-id  genre/for-girl-id
       :creds     (creds)}))

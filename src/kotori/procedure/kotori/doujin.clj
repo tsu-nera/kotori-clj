@@ -31,46 +31,66 @@
   (update params :text (fn [s]
                          (str title "\n" s))))
 
+(defn- upload-images [urls creds proxy]
+  (->> urls
+       io/downloads!
+       (map (fn [file-path]
+              {:creds     creds
+               :proxy     proxy
+               :file-path file-path}))
+       (map private/upload-image)
+       (map :media-id)
+       (into [])))
+
+(defn- make-exinfo [cid type media-ids thread-ids]
+  {"cid"        cid
+   "type"       type
+   "media_ids"  media-ids
+   "thread_ids" thread-ids})
+
+(defn- make-page-params [base-params media-ids]
+  (let  [media-ids-sep (partition-all 2 media-ids)
+         page-total    (count media-ids-sep)]
+    (->> media-ids-sep
+         (map-indexed (fn [page-index ids]
+                        {:text
+                         (sample->format (+ page-index 1)
+                                         page-total)
+                         :media-ids (into [] ids)
+                         :type      "comic"}))
+         (map #(merge base-params %)))))
+
+(defn- tweet-multi [params]
+  (->> params
+       (map (fn [param]
+              (Thread/sleep 10000)
+              (when-let [resp (kotori/tweet param)]
+                (tweet/->id resp))))
+       (into [])))
+
 (defn- tweet-image [{:keys [info db coll-path] :as m}]
-  (let [doc           (doujin/select-next-image m)
-        cid           (:cid doc)
-        urls          (into [] (rest (:urls doc)))
-        title         (:title doc)
-        media-ids     (->> urls
-                           io/downloads!
-                           (map (fn [file-path]
-                                  {:creds     (:cred info)
-                                   :proxy     (:proxy info)
-                                   :file-path file-path}))
-                           (map private/upload-image)
-                           (map :media-id)
-                           (into []))
-        exinfo        {"cid"       cid
-                       "media_ids" media-ids
-                       "type"      "comic" ;; TODO 仮対応
-                       }
-        media-ids-sep (partition-all 2 media-ids)
-        page-total    (count media-ids-sep)
-        page-params   (->> media-ids-sep
-                           (map-indexed (fn [page-index ids]
-                                          {:text
-                                           (sample->format (+ page-index 1)
-                                                           page-total)
-                                           :media-ids (into [] ids)
-                                           :type      :photo}))
-                           (map #(merge m %)))
-        first-params  (append-title (first page-params) title)
-        rest-params   (into [] (rest page-params))]
-    (doseq [params (reverse rest-params)]
-      (kotori/tweet params)
-      (Thread/sleep 10000))
-    (when-let [resp (kotori/tweet first-params)]
-      (let [doc-path (str coll-path "/" cid)]
-        (fs/update! db doc-path (product/tweet->doc resp exinfo))
-        (log/info
-         (str "post tweet-image completed, cid=" cid ", title=" title))
-        (->discord! resp cid))
-      resp)))
+  (let [doc          (doujin/select-next-image m)
+        urls         (into [] (rest (:urls doc)))
+        media-ids    (upload-images urls (:cred info) (:proxy info))
+        cid          (:cid doc)
+        title        (:title doc)
+        page-params  (make-page-params m media-ids)
+        first-params (append-title (first page-params) title)
+        rest-params  (into [] (rest page-params))]
+    (when-let [thread-ids (tweet-multi (reverse rest-params))]
+      (when-let [resp (kotori/tweet first-params)]
+        (let [tweet-id   (tweet/->id resp)
+              user-id    (:user-id info)
+              doc-path   (str coll-path "/" cid)
+              thread-ids (conj thread-ids tweet-id)
+              exinfo     (make-exinfo cid "comic" media-ids thread-ids)]
+          (doto db
+            (kotori/assoc-thread-ids! user-id tweet-id thread-ids)
+            (fs/update! doc-path (product/tweet->doc resp exinfo)))
+          (log/info
+           (str "post tweet-image completed, cid=" cid ", title=" title))
+          (->discord! resp cid))
+        resp))))
 
 ;; TODO インタフェースで解決する.
 (defn tweet-boys-image [{:as m}]
@@ -98,7 +118,7 @@
         af-url     (:affiliate-url doc)]
     (str title
          new-line
-         (->otameshi urls 0)
+         t       (->otameshi urls 0)
          (when (< 1 sample-max)
            (->otameshi urls 1))
          "\n"
@@ -119,7 +139,7 @@
         message (make-voice-text doc urls)
         params  (-> m
                     (assoc :text message)
-                    (assoc :type :text))]
+                    (assoc :type "voice"))]
     (when-let [resp (kotori/tweet params)]
       (let [doc-path (genre/->doc-path cid)]
         (fs/update! db doc-path (product/tweet->doc resp exinfo))
@@ -159,9 +179,9 @@
                                 :creds (creds)
                                 :info  (code->kotori "0003")}))
 
-  (def resp3 (tweet-girls-image {:db    (db-prod)
+  (def resp3 (tweet-girls-image {:db    (db-dev)
                                  :creds (creds)
-                                 :info  (code->kotori "0026")}))
+                                 :info  (code->kotori "0003")}))
 
   )
 

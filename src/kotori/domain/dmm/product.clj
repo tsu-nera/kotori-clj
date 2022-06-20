@@ -47,6 +47,11 @@
 (defn ->genres [raw]
   (get-in raw [:iteminfo :genre]))
 
+(defn ->genre-ids [raw]
+  (->> (->genres raw)
+       (map #(get % "id"))
+       (into [])))
+
 (defn ->maker-id [raw]
   (-> raw
       (get-in [:iteminfo :maker])
@@ -90,7 +95,7 @@
     (:director info) (assoc :director_id (info->id info :director))
     (:series info)   (assoc :series_id (info->id info :series))))
 
-(defn api->data
+(defn api->doc
   "dmm response map -> firestore doc mapの写像"
   [raw]
   (let [actresses (->actresses raw)
@@ -117,6 +122,11 @@
 
 (defn set-scraped-timestamp [timestamp data]
   (assoc data :last_scraped_time timestamp))
+
+(defn doc->genre-ids [doc]
+  (->> (:genres doc)
+       (map #(get % "id"))
+       (into [])))
 
 ;; TODO とりあえずuser-idは必要なユースケースが現れたら対応.
 ;; それまえはコメントアウトしておく.

@@ -57,6 +57,12 @@
       (fs/assoc! parent-doc-path
                  "self_replyed_tweet_id" child-id))))
 
+(defn assoc-thread-ids!
+  "一つのtweet-idのフィールドに関連idのリストをまとめてbind"
+  [db user-id tweet-id thread-ids]
+  (let [doc-path (tweet/->post-doc-path user-id tweet-id)]
+    (fs/assoc! db doc-path "thread_ids" thread-ids)))
+
 (defn tweet [{:keys [^d/Kotori info db text type media-ids reply-tweet-id]}]
   (let [{:keys [user-id cred proxy]} info
         text-length                  (count text)
@@ -66,7 +72,7 @@
                                       :reply-tweet-id reply-tweet-id}]
     (if-let [resp (handle-tweet-response
                    private/create-tweet cred params)]
-      (let [tweet-id (:id_str resp)
+      (let [tweet-id (tweet/->id resp)
             doc-path (tweet/->post-doc-path user-id tweet-id)]
         (log/info (str "post tweet completed. id=" tweet-id
                        ", length=" text-length ",media-ids=" media-ids))

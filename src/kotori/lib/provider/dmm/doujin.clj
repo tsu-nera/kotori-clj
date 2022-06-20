@@ -37,29 +37,23 @@
   {:service service-code
    :floor   floor-code})
 
-(defn for-x? [genre-id product]
-  (let [genre-ids (->> (get-in (json/->clj product) [:iteminfo :genre])
-                       (map :id)
-                       (into []))]
-    (.contains genre-ids genre-id)))
+(defn for-boy? [genre-ids]
+  (.contains genre-ids genre/for-boy-id))
 
-(defn for-girl? [product]
-  (for-x? genre/for-girl-id product))
+(defn for-girl? [genre-ids]
+  (.contains genre-ids genre/for-girl-id))
 
-(defn bl? [product]
-  (for-x? genre/bl-id product))
+(defn bl? [genre-ids]
+  (.contains genre-ids genre/bl-id))
 
-(defn gay? [product]
-  (for-x? genre/gay-id product))
+(defn gay? [genre-ids]
+  (.contains genre-ids genre/gay-id))
 
 ;; 実際にTLラベルがついているものが少ない気がする
-(defn tl? [product]
-  (and (for-girl? product)
-       (not (bl? product))
-       (not (gay? product))))
-
-(defn for-boy? [product]
-  (for-x? genre/for-boy-id product))
+(defn tl? [genre-ids]
+  (and (for-girl? genre-ids)
+       (not (bl? genre-ids))
+       (not (gay? genre-ids))))
 
 (defn get-product [{:keys [cid creds]}]
   (when-let [resp (api/search-product
@@ -80,14 +74,6 @@
   (when-let [products (get-products
                        (assoc m :genre-id genre/for-girl-id))]
     products))
-
-(defn get-tl-products [{:as m}]
-  (when-let [products (get-girls-products m)]
-    (filter tl? products)))
-
-(defn get-bl-products [{:as m}]
-  (when-let [products (get-girls-products m)]
-    (filter bl? products)))
 
 ;; "https://pics.dmm.co.jp/digital/cg/d_205949/d_205949pt.jpg"
 (defn ->format [resp]

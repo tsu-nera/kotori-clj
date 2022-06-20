@@ -3,6 +3,9 @@
    [clojure.pprint :refer [pprint]]
    [devtools :refer [->screen-name ->user-id kotori-params twitter-auth]]
    [firebase :refer [db-dev db-prod]]
+   [kotori.domain.tweet.core :as tweet]
+   [kotori.lib.firestore :as fs]
+   [kotori.lib.time :as time]
    [kotori.procedure.kotori.core :as kotori]
    [twitter-clj.guest :as guest]
    [twitter-clj.private :as private]))
@@ -28,9 +31,22 @@
   ([code tweet-id]
    (delete-tweet! (db-prod) code tweet-id))
   ([db code tweet-id]
-   (let [params (kotori-params db code)]
-     (kotori/delete-tweet!
-      (assoc params :tweet-id tweet-id)))))
+   (let [params   (kotori-params db code)
+         user-id  (get-in params [:info :user-id])
+         doc-path (tweet/->post-doc-path user-id tweet-id)]
+     (when-let [doc (fs/get-doc db doc-path)]
+       (if-let [thread-ids (:thread-ids doc)]
+         (doseq [thread-id thread-ids]
+           (kotori/delete-tweet!
+            (assoc params :tweet-id thread-id))
+           (time/sleep! 2))
+         (kotori/delete-tweet!
+          (assoc params :tweet-id tweet-id)))
+       (if-let [cid (:cid doc)]
+         ;; TODO kotoriの中に coll-pathをいれる対応が必要.
+         ;; 削除したものに対する排他も検討が必要.
+         (println cid)
+         (println "cid not found"))))))
 #_(delete-tweet! (db-dev) "0003" "")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

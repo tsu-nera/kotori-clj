@@ -5,7 +5,7 @@
    [clojure.string :as str]
    [clojure.string :as string]
    [defun.core :refer [defun]]
-   [devtools :refer [env kotori-info]]
+   [devtools :refer [env code->kotori]]
    [firebase :refer [db-dev db-prod]]
    [integrant.repl.state :refer [config system]]
    [kotori.domain.dmm.core :as d]
@@ -260,7 +260,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (comment
-  (def info (kotori-info "0001"))
+  (def info (code->kotori "0001"))
   (def screen-name (:screen-name info))
 
   (def products (st/select-tweeted-products
@@ -279,9 +279,9 @@
 
 (comment  ;;;
   (require '[firebase :refer [db-dev db-prod]]
-           '[devtools :refer [kotori-info]])
+           '[devtools :refer [code->kotori]])
 
-  (def info (kotori-info "0001"))
+  (def info (code->kotori "0001"))
   (def user-id (:user-id info))
   (def screen-name (:screen-name info))
 

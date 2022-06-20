@@ -143,7 +143,7 @@
 
 (comment
   (require
-   '[devtools :refer [kotori-info]]
+   '[devtools :refer [code->kotori]]
    '[tools.dmm :refer [creds]]
    '[firebase :refer [db db-prod]])
 
@@ -173,7 +173,7 @@
   (def products
     (select-scheduled-image
      {:db        (db-prod)
-      :info      (kotori-info "0026")
+      :info      (code->kotori "0026")
       :limit     200
       :coll-path "providers/dmm/girls"
       :genre-id  genre/for-girl-id
@@ -183,7 +183,7 @@
   (def products
     (select-scheduled-voice
      {:db    (db-prod)
-      :info  (kotori-info "0031")
+      :info  (code->kotori "0031")
       :creds (creds)}))
   (count products)
   (select-while-url-exists products)

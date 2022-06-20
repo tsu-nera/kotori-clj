@@ -357,7 +357,7 @@
 (comment
   (require '[firebase :refer [db-prod db-dev db]]
            '[tools.dmm :refer [creds]]
-           '[devtools :refer [->screen-name env kotori-info]])
+           '[devtools :refer [->screen-name env code->kotori]])
   )
 
 (comment
@@ -372,7 +372,7 @@
 
 (comment
   ;;;;;;;;;;;
-  (def info (kotori-info "0002"))
+  (def info (code->kotori "0002"))
   (def products
     (into []
           (select-scheduled-products
@@ -398,7 +398,7 @@
 
   (def products (fs/get-docs-by-ids (db-prod) product/coll-path cids))
 
-  (def info (kotori-info "0009"))
+  (def info (code->kotori "0009"))
   (def products (select-scheduled-products
                  {:db          (db-prod)
                   :info        info
@@ -445,7 +445,7 @@
 
 (comment
 
-  (def info (kotori-info "0002"))
+  (def info (code->kotori "0002"))
   (def genre-id (:genre-id info))
 
   (def products (lib-dmm/get-products {:genre-id genre-id

@@ -131,12 +131,12 @@
 (comment
   (require '[firebase :refer [db db-prod db-dev]]
            '[tools.dmm :refer [creds]]
-           '[devtools :refer [kotori-info ->screen-name
+           '[devtools :refer [code->kotori ->screen-name
                               info-dev twitter-auth]])
 
   (def resp (doujin/select-next-image {:db    (db-prod)
                                        :creds (creds)
-                                       :info  (kotori-info "0029")}))
+                                       :info  (code->kotori "0029")}))
   (def urls (into [] (rest (:urls resp))))
 
   (def media-ids-sep (partition-all 2 urls))
@@ -157,11 +157,11 @@
 
   (def resp2 (tweet-boys-image {:db    (db)
                                 :creds (creds)
-                                :info  (kotori-info "0003")}))
+                                :info  (code->kotori "0003")}))
 
   (def resp3 (tweet-girls-image {:db    (db-prod)
                                  :creds (creds)
-                                 :info  (kotori-info "0026")}))
+                                 :info  (code->kotori "0026")}))
 
   )
 
@@ -169,9 +169,9 @@
 
   (def m {:db    (db-prod)
           :creds (creds)
-          :info  (kotori-info "0002")})
+          :info  (code->kotori "0002")})
 
   (def resp (tweet-voice {:db    (db-dev)
                           :creds (creds)
-                          :info  (kotori-info "0003")}))
+                          :info  (code->kotori "0003")}))
   )

@@ -49,7 +49,7 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (comment
-  (require '[devtools :refer [env ->screen-name kotori-info]]
+  (require '[devtools :refer [env ->screen-name code->kotori]]
            '[tools.dmm :refer [creds]]
            '[kotori.lib.kotori :refer [->next] :as k]
            '[firebase :refer [db-prod db-dev db]])
@@ -83,7 +83,7 @@
                               :genre-id 8510
                               :limit    300}))
 
-  (def info (kotori-info "0027"))
+  (def info (code->kotori "0027"))
   (def products
     (select-scheduled-products
      {:db          (db-prod)

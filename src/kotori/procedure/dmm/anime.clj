@@ -36,7 +36,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (comment
-  (require '[devtools :refer [->screen-name kotori-info]]
+  (require '[devtools :refer [->screen-name code->kotori]]
            '[tools.dmm :refer [creds]]
            '[kotori.lib.kotori :refer [->next]]
            '[firebase :refer [db-prod db-dev db]])
@@ -62,11 +62,11 @@
            {:db          (db-prod)
             :limit       300
             :creds       (creds)
-            :info        (kotori-info "0024")
+            :info        (code->kotori "0024")
             :screen-name (->screen-name "0024")})))
   (count products)
 
-  (into [] (apply comp (st/make-strategy (kotori-info "0024"))) products)
+  (into [] (apply comp (st/make-strategy (code->kotori "0024"))) products)
 
   (map ->next products)
   )

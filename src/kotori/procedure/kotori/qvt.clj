@@ -94,10 +94,10 @@
 
 (comment
   (require '[firebase :refer [db db-dev db-prod]]
-           '[devtools :refer [env ->screen-name kotori-info]])
+           '[devtools :refer [env ->screen-name code->kotori]])
 
    ;;;;;;;;;;;;;
-  (def info (kotori-info "0003"))
+  (def info (code->kotori "0003"))
   (def screen-name (->screen-name "0003"))
 
   (def qvt (select-next-qvt-product {:db          (db-dev)

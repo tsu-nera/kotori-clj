@@ -34,7 +34,7 @@
   (fn [req]
     (let [screen-name (:screen-name req)
           config      (get config-map screen-name)
-          info        (kotori/config->info config)]
+          info        (kotori/config->kotori config)]
       (handler (assoc req :info info)))))
 
 (defn wrap-dmm [handler]
@@ -83,7 +83,7 @@
 
 
 (comment
-  (require '[devtools :refer [kotori-names ->screen-name kotori-info]]
+  (require '[devtools :refer [kotori-names ->screen-name code->kotori]]
            '[tools.dmm :refer [creds]]
            '[firebase :refer [db db-prod]])
   (def app (make-app (kotori-names)))
@@ -91,7 +91,7 @@
   (def screen-name (->screen-name "0031"))
   (def params {:db          (db-prod)
                :creds       (creds)
-               :info        (kotori-info "0031")
+               :info        (code->kotori "0031")
                :screen-name screen-name})
 
   (app {:request-method :post :uri "/api/ping"})

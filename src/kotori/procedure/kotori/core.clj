@@ -20,8 +20,8 @@
    [slingshot.slingshot :refer [throw+ try+]]
    [twitter-clj.private :as private]))
 
-(defn config->info [{:keys [screen-name user-id code proxy-map]
-                     :as   m}]
+(defn config->kotori [{:keys [screen-name user-id code proxy-map]
+                       :as   m}]
   (let [cred-map (d/config->cred-map m)]
     (d/make-info screen-name user-id code
                  cred-map
@@ -174,7 +174,7 @@
   ;;;
   (require '[firebase :refer [db db-prod db-dev]]
            '[tools.dmm :refer [creds]]
-           '[devtools :refer [kotori-info ->screen-name
+           '[devtools :refer [code->kotori ->screen-name
                               info-dev twitter-auth]])
 
   (def params {:db (db-dev) :info @info-dev})
@@ -192,7 +192,7 @@
 
 (comment
   (def tweet-id "xxx")
-  (def params {:db (db-prod) :info (kotori-info "0001")})
+  (def params {:db (db-prod) :info (code->kotori "0001")})
   (delete-tweet! (-> params
                      (assoc :tweet-id tweet-id)))
   )
@@ -210,7 +210,7 @@
   )
 
 (comment
-  (def info (kotori-info "0001"))
+  (def info (code->kotori "0001"))
   (def resp (select-next-product {:db          (db-prod)
                                   :screen-name (:screen-name info)
                                   :creds       (creds)
@@ -219,7 +219,7 @@
   )
 
 (comment
-  (def info (kotori-info "0027"))
+  (def info (code->kotori "0027"))
   (def resp (select-next-amateur-videoc
              {:db          (db-prod)
               :creds       (creds)
@@ -228,7 +228,7 @@
   )
 
 (comment
-  (def info (kotori-info "0028"))
+  (def info (code->kotori "0028"))
   (def resp (select-next-vr
              {:db          (db-prod)
               :creds       (creds)

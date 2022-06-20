@@ -3,7 +3,7 @@
   (:refer-clojure :exclude [proxy])
   (:require
    [integrant.repl.state :refer [config system]]
-   [kotori.procedure.kotori.core :refer [config->info]]
+   [kotori.procedure.kotori.core :refer [config->kotori]]
    [kotori.service.firebase :refer [get-db]]
    [twitter-clj.guest :as guest]
    [twitter-clj.private :as private]))
@@ -57,26 +57,26 @@
   (-> (kotori-codes)
       (get code)))
 
-(defn kotori-info-by-name [screen-name]
-  (config->info (kotori-by-name screen-name)))
+(defn code->kotori-by-name [screen-name]
+  (config->kotori (kotori-by-name screen-name)))
 
-(defn kotori-info [code]
-  (config->info (kotori-by-code code)))
+(defn code->kotori [code]
+  (config->kotori (kotori-by-code code)))
 
 (defn kotori-params [db code]
-  (let [info (config->info (kotori-by-code code))]
+  (let [info (config->kotori (kotori-by-code code))]
     {:db db :info info}))
 
-(def info-dev (delay (kotori-info "0003")))
+(def info-dev (delay (code->kotori "0003")))
 
 (defn ->screen-name [code]
-  (:screen-name (kotori-info code)))
+  (:screen-name (code->kotori code)))
 
 (defn ->user-id [code]
-  (:user-id (kotori-info code)))
+  (:user-id (code->kotori code)))
 
 (defn get-tweet-with-info
   ([code id]
-   (let [creds (:creds (kotori-info code))]
+   (let [creds (:creds (code->kotori code))]
      (private/get-tweet creds (str id)))))
 #_(get-tweet-with-info "0001" "")

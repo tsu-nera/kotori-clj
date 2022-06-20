@@ -46,7 +46,7 @@
        (assoc :coll-path coll-path))))
 
 (comment
-  (require '[devtools :refer [kotori-info]]
+  (require '[devtools :refer [code->kotori]]
            '[tools.dmm :refer [creds]]
            '[firebase :refer [db-prod db-dev db]])
 
@@ -67,5 +67,5 @@
            {:db    (db-prod)
             :limit 100
             :creds (creds)
-            :info  (kotori-info "0028")})))
+            :info  (code->kotori "0028")})))
   )

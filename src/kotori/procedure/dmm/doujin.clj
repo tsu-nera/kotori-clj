@@ -7,7 +7,6 @@
    [kotori.domain.kotori.core :refer [kotori->af-id]]
    [kotori.lib.json :as json]
    [kotori.lib.kotori :refer [ng->ok next->swap-af-id]]
-   [kotori.lib.log :as log]
    [kotori.lib.provider.dmm.core :refer [swap-af-id]]
    [kotori.lib.provider.dmm.doujin :as lib]
    [kotori.lib.time :as time]
@@ -200,4 +199,3 @@
   (count products)
   (select-while-url-exists products)
   )
-

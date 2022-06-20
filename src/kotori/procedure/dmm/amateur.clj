@@ -83,7 +83,7 @@
                               :genre-id 8510
                               :limit    300}))
 
-  (def info (code->kotori "0027"))
+  (def info (code->kotori "0040"))
   (def products
     (select-scheduled-products
      {:db          (db-prod)

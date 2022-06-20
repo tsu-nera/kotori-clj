@@ -18,7 +18,7 @@
     Kotori)))
 
 (defn contains-genre? [genre-id-set product]
-  (let [genre-ids (product/->genre-ids product)]
+  (let [genre-ids (product/doc->genre-ids product)]
     (some true?
           (map #(contains? genre-id-set %) genre-ids))))
 

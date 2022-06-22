@@ -104,6 +104,9 @@
 (def st-exclude-videoc-fat
   (remove #(contains-genre? videoc/fat-ids %)))
 
+(def st-exclude-videoa-fat
+  (remove #(contains-genre? videoa/fat-ids %)))
+
 (defn no-actress? [product]
   (let [count (:actress-count product)]
     (or (nil? count) (zero? count))))
@@ -163,9 +166,21 @@
            st-exclude-katsuo
            st-exclude-gas]))
 
+(defmethod make-strategy "0007" [_]
+  (concat videoa-default-xst
+          [(->st-exclude (videoa/names->genre-ids
+                          ["巨乳フェチ" "ぽっちゃり"]))
+           st-exclude-vr]))
+
 (defmethod make-strategy "0009" [_]
   (conj videoa-default-xst
         st-exclude-vr))
+
+(defmethod make-strategy "0010" [_]
+  (concat videoa-default-xst
+          [(->st-exclude (videoa/names->genre-ids
+                          ["巨乳フェチ" "超乳"]))
+           st-exclude-vr]))
 
 (defmethod make-strategy "0020" [_]
   [st-exclude-ng-genres-non-hard
@@ -204,9 +219,15 @@
    st-exclude-no-samples
    st-include-videoc-fat])
 
+(defmethod make-strategy "0041" [_]
+  (concat videoa-default-xst
+          [(->st-exclude (videoa/names->genre-ids
+                          ["ぽっちゃり" "超乳"]))
+           st-exclude-vr]))
+
 (defmethod make-strategy :default [_]
   (concat videoa-default-xst
-          videoa-extra-xst))
+          [st-exclude-vr]))
 
 (defn recently-tweeted? [p days]
   (let [past-time (time/date->days-ago days)
@@ -367,7 +388,7 @@
 
 (comment
   ;;;;;;;;;;;
-  (def info (code->kotori "0002"))
+  (def info (code->kotori "0041"))
   (def products
     (into []
           (select-scheduled-products

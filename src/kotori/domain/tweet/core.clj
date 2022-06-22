@@ -42,7 +42,7 @@
   (:id_str tweet))
 
 (defn ->reply-id [tweet]
-  (:in_reply_to_user_id_str tweet))
+  (:in_reply_to_status_id_str tweet))
 
 (defn ->screen-name [tweet]
   (get-in tweet [:user :screen_name]))

@@ -67,7 +67,6 @@
       ["/tweet-random" kotori/tweet-random]
       ["/tweet-boys-doujin-image" doujin/tweet-boys-image]
       ["/tweet-girls-doujin-image" doujin/tweet-girls-image]
-      ["/tweet-doujin-image" doujin/tweet-boys-image] ;; TODO 後で削除
       ["/tweet-doujin-voice" doujin/tweet-voice]
       ["/get-product" {:get kotori/get-product}]
       ["/select-next-product" {:get kotori/select-next-product}]

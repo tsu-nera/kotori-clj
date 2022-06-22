@@ -84,6 +84,11 @@
   [(filter voice-product?)
    (st/->st-include genre/chikubi-ids)])
 
+;; TODO あとで削除
+(defmethod make-strategy "0003" [_]
+  [(filter image-product?)
+   (filter bl-product?)])
+
 (defmethod make-strategy "0026" [_]
   [(filter image-product?)
    (filter tl-product?)])
@@ -94,6 +99,10 @@
 (defmethod make-strategy "0031" [_]
   [(filter voice-product?)
    (st/->st-exclude genre/chikubi-ids)])
+
+(defmethod make-strategy "0034" [_]
+  [(filter image-product?)
+   (filter bl-product?)])
 
 (defmethod make-strategy :default [_]
   [])
@@ -184,7 +193,7 @@
   (def products
     (select-scheduled-image
      {:db        (db-prod)
-      :info      (code->kotori "0026")
+      :info      (code->kotori "0034")
       :limit     100
       :coll-path "providers/dmm/girls"
       :genre-id  genre/for-girl-id

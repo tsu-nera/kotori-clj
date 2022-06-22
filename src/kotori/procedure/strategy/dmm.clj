@@ -83,8 +83,20 @@
    (str/includes? (:description p) "乳首")
    (str/includes? (:title p) "チクビ")))
 
+(defn contains-mesuiki? [p]
+  (or
+   (str/includes? (:title p) "メスイキ")
+   (str/includes? (:title p) "ドライ")
+   (str/includes? (:title p) "ペニバン")
+   (str/includes? (:description p) "メスイキ")
+   (str/includes? (:description p) "ドライ")
+   (str/includes? (:description p) "ペニバン")))
+
 (def st-include-chikubi
   (filter contains-chikubi?))
+
+(def st-include-mesuiki
+  (filter contains-mesuiki?))
 
 (def st-exclude-chikubi
   (remove contains-chikubi?))
@@ -187,11 +199,6 @@
    st-exclude-vr
    st-exclude-no-samples])
 
-(defmethod make-strategy "0025" [_]
-  (concat videoa-default-xst
-          [st-exclude-vr
-           st-exclude-chikubi]))
-
 ;; 現状公式にはルネサスピクチャーズのみ動画サンプルの利用が可能なので
 ;; ほかのメーカーを投稿しないように抑止をいれておく.
 ;; いちおうほかの動画もAPIで取得できちゃうので
@@ -201,6 +208,12 @@
   [st-include-lunesoft
    (make-st-exclude-ng-genres anime/ng-genres)
    st-exclude-no-samples])
+
+#_(defmethod make-strategy "0025" [_]
+    [st-exclude-no-samples
+     (->st-exclude videoa/dirty-ids)
+     st-exclude-vr
+     st-include-mesuiki])
 
 (defmethod make-strategy "0027" [_]
   [(make-st-exclude-ng-genres videoc/ng-genres)
@@ -388,16 +401,14 @@
 
 (comment
   ;;;;;;;;;;;
-  (def info (code->kotori "0041"))
+  (def info (code->kotori "0025"))
   (def products
     (into []
           (select-scheduled-products
-           {:db          (db-prod)
-            :creds       (creds)
-            :info        info
-            :limit       300
-            ;; :sort        "review"
-            :screen-name (:screen-name info)})))
+           {:db    (db-prod)
+            :creds (creds)
+            :info  info
+            :limit 500})))
   (count products)
   ;;
   )

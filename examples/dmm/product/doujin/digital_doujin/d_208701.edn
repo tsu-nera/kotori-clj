@@ -1,0 +1,40 @@
+{:imageURL
+ {:list "https://pics.dmm.co.jp/digital/comic/d_208701/d_208701pt.jpg",
+  :large
+  "https://pics.dmm.co.jp/digital/comic/d_208701/d_208701pl.jpg"},
+ :date "2021-08-07 00:00:00",
+ :content_id "d_208701",
+ :service_name "同人",
+ :floor_code "digital_doujin",
+ :product_id "d_208701",
+ :iteminfo
+ {:genre
+  [{:id 25, :name "拘束"}
+   {:id 4060, :name "ゲイ"}
+   {:id 5001, :name "中出し"}
+   {:id 5011, :name "放尿・お漏らし"}
+   {:id 152004, :name "ラブラブ・あまあま"}
+   {:id 154006, :name "サラリーマン"}
+   {:id 154024, :name "巨根"}
+   {:id 155017, :name "言葉責め"}
+   {:id 156003, :name "断面図あり"}
+   {:id 156006, :name "女性向け"}
+   {:id 156023, :name "成人向け"}
+   {:id 160020, :name "メスイキ"}
+   {:id 160030, :name "ピックアップ"}],
+  :series [{:id 3004631, :name "リーマンラブホ男子会"}],
+  :maker [{:id 200853, :name "すめし屋さん"}]},
+ :affiliateURL
+ "https://al.dmm.co.jp/?lurl=https%3A%2F%2Fwww.dmm.co.jp%2Fdc%2Fdoujin%2F-%2Fdetail%2F%3D%2Fcid%3Dd_208701%2F&af_id=hogehoge-xxx&ch=api",
+ :floor_name "同人",
+ :title "リーマンラブホ男子会EROS―XLで絶倫な後輩は会社の先輩を躾けたい―",
+ :volume "56",
+ :category_name "同人 (同人)",
+ :prices
+ {:price "880",
+  :list_price "880",
+  :deliveries
+  {:delivery [{:type "download", :price "880", :list_price "880"}]}},
+ :review {:count 1, :average "1.00"},
+ :service_code "doujin",
+ :URL "https://www.dmm.co.jp/dc/doujin/-/detail/=/cid=d_208701/"}

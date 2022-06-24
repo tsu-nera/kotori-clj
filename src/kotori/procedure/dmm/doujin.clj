@@ -5,6 +5,7 @@
     :as d
     :refer [doujin-coll-path girls-coll-path]]
    [kotori.domain.kotori.core :refer [kotori->af-id]]
+   [kotori.lib.firestore :as fs]
    [kotori.lib.json :as json]
    [kotori.lib.kotori :refer [ng->ok next->swap-af-id]]
    [kotori.lib.provider.dmm.core :refer [swap-af-id]]
@@ -35,17 +36,49 @@
      :count     (count docs)
      :products  docs}))
 
+(defn- get-target-cids [db coll-path products]
+  (let [cids (map :content_id products)]
+    (->> (fs/get-docs-by-ids db coll-path cids)
+         (remove #(:section %))
+         (map :cid)
+         (into []))))
+
+(defn scrape-pages!
+  [{:keys [cids db coll-path ts]
+    :or   {ts (time/fs-now)}}]
+  (when-let [pages (keep identity
+                         (lib/get-page-bulk cids))]
+    (let [sections (map lib/raw->section pages)]
+      (->> (map vector cids sections)
+           (map (fn [[cid section]] {:cid cid :section section}))
+           (map #(d/set-scraped-timestamp ts %))
+           (map #(json/->json %))
+           (fs/make-batch-docs "cid" coll-path)
+           (fs/batch-set! db)))
+    {:timestamp ts
+     :count     (count pages)
+     :pages     pages}))
+
+(defn scrape-section-if! [db products]
+  (let [cids (get-target-cids db girls-coll-path products)]
+    (when (and cids (< 0 (count cids)))
+      (scrape-pages! {:db        db
+                      :cids      cids
+                      :coll-path girls-coll-path}))))
+
 (defn crawl-girls-products!
   "女性向け"
   [{:keys [db] :as m}]
-  (let [ts   (time/fs-now)
-        docs (->> (lib/get-girls-products m)
-                  (map lib/api->data)
-                  (map (fn [m] (d/set-crawled-timestamp ts m)))
-                  (map json/->json))]
+  (let [ts       (time/fs-now)
+        products (lib/get-girls-products m)
+        docs     (->> products
+                      (map lib/api->data)
+                      (map (fn [m] (d/set-crawled-timestamp ts m)))
+                      (map json/->json))]
     (doto db
       (product/save-products! girls-coll-path docs)
-      (product/update-crawled-time! ts "doujin" genre/for-girl-id))
+      (product/update-crawled-time! ts "doujin" genre/for-girl-id)
+      (scrape-section-if! products))
     {:timestamp ts
      :count     (count docs)
      :products  docs}))
@@ -71,12 +104,10 @@
   (= "voice" (:format p)))
 
 (defn tl-product? [p]
-  (let [genre-ids (d/doc->genre-ids p)]
-    (lib/tl? genre-ids)))
+  (= "tl" (:section p)))
 
 (defn bl-product? [p]
-  (let [genre-ids (d/doc->genre-ids p)]
-    (lib/bl? genre-ids)))
+  (= "bl" (:section p)))
 
 (defmulti make-strategy :code)
 
@@ -165,7 +196,7 @@
   (require
    '[devtools :refer [code->kotori]]
    '[tools.dmm :refer [creds]]
-   '[firebase :refer [db db-prod]])
+   '[firebase :refer [db db-prod db-dev]])
 
   (def cid "d_227233")
   (def resp (lib/get-product {:cid cid :creds (creds)}))
@@ -174,26 +205,24 @@
   (def urls (map #(get-in % [:imageURL :list]) resp))
 
   (def resp (crawl-product! {:db (db) :cid cid :creds (creds)}))
-
   (def products (crawl-products! {:db    (db-prod)
                                   :creds (creds)
                                   :limit 300}))
 
-  (def girls (crawl-girls-products! {:db    (db-prod)
-                                     :creds (creds)
-                                     :limit 300}))
+  (def girls (:products
+              (crawl-girls-products! {:db    (db-prod)
+                                      :creds (creds)
+                                      :limit 300})))
+  (count girls)
 
   (def products (crawl-voice-products! {:db    (db)
                                         :creds (creds)
                                         :limit 100}))
 
-  (lib/get-products {:creds (creds)
-                     :hits  200})
-
   (def products
     (select-scheduled-image
-     {:db        (db-prod)
-      :info      (code->kotori "0034")
+     {:db        (db-dev)
+      :info      (code->kotori "0026")
       :limit     100
       :coll-path "providers/dmm/girls"
       :genre-id  genre/for-girl-id
@@ -208,3 +237,4 @@
   (count products)
   (select-while-url-exists products)
   )
+

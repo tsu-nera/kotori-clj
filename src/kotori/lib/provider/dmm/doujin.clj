@@ -3,8 +3,8 @@
    [kotori.domain.dmm.genre.doujin :as genre]
    [kotori.domain.dmm.product :as product]
    [kotori.lib.io :as io]
-   [kotori.lib.json :as json]
    [kotori.lib.provider.dmm.api :as api]
+   [kotori.lib.provider.dmm.core :refer [request-bulk]]
    [kotori.lib.provider.dmm.product :as lib]
    [kotori.lib.provider.dmm.public :as public]
    [net.cgrand.enlive-html :as html]))
@@ -156,6 +156,25 @@
     (when-let [raw (public/get-page-raw page-url)]
       (->> (html/select raw [:video]) (into [] xf)))))
 
+(defn get-page-bulk [cids]
+  (->> cids
+       (map (fn [cid] (->url cid)))
+       (request-bulk public/get-page-raw)
+       (into [])))
+
+(defn raw->section [raw]
+  (let [url (-> raw
+                (html/select [:a.leftNavigationArrow__txt])
+                first
+                (get-in [:attrs :href]))]
+    (re-find #"bl|tl" url)))
+
+(defn get-doujin-section
+  "女性向け作品のTL/BL判定"
+  [cid]
+  (when-let [raw (public/get-page-raw (->url cid))]
+    (raw->section raw)))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (comment
@@ -179,10 +198,9 @@
   )
 
 (comment
-  (def girls (get-products {:creds    (creds)
-                            :limit    300
-                            :genre-id genre/for-girl-id}))
-  (count girls)
+  (def girls (get-girls-products {:creds (creds)
+                                  :limit 300}))
+  (:products girls)
 
   (def bls (filter bl? girls))
   (count bls)
@@ -248,4 +266,12 @@
   (def urls (get-voice-urls cid))
 
   (def voices (get-voice-products {:creds (creds)}))
+  )
+
+(comment
+
+  (def cid "d_208701")
+  (def raw (public/get-page-raw (->url cid)))
+
+  (def resp (get-page-bulk [cid]))
   )

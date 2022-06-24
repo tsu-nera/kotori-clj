@@ -401,14 +401,14 @@
 
 (comment
   ;;;;;;;;;;;
-  (def info (code->kotori "0025"))
+  (def info (code->kotori "0009"))
   (def products
     (into []
           (select-scheduled-products
            {:db    (db-prod)
             :creds (creds)
             :info  info
-            :limit 500})))
+            :limit 300})))
   (count products)
   ;;
   )
@@ -472,7 +472,7 @@
 
 (comment
 
-  (def info (code->kotori "0002"))
+  (def info (code->kotori "0020"))
   (def genre-id (:genre-id info))
 
   (def products (lib-dmm/get-products {:genre-id genre-id

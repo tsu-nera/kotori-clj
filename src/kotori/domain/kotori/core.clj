@@ -15,7 +15,7 @@
   {"0001" ["videoa" nil]
    "0002" ["videoa" "痴女"] ;1031
    "0007" ["videoa" "超乳"] ;6149
-   "0009" ["videoa" "素人"] ;4024
+   "0009" ["videoa" "ハメ撮り"] ;4024
    "0010" ["videoa" "ぽっちゃり"] ;2007
    "0011" ["videoa" "熟女"] ;1014
    "0019" ["videoa" "ギャル"] ;1034
@@ -25,7 +25,7 @@
    "0027" ["videoc" nil]
    "0028" ["videoa" "VR専用"] ;6793
    "0040" ["videoc" "ぽっちゃり"] ; 8510. 2007ではない.
-   "0041" ["videoa" "巨乳フェチ"]})
+   "0041" ["videoa" "母乳"]})
 
 (defn floor-genres [name]
   (let [genre (genre/make-genre name)]

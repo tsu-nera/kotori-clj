@@ -22,7 +22,7 @@
         doc-path (->doc-path user-id)]
     (doto (f/doc db doc-path)
       (f/assoc! "dmm_af_id" af-id))))
-#_(update-af-id "0040" (db-prod))
+#_(update-af-id "0034" (db-prod))
 
 (defn kotori-edn->fs!
   "kotori.ednの情報をfirestoreへ"
@@ -37,4 +37,4 @@
      (doto (f/doc db doc-path)
        (f/assoc! "twitter_auth" twitter-auth)
        (f/assoc! "dmm_af_id" af-id)))))
-#_(kotori-edn->fs! "0026")
+#_(kotori-edn->fs! "0041")

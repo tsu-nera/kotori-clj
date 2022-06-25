@@ -326,12 +326,13 @@
          (into [] xstrategy))))
 
 (defn select-scheduled-products
-  [{:keys [info db limit creds floor coll-path sort]
+  [{:keys [info db limit creds coll-path sort]
     :as   m
     :or   {limit 300
            sort  "rank"}}]
-  (let [genre     (genre/make-genre floor)
+  (let [floor     (get-in info [:strategy :floor-code])
         genre-id  (get-in info [:strategy :genre-id])
+        genre     (genre/make-genre floor)
         coll-path (or coll-path (genre/->coll-path genre))
         products  (lib-dmm/get-products {:floor    floor
                                          :genre-id genre-id
@@ -401,7 +402,7 @@
 
 (comment
   ;;;;;;;;;;;
-  (def info (code->kotori "0009"))
+  (def info (code->kotori "0007"))
   (def products
     (into []
           (select-scheduled-products

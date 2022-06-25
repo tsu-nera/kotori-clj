@@ -115,7 +115,6 @@
   [(filter voice-product?)
    (st/->st-include genre/chikubi-ids)])
 
-;; TODO あとで削除
 (defmethod make-strategy "0003" [_]
   [(filter image-product?)
    (filter bl-product?)])
@@ -140,10 +139,11 @@
 
 ;; TODO とりあえずやっつけで分岐するがあとでインタフェースで解決する.
 (defn select-scheduled-image
-  [{:keys [info db limit creds coll-path genre-id]
+  [{:keys [info db limit creds coll-path]
     :as   m
     :or   {limit 200}}]
-  (let [products (lib/get-products {:genre-id genre-id
+  (let [genre-id (:genre-id info)
+        products (lib/get-products {:genre-id genre-id
                                     :creds    creds
                                     :limit    limit})
         xst      (make-strategy info)
@@ -219,13 +219,13 @@
                                         :creds (creds)
                                         :limit 100}))
 
+  (def kotori (code->kotori "0034"))
   (def products
     (select-scheduled-image
      {:db        (db-dev)
-      :info      (code->kotori "0026")
+      :info      kotori
       :limit     100
       :coll-path "providers/dmm/girls"
-      :genre-id  genre/for-girl-id
       :creds     (creds)}))
   (count products)
 

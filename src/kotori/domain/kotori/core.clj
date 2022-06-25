@@ -10,7 +10,6 @@
 (defrecord Proxy [proxy-host proxy-port proxy-user proxy-pass])
 
 ;; TODO EDNファイルで定義してもいい.そしてRole Recordでもいい.
-;; TODO doujin対応
 (def code-genre-map
   {"0001" ["videoa" nil]
    "0002" ["videoa" "痴女"] ;1031
@@ -22,8 +21,11 @@
    "0020" ["videoa" "イラマチオ"];5068
    "0024" ["anime" nil]
    "0025" ["videoa" "M男"] ;5005
+   "0026" ["doujin" "女性向け"]
    "0027" ["videoc" nil]
    "0028" ["videoa" "VR専用"] ;6793
+   "0029" ["doujin" "男性向け"]
+   "0034" ["doujin" "女性向け"]
    "0040" ["videoc" "ぽっちゃり"] ; 8510. 2007ではない.
    "0041" ["videoa" "母乳"]})
 

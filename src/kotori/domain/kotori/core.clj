@@ -2,13 +2,13 @@
   (:require
    [clojure.spec.alpha :as s]
    [kotori.domain.dmm.genre.core :as genre]
+   [kotori.domain.kotori.proxy :as proxy]
    [kotori.domain.kotori.strategy :as st]))
 
 (def coll-name "kotoris")
 (defn ->doc-path [user-id] (str coll-name "/" user-id))
 
 (defrecord Cred [auth-token ct0 dmm-af-id])
-(defrecord Proxy [proxy-host proxy-port proxy-user proxy-pass])
 
 ;; TODO EDNファイルで定義してもいい.そしてRole Recordでもいい.
 (def code-genre-map
@@ -46,7 +46,7 @@
 
 (defrecord Kotori
   [screen-name user-id code
-   strategy ^Cred cred ^Proxy proxy])
+   strategy cred proxy-info])
 
 (s/def ::auth-token string?)
 (s/def ::ct0 string?)
@@ -55,13 +55,6 @@
   (s/keys :req-un [::auth-token ::ct0]
           :opt-un [::dmm-af-id]))
 
-(s/def ::proxy-host string?)
-(s/def ::proxy-port int?)
-(s/def ::proxy-user string?)
-(s/def ::proxy-pass string?)
-(s/def ::proxy
-  (s/keys :opt-un [::proxy-host ::proxy-port ::proxy-user ::proxy-pass]))
-
 (s/def ::screen-name string?)
 (s/def ::user-id string?)
 (s/def ::code string?)
@@ -69,7 +62,7 @@
 (s/def ::info
   (s/keys :req-un [::screen-name ::user-id ::code
                    ::cred ::st/strategy]
-          :opt-un [::proxy]))
+          :opt-un [::proxy/info]))
 
 (def guest-user "guest")
 
@@ -85,11 +78,11 @@
   (get-in kotori [:cred :dmm-af-id]))
 
 ;; Abstract Factory Pattern
-(defn make-info [screen-name user-id code cred-map proxy-map]
+(defn make-info [screen-name user-id code cred-map proxy-info]
   (let [cred       (s/conform ::cred (map->Cred cred-map))
-        test-proxy (s/conform ::proxy (map->Proxy proxy-map))
-        proxy      (if-not (s/invalid? test-proxy) test-proxy {})
+        test-proxy (s/conform ::proxy/info (proxy/map->Info proxy-info))
+        proxy-info (if-not (s/invalid? test-proxy) test-proxy {})
         genre-id   (code->genre-id code)
         strategy   (s/conform ::st/strategy (st/->Strategy genre-id))]
     (s/conform ::info (->Kotori screen-name user-id code strategy
-                                cred proxy))))
+                                cred proxy-info))))

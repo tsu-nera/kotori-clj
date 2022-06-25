@@ -32,13 +32,13 @@
   (update params :text (fn [s]
                          (str title "\n" s))))
 
-(defn- upload-images [urls creds proxy]
+(defn- upload-images [urls creds proxy-info]
   (log/debug (str "upload images...cnt=" (count urls)))
   (->> urls
        io/downloads!
        (map (fn [file-path]
               {:creds     creds
-               :proxy     proxy
+               :proxy     proxy-info
                :file-path file-path}))
        (map private/upload-image)
        (map :media-id)
@@ -90,7 +90,7 @@
 (defn- tweet-image [{:keys [info db coll-path] :as m}]
   (let [doc            (doujin/select-next-image m)
         urls           (into [] (:urls doc))
-        media-ids      (upload-images urls (:cred info) (:proxy info))
+        media-ids      (upload-images urls (:cred info) (:proxy-info info))
         cid            (:cid doc)
         title          (:title doc)
         af-url         (:affiliate-url doc)

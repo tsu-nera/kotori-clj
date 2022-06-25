@@ -7,8 +7,8 @@
   (fn [m k v]
     (let [label (:proxy-label v)
           new-v (if label
-                  (assoc v :proxy (label proxies))
-                  (assoc v :proxy {}))]
+                  (assoc v :proxy-info (label proxies))
+                  (assoc v :proxy-info {}))]
       (assoc m k new-v))))
 
 (defmethod ig/init-key ::by-ids [_ {:keys [path proxies]}]
@@ -34,3 +34,4 @@
        (map (fn [[screen-name data]]
               {screen-name data}))
        (reduce conj)))
+

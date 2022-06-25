@@ -20,12 +20,12 @@
    [slingshot.slingshot :refer [throw+ try+]]
    [twitter-clj.private :as private]))
 
-(defn config->kotori [{:keys [screen-name user-id code proxy-map]
+(defn config->kotori [{:keys [screen-name user-id code proxy-info]
                        :as   m}]
   (let [cred-map (d/config->cred-map m)]
     (d/make-info screen-name user-id code
                  cred-map
-                 proxy-map)))
+                 proxy-info)))
 
 (defn make-text [source strategy builder]
   (builder (strategy source)))

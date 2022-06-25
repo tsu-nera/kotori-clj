@@ -27,6 +27,7 @@
 (defn proxies []
   (-> system
       :kotori.service.env/proxies))
+#_(proxies)
 
 (defn proxy [label]
   (get (proxies) label))
@@ -38,6 +39,7 @@
 (defn kotori-names []
   (-> system
       :kotori.service.kotori/by-names))
+#_(kotori-names)
 
 (defn kotori-codes []
   (-> system

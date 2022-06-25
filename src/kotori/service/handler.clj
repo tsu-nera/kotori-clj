@@ -34,8 +34,8 @@
   (fn [req]
     (let [screen-name (:screen-name req)
           config      (get config-map screen-name)
-          info        (kotori/config->kotori config)]
-      (handler (assoc req :info info)))))
+          kotori      (kotori/config->kotori config)]
+      (handler (assoc req :info kotori)))))
 
 (defn wrap-dmm [handler]
   (fn [req]

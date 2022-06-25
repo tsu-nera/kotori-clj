@@ -9,3 +9,6 @@
 
 (s/def ::strategy
   (s/keys :opt-un [::floor-code ::genre-id]))
+
+(defn create [config]
+  (s/conform ::strategy (map->Strategy config)))

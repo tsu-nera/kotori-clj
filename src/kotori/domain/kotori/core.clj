@@ -3,7 +3,7 @@
    [clojure.spec.alpha :as s]
    [kotori.domain.dmm.genre.core :as genre]
    [kotori.domain.kotori.proxy :as proxy]
-   [kotori.domain.kotori.strategy :as st]))
+   [kotori.domain.kotori.strategy :as strategy]))
 
 (def coll-name "kotoris")
 (defn ->doc-path [user-id] (str coll-name "/" user-id))
@@ -27,8 +27,9 @@
 
 (s/def ::info
   (s/keys :req-un [::screen-name ::user-id ::code
-                   ::cred ::st/strategy]
-          :opt-un [::proxy/info]))
+                   ::cred
+                   ::strategy/strategy]
+          :opt-un [::proxy/proxy-info]))
 
 (def guest-user "guest")
 
@@ -39,16 +40,13 @@
   (get-in kotori [:cred :dmm-af-id]))
 
 ;; Abstract Factory Pattern
-(defn make-info [screen-name user-id code
-                 cred-map
-                 strategy
-                 proxy-info]
-  (let [cred       (s/conform ::cred (map->Cred
-                                      cred-map))
-        test-proxy (s/conform ::proxy/info (proxy/map->Info proxy-info))
-        proxy-info (if-not (s/invalid? test-proxy) test-proxy {})
-        strategy   (s/conform ::st/strategy
-                              (st/map->Strategy strategy))]
+(defn create [screen-name user-id code
+              cred-map
+              strategy
+              proxy-info]
+  (let [cred       (s/conform ::cred (map->Cred cred-map))
+        proxy-info (proxy/create proxy-info)
+        strategy   (strategy/create strategy)]
     (s/conform ::info (->Kotori screen-name user-id code strategy
                                 cred proxy-info))))
 

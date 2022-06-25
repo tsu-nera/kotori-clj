@@ -58,7 +58,6 @@
       ["/crawl-doujin-girls" {:post dmm-doujin/crawl-girls-products!}]
       ["/crawl-qvt-descs" {:post dmm/crawl-qvt-descs!}]]
      ["/kotori" {:middleware [#(wrap-kotori config-map %) #(wrap-dmm %)]}
-      ["/dummy" kotori/dummy]
       ["/tweet" kotori/tweet]
       ["/tweet-quoted-video"
        {:post qvt/tweet-quoted-video}]

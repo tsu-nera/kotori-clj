@@ -142,7 +142,7 @@
   [{:keys [info db limit creds coll-path]
     :as   m
     :or   {limit 200}}]
-  (let [genre-id (:genre-id info)
+  (let [genre-id (get-in info [:strategy :genre-id])
         products (lib/get-products {:genre-id genre-id
                                     :creds    creds
                                     :limit    limit})
@@ -220,6 +220,7 @@
                                         :limit 100}))
 
   (def kotori (code->kotori "0034"))
+  (get-in kotori [:strategy :genre-id])
   (def products
     (select-scheduled-image
      {:db        (db-dev)

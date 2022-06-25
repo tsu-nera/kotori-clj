@@ -5,7 +5,6 @@
    [integrant.repl.state :refer [config system]]
    [kotori.procedure.kotori.core :refer [config->kotori]]
    [kotori.service.firebase :refer [get-db]]
-   [twitter-clj.guest :as guest]
    [twitter-clj.private :as private]))
 
 (defn db []

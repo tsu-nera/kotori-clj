@@ -29,21 +29,39 @@
       :kotori.service.env/proxies))
 #_(proxies)
 
+(defn strategies []
+  (-> system
+      :kotori.service.kotori/strategies))
+#_(strategies)
+
+(defn ->strategy [code]
+  (get (strategies) code))
+#_(->strategy "0001")
+
 (defn proxy [label]
   (get (proxies) label))
 
 (defn kotori-ids []
   (-> system
-      :kotori.service.kotori/by-ids))
+      :kotori.service.kotori/ids))
 
 (defn kotori-names []
   (-> system
-      :kotori.service.kotori/by-names))
+      :kotori.service.kotori/names))
 #_(kotori-names)
 
 (defn kotori-codes []
   (-> system
-      :kotori.service.kotori/by-codes))
+      :kotori.service.kotori/codes))
+
+(defn kotories []
+  (-> system
+      :kotori.service.kotori/apps))
+#_(kotories)
+
+(defn ->kotori [code]
+  (get (kotories) code))
+#_(->kotori "0001")
 
 (defn kotori-by-id [user-id]
   (let [key (keyword user-id)]
@@ -81,3 +99,14 @@
    (let [creds (:creds (code->kotori code))]
      (private/get-tweet creds (str id)))))
 #_(get-tweet-with-info "0001" "")
+
+(comment
+  (def codes (kotori-codes))
+  (def sts (strategies))
+
+  (reduce-kv (fn [m k v]
+               (let [strategy (get sts k)]
+                 (assoc m k (cond-> v
+                              strategy
+                              (assoc :strategy strategy))))) {} codes)
+  )

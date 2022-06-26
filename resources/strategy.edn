@@ -1,0 +1,18 @@
+{"0001" {:floor-code "videoa"}
+ "0002" {:floor-code "videoa" :genre-id 1031}
+ "0007" {:floor-code "videoa" :genre-id 6149}
+ "0009" {:floor-code "videoa" :genre-id 6002}
+ "0010" {:floor-code "videoa" :genre-id 2007}
+ "0011" {:floor-code "videoa" :genre-id 1014}
+ "0019" {:floor-code "videoa" :genre-id 1034}
+ "0020" {:floor-code "videoa" :genre-id 5068}
+ "0024" {:floor-code "anime"}
+ "0025" {:floor-code "videoa" :genre-id 5074}
+ "0026" {:floor-code "doujin" :genre-id 156006}
+ "0027" {:floor-code "videoc"}
+ "0028" {:floor-code "videoa" :genre-id 6793}
+ "0029" {:floor-code "videoa" :genre-id 156022}
+ "0031" {:floor-code "doujin"}
+ "0034" {:floor-code "doujin" :genre-id 156006}
+ "0040" {:floor-code "videoc" :genre-id 8510}
+ "0041" {:floor-code "videoa" :genre-id 5060}}

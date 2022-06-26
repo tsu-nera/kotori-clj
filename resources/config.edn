@@ -1,17 +1,21 @@
 ;; configuration maps for integrant
-{:kotori.service.logger/logger   {}
- :kotori.service.env/env         {:path "private/prod/env.edn"}
- :kotori.service.env/proxies     {:path "private/proxies.edn"}
- :kotori.service.kotori/by-ids   {:path    "private/kotori.edn"
-                                  :proxies #ig/ref :kotori.service.env/proxies}
- :kotori.service.kotori/by-names #ig/ref :kotori.service.kotori/by-ids
- :kotori.service.kotori/by-codes #ig/ref :kotori.service.kotori/by-ids
- :kotori.service.firebase/app    {:path "private/prod/credentials.json"}
- :kotori.service.firebase/db     {:app #ig/ref :kotori.service.firebase/app}
- :kotori.service.handler/app     {:config-map #ig/ref :kotori.service.kotori/by-names}
- :kotori.service.server/server   {:config  {:host  "0.0.0.0"
-                                            :port  8888
-                                            :join? false}
-                                  :env     #ig/ref :kotori.service.env/env
-                                  :db      #ig/ref :kotori.service.firebase/db
-                                  :handler #ig/ref :kotori.service.handler/app}}
+{:kotori.service.logger/logger     {}
+ :kotori.service.env/env           {:path "private/prod/env.edn"}
+ :kotori.service.env/proxies       {:path "private/proxies.edn"}
+ :kotori.service.kotori/strategies {:path "strategy.edn"}
+ :kotori.service.kotori/config     {:path "private/kotori.edn"}
+ :kotori.service.kotori/apps       {:config     #ig/ref :kotori.service.kotori/config
+                                    :strategies #ig/ref :kotori.service.kotori/strategies
+                                    :proxies    #ig/ref :kotori.service.env/proxies}
+ :kotori.service.kotori/ids        #ig/ref :kotori.service.kotori/apps
+ :kotori.service.kotori/names      #ig/ref :kotori.service.kotori/apps
+ :kotori.service.kotori/codes      #ig/ref :kotori.service.kotori/apps
+ :kotori.service.firebase/app      {:path "private/prod/credentials.json"}
+ :kotori.service.firebase/db       {:app #ig/ref :kotori.service.firebase/app}
+ :kotori.service.handler/app       {:kotories #ig/ref :kotori.service.kotori/names}
+ :kotori.service.server/server     {:config  {:host  "0.0.0.0"
+                                              :port  8888
+                                              :join? false}
+                                    :env     #ig/ref :kotori.service.env/env
+                                    :db      #ig/ref :kotori.service.firebase/db
+                                    :handler #ig/ref :kotori.service.handler/app}}

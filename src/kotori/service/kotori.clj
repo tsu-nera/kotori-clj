@@ -3,31 +3,23 @@
    [integrant.core :as ig]
    [kotori.lib.io :as io]))
 
-(defn assoc-proxy [proxies]
-  (fn [m k v]
-    (let [label (:proxy-label v)
-          new-v (if label
-                  (assoc v :proxy-info (label proxies))
-                  (assoc v :proxy-info {}))]
-      (assoc m k new-v))))
+(defmethod ig/init-key ::strategies [_ {:keys [path]}]
+  (-> path io/load-edn))
 
-(defmethod ig/init-key ::by-ids [_ {:keys [path proxies]}]
-  (let [config   (-> path
-                     io/load-edn)
-        assoc-fn (assoc-proxy proxies)]
-    (reduce-kv assoc-fn {} config)))
+(defmethod ig/init-key ::config [_ {:keys [path]}]
+  (-> path io/load-edn))
 
-(defmethod ig/init-key ::by-codes [_ config]
-  (->> config
+(defmethod ig/init-key ::ids [_ apps]
+  (->> apps
        vals
-       (map (juxt :code
+       (map (juxt :user-id
                   identity))
-       (map (fn [[code data]]
-              {code data}))
+       (map (fn [[user-id data]]
+              {user-id data}))
        (reduce conj)))
 
-(defmethod ig/init-key ::by-names [_ config]
-  (->> config
+(defmethod ig/init-key ::names [_ apps]
+  (->> apps
        vals
        (map (juxt :screen-name
                   identity))
@@ -35,3 +27,25 @@
               {screen-name data}))
        (reduce conj)))
 
+(defn- assoc-if-proxy [proxies]
+  (fn [m k v]
+    (let [label (:proxy-label v)
+          new-v (if label
+                  (assoc v :proxy-info (label proxies))
+                  (assoc v :proxy-info {}))]
+      (assoc m k new-v))))
+
+(defn- assoc-if-strategy [strategies]
+  (fn [m code v]
+    (let [strategy (get strategies code)]
+      (assoc m code (cond-> v
+                      strategy
+                      (assoc :strategy strategy))))))
+
+(defmethod ig/init-key ::apps [_ {:keys [config strategies proxies]}]
+  (->> config
+       (reduce-kv (assoc-if-strategy strategies) {})
+       (reduce-kv (assoc-if-proxy proxies) {})))
+
+(defmethod ig/init-key ::codes [_ apps]
+  apps)

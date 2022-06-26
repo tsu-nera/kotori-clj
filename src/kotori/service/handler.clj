@@ -30,10 +30,10 @@
         handler
         ->http)))
 
-(defn wrap-kotori [config-map handler]
+(defn wrap-kotori [kotories handler]
   (fn [req]
     (let [screen-name (:screen-name req)
-          config      (get config-map screen-name)
+          config      (get kotories screen-name)
           kotori      (kotori/config->kotori config)]
       (handler (assoc req :info kotori)))))
 
@@ -43,7 +43,7 @@
           creds (api/env->creds env)]
       (handler (assoc req :creds creds)))))
 
-(defn make-app [config-map]
+(defn make-app [kotories]
   (ring/ring-handler
    (ring/router
     ["/api" {:middleware [#(wrap-http %)]}
@@ -57,7 +57,7 @@
       ["/crawl-doujin-voices" {:post dmm-doujin/crawl-voice-products!}]
       ["/crawl-doujin-girls" {:post dmm-doujin/crawl-girls-products!}]
       ["/crawl-qvt-descs" {:post dmm/crawl-qvt-descs!}]]
-     ["/kotori" {:middleware [#(wrap-kotori config-map %) #(wrap-dmm %)]}
+     ["/kotori" {:middleware [#(wrap-kotori kotories %) #(wrap-dmm %)]}
       ["/tweet" kotori/tweet]
       ["/tweet-quoted-video"
        {:post qvt/tweet-quoted-video}]
@@ -74,8 +74,8 @@
       ["/select-next-vr" {:get kotori/select-next-vr}]
       ["/select-next-anime" {:get kotori/select-next-anime}]]])))
 
-(defmethod ig/init-key ::app [_ {:keys [config-map]}]
-  (make-app config-map))
+(defmethod ig/init-key ::app [_ {:keys [kotories]}]
+  (make-app kotories))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 

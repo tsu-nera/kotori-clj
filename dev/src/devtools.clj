@@ -3,7 +3,7 @@
   (:refer-clojure :exclude [proxy])
   (:require
    [integrant.repl.state :refer [config system]]
-   [kotori.procedure.kotori.core :refer [config->kotori]]
+   [kotori.domain.kotori.core :refer [config->kotori]]
    [kotori.service.firebase :refer [get-db]]
    [twitter-clj.private :as private]))
 

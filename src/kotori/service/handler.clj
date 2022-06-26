@@ -1,6 +1,7 @@
 (ns kotori.service.handler
   (:require
    [integrant.core :as ig]
+   [kotori.domain.kotori.core :refer [config->kotori]]
    [kotori.lib.provider.dmm.api :as api]
    [kotori.procedure.dmm.amateur :as dmm-amateur]
    [kotori.procedure.dmm.anime :as dmm-anime]
@@ -34,7 +35,7 @@
   (fn [req]
     (let [screen-name (:screen-name req)
           config      (get kotories screen-name)
-          kotori      (kotori/config->kotori config)]
+          kotori      (config->kotori config)]
       (handler (assoc req :info kotori)))))
 
 (defn wrap-dmm [handler]

@@ -33,11 +33,11 @@
 
 (def guest-user "guest")
 
-(defn config->cred-map [config]
-  (select-keys config [:auth-token :ct0 :dmm-af-id]))
-
 (defn kotori->af-id [kotori]
   (get-in kotori [:cred :dmm-af-id]))
+
+(defn config->cred-map [config]
+  (select-keys config [:auth-token :ct0 :dmm-af-id]))
 
 ;; Abstract Factory Pattern
 (defn create [screen-name user-id code
@@ -49,6 +49,15 @@
         strategy   (strategy/create strategy)]
     (s/conform ::info (->Kotori screen-name user-id code strategy
                                 cred proxy-info))))
+
+(defn config->kotori [{:keys
+                       [screen-name user-id code proxy-info strategy]
+                       :as m}]
+  (let [cred-map (config->cred-map m)]
+    (create screen-name user-id code
+            cred-map
+            strategy
+            proxy-info)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 

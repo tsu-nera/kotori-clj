@@ -12,7 +12,7 @@
 
 (defrecord Kotori
   [screen-name user-id code
-   strategy cred proxy-info])
+   strategy cred proxy])
 
 (s/def ::auth-token string?)
 (s/def ::ct0 string?)
@@ -29,7 +29,7 @@
   (s/keys :req-un [::screen-name ::user-id ::code
                    ::cred
                    ::strategy/strategy]
-          :opt-un [::proxy/proxy-info]))
+          :opt-un [::proxy/proxy]))
 
 (def guest-user "guest")
 
@@ -43,21 +43,21 @@
 (defn create [screen-name user-id code
               cred-map
               strategy
-              proxy-info]
-  (let [cred       (s/conform ::cred (map->Cred cred-map))
-        proxy-info (proxy/create proxy-info)
-        strategy   (strategy/create strategy)]
+              proxy]
+  (let [cred     (s/conform ::cred (map->Cred cred-map))
+        proxy    (proxy/create proxy)
+        strategy (strategy/create strategy)]
     (s/conform ::info (->Kotori screen-name user-id code strategy
-                                cred proxy-info))))
+                                cred proxy))))
 
 (defn config->kotori [{:keys
-                       [screen-name user-id code proxy-info strategy]
+                       [screen-name user-id code proxy strategy]
                        :as m}]
   (let [cred-map (config->cred-map m)]
     (create screen-name user-id code
             cred-map
             strategy
-            proxy-info)))
+            proxy)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 

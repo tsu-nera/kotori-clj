@@ -1,6 +1,5 @@
 (ns devtools
   "REPLからの利用を想定したツール."
-  (:refer-clojure :exclude [proxy])
   (:require
    [integrant.repl.state :refer [config system]]
    [kotori.domain.kotori.core :refer [config->kotori]]
@@ -29,6 +28,9 @@
       :kotori.service.env/proxies))
 #_(proxies)
 
+(defn ->proxy [label]
+  (get (proxies) label))
+
 (defn strategies []
   (-> system
       :kotori.service.kotori/strategies))
@@ -37,9 +39,6 @@
 (defn ->strategy [code]
   (get (strategies) code))
 #_(->strategy "0001")
-
-(defn proxy [label]
-  (get (proxies) label))
 
 (defn kotori-ids []
   (-> system
@@ -100,13 +99,3 @@
      (private/get-tweet creds (str id)))))
 #_(get-tweet-with-info "0001" "")
 
-(comment
-  (def codes (kotori-codes))
-  (def sts (strategies))
-
-  (reduce-kv (fn [m k v]
-               (let [strategy (get sts k)]
-                 (assoc m k (cond-> v
-                              strategy
-                              (assoc :strategy strategy))))) {} codes)
-  )

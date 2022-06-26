@@ -31,8 +31,8 @@
   (fn [m k v]
     (let [label (:proxy-label v)
           new-v (if label
-                  (assoc v :proxy-info (label proxies))
-                  (assoc v :proxy-info {}))]
+                  (assoc v :proxy (label proxies))
+                  (assoc v :proxy {}))]
       (assoc m k new-v))))
 
 (defn- assoc-if-strategy [strategies]

@@ -26,13 +26,6 @@
     ;; このメーカに限定してクロールする. それにしてもルール無視した投稿は多い.
     (product/crawl-products! (merge m opts lune-opt))))
 
-(defn select-scheduled-products
-  [{:as m}]
-  (st/select-scheduled-products
-   (merge m
-          {:floor     floor
-           :past-days 18})))
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (comment
@@ -58,7 +51,7 @@
 
   (def products
     (into []
-          (select-scheduled-products
+          (st/select-scheduled-products
            {:db          (db-prod)
             :limit       300
             :creds       (creds)

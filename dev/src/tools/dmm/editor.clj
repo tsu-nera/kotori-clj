@@ -1,16 +1,12 @@
 (ns tools.dmm.editor
   "主にスクレイピングしたデータをパースしてゴニョゴニョする実験ツール"
   (:require
-   [clojure.string :as str]
    [devtools :refer [->screen-name env]]
    [firebase :refer [db-prod db-dev db]]
    [kotori.lib.kotori :as lib]
    [kotori.lib.provider.dmm.editor :as ed]
    [kotori.lib.provider.dmm.parser :as p]
    [kotori.lib.provider.dmm.public :as public]
-   [kotori.procedure.dmm.amateur
-    :refer [select-scheduled-products]
-    :rename {select-scheduled-products select-scheduled-videocs}]
    [kotori.procedure.strategy.dmm
     :refer [select-scheduled-products]]))
 

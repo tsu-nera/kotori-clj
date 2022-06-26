@@ -41,12 +41,6 @@
               :floor     floor}]
     (product/crawl-products! (merge m opts))))
 
-(defn select-scheduled-products
-  [{:as m}]
-  (st/select-scheduled-products
-   (-> m
-       (assoc :floor floor))))
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (comment
   (require '[devtools :refer [env ->screen-name code->kotori]]
@@ -85,7 +79,7 @@
 
   (def info (code->kotori "0040"))
   (def products
-    (select-scheduled-products
+    (st/select-scheduled-products
      {:db          (db-prod)
       :creds       (creds)
       :info        info

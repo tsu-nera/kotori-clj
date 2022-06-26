@@ -4,18 +4,14 @@
    [clojure.string :as str]
    [kotori.domain.dmm.core :as dmm]
    [kotori.domain.dmm.genre.anime :as anime]
-   [kotori.domain.dmm.genre.core :as genre]
    [kotori.domain.dmm.genre.videoa :as videoa]
    [kotori.domain.dmm.genre.videoc :as videoc]
    [kotori.domain.dmm.product :as product]
-   [kotori.domain.kotori.core :refer [guest-user]]
+   [kotori.domain.kotori.core :as kotori]
    [kotori.lib.firestore :as fs]
    [kotori.lib.kotori :as lib]
    [kotori.lib.provider.dmm.product :as lib-dmm]
-   [kotori.lib.time :as time])
-  (:import
-   (kotori.domain.kotori.core
-    Kotori)))
+   [kotori.lib.time :as time]))
 
 (defn contains-genre? [genre-id-set product]
   (let [genre-ids (product/doc->genre-ids product)]
@@ -326,14 +322,13 @@
          (into [] xstrategy))))
 
 (defn select-scheduled-products
-  [{:keys [info db limit creds coll-path sort]
+  [{:keys [info db limit creds sort]
     :as   m
     :or   {limit 300
            sort  "rank"}}]
   (let [floor     (get-in info [:strategy :floor-code])
         genre-id  (get-in info [:strategy :genre-id])
-        genre     (genre/make-genre floor)
-        coll-path (or coll-path (genre/->coll-path genre))
+        coll-path (kotori/->coll-path info)
         products  (lib-dmm/get-products {:floor    floor
                                          :genre-id genre-id
                                          :creds    creds
@@ -352,7 +347,7 @@
 
 (defn select-tweeted-products [{:keys [db limit screen-name]
                                 :or   {limit       5
-                                       screen-name guest-user}}]
+                                       screen-name kotori/guest-user}}]
   {:pre [(string? screen-name)]}
   (let [q-already-tweeted
         ;; 42日前から21日分を候補にする.

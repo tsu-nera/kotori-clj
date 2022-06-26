@@ -36,6 +36,9 @@
 (defn kotori->af-id [kotori]
   (get-in kotori [:cred :dmm-af-id]))
 
+(defn ->coll-path [kotori]
+  (get-in kotori [:strategy :coll-path]))
+
 (defn config->cred-map [config]
   (select-keys config [:auth-token :ct0 :dmm-af-id]))
 

@@ -39,11 +39,6 @@
 ;; 手動でも自動でも一応ダウンロードはできるがあえて規約違反を犯すリスクを
 ;; 取りつつダウンロードして利用するべきでないため動画は選択ロジックから除外.
 ;; よい素材が今後開放されることを願いつつ待つ.
-(defn select-scheduled-products
-  [{:as m}]
-  (st/select-scheduled-products
-   (-> m
-       (assoc :coll-path coll-path))))
 
 (comment
   (require '[devtools :refer [code->kotori]]
@@ -63,7 +58,7 @@
 
   (def vrs
     (into []
-          (select-scheduled-products
+          (st/select-scheduled-products
            {:db    (db-prod)
             :limit 100
             :creds (creds)

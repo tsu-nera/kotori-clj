@@ -115,7 +115,7 @@
   {:pre [(s/valid? ::d/screen-name screen-name)]}
   (let [af-id (d/kotori->af-id info)
         next  (-> m
-                  amateur/select-scheduled-products
+                  st-dmm/select-scheduled-products
                   first
                   lib/->next)]
     (-> next
@@ -125,7 +125,7 @@
 (defn select-next-vr [{:keys [info screen-name] :as m}]
   {:pre [(s/valid? ::d/screen-name screen-name)]}
   (when-let [next (-> m
-                      vr/select-scheduled-products
+                      st-dmm/select-scheduled-products
                       first
                       lib/->next
                       (lib/next->swap-af-id (d/kotori->af-id info)))]
@@ -137,8 +137,8 @@
 (defn select-next-anime [{:keys [info screen-name] :as m}]
   {:pre [(s/valid? ::d/screen-name screen-name)]}
   (let [af-id (d/kotori->af-id info)]
-    (-> m
-        anime/select-scheduled-products
+    (-> (merge m {:past-days 18})
+        st-dmm/select-scheduled-products
         first
         lib/->next
         (lib/next->swap-af-id af-id))))

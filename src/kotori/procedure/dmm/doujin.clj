@@ -4,7 +4,7 @@
    [kotori.domain.dmm.product
     :as d
     :refer [doujin-coll-path girls-coll-path]]
-   [kotori.domain.kotori.core :refer [kotori->af-id]]
+   [kotori.domain.kotori.core :refer [kotori->af-id ->coll-path]]
    [kotori.lib.firestore :as fs]
    [kotori.lib.json :as json]
    [kotori.lib.kotori :refer [ng->ok next->swap-af-id]]
@@ -137,17 +137,17 @@
 (defmethod make-strategy :default [_]
   [])
 
-;; TODO とりあえずやっつけで分岐するがあとでインタフェースで解決する.
 (defn select-scheduled-image
-  [{:keys [info db limit creds coll-path]
+  [{:keys [info db limit creds]
     :as   m
     :or   {limit 200}}]
-  (let [genre-id (get-in info [:strategy :genre-id])
-        products (lib/get-products {:genre-id genre-id
-                                    :creds    creds
-                                    :limit    limit})
-        xst      (make-strategy info)
-        doc-ids  (map :content_id products)]
+  (let [genre-id  (get-in info [:strategy :genre-id])
+        products  (lib/get-products {:genre-id genre-id
+                                     :creds    creds
+                                     :limit    limit})
+        xst       (make-strategy info)
+        doc-ids   (map :content_id products)
+        coll-path (->coll-path info)]
     (->> (st/select-scheduled-products-with-xst
           m xst coll-path doc-ids)
          (take limit))))
@@ -167,12 +167,13 @@
   [{:keys [info db limit creds]
     :as   m
     :or   {limit 100}}]
-  (let [products (lib/get-voice-products {:creds creds
-                                          :limit limit})
-        xst      (make-strategy info)
-        doc-ids  (map :content_id products)]
+  (let [products  (lib/get-voice-products {:creds creds
+                                           :limit limit})
+        xst       (make-strategy info)
+        doc-ids   (map :content_id products)
+        coll-path (->coll-path info)]
     (->> (st/select-scheduled-products-with-xst
-          m xst doujin-coll-path doc-ids)
+          m xst coll-path doc-ids)
          (take limit))))
 
 (defn- select-while-url-exists [docs]
@@ -220,7 +221,6 @@
                                         :limit 100}))
 
   (def kotori (code->kotori "0034"))
-  (get-in kotori [:strategy :genre-id])
   (def products
     (select-scheduled-image
      {:db        (db-dev)

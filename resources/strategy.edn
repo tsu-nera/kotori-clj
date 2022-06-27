@@ -2,6 +2,8 @@
          :coll-path  "providers/dmm/products"}
  "0002" {:floor-code "videoa" :genre-id 1031
          :coll-path  "providers/dmm/products"}
+ "0003" {:floor-code "videoa" :genre-id 35
+         :coll-path  "providers/dmm/products"}
  "0007" {:floor-code "videoa" :genre-id 6149
          :coll-path  "providers/dmm/products"}
  "0009" {:floor-code "videoa" :genre-id 6002
@@ -10,7 +12,7 @@
          :coll-path  "providers/dmm/products"}
  "0011" {:floor-code "videoa" :genre-id 1014
          :coll-path  "providers/dmm/products"}
- "0019" {:floor-code "videoa" :genre-id 1034
+ "0019" {:floor-code "videoa" :genre-id 4138
          :coll-path  "providers/dmm/products"}
  "0020" {:floor-code "videoa" :genre-id 5068
          :coll-path  "providers/dmm/products"}
@@ -33,4 +35,6 @@
  "0040" {:floor-code "videoc" :genre-id 8510
          :coll-path  "providers/dmm/amateurs"}
  "0041" {:floor-code "videoa" :genre-id 5060
+         :coll-path  "providers/dmm/products"}
+ "0042" {:floor-code "videoa" :genre-id 35
          :coll-path  "providers/dmm/products"}}

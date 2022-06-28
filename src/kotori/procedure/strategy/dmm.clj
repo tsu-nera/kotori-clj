@@ -397,7 +397,7 @@
 
 (comment
   ;;;;;;;;;;;
-  (def info (code->kotori "0007"))
+  (def info (code->kotori "0009"))
   (def products
     (into []
           (select-scheduled-products
@@ -421,7 +421,7 @@
 
   (def products (fs/get-docs-by-ids (db-prod) product/coll-path cids))
 
-  (def info (code->kotori "0011"))
+  (def info (code->kotori "0042"))
   (def products (select-scheduled-products
                  {:db          (db-prod)
                   :info        info

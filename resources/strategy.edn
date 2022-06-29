@@ -26,7 +26,7 @@
          :coll-path  "providers/dmm/amateurs"}
  "0028" {:floor-code "videoa" :genre-id 6793
          :coll-path  "providers/dmm/vrs"}
- "0029" {:floor-code "doujin" :genre-id 156022
+ "0029" {:floor-code "doujin" :genre-id 2007
          :coll-path  "providers/dmm/doujins"}
  "0031" {:floor-code "doujin"
          :coll-path  "providers/dmm/doujins"}

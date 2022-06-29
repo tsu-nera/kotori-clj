@@ -4,7 +4,7 @@
    [kotori.domain.dmm.product
     :as d
     :refer [doujin-coll-path girls-coll-path]]
-   [kotori.domain.kotori.core :refer [kotori->af-id ->coll-path]]
+   [kotori.domain.kotori.core :as kotori]
    [kotori.lib.firestore :as fs]
    [kotori.lib.json :as json]
    [kotori.lib.kotori :refer [ng->ok next->swap-af-id]]
@@ -143,13 +143,13 @@
   [{:keys [info db limit creds]
     :as   m
     :or   {limit 200}}]
-  (let [genre-id  (get-in info [:strategy :genre-id])
+  (let [genre-id  (kotori/->genre-id info)
         products  (lib/get-products {:genre-id genre-id
                                      :creds    creds
                                      :limit    limit})
         xst       (make-strategy info)
         doc-ids   (map :content_id products)
-        coll-path (->coll-path info)]
+        coll-path (kotori/->coll-path info)]
     (->> (st/select-scheduled-products-with-xst
           m xst coll-path doc-ids)
          (take limit))))
@@ -158,7 +158,7 @@
   (let [doc        (first (select-scheduled-image params))
         cid        (:cid doc)
         title      (-> (:title doc) ng->ok)
-        af-id      (kotori->af-id info)
+        af-id      (kotori/->af-id info)
         image-urls (lib/get-image-urls cid)]
     {:cid           cid
      :title         title
@@ -173,7 +173,7 @@
                                            :limit limit})
         xst       (make-strategy info)
         doc-ids   (map :content_id products)
-        coll-path (->coll-path info)]
+        coll-path (kotori/->coll-path info)]
     (->> (st/select-scheduled-products-with-xst
           m xst coll-path doc-ids)
          (take limit))))
@@ -191,7 +191,7 @@
 
 (defn select-next-voice [{:keys [info] :as params}]
   (let [docs  (select-scheduled-voice params)
-        af-id (kotori->af-id info)]
+        af-id (kotori/->af-id info)]
     (-> (select-while-url-exists (take 5 docs))
         (next->swap-af-id af-id))))
 
@@ -226,7 +226,7 @@
                                         :creds (creds)
                                         :limit 100}))
 
-  (def kotori (code->kotori "0029"))
+  (def kotori (code->kotori "0034"))
   (def products
     (select-scheduled-image
      {:db    (db-prod)

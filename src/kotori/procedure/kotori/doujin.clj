@@ -2,6 +2,7 @@
   (:require
    [kotori.domain.dmm.genre.doujin :as genre]
    [kotori.domain.dmm.product :as product]
+   [kotori.domain.kotori.core :as d]
    [kotori.domain.tweet.core :as tweet]
    [kotori.lib.discord :as discord]
    [kotori.lib.firestore :as fs]
@@ -87,8 +88,9 @@
                    m-rest
                    (conj acc tweet-id))))))))
 
-(defn- tweet-image [{:keys [info db coll-path] :as m}]
-  (let [doc            (doujin/select-next-image m)
+(defn tweet-image [{:keys [info db] :as m}]
+  (let [coll-path      (d/->coll-path info)
+        doc            (doujin/select-next-image m)
         urls           (into [] (:urls doc))
         media-ids      (upload-images urls (:cred info) (:proxy info))
         cid            (:cid doc)
@@ -116,18 +118,6 @@
             (log/info
              (str "post tweet-image completed, cid=" cid ", title=" title)))
           resp)))))
-
-;; TODO インタフェースで解決する.
-(defn tweet-boys-image [{:as m}]
-  (tweet-image
-   (merge m {:genre-id  genre/for-boy-id
-             :coll-path product/doujin-coll-path})))
-
-;; TODO インタフェースで解決する.
-(defn tweet-girls-image [{:as m}]
-  (tweet-image
-   (merge m {:genre-id  genre/for-girl-id
-             :coll-path product/girls-coll-path})))
 
 (defn- ->otameshi [urls i]
   (str "お試し"
@@ -200,13 +190,13 @@
   (def rest-params (into [] (rest page-params)))
 
 
-  (def resp2 (tweet-boys-image {:db    (db-prod)
-                                :creds (creds)
-                                :info  (code->kotori "0029")}))
+  (def resp2 (tweet-image {:db    (db-prod)
+                           :creds (creds)
+                           :info  (code->kotori "0029")}))
 
-  (def resp3 (tweet-girls-image {:db    (db-prod)
-                                 :creds (creds)
-                                 :info  (code->kotori "0026")}))
+  (def resp3 (tweet-image {:db    (db-prod)
+                           :creds (creds)
+                           :info  (code->kotori "0026")}))
 
   )
 

@@ -104,7 +104,7 @@
 
 (defn select-next-product [{:keys [info screen-name] :as m}]
   {:pre [(s/valid? ::d/screen-name screen-name)]}
-  (let [af-id (d/kotori->af-id info)]
+  (let [af-id (d/->af-id info)]
     (-> m
         st-dmm/select-scheduled-products
         first
@@ -113,7 +113,7 @@
 
 (defn select-next-amateur-videoc [{:keys [info screen-name] :as m}]
   {:pre [(s/valid? ::d/screen-name screen-name)]}
-  (let [af-id  (d/kotori->af-id info)
+  (let [af-id  (d/->af-id info)
         params (assoc m :sort "review")
         next   (-> m
                    st-dmm/select-scheduled-products
@@ -129,7 +129,7 @@
                       st-dmm/select-scheduled-products
                       first
                       lib/->next
-                      (lib/next->swap-af-id (d/kotori->af-id info)))]
+                      (lib/next->swap-af-id (d/->af-id info)))]
     (let [cid (:cid next)
           uri (public/cid->vr-uri cid)]
       (cond-> next
@@ -137,7 +137,7 @@
 
 (defn select-next-anime [{:keys [info screen-name] :as m}]
   {:pre [(s/valid? ::d/screen-name screen-name)]}
-  (let [af-id (d/kotori->af-id info)]
+  (let [af-id (d/->af-id info)]
     (-> (merge m {:past-days 18})
         st-dmm/select-scheduled-products
         first

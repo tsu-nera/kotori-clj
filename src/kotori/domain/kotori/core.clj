@@ -33,11 +33,14 @@
 
 (def guest-user "guest")
 
-(defn kotori->af-id [kotori]
+(defn ->af-id [kotori]
   (get-in kotori [:cred :dmm-af-id]))
 
 (defn ->coll-path [kotori]
   (get-in kotori [:strategy :coll-path]))
+
+(defn ->genre-id [kotori]
+  (get-in kotori [:strategy :genre-id]))
 
 (defn config->cred-map [config]
   (select-keys config [:auth-token :ct0 :dmm-af-id]))

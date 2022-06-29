@@ -113,11 +113,12 @@
 
 (defn select-next-amateur-videoc [{:keys [info screen-name] :as m}]
   {:pre [(s/valid? ::d/screen-name screen-name)]}
-  (let [af-id (d/kotori->af-id info)
-        next  (-> m
-                  st-dmm/select-scheduled-products
-                  first
-                  lib/->next)]
+  (let [af-id  (d/kotori->af-id info)
+        params (assoc m :sort "review")
+        next   (-> m
+                   st-dmm/select-scheduled-products
+                   first
+                   lib/->next)]
     (-> next
         (assoc :name (lib/videoc-title->name (:title next)))
         (lib/next->swap-af-id af-id))))

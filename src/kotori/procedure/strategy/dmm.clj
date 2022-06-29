@@ -181,8 +181,10 @@
            st-exclude-vr]))
 
 (defmethod make-strategy "0009" [_]
-  (conj videoa-default-xst
-        st-exclude-vr))
+  (concat videoa-default-xst
+          [(->st-exclude (videoa/names->genre-ids
+                          ["ぽっちゃり"]))
+           st-exclude-vr]))
 
 (defmethod make-strategy "0010" [_]
   (concat videoa-default-xst
@@ -397,7 +399,7 @@
 
 (comment
   ;;;;;;;;;;;
-  (def info (code->kotori "0009"))
+  (def info (code->kotori "0040"))
   (def products
     (into []
           (select-scheduled-products

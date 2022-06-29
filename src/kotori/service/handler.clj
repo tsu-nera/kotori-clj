@@ -55,6 +55,7 @@
       ["/crawl-anime-products" {:post dmm-anime/crawl-products!}]
       ["/crawl-amateur-products" {:post dmm-amateur/crawl-products!}]
       ["/crawl-doujin-products" {:post dmm-doujin/crawl-products!}]
+      ["/crawl-doujin-boys" {:post dmm-doujin/crawl-boys-products!}]
       ["/crawl-doujin-voices" {:post dmm-doujin/crawl-voice-products!}]
       ["/crawl-doujin-girls" {:post dmm-doujin/crawl-girls-products!}]
       ["/crawl-qvt-descs" {:post dmm/crawl-qvt-descs!}]]

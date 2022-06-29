@@ -22,22 +22,24 @@
                            (time/fs-now))))
 
 (defn crawl-products!
-  "男性向け"
-  [{:keys [db] :as m}]
+  [{:keys [db coll-path genre-id]
+    :or   {coll-path doujin-coll-path
+           genre-id  genre/for-boy-id}
+    :as   m}]
   (let [ts   (time/fs-now)
-        docs (->> (lib/get-boys-products m)
+        docs (->> (lib/get-products m)
                   (map lib/api->data)
                   (map (fn [m] (d/set-crawled-timestamp ts m)))
                   (map json/->json))]
     (doto db
-      (product/save-products! doujin-coll-path docs)
-      (product/update-crawled-time! ts "doujin" genre/for-boy-id))
+      (product/save-products! coll-path docs)
+      (product/update-crawled-time! ts "doujin" genre-id))
     {:timestamp ts
      :count     (count docs)
      :products  docs}))
 
 (defn- get-target-cids [db coll-path products]
-  (let [cids (map :content_id products)]
+  (let [cids (map #(get % "cid") products)]
     (->> (fs/get-docs-by-ids db coll-path cids)
          (remove #(:section %))
          (map :cid)
@@ -66,22 +68,22 @@
                       :cids      cids
                       :coll-path girls-coll-path}))))
 
+(defn crawl-boys-products!
+  "男性向け"
+  [{:keys [db] :as m}]
+  (let [params (merge m
+                      {:genre-id  genre/for-boy-id
+                       :coll-path doujin-coll-path})]
+    (crawl-products! params)))
+
 (defn crawl-girls-products!
   "女性向け"
   [{:keys [db] :as m}]
-  (let [ts       (time/fs-now)
-        products (lib/get-girls-products m)
-        docs     (->> products
-                      (map lib/api->data)
-                      (map (fn [m] (d/set-crawled-timestamp ts m)))
-                      (map json/->json))]
-    (doto db
-      (product/save-products! girls-coll-path docs)
-      (product/update-crawled-time! ts "doujin" genre/for-girl-id)
-      (scrape-section-if! products))
-    {:timestamp ts
-     :count     (count docs)
-     :products  docs}))
+  (let [params (merge m {:genre-id  genre/for-girl-id
+                         :coll-path girls-coll-path})]
+    (when-let [resp (crawl-products! params)]
+      (scrape-section-if! db (:products resp))
+      resp)))
 
 (defn crawl-voice-products! [{:keys [db] :as m}]
   (let [ts   (time/fs-now)
@@ -201,33 +203,36 @@
 
   (def cid "d_227233")
   (def resp (lib/get-product {:cid cid :creds (creds)}))
-  (def resp (lib/get-products {:creds (creds) :hits 100}))
+  (def resp (lib/get-products {:creds    (creds) :hits 100
+                               :genre-id genre/for-boy-id}))
 
   (def urls (map #(get-in % [:imageURL :list]) resp))
 
   (def resp (crawl-product! {:db (db) :cid cid :creds (creds)}))
+
   (def products (crawl-products! {:db    (db-prod)
                                   :creds (creds)
                                   :limit 300}))
 
   (def girls (:products
-              (crawl-girls-products! {:db    (db-prod)
+              (crawl-girls-products! {:db    (db-dev)
                                       :creds (creds)
-                                      :limit 300})))
+                                      :limit 100})))
   (count girls)
+  (def resp (scrape-section-if! (db-dev) girls))
+
 
   (def products (crawl-voice-products! {:db    (db)
                                         :creds (creds)
                                         :limit 100}))
 
-  (def kotori (code->kotori "0034"))
+  (def kotori (code->kotori "0029"))
   (def products
     (select-scheduled-image
-     {:db        (db-dev)
-      :info      kotori
-      :limit     100
-      :coll-path "providers/dmm/girls"
-      :creds     (creds)}))
+     {:db    (db-prod)
+      :info  kotori
+      :limit 100
+      :creds (creds)}))
   (count products)
 
   (def products

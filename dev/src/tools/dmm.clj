@@ -158,15 +158,18 @@
     (dmm/scrape-page! {:cid cid :db db}
                       "providers/dmm/products")))
 
-#_(defn prepare-videoc!
-    [cid]
-    (let [db        (db-prod)
-          coll-path "providers/dmm/amateurs"]
-      (dmm/crawl-product! {:db        db :cid cid :creds (creds)
-                           :coll-path coll-path
-                           :floor     "videoc"})
-      (dmm/scrape-page! {:cid cid :db db}
-                        coll-path)))
+(defn prepare-videoc!
+  [cid]
+  (let [db        (db-prod)
+        coll-path "providers/dmm/amateurs"
+        floor     "videoc"]
+    (dmm/crawl-product! {:db    db
+                         :cid   cid
+                         :creds (creds)
+                         :floor floor}
+                        coll-path)
+    (dmm/scrape-page! {:cid cid :db db :floor floor}
+                      coll-path)))
 
 (defn metadata->csv-from-fs! [db limit csv-path]
   (dmm/crawl-qvt-descs! {:db db :limit limit})

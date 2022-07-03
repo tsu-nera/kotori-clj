@@ -16,7 +16,7 @@
    [kotori.core :as core]
    [kotori.lib.net :refer [get-global-ip]]
    [kotori.service.firebase :refer [get-app get-db delete-app!]]
-   [tools.dmm :refer [open-dmm get-dmm prepare-videoa!]]
+   [tools.dmm :refer [open-dmm get-dmm prepare-videoa! prepare-videoc!]]
    [tools.twitter :refer [delete-tweet!]]))
 
 (def env-dev "private/dev/env.edn")

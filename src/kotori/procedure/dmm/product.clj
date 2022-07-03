@@ -268,6 +268,21 @@
   )
 
 (comment
+
+  (def product (crawl-product! {:db    (db-prod)
+                                :creds (creds)
+                                :cid   "ckj087"
+                                :floor "videoc"}
+                               "providers/dmm/amateurs"))
+
+  (def resp (scrape-page! {:cid   "ckj087" :db (db-prod)
+                           :floor "videoc"}
+                          "providers/dmm/amateurs"))
+
+
+  )
+
+(comment
   (def resp (get-qvts-without-desc {:db    (db-prod)
                                     :limit 100}))
   (def cids (map :cid resp))

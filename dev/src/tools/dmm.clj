@@ -150,26 +150,23 @@
   ([cid db]
    (dmm/crawl-product! {:db db :cid cid :env (env)})))
 
-;; crawl-product!ではscrapeしないので両方実施.
 (defn prepare-videoa!
   [cid]
-  (let [db (db-prod)]
-    (dmm/crawl-product! {:db db :cid cid :creds (creds)})
-    (dmm/scrape-page! {:cid cid :db db}
-                      "providers/dmm/products")))
+  (let [params {:db        (db-prod)
+                :coll-path "providers/dmm/products"
+                :floor     "videoa"
+                :creds     (creds)
+                :cid       cid}]
+    (dmm/prepare-video! params)))
 
 (defn prepare-videoc!
   [cid]
-  (let [db        (db-prod)
-        coll-path "providers/dmm/amateurs"
-        floor     "videoc"]
-    (dmm/crawl-product! {:db    db
-                         :cid   cid
-                         :creds (creds)
-                         :floor floor}
-                        coll-path)
-    (dmm/scrape-page! {:cid cid :db db :floor floor}
-                      coll-path)))
+  (let [params {:db        (db-prod)
+                :coll-path "providers/dmm/amateurs"
+                :floor     "videoc"
+                :creds     (creds)
+                :cid       cid}]
+    (dmm/prepare-video! params)))
 
 (defn metadata->csv-from-fs! [db limit csv-path]
   (dmm/crawl-qvt-descs! {:db db :limit limit})

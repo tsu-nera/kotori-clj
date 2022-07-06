@@ -74,16 +74,15 @@
 
   (def resp (crawl-products! {:db       (db-prod)
                               :creds    (creds)
-                              :genre-id 8510
-                              :limit    300}))
+                              :genre-id 4031
+                              :limit    100}))
 
-  (def info (code->kotori "0040"))
+  (def info (code->kotori "0027"))
   (def products
     (st/select-scheduled-products
-     {:db          (db-prod)
-      :creds       (creds)
-      :info        info
-      :screen-name (:screen-name info)}))
+     {:db    (db-prod)
+      :creds (creds)
+      :info  info}))
   (count products)
 
   (def ret (map :description (map ->next products)))

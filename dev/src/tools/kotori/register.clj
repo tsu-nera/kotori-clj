@@ -37,4 +37,4 @@
      (doto (f/doc db doc-path)
        (f/assoc! "twitter_auth" twitter-auth)
        (f/assoc! "dmm_af_id" af-id)))))
-#_(kotori-edn->fs! "0041")
+#_(kotori-edn->fs! "0045")

@@ -5,6 +5,7 @@
    [kotori.domain.dmm.core :as dmm]
    [kotori.domain.dmm.genre.core :as genre]
    [kotori.domain.dmm.product :as product]
+   [kotori.domain.kotori.core :as kotori]
    [kotori.domain.tweet.qvt :as qvt]
    [kotori.lib.firestore :as fs]
    [kotori.lib.json :as json]
@@ -20,9 +21,9 @@
 
 (defn get-product
   "Firestoreから指定したcidの情報を取得. via apiでFANZAからではない"
-  [{:keys [db cid]}]
+  [{:keys [info db cid]}]
   {:pre [(s/valid? ::dmm/cid cid)]}
-  (let [doc-path (product/doc-path cid)]
+  (let [doc-path (kotori/kotori->doc-path info cid)]
     (fs/get-doc db doc-path)))
 
 (defn get-campaign-products
@@ -233,6 +234,11 @@
       (fs/set! (fs/doc-path campaigns-path id) campaign))
     campaign))
 
+(defn prepare-video!
+  [{:keys [db cid creds floor coll-path] :as m}]
+  (crawl-product! m coll-path)
+  (scrape-page! m coll-path))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (comment
@@ -248,7 +254,7 @@
 
   (def products (-> (crawl-products! {:db       (db-prod)
                                       :creds    (creds)
-                                      :genre-id 1031
+                                      :genre-id 2024
                                       :limit    300})
                     :products))
   (count products)

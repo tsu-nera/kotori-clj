@@ -22,7 +22,7 @@
          :coll-path  "providers/dmm/products"}
  "0026" {:floor-code "doujin" :genre-id 156006
          :coll-path  "providers/dmm/girls"}
- "0027" {:floor-code "videoc"
+ "0027" {:floor-code "videoc" :genre-id 4031
          :coll-path  "providers/dmm/amateurs"}
  "0028" {:floor-code "videoa" :genre-id 6793
          :coll-path  "providers/dmm/vrs"}
@@ -37,4 +37,6 @@
  "0041" {:floor-code "videoa" :genre-id 5060
          :coll-path  "providers/dmm/products"}
  "0042" {:floor-code "videoa" :genre-id 35
+         :coll-path  "providers/dmm/products"}
+ "0045" {:floor-code "videoa" :genre-id 4011 ;尻フェチ
          :coll-path  "providers/dmm/products"}}

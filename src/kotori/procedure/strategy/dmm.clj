@@ -97,6 +97,14 @@
 (def st-exclude-chikubi
   (remove contains-chikubi?))
 
+(defn ->st-exclude-title
+  [keyword]
+  (remove (fn [p] (str/includes? (:title p) keyword))))
+
+(defn ->st-include-title
+  [keyword]
+  (filter (fn [p] (str/includes? (:title p) keyword))))
+
 ;; かつお物産は人気なもののちょっとジャンルからそれるので排他しておく.
 (def maker-id-katsuo 6608)
 (def st-exclude-katsuo
@@ -177,19 +185,17 @@
 (defmethod make-strategy "0007" [_]
   (concat videoa-default-xst
           [(->st-exclude (videoa/names->genre-ids
-                          ["巨乳フェチ" "ぽっちゃり"]))
+                          ["ぽっちゃり"]))
            st-exclude-vr]))
 
 (defmethod make-strategy "0009" [_]
   (concat videoa-default-xst
-          [(->st-exclude (videoa/names->genre-ids
-                          ["ぽっちゃり"]))
-           st-exclude-vr]))
+          [st-exclude-vr]))
 
 (defmethod make-strategy "0010" [_]
   (concat videoa-default-xst
           [(->st-exclude (videoa/names->genre-ids
-                          ["巨乳フェチ" "超乳"]))
+                          ["超乳"]))
            st-exclude-vr]))
 
 (defmethod make-strategy "0020" [_]
@@ -399,7 +405,7 @@
 
 (comment
   ;;;;;;;;;;;
-  (def info (code->kotori "0040"))
+  (def info (code->kotori "0045"))
   (def products
     (into []
           (select-scheduled-products
@@ -423,7 +429,7 @@
 
   (def products (fs/get-docs-by-ids (db-prod) product/coll-path cids))
 
-  (def info (code->kotori "0042"))
+  (def info (code->kotori "0045"))
   (def products (select-scheduled-products
                  {:db          (db-prod)
                   :info        info

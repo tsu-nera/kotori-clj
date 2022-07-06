@@ -11,10 +11,7 @@
    [kotori.lib.kotori :as lib]
    [kotori.lib.log :as log]
    [kotori.lib.provider.dmm.public :as public]
-   [kotori.procedure.dmm.amateur :as amateur]
-   [kotori.procedure.dmm.anime :as anime]
    [kotori.procedure.dmm.product :as product]
-   [kotori.procedure.dmm.vr :as vr]
    [kotori.procedure.strategy.core :as st]
    [kotori.procedure.strategy.dmm :as st-dmm]
    [slingshot.slingshot :refer [throw+ try+]]
@@ -99,11 +96,19 @@
         text         (make-text source strategy text-builder)]
     (tweet (assoc params :text text :type "text"))))
 
-(defn get-product [{:as m}]
-  (lib/->next (product/get-product m)))
+(defn get-product [{:keys [info] :as m}]
+  (let [af-id     (d/->af-id info)
+        floor     (d/->floor info)
+        coll-path (d/->coll-path info)]
+    (product/prepare-video! (merge m {:floor     floor
+                                      :coll-path coll-path}))
+    (cond-> (product/get-product m)
+      true lib/->next
+      true (lib/next->swap-af-id af-id)
+      (= floor "videoc")
+      (assoc :name (lib/videoc-title->name (:title next))))))
 
-(defn select-next-product [{:keys [info screen-name] :as m}]
-  {:pre [(s/valid? ::d/screen-name screen-name)]}
+(defn select-next-product [{:keys [info] :as m}]
   (let [af-id (d/->af-id info)]
     (-> m
         st-dmm/select-scheduled-products
@@ -111,8 +116,7 @@
         lib/->next
         (lib/next->swap-af-id af-id))))
 
-(defn select-next-amateur-videoc [{:keys [info screen-name] :as m}]
-  {:pre [(s/valid? ::d/screen-name screen-name)]}
+(defn select-next-amateur-videoc [{:keys [info] :as m}]
   (let [af-id  (d/->af-id info)
         params (assoc m :sort "review")
         next   (-> m
@@ -175,7 +179,7 @@
   ;;;
   (require '[firebase :refer [db db-prod db-dev]]
            '[tools.dmm :refer [creds]]
-           '[devtools :refer [code->kotori ->screen-name
+           '[devtools :refer [code->kotori
                               info-dev twitter-auth]])
 
   (def params {:db (db-dev) :info @info-dev})
@@ -238,8 +242,11 @@
   )
 
 (comment
-  (def resp (get-product {:db (db-prod) :cid "lzdm00050"}))
-  (count (:description resp))
+  (def info (code->kotori "0027"))
+  (def resp (get-product {:db   (db-prod)
+                          :info info
+                          :cid  "ckj087"}))
+
   )
 
 (comment

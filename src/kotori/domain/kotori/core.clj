@@ -39,8 +39,14 @@
 (defn ->coll-path [kotori]
   (get-in kotori [:strategy :coll-path]))
 
+(defn kotori->doc-path [kotori cid]
+  (str (->coll-path kotori) "/" cid))
+
 (defn ->genre-id [kotori]
   (get-in kotori [:strategy :genre-id]))
+
+(defn ->floor [kotori]
+  (get-in kotori [:strategy :floor-code]))
 
 (defn config->cred-map [config]
   (select-keys config [:auth-token :ct0 :dmm-af-id]))

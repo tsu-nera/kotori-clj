@@ -61,8 +61,7 @@
       ["/crawl-qvt-descs" {:post dmm/crawl-qvt-descs!}]]
      ["/kotori" {:middleware [#(wrap-kotori kotories %) #(wrap-dmm %)]}
       ["/tweet" kotori/tweet]
-      ["/tweet-quoted-video"
-       {:post qvt/tweet-quoted-video}]
+      ["/tweet-quoted-video" {:post qvt/tweet-quoted-video}]
       ["/tweet-morning" kotori/tweet-morning]
       ["/tweet-evening" kotori/tweet-evening]
       ["/tweet-random" kotori/tweet-random]

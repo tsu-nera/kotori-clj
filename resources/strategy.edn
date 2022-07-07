@@ -2,7 +2,7 @@
          :coll-path  "providers/dmm/products"}
  "0002" {:floor-code "videoa" :genre-id 1031
          :coll-path  "providers/dmm/products"}
- "0003" {:floor-code "videoa" :genre-id 35
+ "0003" {:floor-code "videoa"
          :coll-path  "providers/dmm/products"}
  "0007" {:floor-code "videoa" :genre-id 6149
          :coll-path  "providers/dmm/products"}

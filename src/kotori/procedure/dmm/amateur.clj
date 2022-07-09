@@ -74,7 +74,7 @@
 
   (def resp (crawl-products! {:db       (db-prod)
                               :creds    (creds)
-                              :genre-id 4031
+                              :genre-id 1069
                               :limit    100}))
 
   (def info (code->kotori "0027"))

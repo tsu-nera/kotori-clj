@@ -8,7 +8,7 @@
    [kotori.lib.firestore :as fs]
    [kotori.procedure.kotori.core :as kotori]))
 
-(def dead-name (->screen-name "0012"))
+(def dead-name (->screen-name "0007"))
 
 (defn ->retweets-coll-path [code]
   (let [user-id (->user-id code)]
@@ -23,7 +23,7 @@
 ;;;;
 (comment
   (def retweeters
-    ["0002" "0007" "0009" "0010"
+    ["0001" "0002" "0009" "0010"
      "0011" "0019" "0020" "0025"])
 
   (let [db (db-prod)]

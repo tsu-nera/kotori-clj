@@ -4,8 +4,6 @@
          :coll-path  "providers/dmm/products"}
  "0003" {:floor-code "videoa"
          :coll-path  "providers/dmm/products"}
- "0007" {:floor-code "videoa" :genre-id 6149
-         :coll-path  "providers/dmm/products"}
  "0009" {:floor-code "videoa" :genre-id 3008 ;水着
          :coll-path  "providers/dmm/products"}
  "0010" {:floor-code "videoa" :genre-id 2007
@@ -22,7 +20,7 @@
          :coll-path  "providers/dmm/products"}
  "0026" {:floor-code "doujin" :genre-id 156006
          :coll-path  "providers/dmm/girls"}
- "0027" {:floor-code "videoc" :genre-id 4031
+ "0027" {:floor-code "videoc" :genre-id 1069 ;不倫
          :coll-path  "providers/dmm/amateurs"}
  "0028" {:floor-code "videoa" :genre-id 6793
          :coll-path  "providers/dmm/vrs"}
@@ -38,5 +36,11 @@
          :coll-path  "providers/dmm/products"}
  "0042" {:floor-code "videoa" :genre-id 35
          :coll-path  "providers/dmm/products"}
+ "0043" {:floor-code "videoa" :genre-id 4015
+         :coll-path  "providers/dmm/products"}
  "0045" {:floor-code "videoa" :genre-id 4011 ;尻フェチ
+         :coll-path  "providers/dmm/products"}
+ "0046" {:floor-code "videoa" :genre-id 6149 ;超乳
+         :coll-path  "providers/dmm/products"}
+ "0047" {:floor-code "videoa" :genre-id 4009 ;巨乳フェチ
          :coll-path  "providers/dmm/products"}}

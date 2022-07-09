@@ -254,7 +254,7 @@
 
   (def products (-> (crawl-products! {:db       (db-prod)
                                       :creds    (creds)
-                                      :genre-id 2024
+                                      :genre-id 4009
                                       :limit    300})
                     :products))
   (count products)

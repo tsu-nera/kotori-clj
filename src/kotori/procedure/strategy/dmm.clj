@@ -182,12 +182,6 @@
            st-exclude-katsuo
            st-exclude-gas]))
 
-(defmethod make-strategy "0007" [_]
-  (concat videoa-default-xst
-          [(->st-exclude (videoa/names->genre-ids
-                          ["ぽっちゃり"]))
-           st-exclude-vr]))
-
 (defmethod make-strategy "0009" [_]
   (concat videoa-default-xst
           [st-exclude-vr]))
@@ -240,6 +234,23 @@
   (concat videoa-default-xst
           [(->st-exclude (videoa/names->genre-ids
                           ["ぽっちゃり" "超乳"]))
+           st-exclude-vr]))
+
+(defmethod make-strategy "0043" [_]
+  [st-exclude-no-samples
+   (->st-exclude videoa/dirty-ids)
+   st-exclude-vr])
+
+(defmethod make-strategy "0046" [_]
+  (concat videoa-default-xst
+          [(->st-exclude (videoa/names->genre-ids
+                          ["ぽっちゃり"]))
+           st-exclude-vr]))
+
+(defmethod make-strategy "0047" [_]
+  (concat videoa-default-xst
+          [(->st-exclude (videoa/names->genre-ids
+                          ["ぽっちゃり"]))
            st-exclude-vr]))
 
 (defmethod make-strategy :default [_]
@@ -405,7 +416,7 @@
 
 (comment
   ;;;;;;;;;;;
-  (def info (code->kotori "0045"))
+  (def info (code->kotori "0043"))
   (def products
     (into []
           (select-scheduled-products
